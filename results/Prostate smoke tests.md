@@ -137,3 +137,53 @@ The best published MedGUIDE result is 0.644, but that is GPT-4.1 averaged over a
 - every answer comes with a path through the guideline.
 
 To reproduce: `cd src && NAV_PAGES=PROS-16 python -m nccn_nav.bench_medguide ../private`.
+
+---
+
+# Update 2: whole-guideline encoding, and do OCR/layout models help?
+
+## What is encoded now (all 222 pages of v6.2026)
+
+| Layer | Content | Module | Output (private/) |
+|---|---|---|---|
+| Decision graphs | All 18 flow pages (PROS-1 to 18): E1 vector extraction merged with E2 Haiku vision; every arrow labelled by which method found it | `pdfvec.py`, `consensus.merge_all` | `merged_graphs.json` |
+| Footnotes | 64 of ~69 algorithm footnotes, linked to the boxes that cite them | `pdfvec.py` | `footnotes.json` |
+| Branch conditions | 140 conditions across all 18 pages, over a patient-fact schema of 30 facts. 28 reviewed (PROS-3, 9, 16); 112 are unreviewed Haiku drafts | `predicates.py` | `predicates.json`, `predicates_status.json` |
+| Full text | Every page in reading order: update log, algorithm, footnote pages, principles PROS-A to N, staging, Discussion MS-1 to 72. Reference lists are tagged but left out of search | `fulltext.py` | `pages.json`, `chunks_full.json` (544 chunks) |
+| Tables | 13 line-ruled tables kept as Markdown grids (PROS-2 risk groups, PROS-18 therapy lines, principles tables) | `fulltext.py` | in `pages.json` |
+
+**Graph merge, all 18 pages:** 255 arrows. 204 (80%) were found by both extractors. The other 51 are kept but flagged for human review:
+- 41 found only by vision, mostly on the table-like pages PROS-2 and PROS-18, where E1 finds no arrows;
+- 10 found only by vector extraction.
+
+**Branch-condition check (no LLM):** random patient facts were tested against 43 branch points. At 5 of them more than one branch can be true at once; these go to review. The engine only auto-decides when exactly one branch is true, so overlapping branches go to the LLM rather than being chosen silently.
+
+**Coverage check** (`coverage.py`): share of each page's words that appear in the encoding.
+- Principles pages: 0.90–0.94. Discussion: 0.92. Staging: 0.88. Footnote pages: 0.86–0.93.
+- Flow pages: 0.71–0.92. Most of the gap is the per-page header and footer boilerplate, which is deliberately excluded.
+
+**Regression:** the 8 vignettes still score 8/8 with the correct facts, and MedGUIDE is unchanged at 0.873 on the merged graph.
+
+## Do OCR or layout models help?
+
+**OCR is not needed for this PDF.** It is born-digital: every word is in the text layer, exactly. OCR would only add recognition errors. What matters is structure (arrows, boxes, tables, reading order), not reading characters.
+
+**Layout and table models were tested.** Docling's open-source layout and table-structure model (MIT licence, run locally on CPU; about 25 s for 4 pages, no Claude credit) was compared with PyMuPDF's free table finders (`compare_tables.py`). Values are the share of page words recovered inside extracted tables:
+
+| Page | PyMuPDF (ruled lines) | PyMuPDF (text alignment) | Docling |
+|---|---|---|---|
+| PROS-2 (risk groups) | 0.96 | 0.67 | 0.96 |
+| PROS-18 (therapy lines) | 0.75 | 0.72 | 0.62 |
+| ST-1 (staging, no ruled lines) | 0.00 | 0.69 | 0.00 |
+| PROS-H table | 0.77 | 0.67 | 0.78 |
+
+Docling matched PyMuPDF and added nothing. Neither recovers the unruled staging tables as tables, though their text is fully captured in the page store.
+
+**Where image-based models do help** is the flowchart arrows. Haiku vision (E2) scored 1.00 arrow F1 on the 4 reference pages and supplied the arrows for the table-like pages. Use it as a cross-check against the vector extraction, not on its own.
+
+## What would still improve performance
+
+1. **Human review:** the 51 flagged arrows and the 112 unreviewed branch conditions. This is the biggest remaining quality lever, and it is human time, not credits.
+2. **MedGUIDE:** most of the remaining A5 errors look like dataset label noise. Adjudicate before reporting.
+3. **Retrieval:** BM25 sometimes misses definitions. A local medical embedding model such as MedCPT, now installable since PyTorch came with Docling, would give hybrid search with no Claude cost.
+4. **Staging tables:** a Haiku vision pass over the 2 ST pages would rebuild them as structured grids.
