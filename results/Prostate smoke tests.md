@@ -187,3 +187,57 @@ Docling matched PyMuPDF and added nothing. Neither recovers the unruled staging 
 2. **MedGUIDE:** most of the remaining A5 errors look like dataset label noise. Adjudicate before reporting.
 3. **Retrieval:** BM25 sometimes misses definitions. A local medical embedding model such as MedCPT, now installable since PyTorch came with Docling, would give hybrid search with no Claude cost.
 4. **Staging tables:** a Haiku vision pass over the 2 ST pages would rebuild them as structured grids.
+
+---
+
+# Update 3: suggested fixes applied, then MedGUIDE re-tested
+
+## Fixes
+
+Items 1 and 3 were LLM review by Haiku, not clinician review.
+
+1. **Flagged arrows (51).**
+   - Haiku compared each against the page image: 43 confirmed, 6 rejected and removed, 2 unsure and left flagged.
+   - The merged graph now has 249 arrows: 204 found by both extractors and 43 confirmed by the image check.
+2. **Unreviewed branch conditions (112).**
+   - Haiku audited each against its box text: 101 OK, 3 fixed (e.g. a missing "or positive DRE" alternative), 8 removed (treatment or referral boxes, not conditions).
+   - 132 conditions remain.
+3. **Staging tables.** Haiku vision rebuilt the unruled ST-1 and ST-2 pages as 6 Markdown tables (the T, N, M, prognostic-group and Grade Group tables). The page store now has 19 tables and 550 search chunks.
+4. **Hybrid retrieval.**
+   - MedCPT query and article encoders, run locally on CPU, are fused with BM25 by reciprocal rank fusion (`NAV_DENSE=1`).
+   - Example: for "definition of high-volume metastatic disease", hybrid search returns the defining footnote first (PROS-15A ccc: CHAARTED criteria); BM25 alone did not.
+5. **MedGUIDE label check.**
+   - Haiku checked each question's label against its patient description: 144 consistent, 20 contradicting, 2 unclear.
+   - In most contradictions the label says M1, but the description says imaging showed no distant metastases.
+
+**Regression after all fixes:** the 8 vignettes still get 8/8 with the correct facts.
+
+## MedGUIDE prostate results
+
+All arms use Haiku. "Clean labels" means the 144 items whose label is consistent with the case text.
+
+| Arm | All 166 | Clean labels (144) |
+|---|---|---|
+| A0: no guideline | 0.645 | 0.708 |
+| A5: fact extraction + graph engine, A0 as fallback | **0.873** | **0.986** |
+
+Same random 30-question subset (25 of them have clean labels):
+
+| Arm | All 30 | Clean 25 |
+|---|---|---|
+| A0: no guideline | 0.733 | — |
+| A2: BM25 search | 0.733 | 0.760 |
+| A2: hybrid BM25 + MedCPT search | 0.633 | 0.720 |
+| A5 + A0 fallback | 0.867 | 1.000 |
+
+## What this shows
+
+- **Explicit branch logic beats better retrieval on this task.**
+  - The graph engine (A5) scored 0.87 on all 166 items and 0.99 on the 144 clean ones.
+  - Better retrieval did not help the search-only arm: hybrid scored 0.63 vs 0.73 for BM25 on 30 items, a gap within single-run noise. The search agent itself reported that the flattened PROS-16 flowchart text was hard to read.
+  - Hybrid search remains useful for definitions and footnotes, as the high-volume example shows.
+- **Caveat on the clean-label numbers:** the label check and A5's fact extraction were both done by Haiku reading the same descriptions, so they may agree for shared reasons. That could inflate the 0.986. Report both numbers, and have a clinician adjudicate the 22 flagged items before publishing.
+- **Remaining limits:**
+  - MedGUIDE prostate covers only one tree (PROS-16).
+  - One run per arm.
+  - All reviews so far are by an LLM, not a clinician.
