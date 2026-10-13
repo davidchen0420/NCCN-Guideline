@@ -75,6 +75,13 @@ def build(private):
         elif kind == "algorithm":
             entry["footnotes"] = extract_page_graph(doc, i)["footnotes"]
         pages.append(entry)
+    # Unruled staging tables: use the vision transcription (review/staging_tables.json) if present.
+    staging = private / "review" / "staging_tables.json"
+    if staging.exists():
+        tables = json.loads(staging.read_text())
+        for p in pages:
+            if p["code"] in tables:
+                p["tables"] = tables[p["code"]]
     (private / "pages.json").write_text(json.dumps(pages, indent=1))
     return pages
 

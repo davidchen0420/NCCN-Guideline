@@ -56,14 +56,28 @@ def build_chunks(doc, ids, max_words=220):
 
 
 class Retriever:
-    def __init__(self, chunks):
+    """BM25 retrieval; with `dense_cache` set (and MedCPT available), BM25 and MedCPT
+    rankings are fused by reciprocal rank fusion (hybrid search)."""
+
+    def __init__(self, chunks, dense_cache=None):
         self.chunks = chunks
         self.bm25 = BM25Okapi([tokenize(c["text"]) for c in chunks])
+        self.dense = None
+        if dense_cache:
+            from .dense import MedCPT, chunk_embeddings
+
+            self.dense = MedCPT()
+            self.emb = chunk_embeddings(chunks, dense_cache, self.dense)
 
     def search(self, query, k=5, pages=None):
         """Top-k chunks; `pages` restricts to page-code prefixes (node-scoped retrieval)."""
         scores = self.bm25.get_scores(tokenize(query))
         ranked = sorted(range(len(scores)), key=lambda i: -scores[i])
+        if self.dense is not None:
+            from .dense import rrf
+
+            sims = self.emb @ self.dense.encode_query(query)
+            ranked = rrf([ranked[:200], sorted(range(len(sims)), key=lambda i: -sims[i])[:200]])
         out = []
         for i in ranked:
             chunk = self.chunks[i]
