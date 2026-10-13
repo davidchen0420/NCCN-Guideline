@@ -76,3 +76,64 @@ cd src
 python -m nccn_nav.bench_encoding ../private
 NAV_PAGES=PROS-3,PROS-9 python -m nccn_nav.bench_traversal ../private
 ```
+
+---
+
+# Update: audit fixes and MedGUIDE prostate benchmark
+
+## Fixes found by the audit (in code, no LLM cost)
+
+Checking E1's graph against the MedGUIDE tree for PROS-16 turned up three extraction bugs:
+1. All-caps condition boxes inside the flow (e.g. "PSADT >10 mo") were classed as column headers and dropped. Now only all-caps text *above* the flow counts as a header.
+2. Arrows that leave a shared closing bracket (two boxes feeding one arrow) were attributed to only one box. They now come from every box inside the bracket.
+3. Arrows entering a box from above or below were not attached to it.
+
+E1 now recovers all 15 arrows on PROS-16, and the 4 reference pages score the same as before.
+
+Two engine (navigator) changes:
+- **Continue past a recommendation box** when the case's facts settle a branch shortly after it. The case is describing what happened next.
+- **When a branch can't be decided but its arms rejoin**, jump to where they rejoin and record the skipped step (e.g. PSADT is missing, but both PSADT branches lead to the same assessment box).
+
+The 8 earlier test cases still reach the correct final step with the correct facts.
+
+## MedGUIDE prostate (HF `MedGUIDE/MedGUIDE-MCQA-8K`, `prostate_14`)
+
+- 166 three-option questions, all built from the NCCN M0 CRPC tree (PROS-16 in v6.2026; MedGUIDE used an older version). The three options are the tree's three end boxes, always in the same order. Chance is 0.333.
+- The dataset declares no license, so it is stored only in `private/`.
+
+| Arm (all Haiku) | Items | Accuracy |
+|---|---|---|
+| A0: no guideline | 166 | **0.645** |
+| A5: Haiku extracts 3 facts, code walks PROS-16 | 166 | **0.873** (abstained on 3, coverage 0.98) |
+| A5 + A0 fallback when the engine abstains | 166 | **0.873** |
+| A0, on a random 30-question subset | 30 | 0.733 |
+| A2: BM25 search, same subset | 30 | 0.733 |
+| A5 + A0, same subset | 30 | 0.867 |
+
+The best published MedGUIDE result is 0.644, but that is GPT-4.1 averaged over all 17 cancers. It is context, not a like-for-like comparison.
+
+**Error analysis:**
+- **A0** mostly confused "maintain" with "change" treatment (45 of its 59 errors): it doesn't apply the PSADT and progression branch logic consistently.
+- **A5's 21 errors:**
+  - 13 are labelled "M1 workup", and the engine answered something else.
+  - In the 3 such profiles inspected, the text says imaging shows *no* distant metastases. These look like **label noise in MedGUIDE**: its profiles are LLM-generated from the tree path and sometimes contradict it. The engine's answer follows the stated facts.
+- **Caveat:** a clinician should adjudicate those items before reporting MedGUIDE numbers. Corrected labels would raise A5's score and lower A0's on those items.
+
+## Audit: where each strategy stands
+
+| Strategy | Evidence so far | Main gap |
+|---|---|---|
+| E1 vector extraction | 0.98 arrow F1 on 4 pages; PROS-16 fixed | Table pages (PROS-2, PROS-18); geometry rules keep needing case-by-case fixes |
+| E2 Haiku vision | 1.00 on 4 pages | Only 4 pages; one run each; no variance |
+| E4 cross-check | 0.99; flagged E1's error | Needs E2 on every page |
+| A2 retrieval only | No better than A0 on MedGUIDE (0.733 vs 0.733, n=30) | Flattened flowchart text loses the branch structure |
+| A4 LLM walks graph | 8/8 on easy test cases | Not yet run on MedGUIDE (costly per item) |
+| A5 facts + engine | 0.873 on MedGUIDE vs 0.645 for A0 | Quality of fact extraction and fact definitions; predicates cover only PROS-3, 9 and 16 so far |
+
+**Recommended architecture (unchanged, now with better support):** E1 + E2 cross-check for encoding; then A5 with an LLM fallback for walking the graph:
+- facts extracted once per patient;
+- the engine decides every branch it can;
+- the LLM decides only the rest;
+- every answer comes with a path through the guideline.
+
+To reproduce: `cd src && NAV_PAGES=PROS-16 python -m nccn_nav.bench_medguide ../private`.
