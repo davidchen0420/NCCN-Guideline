@@ -241,3 +241,23 @@ Same random 30-question subset (25 of them have clean labels):
   - MedGUIDE prostate covers only one tree (PROS-16).
   - One run per arm.
   - All reviews so far are by an LLM, not a clinician.
+
+---
+
+# Benchmark policy: validated items only
+
+From now on, benchmark numbers are computed **only on validated items**. `bench_medguide.py` now scores just the MedGUIDE items whose label passed the consistency check against the case text: 144 of 166. The 22 items whose label contradicts the case, or is unclear, are excluded. The script refuses to run without the label-check files.
+
+| Arm (validated MedGUIDE items) | n | Accuracy |
+|---|---|---|
+| A0: no guideline | 144 | 0.708 |
+| A5: fact extraction + graph engine, A0 fallback | 144 | **0.986** (engine abstained on 1) |
+| A0, on the 30-question subset | 25 | 0.760 |
+| A2: BM25 search, 30-question subset | 25 | 0.760 |
+| A2: hybrid BM25 + MedCPT, 30-question subset | 25 | 0.720 |
+| A5 + A0, 30-question subset | 25 | 1.000 |
+
+What "validated" means here, and what is not counted:
+- **The labels were validated by an LLM (Haiku), not a clinician.** The same model family also extracted A5's facts, so that check may favour A5. Clinician adjudication of the 22 excluded items, and of a sample of the included ones, is still needed before external reporting.
+- **The 8 synthetic vignettes and the 4 hand-checked encoding pages** were labelled by Claude and never independently validated. They stay as smoke tests only and are **not** benchmark results.
+- **The search arm (A2)** has only 25 validated items, too few to compare it reliably with A0 or A5. Running it on all 144 would cost about 2–3 more Haiku agent runs.

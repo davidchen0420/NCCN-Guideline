@@ -3,6 +3,9 @@ three-option items built from the NCCN M0 CRPC decision tree, PROS-16 in v6.2026
 
   NAV_PAGES=PROS-16 python -m nccn_nav.bench_medguide <private>
 
+Only validated items are scored: those whose label an independent check
+(medguide/label_check_*.json) found consistent with the case text.
+
 Arms:
   A0      Haiku answers from the profile alone.
   A2      Haiku with BM25 search (30-item random subset).
@@ -63,21 +66,20 @@ def main(private):
     checks = load("label_check_a.json", "label_check_b.json")
     clean_ids = [i for i in all_ids if checks.get(i, {}).get("verdict") == "consistent"]
     clean_sub = [i for i in sub_ids if i in clean_ids]
-    rows = [("A0 no context", a0, all_ids), ("A5 engine (abstains)", a5, all_ids),
-            ("A5 + A0 fallback", hybrid, all_ids),
-            ("A0 [clean labels]", a0, clean_ids), ("A5 + A0 [clean labels]", hybrid, clean_ids),
-            ("A0 on 30-subset", a0, sub_ids), ("A2 BM25 on 30-subset", a2, sub_ids),
-            ("A2 hybrid on 30-subset", a2h, sub_ids), ("A5+A0 on 30-subset", hybrid, sub_ids),
-            ("A2 BM25 [clean 30]", a2, clean_sub), ("A2 hybrid [clean 30]", a2h, clean_sub),
-            ("A5+A0 [clean 30]", hybrid, clean_sub)]
-    if checks:
-        print(f"label check: {len(clean_ids)}/{len(all_ids)} items consistent with their case text")
-    print(f"{'arm':26} {'correct/answered':>17} {'coverage':>9} {'accuracy (all)':>15}")
+    if not checks:
+        sys.exit("label checks (medguide/label_check_*.json) are required: only validated items are scored")
+    # Benchmark only on validated items: labels the check found consistent with their case text.
+    print(f"validated items: {len(clean_ids)}/{len(all_ids)} (excluded: label contradicts or is unclear)")
+    rows = [("A0 no context", a0, clean_ids), ("A5 engine (abstains)", a5, clean_ids),
+            ("A5 + A0 fallback", hybrid, clean_ids),
+            ("A0 [30-subset]", a0, clean_sub), ("A2 BM25 [30-subset]", a2, clean_sub),
+            ("A2 hybrid [30-subset]", a2h, clean_sub), ("A5 + A0 [30-subset]", hybrid, clean_sub)]
+    print(f"{'arm (validated items only)':28} {'correct/answered':>17} {'coverage':>9} {'accuracy':>9}")
     for name, pred, ids in rows:
         if not pred:
             continue
         right, answered, total = acc(pred, ids, answers)
-        print(f"{name:26} {right:>8}/{answered:<8} {answered / total:9.2f} {right / total:15.3f}")
+        print(f"{name:28} {right:>8}/{answered:<8} {answered / total:9.2f} {right / total:9.3f}  (n={total})")
     print("chance = 0.333; best published MedGUIDE overall (all cancers, GPT-4.1) = 0.644")
 
 
