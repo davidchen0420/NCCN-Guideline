@@ -24,7 +24,8 @@ from .textlayer import Retriever
 class Guideline:
     def __init__(self, private):
         self.private = Path(private)
-        pages = json.loads((self.private / "e1_graphs.json").read_text())
+        merged = self.private / "merged_graphs.json"  # E1+E2 merge (consensus.merge_all), if built
+        pages = json.loads((merged if merged.exists() else self.private / "e1_graphs.json").read_text())
         self.footnotes = json.loads((self.private / "footnotes.json").read_text())
         full = self.private / "chunks_full.json"  # complete page store (fulltext.py), if built
         chunk_file = full if full.exists() else self.private / "chunks.json"
