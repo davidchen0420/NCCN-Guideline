@@ -1,3 +1,5 @@
 # Licensed NCCN content: never commit (repo is public)
 *.pdf
 .DS_Store
+# Derived from licensed NCCN content: keep local
+research_notes/Prostate benchmark planning/prostate_pdf_profile.md
