@@ -198,8 +198,16 @@ def extract_page_graph(doc, index):
     # Everything below the lowest connector or bracket is the footnote block.
     flow_bottom = max([max(t[1], h[1]) for t, h in connectors] + [b["y1"] for b in brackets] + [TOP]) + 25
     lines = _text_lines(page)
-    flow_lines = [l for l in lines if l["bbox"][1] <= flow_bottom]
-    footnotes = _parse_footnotes([l for l in lines if l["bbox"][1] > flow_bottom], page.rect.width)
+    # Footnote lines: below the flow, or starting with a superscript letter marker at the left
+    # margin (footnote blocks can sit beside the lower part of a flow).
+    def is_note(l):
+        marked = l["marker"] and re.fullmatch(r"[a-z]{1,3}", l["marker"]) and l["bbox"][0] < 40
+        return l["bbox"][1] > flow_bottom or marked or (re.match(r"[a-z]{1,3}\t", l["text"]) and l["bbox"][0] < 40)
+
+    note_top = min([l["bbox"][1] for l in lines if is_note(l)] + [BOTTOM])
+    note_lines = [l for l in lines if is_note(l) or (l["bbox"][1] >= note_top and l["bbox"][0] < 40)]
+    flow_lines = [l for l in lines if l not in note_lines]
+    footnotes = _parse_footnotes(note_lines, page.rect.width)
     boxes = _group_boxes(flow_lines, brackets)
     flow_top = min([min(t[1], h[1]) for t, h in connectors] + [b["y0"] for b in brackets] + [BOTTOM])
     for box in boxes:

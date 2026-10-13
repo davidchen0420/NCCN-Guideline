@@ -26,7 +26,9 @@ class Guideline:
         self.private = Path(private)
         pages = json.loads((self.private / "e1_graphs.json").read_text())
         self.footnotes = json.loads((self.private / "footnotes.json").read_text())
-        self.retriever = Retriever(json.loads((self.private / "chunks.json").read_text()))
+        full = self.private / "chunks_full.json"  # complete page store (fulltext.py), if built
+        chunk_file = full if full.exists() else self.private / "chunks.json"
+        self.retriever = Retriever(json.loads(chunk_file.read_text()))
         pred_path = self.private / "predicates.json"
         self.predicates = json.loads(pred_path.read_text()) if pred_path.exists() else {}
         self.nodes, self.children, self.roots = {}, {}, {}

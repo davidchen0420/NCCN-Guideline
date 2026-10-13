@@ -24,7 +24,9 @@ def flow_page_chunks(private):
 
 
 def main(private, query, k=4):
-    cache = Path(private) / "chunks_all.json"
+    cache = Path(private) / "chunks_full.json"  # complete page store from fulltext.py
+    if not cache.exists():
+        cache = Path(private) / "chunks_all.json"
     if not cache.exists():
         chunks = flow_page_chunks(private) + json.loads((Path(private) / "chunks.json").read_text())
         cache.write_text(json.dumps(chunks))
