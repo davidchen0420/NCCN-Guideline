@@ -201,6 +201,10 @@ def extract_page_graph(doc, index):
     flow_lines = [l for l in lines if l["bbox"][1] <= flow_bottom]
     footnotes = _parse_footnotes([l for l in lines if l["bbox"][1] > flow_bottom], page.rect.width)
     boxes = _group_boxes(flow_lines, brackets)
+    flow_top = min([min(t[1], h[1]) for t, h in connectors] + [b["y0"] for b in brackets] + [BOTTOM])
+    for box in boxes:
+        if box["kind"] == "header" and box["bbox"][3] > flow_top:
+            box["kind"] = "box"  # all-caps text inside the flow (e.g. "PSADT >10 mo") is a node
     for i, box in enumerate(boxes):
         box["id"] = f"n{i}"
         box["links"] = LINK_RE.findall(box["text"])
@@ -212,10 +216,23 @@ def extract_page_graph(doc, index):
             x0, _, x1, _ = box["bbox"]
             if side == "src" and x1 > pt[0] + 15:
                 continue
-            if side == "dst" and x0 < pt[0] - 15:
+            enters_vertically = x0 <= pt[0] <= x1 and not (box["bbox"][1] <= pt[1] <= box["bbox"][3])
+            if side == "dst" and x0 < pt[0] - 15 and not enters_vertically:
                 continue
             cands.append((_dist_point_box(pt, box["bbox"], pad=2), box["id"]))
         return min(cands)[1] if cands and min(cands)[0] < 60 else None
+
+    def bracket_sources(pt):
+        # A tail starting at a closing bracket comes from every box that bracket encloses.
+        for br in brackets:
+            if abs(pt[0] - br["x"]) < 10 and br["y0"] - 3 <= pt[1] <= br["y1"] + 3:
+                enclosed = [
+                    b["id"] for b in boxes
+                    if 0 <= br["x"] - b["bbox"][2] <= 60 and b["bbox"][1] < br["y1"] and b["bbox"][3] > br["y0"]
+                ]
+                if enclosed:
+                    return enclosed
+        return []
 
     def bracket_owner(pt):
         # An arrowhead touching an opening bracket points at the box that bracket encloses.
@@ -231,9 +248,10 @@ def extract_page_graph(doc, index):
 
     edges = set()
     for tail, head in connectors:
-        s, t = nearest(tail, "src"), bracket_owner(head) or nearest(head, "dst")
-        if s and t and s != t:
-            edges.add((s, t))
+        t = bracket_owner(head) or nearest(head, "dst")
+        for s in bracket_sources(tail) or [nearest(tail, "src")]:
+            if s and t and s != t:
+                edges.add((s, t))
 
     return {
         "page_index": index,

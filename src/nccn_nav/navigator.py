@@ -73,6 +73,36 @@ def _state_path(private, session):
     return path
 
 
+def _facts_decide_next_branch(gl, kids, facts, depth=3):
+    """True if the facts already resolve a branch shortly after a lone arrow, i.e. the case
+    describes events after this recommendation, so the walk should continue."""
+    frontier = list(kids)
+    for _ in range(depth):
+        nxt = []
+        for node in frontier:
+            grand = gl.children[node]
+            if len(grand) > 1:
+                verdicts = [evaluate(gl.predicates.get(c), facts) for c in grand]
+                if verdicts.count(True) == 1 and None not in verdicts:
+                    return True
+            nxt += grand
+        frontier = nxt
+    return False
+
+
+def _reconvergence(gl, kids, depth=3):
+    """First node reachable from every child within `depth` steps, if any."""
+    reach = []
+    for kid in kids:
+        seen, frontier = [], [kid]
+        for _ in range(depth):
+            frontier = [c for n in frontier for c in gl.children[n]]
+            seen += frontier
+        reach.append(seen)
+    common = [n for n in reach[0] if all(n in r for r in reach[1:])]
+    return common[0] if common else None
+
+
 def _auto_step(gl, state):
     """A5: follow children whose predicates decide the branch from structured facts."""
     while True:
@@ -80,7 +110,12 @@ def _auto_step(gl, state):
         if not kids or not state.get("facts"):
             return
         here = gl.nodes[state["at"]]
-        passthrough = state["at"] in gl.predicates or here.get("links") or (state["path"] and state["path"][-1]["by"] == "entry")
+        passthrough = (
+            state["at"] in gl.predicates
+            or here.get("links")
+            or (state["path"] and state["path"][-1]["by"] == "entry")
+            or _facts_decide_next_branch(gl, kids, state["facts"])
+        )
         if len(kids) == 1 and kids[0] not in gl.predicates and passthrough:
             # A lone unconditional arrow out of a condition or referral box needs no decision.
             # Arrows out of a recommendation box lead to later events, so stop there.
@@ -92,8 +127,14 @@ def _auto_step(gl, state):
         if len(true) == 1 and all(v is not None for v in verdicts.values()):
             state["path"].append({"node": true[0], "by": "predicate"})
             state["at"] = true[0]
-        else:
-            return
+            continue
+        merge = _reconvergence(gl, kids) if len(kids) > 1 and None in verdicts.values() and not true else None
+        if merge:
+            # Undecidable branch whose arms rejoin: skip to the join, recording the gap.
+            state["path"].append({"node": merge, "by": "reconverge", "unresolved": kids})
+            state["at"] = merge
+            continue
+        return
 
 
 def render(gl, state):
