@@ -1,0 +1,22 @@
+{
+ "SAMPLE-1:n3": {
+  "fact": "score",
+  "op": ">=",
+  "value": 10
+ },
+ "SAMPLE-1:n4": {
+  "fact": "score",
+  "op": "<",
+  "value": 10
+ },
+ "SAMPLE-2:n2": {
+  "fact": "age",
+  "op": ">=",
+  "value": 65
+ },
+ "SAMPLE-2:n3": {
+  "fact": "age",
+  "op": "<",
+  "value": 65
+ }
+}

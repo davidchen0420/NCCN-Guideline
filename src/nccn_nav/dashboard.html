@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Guideline Dashboard</title>
+<style>
+:root{--bg:#fafaf9;--panel:#fff;--ink:#1c1917;--muted:#78716c;--line:#e7e5e4;--box:#f5f5f4;
+--agreed:#334155;--verified:#2563eb;--unsure:#dc2626;--pred:#16a34a;--link:#9333ea;--walk:#ea580c;--hl:#fde68a}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0c0a09;--panel:#1c1917;--ink:#f5f5f4;
+--muted:#a8a29e;--line:#292524;--box:#292524;--agreed:#cbd5e1;--verified:#60a5fa;--unsure:#f87171;--pred:#4ade80;
+--link:#c084fc;--walk:#fb923c;--hl:#713f12}}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.4 system-ui,sans-serif;background:var(--bg);color:var(--ink);height:100vh;display:flex;flex-direction:column}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+h1{font-size:16px;margin:0}.sub{color:var(--muted);font-size:12px}
+.search{position:relative;flex:1;min-width:200px;max-width:460px}
+input,select,button{font:inherit;color:var(--ink)}
+input[type=search],input[type=text],input[type=number],select{width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+button{border:1px solid var(--line);background:var(--panel);border-radius:6px;padding:4px 9px;cursor:pointer}
+button:hover{border-color:var(--link)}button.primary{background:var(--link);color:#fff;border-color:var(--link)}
+#results{position:absolute;top:36px;left:0;right:0;max-height:60vh;overflow:auto;background:var(--panel);border:1px solid var(--line);
+border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.2);z-index:20;display:none}
+#results div{padding:7px 10px;border-bottom:1px solid var(--line);cursor:pointer;font-size:13px}
+#results div:hover{background:var(--box)}#results small{color:var(--muted)}
+#app{flex:1;display:grid;grid-template-columns:230px minmax(0,1fr) 340px;min-height:0}
+aside{background:var(--panel);overflow:auto;min-height:0}#side{border-right:1px solid var(--line);padding:10px}
+#panel{border-left:1px solid var(--line)}
+main{display:flex;flex-direction:column;min-width:0;min-height:0}
+.group{margin:10px 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+#side button.pg{display:flex;justify-content:space-between;width:100%;margin:2px 0;text-align:left;border-color:transparent;background:none}
+#side button.pg.on{border-color:var(--link);color:var(--link)}#side button.pg small{color:var(--muted)}
+.toolbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line)}
+.toolbar label{font-size:12px;color:var(--muted);display:flex;gap:4px;align-items:center}
+#chart{flex:1;overflow:auto;padding:8px 12px;min-height:0}
+#chart svg{width:100%;height:100%;min-height:360px;display:block;cursor:grab;touch-action:none}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);padding:6px 12px;border-top:1px solid var(--line)}
+.legend i{display:inline-block;width:20px;height:0;border-top:2px solid;vertical-align:middle;margin-right:4px}
+.node rect{fill:var(--box);stroke:var(--line);cursor:pointer}.node.pred rect{stroke:var(--pred);stroke-width:1.6}
+.node.ref rect{stroke:var(--link);stroke-dasharray:3 2}.node div{font-size:7.2px;line-height:1.18;padding:2px 3px;overflow:hidden;height:100%;pointer-events:none}
+.node:hover rect{stroke:var(--link);stroke-width:2}.node.sel rect{stroke:var(--link);stroke-width:2.6}
+.node.walk rect{fill:color-mix(in srgb,var(--walk) 18%,var(--box));stroke:var(--walk);stroke-width:2}
+.node.cur rect{stroke-width:3.2}.node.fn rect{fill:var(--hl)}sup{color:var(--link);font-weight:600}
+.e{fill:none;stroke-width:1.1}.e.agreed{stroke:var(--agreed)}
+body:not(.conf) .e.verified,body:not(.conf) .e.unsure{stroke:var(--agreed);stroke-dasharray:none}
+body.conf .e.verified{stroke:var(--verified);stroke-dasharray:4 2}body.conf .e.unsure{stroke:var(--unsure);stroke-dasharray:2 2}
+.e.walk{stroke:var(--walk)!important;stroke-width:2.6;stroke-dasharray:none!important}
+.tabs{display:flex;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel)}
+.tabs button{flex:1;border:0;border-radius:0;border-bottom:2px solid transparent}.tabs button.on{border-bottom-color:var(--link);color:var(--link)}
+.pane{padding:12px;display:none}.pane.on{display:block}
+.pane h3{margin:12px 0 4px;font-size:13px}.muted{color:var(--muted);font-size:12px}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:12px;padding:1px 8px;margin:2px 4px 2px 0;font-size:12px;cursor:pointer;background:var(--box)}
+.chip.on{border-color:var(--link);color:var(--link)}
+.fnote{font-size:12px;margin:4px 0;padding:6px;border-radius:6px;background:var(--box)}
+.fnote.on{outline:2px solid var(--link)}
+code{font-size:11px;word-break:break-all}
+.choice{display:block;width:100%;text-align:left;margin:4px 0}.crumb{display:block;text-align:left;width:100%;border:0;border-left:3px solid var(--walk);border-radius:0;margin:2px 0;font-size:12px}
+.field{display:grid;grid-template-columns:1fr 120px;gap:6px;align-items:center;margin:4px 0;font-size:13px}
+.card{background:var(--box);border-radius:8px;padding:10px;margin:8px 0;font-size:13px}
+@media (max-width:1000px){#app{grid-template-columns:1fr;grid-auto-rows:auto;overflow:auto}body{height:auto}aside{max-height:none}#side{max-height:200px}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1 id="title">Guideline dashboard</h1><div class="sub" id="stats"></div></div>
+  <div class="search"><input type="search" id="q" placeholder="Search boxes, footnotes, principles, discussion" aria-label="Search"><div id="results"></div></div>
+</header>
+<div id="app">
+  <aside id="side"><input type="search" id="pf" placeholder="Filter pages" aria-label="Filter pages"><div id="pagelist"></div></aside>
+  <main>
+    <div class="toolbar">
+      <button id="zout" aria-label="Zoom out">−</button><button id="zin" aria-label="Zoom in">+</button><button id="zreset">Fit</button>
+      <button id="back">◀ Back</button><button id="fwd">Forward ▶</button>
+      <label><input type="checkbox" id="conf"> show extraction confidence</label>
+      <span id="pagetitle" style="margin-left:auto;font-weight:600"></span>
+    </div>
+    <div id="chart"></div>
+    <div class="legend" id="legend">
+      <span><i style="border-color:var(--pred)"></i>box has a branch condition</span>
+      <span><i style="border-color:var(--link);border-top-style:dashed"></i>refers to another page</span>
+      <span><i style="border-color:var(--walk)"></i>walked path</span>
+    </div>
+  </main>
+  <aside id="panel">
+    <div class="tabs"><button data-t="details" class="on">Details</button><button data-t="walk">Walk</button><button data-t="facts">Patient facts</button></div>
+    <div class="pane on" id="p-details"></div>
+    <div class="pane" id="p-walk"></div>
+    <div class="pane" id="p-facts"></div>
+  </aside>
+</div>
+<script>
+/*PREDICATES_JS*/
+</script>
+<script>
+const B=/*BUNDLE*/null;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const NODES={},PRED={};
+for(const [page,g] of Object.entries(B.pages)){for(const n of g.nodes){const id=page+':'+n.id;NODES[id]={...n,page,full:id};if(n.pred)PRED[id]=n.pred}}
+const parents={};for(const [s,ks] of Object.entries(B.children))for(const k of ks)(parents[k]=parents[k]||[]).push(s);
+const S={page:null,sel:null,fn:null,walk:null,facts:{},zoom:null,hist:[],hpos:-1};
+const TEXT_PAGES=[...B.principles,...B.discussion];
+function getNode(id){if(id.endsWith(':START')){const p=id.split(':')[0];return{text:'Entry of '+p,page:p,full:id,links:[],footnotes:[]}}return NODES[id]}
+function kidsOf(id){return id.endsWith(':START')?B.roots[id.split(':')[0]]:(B.children[id]||[])}
+
+/* ---------- sidebar ---------- */
+function renderList(){const f=$('#pf').value.toLowerCase();let h='';
+ const grp=(name,items,fmt)=>{items=items.filter(p=>p.toLowerCase().includes(f));if(!items.length)return;
+  h+=`<div class="group">${name}</div>`+items.map(p=>`<button class="pg${p===S.page?' on':''}" data-p="${esc(p)}"><span>${esc(p)}</span><small>${fmt(p)}</small></button>`).join('')};
+ grp('Algorithm pages',Object.keys(B.pages),p=>B.pages[p].nodes.length+' boxes');
+ grp('Principles',B.principles,p=>B.chunks.filter(c=>c.page===p).length+' §');
+ grp('Discussion',B.discussion,p=>B.chunks.filter(c=>c.page===p).length+' §');
+ $('#pagelist').innerHTML=h;
+ $('#pagelist').querySelectorAll('button').forEach(b=>b.onclick=()=>go(b.dataset.p))}
+$('#pf').oninput=renderList;
+
+/* ---------- navigation / history ---------- */
+function go(page,nid,fromHist){
+ if(!B.pages[page]&&!TEXT_PAGES.includes(page))return;
+ if(S.page!==page){S.zoom=null;S.fn=null}
+ S.page=page;S.sel=nid||null;
+ if(!fromHist){S.hist=S.hist.slice(0,S.hpos+1);S.hist.push([page,nid||null]);S.hpos=S.hist.length-1;
+  try{history.replaceState(null,'','#'+page+(nid?':'+nid.split(':')[1]:''))}catch(e){}
+  try{localStorage.setItem('dash-page',page)}catch(e){}}
+ renderList();renderChart();renderDetails();$('#pagetitle').textContent=page}
+$('#back').onclick=()=>{if(S.hpos>0){S.hpos--;go(...S.hist[S.hpos],true)}};
+$('#fwd').onclick=()=>{if(S.hpos<S.hist.length-1){S.hpos++;go(...S.hist[S.hpos],true)}};
+function fromHash(){const h=decodeURIComponent(location.hash.slice(1));if(!h)return false;
+ const [p,n]=h.split(':');if(B.pages[p]||TEXT_PAGES.includes(p)){go(p,n?p+':'+n:null);return true}return false}
+
+/* ---------- chart ---------- */
+function center(b){return[(b[0]+b[2])/2,(b[1]+b[3])/2]}
+function anchor(b,t){const[cx,cy]=center(b);const dx=t[0]-cx,dy=t[1]-cy;const hw=(b[2]-b[0])/2+2,hh=(b[3]-b[1])/2+2;
+ const s=Math.min(Math.abs(dx)>1e-6?hw/Math.abs(dx):1e9,Math.abs(dy)>1e-6?hh/Math.abs(dy):1e9);return[cx+dx*s,cy+dy*s]}
+function walkSets(){const nodes=new Set(),edges=new Set();let cur=null;
+ if(S.walk){let prev=null;for(const st of S.walk.path){nodes.add(st.node);if(prev)edges.add(prev+'>'+st.node);prev=st.node}cur=S.walk.at}
+ return{nodes,edges,cur}}
+function renderChart(){const box=$('#chart');
+ if(!B.pages[S.page]){const cs=B.chunks.filter(c=>c.page===S.page);
+  box.innerHTML=cs.map(c=>`<div class="card"><b>${esc(c.page)}</b> <span class="muted">${esc(c.source)}</span><p>${esc(c.text)}</p></div>`).join('')||'<p class="muted">No text.</p>';
+  $('#legend').style.display='none';return}
+ $('#legend').style.display='';
+ const g=B.pages[S.page],byId={};g.nodes.forEach(n=>byId[n.id]=n);
+ const z=S.zoom||(S.zoom={x:0,y:B.top,w:B.w,h:B.bottom-B.top});const ws=walkSets();
+ let s=`<svg viewBox="${z.x} ${z.y} ${z.w} ${z.h}"><defs></defs>`;
+ g.edges.forEach(e=>{const a=byId[e.src],b=byId[e.dst];if(!a||!b)return;
+  const p1=anchor(a.bbox,center(b.bbox)),p2=anchor(b.bbox,center(a.bbox));
+  const w=ws.edges.has(S.page+':'+e.src+'>'+S.page+':'+e.dst)?' walk':'';
+  s+=`<path class="e ${e.cls}${w}" d="M${p1[0]},${p1[1]} L${p2[0]},${p2[1]}"/>`;
+  const ang=Math.atan2(p2[1]-p1[1],p2[0]-p1[0]),L=5;
+  s+=`<path class="e ${e.cls}${w}" d="M${p2[0]-L*Math.cos(ang-.45)},${p2[1]-L*Math.sin(ang-.45)} L${p2[0]},${p2[1]} L${p2[0]-L*Math.cos(ang+.45)},${p2[1]-L*Math.sin(ang+.45)}"/>`});
+ g.nodes.forEach(n=>{const[x0,y0,x1,y1]=n.bbox,full=S.page+':'+n.id;
+  const cls=['node',n.pred?'pred':'',n.links.length?'ref':'',full===S.sel?'sel':'',ws.nodes.has(full)?'walk':'',full===ws.cur?'cur':'',
+   S.fn&&n.footnotes.some(f=>f[0]===S.fn)?'fn':''].filter(Boolean).join(' ');
+  const fn=n.footnotes.length?`<sup> ${n.footnotes.map(f=>esc(f[0])).join(',')}</sup>`:'';
+  s+=`<g class="${cls}" data-id="${full}"><rect x="${x0-2}" y="${y0-2}" width="${x1-x0+4}" height="${y1-y0+4}" rx="3"/>
+  <foreignObject x="${x0-2}" y="${y0-2}" width="${x1-x0+4}" height="${y1-y0+4}"><div xmlns="http://www.w3.org/1999/xhtml">${esc(n.text)}${fn}</div></foreignObject></g>`});
+ s+='</svg>';box.innerHTML=s;const svg=box.querySelector('svg');
+ svg.querySelectorAll('.node').forEach(el=>{el.onclick=ev=>{ev.stopPropagation();S.sel=el.dataset.id;renderChart();renderDetails();showTab('details')}});
+ let drag=null;svg.onpointerdown=ev=>{drag={x:ev.clientX,y:ev.clientY,zx:z.x,zy:z.y,id:ev.pointerId,cap:false}};
+ svg.onpointermove=ev=>{if(!drag)return;
+  if(!drag.cap){if(Math.hypot(ev.clientX-drag.x,ev.clientY-drag.y)<4)return;drag.cap=true;svg.setPointerCapture(drag.id)}
+  const r=svg.getBoundingClientRect();z.x=drag.zx-(ev.clientX-drag.x)*z.w/r.width;z.y=drag.zy-(ev.clientY-drag.y)*z.h/r.height;svg.setAttribute('viewBox',`${z.x} ${z.y} ${z.w} ${z.h}`)};
+ svg.onpointerup=()=>drag=null;
+ svg.onwheel=ev=>{ev.preventDefault();zoomBy(ev.deltaY<0?1.15:1/1.15,ev)}}
+function zoomBy(f,ev){const z=S.zoom;if(!z)return;const svg=$('#chart svg');if(!svg)return;const r=svg.getBoundingClientRect();
+ const px=ev?(ev.clientX-r.left)/r.width:.5,py=ev?(ev.clientY-r.top)/r.height:.5;
+ const nw=Math.min(B.w*2,Math.max(60,z.w/f)),nh=nw*z.h/z.w;z.x+=(z.w-nw)*px;z.y+=(z.h-nh)*py;z.w=nw;z.h=nh;
+ svg.setAttribute('viewBox',`${z.x} ${z.y} ${z.w} ${z.h}`)}
+$('#zin').onclick=()=>zoomBy(1.3);$('#zout').onclick=()=>zoomBy(1/1.3);$('#zreset').onclick=()=>{S.zoom=null;renderChart()};
+$('#conf').onchange=e=>document.body.classList.toggle('conf',e.target.checked);
+
+/* ---------- details panel ---------- */
+function showTab(t){document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+ document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='p-'+t))}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>showTab(b.dataset.t));
+function principlesFor(n){const txt=n.text+' '+n.footnotes.map(f=>f[1]).join(' ');
+ const cited=[...new Set(txt.match(/\b[A-Z]+-[A-Z]\b/g)||[])].filter(c=>B.principles.includes(c));
+ return B.chunks.filter(c=>cited.includes(c.page)).slice(0,4)}
+function predText(p){if(!p)return'';if(p.all)return'('+p.all.map(predText).join(' AND ')+')';if(p.any)return'('+p.any.map(predText).join(' OR ')+')';
+ if(p.not)return'NOT '+predText(p.not);return`${p.fact} ${p.op} ${JSON.stringify(p.value)}`}
+function pageBtn(p,nid){const ok=B.pages[p]||TEXT_PAGES.includes(p);return ok?`<button class="chip" data-go="${esc(p)}" data-n="${esc(nid||'')}">${esc(p)}</button>`:`<span class="chip">${esc(p)}</span>`}
+function renderDetails(){const el=$('#p-details');const n=S.sel&&NODES[S.sel];
+ if(!n){el.innerHTML=B.pages[S.page]?`<p class="muted">Click a box to see its condition, footnotes, linked pages and supporting text. Drag to pan, scroll to zoom.</p>`:`<p class="muted">Text page ${esc(S.page)}.</p>`;return}
+ let h=`<b>${esc(n.full)}</b><p>${esc(n.text)}</p>`;
+ if(n.pred)h+=`<h3>Branch condition</h3><div class="card"><code>${esc(predText(n.pred))}</code></div>`;
+ if(n.footnotes.length){h+='<h3>Footnotes</h3>'+n.footnotes.map(f=>`<span class="chip${S.fn===f[0]?' on':''}" data-fn="${esc(f[0])}">${esc(f[0])}</span>`).join('');
+  h+=n.footnotes.map(f=>`<div class="fnote${S.fn===f[0]?' on':''}"><sup>${esc(f[0])}</sup> ${esc(f[1])}</div>`).join('')}
+ const out=(B.children[n.full]||[]),inc=parents[n.full]||[];
+ if(n.links.length)h+='<h3>Refers to</h3>'+n.links.map(l=>pageBtn(l)).join('');
+ if(out.length)h+='<h3>Leads to</h3>'+out.map(c=>`<button class="choice" data-go="${esc(c.split(':')[0])}" data-n="${esc(c)}">${esc(c)}: ${esc(NODES[c].text.slice(0,80))}</button>`).join('');
+ if(inc.length)h+='<h3>Reached from</h3>'+inc.map(c=>`<button class="choice" data-go="${esc(c.split(':')[0])}" data-n="${esc(c)}">${esc(c)}: ${esc(NODES[c].text.slice(0,80))}</button>`).join('');
+ const pr=principlesFor(n);if(pr.length)h+='<h3>Cited principles</h3>'+pr.map(c=>`<div class="fnote"><b>${esc(c.page)}</b> ${esc(c.text.slice(0,420))}${c.text.length>420?'…':''}</div>`).join('');
+ h+=`<p><button id="startwalk">Start guided walk here</button></p>`;
+ el.innerHTML=h;
+ el.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go,b.dataset.n||null));
+ el.querySelectorAll('[data-fn]').forEach(b=>b.onclick=()=>{S.fn=S.fn===b.dataset.fn?null:b.dataset.fn;renderChart();renderDetails()});
+ $('#startwalk').onclick=()=>{startWalk(S.page,n.full)}}
+
+/* ---------- search ---------- */
+const DOCS=[];
+for(const [page,g] of Object.entries(B.pages))for(const n of g.nodes)DOCS.push({k:'box',page,id:page+':'+n.id,text:n.text,label:page+':'+n.id});
+const seenFn=new Set();for(const g of Object.values(B.pages))for(const n of g.nodes)for(const [r,t] of n.footnotes){if(!seenFn.has(r+t)){seenFn.add(r+t);DOCS.push({k:'footnote',page:null,text:t,label:'footnote '+r})}}
+for(const c of B.chunks)DOCS.push({k:c.source,page:c.page,text:c.text,label:c.page});
+function search(q){const toks=q.toLowerCase().split(/\s+/).filter(Boolean);if(!toks.length)return[];
+ return DOCS.map(d=>{const t=d.text.toLowerCase();if(!toks.every(w=>t.includes(w)))return null;
+  let sc=0;toks.forEach(w=>{sc+=t.split(w).length-1});return{d,s:sc/Math.sqrt(t.length)+(d.k==='box'?.05:0)}}).filter(Boolean).sort((a,b)=>b.s-a.s).slice(0,25).map(x=>x.d)}
+function snippet(d,q){const t=d.text,i=t.toLowerCase().indexOf(q.toLowerCase().split(/\s+/)[0]);const a=Math.max(0,i-30);return(a?'…':'')+t.slice(a,a+110)}
+$('#q').oninput=e=>{const q=e.target.value.trim(),r=$('#results');if(!q){r.style.display='none';return}
+ const hits=search(q);r.innerHTML=hits.map((d,i)=>`<div data-i="${i}"><b>${esc(d.label)}</b> <small>${esc(d.k)}</small><br>${esc(snippet(d,q))}</div>`).join('')||'<div class="muted">No matches</div>';
+ r.style.display='block';r.querySelectorAll('[data-i]').forEach(el=>el.onclick=()=>{const d=hits[+el.dataset.i];r.style.display='none';
+  if(d.k==='box')go(d.page,d.id);else if(d.page)go(d.page);else{const hit=DOCS.find(x=>x===d);const owner=Object.entries(B.pages).find(([p,g])=>g.nodes.some(n=>n.footnotes.some(f=>f[1]===d.text)));if(owner)go(owner[0])}})};
+document.addEventListener('click',e=>{if(!e.target.closest('.search'))$('#results').style.display='none'});
+
+/* ---------- guided walk + patient facts (port of navigator.py A4/A5 logic) ---------- */
+const hasFacts=()=>Object.values(S.facts).some(v=>v!==null&&v!==undefined);
+function factsDecideNext(kids,depth=3){let fr=[...kids];for(let i=0;i<depth;i++){const nx=[];
+ for(const n of fr){const gr=kidsOf(n);if(gr.length>1){const v=gr.map(c=>evaluate(PRED[c],S.facts));
+  if(v.filter(x=>x===true).length===1&&!v.includes(null))return true}nx.push(...gr)}fr=nx}return false}
+function reconvergence(kids,depth=3){const reach=kids.map(k=>{let seen=[],fr=[k];for(let i=0;i<depth;i++){fr=fr.flatMap(n=>kidsOf(n));seen=seen.concat(fr)}return seen});
+ return reach[0].find(n=>reach.slice(1).every(r=>r.includes(n)))||null}
+function autoStep(w){let guard=0;while(guard++<200){const kids=kidsOf(w.at);if(!kids.length||!hasFacts())return;
+  const here=getNode(w.at),last=w.path.length?w.path[w.path.length-1].by:null;
+  const pass=PRED[w.at]||(here.links&&here.links.length)||last==='entry'||factsDecideNext(kids);
+  if(kids.length===1&&!PRED[kids[0]]&&pass){w.path.push({node:kids[0],by:'single-arrow'});w.at=kids[0];continue}
+  const v=kids.map(c=>evaluate(PRED[c],S.facts)),tr=kids.filter((c,i)=>v[i]===true);
+  if(tr.length===1&&!v.includes(null)){w.path.push({node:tr[0],by:'predicate'});w.at=tr[0];continue}
+  const merge=kids.length>1&&v.includes(null)&&!tr.length?reconvergence(kids):null;
+  if(merge){w.path.push({node:merge,by:'reconverge',unresolved:kids});w.at=merge;continue}
+  return}}
+function startWalk(page,nid){const roots=B.roots[page]||[];const w={path:[],at:null};
+ if(nid){w.at=nid;w.path.push({node:nid,by:'entry'})}
+ else if(roots.length===1){w.at=roots[0];w.path.push({node:roots[0],by:'entry'})}
+ else if(roots.length){w.at=page+':START';w.path.push({node:w.at,by:'entry'})}
+ else return;
+ autoStep(w);S.walk=w;afterWalk()}
+function choose(c){S.walk.path.push({node:c,by:'manual'});S.walk.at=c;autoStep(S.walk);afterWalk()}
+function afterWalk(){const at=S.walk.at;const pg=at.split(':')[0];
+ if(S.page!==pg){go(pg,at.endsWith(':START')?null:at)}else{S.sel=at.endsWith(':START')?null:at;renderChart();renderDetails()}
+ renderWalk();showTab('walk')}
+function renderWalk(){const el=$('#p-walk'),w=S.walk;
+ if(!w){el.innerHTML='<p class="muted">Pick an algorithm page, then start a walk from its entry box (or from the selected box). At each step choose the branch that fits the patient; with facts entered, branches they decide are followed automatically.</p>'+
+  Object.keys(B.pages).map(p=>`<button class="chip" data-start="${esc(p)}">${esc(p)}</button>`).join('');
+  el.querySelectorAll('[data-start]').forEach(b=>b.onclick=()=>startWalk(b.dataset.start));return}
+ let h=`<div><button id="undo">Undo</button> <button id="reset">Reset</button> <button id="exp">Export path</button></div><h3>Path so far</h3>`;
+ h+=w.path.map((s,i)=>`<button class="crumb" data-i="${i}">${i+1}. ${esc(s.node)} <span class="muted">${esc(s.by)}${s.unresolved?' (skipped undecided branch)':''}</span><br>${esc(getNode(s.node).text.slice(0,70))}</button>`).join('');
+ const kids=kidsOf(w.at);h+='<h3>Next step</h3>';
+ if(!kids.length)h+='<div class="card">End of the encoded pathway for this box.</div>';
+ else{if(kids.length>1&&hasFacts())h+='<div class="card muted">Facts did not decide this branch; choose below.</div>';
+  h+=kids.map(c=>{const v=hasFacts()?evaluate(PRED[c],S.facts):null;const tag=v===true?' ✓ matches facts':v===false?' ✗ excluded by facts':'';
+   return`<button class="choice" data-c="${esc(c)}"${v===false?' style="opacity:.55"':''}>${esc(getNode(c).text.slice(0,120))}<span class="muted">${tag}</span></button>`}).join('')}
+ h+='<textarea id="expbox" readonly rows="3" style="width:100%;display:none;margin-top:8px"></textarea>';
+ el.innerHTML=h;
+ el.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>choose(b.dataset.c));
+ el.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{const nd=w.path[+b.dataset.i].node;go(nd.split(':')[0],nd.endsWith(':START')?null:nd)});
+ $('#undo').onclick=()=>{if(w.path.length>1){w.path.pop();w.at=w.path[w.path.length-1].node;afterWalk()}};
+ $('#reset').onclick=()=>{S.walk=null;renderChart();renderWalk()};
+ $('#exp').onclick=()=>{const t=$('#expbox');t.style.display='block';t.value=JSON.stringify(w.path.map(s=>s.node));t.select()}}
+
+/* facts form is derived from the predicates, so it follows whatever the guideline encodes */
+function collectFacts(p,acc){if(!p)return;if(p.all||p.any){(p.all||p.any).forEach(x=>collectFacts(x,acc));return}
+ if(p.not){collectFacts(p.not,acc);return}const f=acc[p.fact]=acc[p.fact]||{vals:new Set(),num:false,bool:false};
+ [].concat(p.value).forEach(v=>{if(typeof v==='number')f.num=true;else if(typeof v==='boolean')f.bool=true;else f.vals.add(v)})}
+const FACTS={};Object.values(PRED).forEach(p=>collectFacts(p,FACTS));
+function renderFacts(){const el=$('#p-facts'),names=Object.keys(FACTS).sort();
+ if(!names.length){el.innerHTML='<p class="muted">No branch conditions are encoded, so facts cannot decide branches.</p>';return}
+ let h='<p class="muted">Enter what you know. Blank means unknown. Only branches with an encoded condition can be decided automatically; others need your choice.</p>';
+ h+=names.map(n=>{const f=FACTS[n];let inp;
+  if(f.bool)inp=`<select data-f="${esc(n)}" data-t="bool"><option value="">unknown</option><option value="true">yes</option><option value="false">no</option></select>`;
+  else if(f.num&&!f.vals.size)inp=`<input type="number" step="any" data-f="${esc(n)}" data-t="num">`;
+  else if(f.vals.size&&!f.num)inp=`<select data-f="${esc(n)}" data-t="str"><option value="">unknown</option>${[...f.vals].sort().map(v=>`<option>${esc(v)}</option>`).join('')}</select>`;
+  else inp=`<input type="text" data-f="${esc(n)}" data-t="str">`;
+  return`<label class="field"><span>${esc(n.replace(/_/g,' '))}</span>${inp}</label>`}).join('');
+ h+=`<p><select id="fstart">${Object.keys(B.pages).map(p=>`<option${p===S.page?' selected':''}>${esc(p)}</option>`).join('')}</select></p>
+ <p><button class="primary" id="frun">Walk from this page with these facts</button> <button id="fclear">Clear</button></p>`;
+ el.innerHTML=h;
+ el.querySelectorAll('[data-f]').forEach(i=>{i.value=S.facts[i.dataset.f]===undefined||S.facts[i.dataset.f]===null?'':String(S.facts[i.dataset.f]);
+  i.onchange=()=>{const v=i.value;S.facts[i.dataset.f]=v===''?null:i.dataset.t==='num'?Number(v):i.dataset.t==='bool'?v==='true':v}});
+ $('#frun').onclick=()=>{el.querySelectorAll('[data-f]').forEach(i=>i.onchange());startWalk($('#fstart').value)};
+ $('#fclear').onclick=()=>{S.facts={};renderFacts()}}
+
+/* ---------- boot ---------- */
+$('#title').textContent=B.title;document.title=B.title;
+const nb=Object.values(B.pages).reduce((a,g)=>a+g.nodes.length,0),ne=Object.values(B.pages).reduce((a,g)=>a+g.edges.length,0);
+$('#stats').textContent=`${Object.keys(B.pages).length} algorithm pages · ${nb} boxes · ${ne} arrows · ${Object.keys(PRED).length} branch conditions`;
+renderFacts();renderWalk();
+window.addEventListener('hashchange',fromHash);
+if(!fromHash()){let p=null;try{p=localStorage.getItem('dash-page')}catch(e){}
+ const first=Object.keys(B.pages)[0];go(B.pages[p]||TEXT_PAGES.includes(p)?p:first)}
+window.__dash={S,startWalk,choose,evaluate};
+</script>
+</body>
+</html>

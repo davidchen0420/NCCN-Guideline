@@ -1,0 +1,192 @@
+{
+ "SAMPLE-1": {
+  "nodes": [
+   {
+    "id": "n1",
+    "kind": "box",
+    "text": "Sample patient presents for evaluation",
+    "bbox": [
+     300,
+     100,
+     490,
+     130
+    ],
+    "links": [],
+    "footnote_refs": []
+   },
+   {
+    "id": "n2",
+    "kind": "box",
+    "text": "Score at least 10?",
+    "bbox": [
+     300,
+     170,
+     490,
+     200
+    ],
+    "links": [],
+    "footnote_refs": []
+   },
+   {
+    "id": "n3",
+    "kind": "box",
+    "text": "Score 10 or more: Option A (see SAMPLE-2)",
+    "bbox": [
+     150,
+     260,
+     340,
+     300
+    ],
+    "links": [
+     "SAMPLE-2"
+    ],
+    "footnote_refs": [
+     "a"
+    ]
+   },
+   {
+    "id": "n4",
+    "kind": "box",
+    "text": "Score below 10: Option B",
+    "bbox": [
+     450,
+     260,
+     640,
+     300
+    ],
+    "links": [],
+    "footnote_refs": [
+     "b"
+    ]
+   },
+   {
+    "id": "n5",
+    "kind": "box",
+    "text": "Observe and repeat score in 6 months",
+    "bbox": [
+     450,
+     350,
+     640,
+     390
+    ],
+    "links": [],
+    "footnote_refs": []
+   }
+  ],
+  "edges": [
+   {
+    "src": "n1",
+    "dst": "n2",
+    "support": "agreed"
+   },
+   {
+    "src": "n2",
+    "dst": "n3",
+    "support": "agreed"
+   },
+   {
+    "src": "n2",
+    "dst": "n4",
+    "support": "verified"
+   },
+   {
+    "src": "n4",
+    "dst": "n5",
+    "support": "unsure"
+   }
+  ]
+ },
+ "SAMPLE-2": {
+  "nodes": [
+   {
+    "id": "n1",
+    "kind": "box",
+    "text": "Option A pathway starts",
+    "bbox": [
+     300,
+     100,
+     490,
+     130
+    ],
+    "links": [],
+    "footnote_refs": []
+   },
+   {
+    "id": "n2",
+    "kind": "box",
+    "text": "Age 65 or older",
+    "bbox": [
+     150,
+     200,
+     340,
+     230
+    ],
+    "links": [],
+    "footnote_refs": []
+   },
+   {
+    "id": "n3",
+    "kind": "box",
+    "text": "Age under 65",
+    "bbox": [
+     450,
+     200,
+     640,
+     230
+    ],
+    "links": [],
+    "footnote_refs": []
+   },
+   {
+    "id": "n4",
+    "kind": "box",
+    "text": "Standard schedule",
+    "bbox": [
+     150,
+     300,
+     340,
+     330
+    ],
+    "links": [],
+    "footnote_refs": [
+     "c"
+    ]
+   },
+   {
+    "id": "n5",
+    "kind": "box",
+    "text": "Intensive schedule",
+    "bbox": [
+     450,
+     300,
+     640,
+     330
+    ],
+    "links": [],
+    "footnote_refs": []
+   }
+  ],
+  "edges": [
+   {
+    "src": "n1",
+    "dst": "n2",
+    "support": "agreed"
+   },
+   {
+    "src": "n1",
+    "dst": "n3",
+    "support": "agreed"
+   },
+   {
+    "src": "n2",
+    "dst": "n4",
+    "support": "agreed"
+   },
+   {
+    "src": "n3",
+    "dst": "n5",
+    "support": "agreed"
+   }
+  ]
+ }
+}
