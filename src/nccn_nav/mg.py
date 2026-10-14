@@ -168,7 +168,8 @@ def build_facts(root):
     for run in ("a", "b"):
         raw = {}
         for f in sorted((root / "medguide").glob(f"facts_raw_{run}_*.json")):
-            raw.update(json.loads(f.read_text()))
+            for i, facts in json.loads(f.read_text()).items():  # files may add variables to a case
+                raw.setdefault(i, {}).update(facts)
         runs[run] = raw
     final, earlier, stats, rejected = {}, {}, {}, 0
     ids = sorted(set(runs["a"]) | set(runs["b"]))
