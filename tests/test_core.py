@@ -258,3 +258,35 @@ def test_sections_constrain_entry_boxes():
     assert evaluate(out["OSTEO-1:n0"], {"guideline_section": "Osteosarcoma", "stage": "I"}) is True
     assert evaluate(out["OSTEO-1:n0"], {"guideline_section": "Ewing Sarcoma", "stage": "I"}) is False
     assert "BONE-1:n0" not in out and preds == {"OSTEO-1:n0": {"fact": "stage", "op": "==", "value": "I"}}
+
+
+def test_structured_table_shares_spanning_cells():
+    from nccn_nav import tables
+
+    def line(y, x, text):
+        return {"text": text, "bbox": [x, y, x + 100, y + 8], "marker": None, "refs": []}
+
+    lines = [line(100, 30, "Intermediate"), line(100, 150, "Favorable intermediate"), line(100, 400, "PROS-4"),
+             line(130, 150, "Unfavorable intermediate"), line(130, 400, "PROS-5"), line(90, 30, "Risk Group")]
+    t = [{"title": "", "layout": "pathway",
+          "columns": [{"header": "Risk Group", "kind": "condition"}, {"header": "", "kind": "condition"},
+                      {"header": "", "kind": "reference"}],
+          "rows": [{"cells": ["Intermediate", "Favorable intermediate", "PROS-4"]},
+                   {"cells": ["Intermediate", "Unfavorable intermediate", "PROS-5"]},
+                   {"cells": ["Invented row", "x", "PROS-9"]}]}]
+    kept, rejected = tables.validate_tables(t, lines)
+    assert len(kept[0]["rows"]) == 2 and rejected
+    nodes, edges = tables.tables_to_graph(kept, lines, "Risk (PROS-2)")
+    by_text = {n["text"]: n for n in nodes}
+    inter = by_text["Intermediate"]["id"]
+    assert sum(e["src"] == "t_root" for e in edges) == 1  # one shared "Intermediate" node
+    assert {e["dst"] for e in edges if e["src"] == inter} == {by_text["Favorable intermediate"]["id"],
+                                                             by_text["Unfavorable intermediate"]["id"]}
+    assert by_text["PROS-5"]["links"] == ["PROS-5"] and by_text["PROS-5"]["role"] == "table_ref"
+
+
+def test_page_reference_parsing():
+    from nccn_nav.bundle import PAGE_REF_RE
+
+    got = [m.groups() for m in PAGE_REF_RE.finditer("Active Surveillance Program (PROS-F 2 of 5); see PROS-3")]
+    assert got == [("PROS", "F", "2", "5"), ("PROS", "3", None, None)]

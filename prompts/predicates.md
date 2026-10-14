@@ -26,6 +26,7 @@ Rules:
   - or the condition needs a variable the schema does not have;
   - or the condition needs a judgement that is not a fact.
   Do not invent variables. A wrong condition is worse than null.
+- A line may carry "section": the disease or subtype section of the guideline this page belongs to (from the page heading). Code already requires the patient to be in that section before any entry box applies, so encode only the rest of the condition. For example, an entry box "Metastatic Ewing sarcoma" in section "Ewing Sarcoma" is the metastatic-status condition alone. An entry box that only names the section's disease, or that lists workup or treatment, is null.
 - For "See X" or link-only boxes, encode the condition stated in the box or its parent. If there is none, use null.
 
 Check that the file is valid JSON. Reply only with the counts of non-null and null predicates.

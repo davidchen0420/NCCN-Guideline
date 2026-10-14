@@ -42,6 +42,7 @@ class Guideline:
         schema_path = self.private / "fact_schema.json"
         self.schema = json.loads(schema_path.read_text()) if schema_path.exists() else {"variables": {}}
         self.nodes, self.children, self.roots = {}, {}, {}
+        self.page_headers = {page: [n for n in g["nodes"] if n["kind"] == "header"] for page, g in pages.items()}
         for page, g in pages.items():
             has_parent = {e["dst"] for e in g["edges"]}
             for n in g["nodes"]:

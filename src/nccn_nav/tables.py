@@ -1,14 +1,23 @@
 """Table and list pages as decision graphs.
 
 Some NCCN pages state decisions as tables or headed lists instead of arrows. A Haiku agent
-(prompts/table_decisions.md) copies their rows into tables/<PAGE>.json as
-{"rows": [{"header", "condition", "recommendation"}]}. Here code checks every row against
-the page's own text and turns the kept rows into the same graph form as a flowchart:
+(prompts/table_decisions.md) copies them into tables_v2/<PAGE>.json as
+{"tables": [{"title", "layout", "columns": [{"header", "kind"}], "rows": [{"cells": [...]}]}]}.
+Here code checks every cell against the page's own text and turns the tables into the same
+graph form as a flowchart:
+
+  pathway table: t_root -> first cell -> next cell -> ... -> next-page reference, one path per
+                 row; a cell repeated in consecutive rows (a span such as "Intermediate" over
+                 "Favorable"/"Unfavorable intermediate") becomes one shared node.
+  lookup table:  t_root -> row label -> "<column header>: <cell>" for every filled cell.
+
+Boxes the flowchart extractor found on the page that the table covers (the same grid read as
+loose boxes) are dropped with their arrows, so a page has one representation.
+
+The first format, tables/<PAGE>.json {"rows": [{"header", "condition", "recommendation"}]},
+is still read for pages without a structured table:
 
   t_root (page entry) -> t<i>_c (condition) -> t<i>_r (recommendation)
-
-A row without a condition (a plain list item) links the root straight to its recommendation.
-The predicates step then writes conditions for the t<i>_c nodes like any other branch.
 
   python -m nccn_nav.tables check private/<slug>    rows kept/rejected per page
 """
@@ -105,6 +114,104 @@ def to_graph(rows, lines, title):
     return nodes, edges
 
 
+PAGE_REF_RE = re.compile(r"\b([A-Z][A-Z0-9_/]{1,11}-[A-Z0-9]+(?: \d+ of \d+)?)\b")
+ROLE = {"condition": "table_condition", "recommendation": "table_rec", "reference": "table_ref", "note": "table_note"}
+
+
+def validate_tables(tables, lines):
+    """(tables with unsupported cells blanked, list of rejections). A row whose first filled
+    cell is not on the page is dropped (its path would start from an invented condition)."""
+    index = page_index(lines)
+    out, rejected = [], []
+    for t in tables or []:
+        if not isinstance(t, dict):
+            continue
+        cols = [c if isinstance(c, dict) else {"header": str(c), "kind": "condition"} for c in t.get("columns", [])]
+        for c in cols:
+            if coverage(c.get("header") or "", index) < MIN_COVER:
+                rejected.append((c.get("header"), "header not on page"))
+                c["header"] = ""
+        rows = []
+        for r in t.get("rows", []):
+            cells = list(r.get("cells", []) if isinstance(r, dict) else r)
+            cells = [(c or "").strip() if isinstance(c, str) else "" for c in cells][:max(len(cols), 1)]
+            cells += [""] * (len(cols) - len(cells))
+            filled = [i for i, c in enumerate(cells) if c]
+            if not filled:
+                continue
+            bad = [i for i in filled if coverage(cells[i], index) < MIN_COVER]
+            if filled[0] in bad:
+                rejected.append((cells, "first cell not on page"))
+                continue
+            for i in bad:
+                rejected.append((cells[i], "cell not on page"))
+                cells[i] = ""
+            rows.append(cells)
+        if rows:
+            out.append({"title": (t.get("title") or "").strip(), "layout": t.get("layout", "pathway"),
+                        "columns": cols, "rows": rows})
+    return out, rejected
+
+
+def tables_to_graph(tables, lines, title):
+    nodes = [{"id": "t_root", "text": title, "kind": "box", "bbox": [0, 0, 0, 0], "role": "table_root",
+              "links": [], "footnote_refs": []}]
+    edges, seen = [], set()
+
+    def add_edge(a, b):
+        if (a, b) not in seen:
+            seen.add((a, b))
+            edges.append({"src": a, "dst": b, "support": "table"})
+
+    def node(nid, text, role, column):
+        nodes.append({"id": nid, "text": text, "kind": "box", "bbox": _bbox_of(text, lines), "role": role,
+                      "column": column, "links": PAGE_REF_RE.findall(text), "footnote_refs": []})
+
+    for ti, t in enumerate(tables):
+        top = "t_root"
+        if len(tables) > 1 and t["title"]:
+            top = f"t{ti}"
+            node(top, t["title"], "table_title", "")
+            add_edge("t_root", top)
+        cols = t["columns"]
+        if t["layout"] == "lookup":
+            for ri, cells in enumerate(t["rows"]):
+                label = cells[0] or f"row {ri + 1}"
+                rid = f"t{ti}_{ri}_0"
+                node(rid, label, "table_condition", cols[0]["header"] if cols else "")
+                add_edge(top, rid)
+                for ci in range(1, len(cells)):
+                    if cells[ci]:
+                        head = cols[ci]["header"] if ci < len(cols) else ""
+                        vid = f"t{ti}_{ri}_{ci}"
+                        node(vid, f"{head}: {cells[ci]}" if head else cells[ci], "table_value", head)
+                        add_edge(rid, vid)
+            continue
+        trie = {}  # path of (column, text) -> node id: identical leading cells share a node
+        for ri, cells in enumerate(t["rows"]):
+            parent, path = top, ()
+            for ci, cell in enumerate(cells):
+                kind = cols[ci].get("kind", "condition") if ci < len(cols) else "condition"
+                if not cell:
+                    continue
+                if kind == "note":  # explanatory cells annotate the node before them
+                    prev = next((n for n in nodes if n["id"] == parent), None)
+                    if prev is not None:
+                        prev.setdefault("notes", []).append(cell)
+                    continue
+                path += ((ci, cell),)
+                if path not in trie:
+                    trie[path] = f"t{ti}_{ri}_{ci}"
+                    node(trie[path], cell, ROLE.get(kind, "table_condition"), cols[ci]["header"] if ci < len(cols) else "")
+                add_edge(parent, trie[path])
+                parent = trie[path]
+    return nodes, edges
+
+
+def covered(text, cells_index):
+    return coverage(text, cells_index) >= MIN_COVER
+
+
 def apply(root, merged):
     """Add table graphs to merged pages (called by consensus.merge_all). Returns
     {page: (kept, rejected)}."""
@@ -113,7 +220,7 @@ def apply(root, merged):
 
     root = Path(root)
     tdir = root / "tables"
-    if not tdir.exists():
+    if not tdir.exists() and not (root / "tables_v2").exists():
         return {}
     spec = Spec(root)
     configure(spec)
@@ -121,6 +228,31 @@ def apply(root, merged):
     from .guideline import fname
 
     for page in merged:
+        f2 = root / "tables_v2" / f"{fname(page)}.json"
+        if f2.exists():
+            try:
+                tables = json.loads(f2.read_text()).get("tables", [])
+            except (json.JSONDecodeError, AttributeError):
+                report[page] = (0, -1)
+                continue
+            lines = _text_lines(spec.doc[spec.index_of(page)])
+            kept, rejected = validate_tables(tables, lines)
+            report[page] = (sum(len(t["rows"]) for t in kept), len(rejected))
+            if not kept:
+                continue
+            g = merged[page]
+            title = next((n["text"] for n in g["nodes"] if n["kind"] == "header"), page)
+            nodes, edges = tables_to_graph(kept, lines, f"{title} ({page})")
+            # Loose boxes that are the same grid (their text lies in the table) go.
+            cells = [{"text": c} for t in kept for r in t["rows"] for c in r] + \
+                    [{"text": c["header"]} for t in kept for c in t["columns"]] + [{"text": t["title"]} for t in kept]
+            cindex = page_index(cells)
+            drop = {n["id"] for n in g["nodes"] if n["kind"] == "box" and not n["id"].startswith("t")
+                    and covered(n["text"], cindex)}
+            g["nodes"] = [n for n in g["nodes"] if not n["id"].startswith("t") and n["id"] not in drop] + nodes
+            g["edges"] = [e for e in g["edges"] if e.get("support") != "table"
+                          and e["src"] not in drop and e["dst"] not in drop] + edges
+            continue
         f = tdir / f"{fname(page)}.json"
         if not f.exists():
             continue
