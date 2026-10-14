@@ -36,7 +36,9 @@ Derived from the licensed NCCN PDF, which is not included. Page images and embed
 - **Entry boxes:** 24 of 25 now have a condition (own, inherited or section).
 - **Arrows:** no single-source arrows remain on prostate pages.
 
-## Intermediate files (inputs to `guideline.json`)
+## Older intermediate files (snapshots, not updated)
+
+The files below are earlier snapshots of the intermediate files `guideline.json` is built from. They predate the structured tables, the extra vision and image-check rounds and the condition repair. Read everything from `guideline.json`; these are kept only for provenance.
 
 | File | Contents |
 |---|---|

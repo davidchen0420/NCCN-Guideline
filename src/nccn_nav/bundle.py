@@ -312,7 +312,8 @@ class Bundler:
                 continue
             rec["reached_from"] = srcs
             rec["link_condition"] = gl.link_conditions.get(r)
-            if rec.get("predicate") is None and rec["link_condition"] is not None:
+            if rec.get("predicate") is None and rec["link_condition"] is not None \
+                    and rec.get("predicate_status") != "rejected":
                 rec["predicate"] = rec["link_condition"]
                 rec["predicate_status"] = "inherited_from_link"
                 rec.setdefault("decision_type", "condition")
