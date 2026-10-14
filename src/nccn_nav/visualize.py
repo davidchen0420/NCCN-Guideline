@@ -14,6 +14,8 @@ import re
 import sys
 from pathlib import Path
 
+from .pdfvec import footnote_text
+
 W, H = 792, 612  # PDF page size in points
 TOP, BOTTOM = 85, 560
 
@@ -95,10 +97,11 @@ select(D.pages[start]||start==='overview'?start:'overview');
 def build(private):
     private = Path(private)
     graphs = json.loads((private / "merged_graphs.json").read_text())
-    preds = json.loads((private / "predicates.json").read_text())
+    pred_path = private / "predicates.json"
+    preds = json.loads(pred_path.read_text()) if pred_path.exists() else {}
     notes = json.loads((private / "footnotes.json").read_text())
     pages, links = {}, set()
-    order = sorted(graphs, key=lambda p: int(re.sub(r"\D", "", p)))
+    order = list(graphs)  # document order
     for page in order:
         g = graphs[page]
         nodes = []
@@ -108,7 +111,8 @@ def build(private):
             nid = f"{page}:{n['id']}"
             nodes.append({"id": n["id"], "text": n["text"], "bbox": n["bbox"], "pred": preds.get(nid),
                           "links": n.get("links", []),
-                          "footnotes": [[r, notes[r]] for r in n.get("footnote_refs", []) if r in notes]})
+                          "footnotes": [[r, footnote_text(notes, page, r)] for r in n.get("footnote_refs", [])
+                                        if footnote_text(notes, page, r)]})
             for link in n.get("links", []):
                 target = re.sub(r"\s.*", "", link)
                 if target != page:
