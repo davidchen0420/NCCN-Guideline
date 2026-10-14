@@ -8,23 +8,24 @@
   "PROS-3": [],
   "PROS-4": [],
   "PROS-5": [],
-  "PROS-6": [
-   "unattached_arrows:2"
-  ],
+  "PROS-6": [],
   "PROS-7": [],
   "PROS-8": [],
   "PROS-9": [],
-  "PROS-10": [],
+  "PROS-10": [
+   "unattached_arrows:1"
+  ],
   "PROS-11": [],
   "PROS-12": [
    "orphans:1"
   ],
-  "PROS-13": [
-   "unattached_arrows:2"
-  ],
+  "PROS-13": [],
   "PROS-14": [],
   "PROS-15": [],
-  "PROS-16": [],
+  "PROS-16": [
+   "unattached_arrows:2",
+   "dead_ends:1"
+  ],
   "PROS-17": [],
   "PROS-18": [
    "no_edges",
@@ -34,16 +35,16 @@
  "audit_sample": [
   "PROS-1",
   "PROS-17",
-  "PROS-9"
+  "PROS-8"
  ],
  "e2_pages": [
   "PROS-2",
-  "PROS-6",
+  "PROS-10",
   "PROS-12",
-  "PROS-13",
+  "PROS-16",
   "PROS-18",
   "PROS-1",
   "PROS-17",
-  "PROS-9"
+  "PROS-8"
  ]
 }

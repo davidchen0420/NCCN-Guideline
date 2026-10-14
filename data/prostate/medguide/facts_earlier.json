@@ -3,15 +3,15 @@
 "psa_ng_ml": 0.98
 },
 "M101": {
-"m_category": "M0",
-"psa_ng_ml": 0.021
+"psa_ng_ml": 0.021,
+"m_category": "M0"
 },
 "M103": {
 "psa_ng_ml": 0.3
 },
 "M104": {
-"m_category": "M0",
-"psa_ng_ml": 0.4
+"psa_ng_ml": 0.4,
+"m_category": "M0"
 },
 "M105": {
 "psa_ng_ml": 4.2
@@ -20,15 +20,15 @@
 "psa_ng_ml": 2.1
 },
 "M107": {
-"m_category": "M0",
-"psa_ng_ml": 1.8
+"psa_ng_ml": 1.8,
+"m_category": "M0"
 },
 "M109": {
 "psa_ng_ml": 3.2
 },
 "M110": {
-"m_category": "M0",
-"psa_ng_ml": 6.4
+"psa_ng_ml": 6.4,
+"m_category": "M0"
 },
 "M111": {
 "psa_ng_ml": 3.8
@@ -37,8 +37,8 @@
 "psa_ng_ml": 3.2
 },
 "M113": {
-"m_category": "M0",
-"psa_ng_ml": 2.8
+"psa_ng_ml": 2.8,
+"m_category": "M0"
 },
 "M115": {
 "psa_ng_ml": 2.3
@@ -65,8 +65,8 @@
 "psa_ng_ml": 8.2
 },
 "M125": {
-"m_category": "M0",
-"psa_ng_ml": 2.1
+"psa_ng_ml": 2.1,
+"m_category": "M0"
 },
 "M128": {
 "m_category": "M0"
@@ -75,8 +75,8 @@
 "psa_ng_ml": 2.1
 },
 "M131": {
-"m_category": "M0",
-"psa_ng_ml": 3.2
+"psa_ng_ml": 3.2,
+"m_category": "M0"
 },
 "M133": {
 "psa_ng_ml": 8.2
@@ -91,8 +91,8 @@
 "psa_ng_ml": 3.2
 },
 "M137": {
-"m_category": "M0",
-"psa_ng_ml": 4.5
+"psa_ng_ml": 4.5,
+"m_category": "M0"
 },
 "M139": {
 "psa_ng_ml": 8.2
@@ -104,8 +104,8 @@
 "m_category": "M0"
 },
 "M142": {
-"m_category": "M1",
-"psa_ng_ml": 8.5
+"psa_ng_ml": 8.5,
+"m_category": "M1"
 },
 "M143": {
 "m_category": "M0"
@@ -120,37 +120,39 @@
 "psa_ng_ml": 7.8
 },
 "M149": {
-"m_category": "M0",
-"psa_ng_ml": 0.015
+"psa_ng_ml": 0.015,
+"m_category": "M0"
 },
 "M152": {
-"m_category": "M0",
-"psa_ng_ml": 4.0
+"psa_ng_ml": 4.0,
+"m_category": "M0"
 },
 "M154": {
 "psa_ng_ml": 2.5
 },
 "M155": {
-"m_category": "M0",
-"psa_ng_ml": 0.05
+"psa_ng_ml": 0.05,
+"m_category": "M0"
 },
 "M158": {
-"m_category": "M0",
-"psa_ng_ml": 0.045
+"psa_ng_ml": 0.045,
+"m_category": "M0"
 },
 "M159": {
 "psa_ng_ml": 8.0
 },
 "M161": {
-"m_category": "M0",
 "psa_ng_ml": {
 "min": null,
-"max": 0.1
-}
+"max": 0.1,
+"min_open": false,
+"max_open": false
+},
+"m_category": "M0"
 },
 "M164": {
-"m_category": "M0",
-"psa_ng_ml": 0.005
+"psa_ng_ml": 0.005,
+"m_category": "M0"
 },
 "M165": {
 "psa_ng_ml": 0.014
@@ -225,8 +227,8 @@
 "psa_ng_ml": 1.3
 },
 "M95": {
-"m_category": "M0",
-"psa_ng_ml": 5.8
+"psa_ng_ml": 5.8,
+"m_category": "M0"
 },
 "M97": {
 "psa_ng_ml": 2.1

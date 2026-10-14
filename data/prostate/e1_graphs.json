@@ -4294,7 +4294,7 @@
    },
    {
     "src": "n195_387",
-    "dst": "n153_594"
+    "dst": "n224_594"
    },
    {
     "src": "n252_364",
@@ -4354,9 +4354,9 @@
    }
   ],
   "footnotes": {},
-  "n_connectors": 20,
-  "n_brackets": 8,
-  "n_unattached": 2,
+  "n_connectors": 18,
+  "n_brackets": 10,
+  "n_unattached": 0,
   "page_id": "PROS-6"
  },
  "PROS-7": {
@@ -5487,7 +5487,7 @@
     "links": [
      "PROS-10"
     ],
-    "role": "branch",
+    "role": "leaf",
     "follow_up": false
    },
    {
@@ -5978,10 +5978,6 @@
     "dst": "n207_628"
    },
    {
-    "src": "n205_441",
-    "dst": "n254_573"
-   },
-   {
     "src": "n219_345",
     "dst": "n205_441"
    },
@@ -6031,8 +6027,8 @@
    }
   ],
   "footnotes": {},
-  "n_connectors": 19,
-  "n_brackets": 14,
+  "n_connectors": 18,
+  "n_brackets": 15,
   "n_unattached": 0,
   "page_id": "PROS-8"
  },
@@ -7491,10 +7487,6 @@
   ],
   "edges": [
    {
-    "src": "n136_356",
-    "dst": "n248_187"
-   },
-   {
     "src": "n162_291",
     "dst": "n136_356"
    },
@@ -7570,7 +7562,7 @@
   "footnotes": {},
   "n_connectors": 19,
   "n_brackets": 13,
-  "n_unattached": 0,
+  "n_unattached": 1,
   "page_id": "PROS-10"
  },
  "PROS-11": {
@@ -9288,9 +9280,9 @@
    "xx": "ADT alone (PROS-G) or observation are recommended for asymptomatic patients with metastatic disease or M0 CRPC and life expectancy \u22645 years.",
    "yy": "See Principles of MDT (PROS-M)."
   },
-  "n_connectors": 8,
-  "n_brackets": 6,
-  "n_unattached": 2,
+  "n_connectors": 6,
+  "n_brackets": 7,
+  "n_unattached": 0,
   "page_id": "PROS-13"
  },
  "PROS-14": {
@@ -10775,7 +10767,7 @@
     ],
     "id": "n178_452",
     "links": [],
-    "role": "branch",
+    "role": "entry",
     "follow_up": false
    },
    {
@@ -11077,7 +11069,7 @@
     ],
     "id": "n251_396",
     "links": [],
-    "role": "step",
+    "role": "leaf",
     "follow_up": false
    },
    {
@@ -11226,7 +11218,7 @@
     ],
     "id": "n336_452",
     "links": [],
-    "role": "branch",
+    "role": "entry",
     "follow_up": false
    },
    {
@@ -11309,14 +11301,6 @@
     "dst": "n231_696"
    },
    {
-    "src": "n251_396",
-    "dst": "n178_452"
-   },
-   {
-    "src": "n251_396",
-    "dst": "n336_452"
-   },
-   {
     "src": "n273_267",
     "dst": "n251_396"
    },
@@ -11340,7 +11324,7 @@
   },
   "n_connectors": 14,
   "n_brackets": 17,
-  "n_unattached": 0,
+  "n_unattached": 2,
   "page_id": "PROS-16"
  },
  "PROS-17": {

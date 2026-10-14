@@ -200,3 +200,52 @@ Prostate's engine alone now matches Haiku with no context, and it is right 92% o
   | AML | 0.91 |
 
 **Process note:** some Haiku sub-agents made stray tool calls that weren't asked for: creating or archiving a remote session, or posting a task suggestion. Each was withdrawn or denied, and no files were affected. Later prompts restrict agents to Read/Write/Bash.
+
+## 9. Code review fixes (systematic review of `src/nccn_nav`)
+
+**The 10 findings fixed:**
+- **Strict thresholds:** they were silently lost. `round(x, 4)` erased the offset that kept ">10" strict. Intervals now carry explicit open bounds, so "PSA >10" satisfies ">10", fails "≤10", and is undecidable for ">12".
+- **E1 geometry:**
+  - vertical arrows are recognised only when the arrowhead sits on the stroke's own axis; bracket pieces split by a touching arrow were previously misread as arrows;
+  - bent-arrow tracing follows right-angle corners only, never fan-out stems or other arrows;
+  - top or bottom box exits/entries must be within 10pt of the box edge.
+- **Label checks:** `label_check*.json` was silently ignored. It is now applied: 22 of 166 prostate items are excluded as label-inconsistent.
+- **Option mapping leaked the gold path:**
+  - Options were mapped only within the gold path's subtree, with ties broken toward the gold path.
+  - Now each option maps to every look-alike box in the whole guideline, and ambiguous boxes make the engine abstain.
+  - An item is valid only if its path ends on a box that the answer option, and no other option, matches.
+- **Earlier-state facts** can no longer override a branch the current facts already select.
+- **One benchmark engine:** `bench_medguide.py` is now a thin wrapper around `mg.score`.
+- **MedGUIDE trees** live in `NCCN Guidelines/medguide_trees.json` and can be overridden on the command line, so the benchmark is no longer hard-coded to 4 guidelines.
+- **One shared text-similarity function** replaces three diverging copies.
+- **Dead code** was removed.
+- **Unit tests** were added (`tests/test_core.py`, 12 tests, no NCCN content): bounds, intervals, units, quote validation, derivation, engine rules, and E1 on a synthetic vector PDF.
+
+**Gold-page edge F1 after the fixes:**
+- No guideline got worse, and AML improved.
+- The final graph had dipped on colon until 37 newly disputed arrows got the image check; it is back to 0.96.
+
+| Guideline | E1 vector alone | Final graph |
+|---|---|---|
+| Prostate | 0.98 | 0.98 |
+| NSCLC | 0.98 | 0.98 |
+| SCLC | 0.86 | 0.92 |
+| Colon | 0.92 | 0.96 |
+| Rectal | 0.71 | 0.85 |
+| Breast | 1.00 | — |
+| AML | 0.94 (from 0.91) | — |
+
+**MedGUIDE held-out test, under the stricter benchmark:**
+
+| Test split | n | Majority box | A0 | A5 engine (correct / answered) | Shuffled facts | **A5 + A0** |
+|---|---|---|---|---|---|---|
+| Prostate | 75 (8 label-inconsistent excluded) | 0.29 | 0.73 | 0.80 (60/60) | 0.33 | **0.96 ± 0.04** |
+| Colon | 80 (154 valid of 182 overall) | 0.24 | 0.60 | 0.58 (46/49) | 0.13 | **0.76 ± 0.09** |
+| NSCLC | 122 | 0.19 | 0.90 | 0.32 (39/39) | 0.12 | 0.90 ± 0.05 |
+| SCLC | 17 | 1.00 | 0.71 | 0.71 (12/12) | 0.71 | uninformative |
+
+**Why these numbers moved:**
+- They are not comparable one-to-one with round 3. The item sets changed: label checks are now applied, and colon validity uses the all-option rule, which admits 18 more colon items.
+- When the engine answers it is now almost always right: prostate 60/60, NSCLC 39/39, colon 46/49. Ambiguous option boxes make it abstain rather than guess, which raises its precision.
+- The shuffled-facts control stays far below the engine (0.12–0.33), so the gains come from each case's own facts.
+- **One Haiku-only arm is weak:** Haiku answered "C" for all 18 newly valid colon items. Those items share one answer pattern, which inflates A0 slightly on colon.
