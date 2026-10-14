@@ -1,23 +1,18 @@
 {
- "psa_trend": {
-  "extracted": 165,
-  "agreed": 158,
-  "disagreed": 7
- },
  "psa_doubling_time_months": {
   "extracted": 166,
   "agreed": 164,
   "disagreed": 2
  },
- "testosterone_ng_dl": {
-  "extracted": 160,
-  "agreed": 159,
-  "disagreed": 1
- },
  "m_category": {
   "extracted": 165,
   "agreed": 159,
   "disagreed": 6
+ },
+ "prior_arpi_treatment": {
+  "extracted": 60,
+  "agreed": 28,
+  "disagreed": 32
  },
  "definitive_treatment_received": {
   "extracted": 154,
@@ -29,50 +24,55 @@
   "agreed": 156,
   "disagreed": 8
  },
- "prior_arpi_treatment": {
-  "extracted": 60,
-  "agreed": 28,
-  "disagreed": 32
+ "psa_status": {
+  "extracted": 120,
+  "agreed": 95,
+  "disagreed": 25
  },
  "crpc_stated": {
   "extracted": 141,
   "agreed": 139,
   "disagreed": 2
  },
- "psa_status": {
-  "extracted": 120,
-  "agreed": 95,
-  "disagreed": 25
+ "testosterone_ng_dl": {
+  "extracted": 160,
+  "agreed": 159,
+  "disagreed": 1
+ },
+ "psa_trend": {
+  "extracted": 165,
+  "agreed": 158,
+  "disagreed": 7
  },
  "psa_ng_ml": {
   "extracted": 71,
   "agreed": 69,
   "disagreed": 2
  },
+ "symptomatic_progression": {
+  "extracted": 62,
+  "agreed": 50,
+  "disagreed": 12
+ },
  "bone_metastases_beyond_vertebrae_pelvis_count": {
   "extracted": 40,
   "agreed": 6,
   "disagreed": 34
- },
- "bone_metastases_count": {
-  "extracted": 35,
-  "agreed": 3,
-  "disagreed": 32
- },
- "visceral_metastases_present": {
-  "extracted": 31,
-  "agreed": 1,
-  "disagreed": 30
  },
  "castration_resistant": {
   "extracted": 115,
   "agreed": 33,
   "disagreed": 82
  },
- "symptomatic_progression": {
-  "extracted": 62,
-  "agreed": 50,
-  "disagreed": 12
+ "visceral_metastases_present": {
+  "extracted": 31,
+  "agreed": 1,
+  "disagreed": 30
+ },
+ "bone_metastases_count": {
+  "extracted": 35,
+  "agreed": 3,
+  "disagreed": 32
  },
  "metastasis_timing": {
   "extracted": 42,
