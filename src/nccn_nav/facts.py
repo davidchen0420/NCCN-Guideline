@@ -98,6 +98,18 @@ def _convert(x, unit, target):
     return round(x * factor, 4)
 
 
+def validate_with_history(extracted, schema, case_text):
+    """(current facts, earlier facts, rejected). An item may carry "earlier": {"value", "quote"}
+    when the case states a different earlier state (e.g. M0 at diagnosis of CRPC, M1 now)."""
+    current, rejected = validate(extracted, schema, case_text)
+    earlier_items = {k: v["earlier"] for k, v in (extracted or {}).items()
+                     if isinstance(v, dict) and isinstance(v.get("earlier"), dict)}
+    for k, v in earlier_items.items():
+        v.setdefault("unit", (extracted[k] or {}).get("unit"))
+    earlier, rej2 = validate(earlier_items, schema, case_text)
+    return current, earlier, rejected + rej2
+
+
 def validate(extracted, schema, case_text):
     """Typed facts from one LLM extraction. Values must cite a quote found in the case text.
     Returns (facts, rejected) where rejected lists (name, reason)."""

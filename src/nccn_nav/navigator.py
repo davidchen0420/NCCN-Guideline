@@ -141,6 +141,14 @@ def _auto_step(gl, state):
             state["path"].append({"node": true[0], "by": "predicate"})
             state["at"] = true[0]
             continue
+        if state.get("initial"):
+            # Undecided on the current state: the branch may describe an earlier point in time.
+            early = {c: evaluate(gl.predicates.get(c), state["initial"]) for c in kids}
+            etrue = [c for c, v in early.items() if v is True]
+            if len(etrue) == 1 and all(v is not None for v in early.values()):
+                state["path"].append({"node": etrue[0], "by": "predicate-earlier"})
+                state["at"] = etrue[0]
+                continue
         # "Otherwise" branch: every sibling with a condition is false and exactly one sibling has
         # no condition at all (e.g. an unlabelled default arm), so that one is taken.
         unconditioned = [c for c in kids if gl.predicates.get(c) is None]
@@ -158,17 +166,19 @@ def _auto_step(gl, state):
         return
 
 
-def walk(gl, facts, max_entries=None):
+def walk(gl, facts, max_entries=None, earlier=None):
     """A5 without an LLM: choose the entry box(es) whose entry condition the facts satisfy, then
     follow predicates. Returns one walk per matching entry: {"entry", "path", "final"}.
     Facts are raw values; derived variables (risk group, stage group, ...) are computed first."""
+    initial = derive({**facts, **(earlier or {})}, gl.schema) if earlier else None
     facts = derive(facts, gl.schema)
     entries = sorted({r for roots in gl.roots.values() for r in roots})
-    verdicts = {r: evaluate(gl.predicates.get(r), facts) for r in entries}
-    chosen = [r for r, v in verdicts.items() if v is True][:max_entries]  # every entry the facts satisfy
+    # An entry describes where the patient started: the current or the earlier state may match it.
+    chosen = [r for r in entries if evaluate(gl.predicates.get(r), facts) is True
+              or (initial and evaluate(gl.predicates.get(r), initial) is True)][:max_entries]
     out = []
     for root in chosen:
-        state = {"at": root, "path": [{"node": root, "by": "entry"}], "facts": facts}
+        state = {"at": root, "path": [{"node": root, "by": "entry"}], "facts": facts, "initial": initial}
         _auto_step(gl, state)
         out.append({"entry": root, "path": [p["node"] for p in state["path"]], "final": state["at"]})
     return out

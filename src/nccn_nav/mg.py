@@ -140,7 +140,7 @@ def map_all(root):
 def build_facts(root):
     """Validate both extraction runs against the schema and the case text, keep only facts the
     two runs agree on, and report per-variable extraction statistics."""
-    from .facts import agreement, validate
+    from .facts import agreement, validate_with_history
 
     root = Path(root)
     schema = json.loads((root / "fact_schema.json").read_text())
@@ -151,16 +151,18 @@ def build_facts(root):
         for f in sorted((root / "medguide").glob(f"facts_raw_{run}_*.json")):
             raw.update(json.loads(f.read_text()))
         runs[run] = raw
-    final, stats, rejected = {}, {}, 0
+    final, earlier, stats, rejected = {}, {}, {}, 0
     ids = sorted(set(runs["a"]) | set(runs["b"]))
     for i in ids:
-        va, ra = validate(runs["a"].get(i, {}), schema, items[i]["profile"])
-        vb, rb = validate(runs["b"].get(i, {}), schema, items[i]["profile"])
+        va, ea, ra = validate_with_history(runs["a"].get(i, {}), schema, items[i]["profile"])
+        vb, eb, rb = validate_with_history(runs["b"].get(i, {}), schema, items[i]["profile"])
         rejected += len(ra) + len(rb)
         if not runs["b"]:
             keep, disagree = va, []  # single run: no agreement filter
+            earlier[i] = ea
         else:
             keep, disagree = agreement(va, vb)
+            earlier[i] = agreement(ea, eb)[0]
         final[i] = keep
         for name in set(va) | set(vb):
             st = stats.setdefault(name, {"extracted": 0, "agreed": 0, "disagreed": 0})
@@ -168,6 +170,7 @@ def build_facts(root):
             st["agreed"] += name in keep
             st["disagreed"] += name in disagree
     (root / "medguide" / "facts_final.json").write_text(json.dumps(final, indent=0))
+    (root / "medguide" / "facts_earlier.json").write_text(json.dumps({k: v for k, v in earlier.items() if v}, indent=0))
     (root / "medguide" / "facts_stats.json").write_text(json.dumps(stats, indent=1))
     n = len(ids)
     tot_ext = sum(v["extracted"] for v in stats.values())
@@ -177,7 +180,7 @@ def build_facts(root):
           f"schema variables never extracted {len(set(schema['variables']) - set(stats))}/{len(schema['variables'])}")
 
 
-def engine_answer(gl, facts, option_nodes, n_options=None):
+def engine_answer(gl, facts, option_nodes, n_options=None, earlier=None):
     """Answer from deterministic walks from every entry the facts satisfy: the first option box
     each walk passes through last; abstain if walks disagree.
     Abstain (None) when walks disagree or no option box is reached. (An earlier rule that took
@@ -187,7 +190,7 @@ def engine_answer(gl, facts, option_nodes, n_options=None):
     for letter, node in option_nodes.items():
         inverse.setdefault(node, []).append(letter)
     answers = set()
-    for w in walk(gl, facts):
+    for w in walk(gl, facts, earlier=earlier):
         # The last option box reached (chosen on the dev split over "first": 36/51 vs 14/51 on colon).
         hit = [n for n in w["path"] if n in inverse]
         if hit:
@@ -212,11 +215,12 @@ def score(root, split_name="test"):
     mapping = json.loads((root / "medguide" / "mapping.json").read_text())
     checks = _load(root, "label_check.json")
     facts = _load(root, "facts_final.json")
+    earlier = _load(root, "facts_earlier.json")
     a0 = _load(root, *sorted(f.name for f in (root / "medguide").glob("A0_*.json")))
     ids = [i for i in items if split[i] == split_name and mapping[i]["valid"]
            and checks.get(i, {}).get("verdict", "consistent") == "consistent"]
-    a5 = {i: engine_answer(gl, facts.get(i, {}), mapping[i]["option_nodes"], len(items[i]["options"]))
-          for i in ids} if facts else {}
+    a5 = {i: engine_answer(gl, facts.get(i, {}), mapping[i]["option_nodes"], len(items[i]["options"]),
+                           earlier.get(i)) for i in ids} if facts else {}
     # Controls. (1) Majority box: always pick the option at the answer box most common among
     # dev items, which shows how much a tree's items share one answer. (2) The engine run on
     # facts shuffled between items, which shows how much the case's own facts matter.
@@ -233,7 +237,8 @@ def score(root, split_name="test"):
 
     shuffled_ids = ids[:]
     _random.Random(0).shuffle(shuffled_ids)
-    shuffled = {i: engine_answer(gl, facts.get(j, {}), mapping[i]["option_nodes"]) for i, j in zip(ids, shuffled_ids)} if facts else {}
+    shuffled = {i: engine_answer(gl, facts.get(j, {}), mapping[i]["option_nodes"], None, earlier.get(j))
+                for i, j in zip(ids, shuffled_ids)} if facts else {}
     rows = [("B majority box (dev)", majority), ("A0 no context", a0), ("A5 engine (abstains)", a5),
             ("A5 shuffled facts", shuffled), ("A5 + A0 fallback", {i: a5.get(i) or a0.get(i) for i in ids})]
     print(f"{root.name} [{split_name}] scored items: {len(ids)} "

@@ -203,11 +203,37 @@ def extract_page_graph(doc, index):
             # Both ends near a head: one belongs to another arrow ending on the same bar
             # (e.g. a junction's exit arrow); the end touching its own head is the closer one.
             ha, hb = da < db, db < da
-        if abs(a[0] - b[0]) < 1:
-            # Vertical strokes are box brackets (an arrow may touch one mid-way, splitting it).
+        if abs(a[0] - b[0]) < 1 and not (ha != hb and abs(a[1] - b[1]) > 6):
+            # Vertical strokes are box brackets (an arrow may touch one mid-way, splitting it);
+            # a vertical stroke with an arrowhead at exactly one end is a downward/upward arrow.
             brackets.append({"x": a[0], "y0": min(a[1], b[1]), "y1": max(a[1], b[1])})
         elif ha != hb:
             connectors.append((b, a) if ha else (a, b))  # (tail, head)
+
+    # Bent arrows (loop-backs drawn as several segments meeting at corners, arrowhead only on the
+    # last piece): walk back from the tail through segments that join it end to end.
+    def extend(tail, used):
+        for _ in range(8):
+            nxt = None
+            for seg in segments:
+                if seg in used:
+                    continue
+                for end, other in ((seg[0], seg[1]), (seg[1], seg[0])):
+                    if math.hypot(end[0] - tail[0], end[1] - tail[1]) < 1.5 and head_dist(other) >= 8:
+                        nxt = (seg, other)
+                        break
+                if nxt:
+                    break
+            if not nxt:
+                return tail
+            used.add(nxt[0])
+            tail = nxt[1]
+        return tail
+
+    head_segments = {}
+    for a, b in segments:
+        head_segments[(a, b)] = True
+    connectors = [(extend(t, {seg for seg in segments if t in seg and h in seg}), h) for t, h in connectors]
 
     brackets = _merge_collinear(brackets)
     # Everything below the lowest connector or bracket is the footnote block.
@@ -250,7 +276,8 @@ def extract_page_graph(doc, index):
                 # ("... or Cabozantinib --> Progression").
                 cands.append((0, box["id"]))
                 continue
-            if side == "src" and x1 > pt[0] + 15:
+            leaves_vertically = x0 <= pt[0] <= x1 and not (box["bbox"][1] <= pt[1] <= box["bbox"][3])
+            if side == "src" and x1 > pt[0] + 15 and not leaves_vertically:
                 continue
             enters_vertically = x0 <= pt[0] <= x1 and not (box["bbox"][1] <= pt[1] <= box["bbox"][3])
             if side == "dst" and x0 < pt[0] - 15 and not enters_vertically:

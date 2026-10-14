@@ -4446,8 +4446,13 @@
    },
    {
     "src": "n195_387",
+    "dst": "n153_594",
+    "support": "e1_only"
+   },
+   {
+    "src": "n195_387",
     "dst": "n224_594",
-    "support": "agreed"
+    "support": "e2_only"
    },
    {
     "src": "n252_364",
@@ -4521,9 +4526,9 @@
    }
   ],
   "footnotes": {},
-  "n_connectors": 18,
-  "n_brackets": 10,
-  "n_unattached": 0,
+  "n_connectors": 20,
+  "n_brackets": 8,
+  "n_unattached": 2,
   "page_id": "PROS-6"
  },
  "PROS-7": {
@@ -5676,7 +5681,7 @@
     "links": [
      "PROS-10"
     ],
-    "role": "leaf",
+    "role": "branch",
     "follow_up": false
    },
    {
@@ -6173,6 +6178,11 @@
     "support": "agreed"
    },
    {
+    "src": "n205_441",
+    "dst": "n254_573",
+    "support": "e1_only"
+   },
+   {
     "src": "n219_345",
     "dst": "n205_441",
     "support": "agreed"
@@ -6234,8 +6244,8 @@
    }
   ],
   "footnotes": {},
-  "n_connectors": 18,
-  "n_brackets": 15,
+  "n_connectors": 19,
+  "n_brackets": 14,
   "n_unattached": 0,
   "page_id": "PROS-8"
  },
@@ -7712,7 +7722,7 @@
    {
     "src": "n136_356",
     "dst": "n248_187",
-    "support": "verified"
+    "support": "agreed"
    },
    {
     "src": "n162_291",
@@ -7811,8 +7821,8 @@
    }
   ],
   "footnotes": {},
-  "n_connectors": 18,
-  "n_brackets": 14,
+  "n_connectors": 19,
+  "n_brackets": 13,
   "n_unattached": 0,
   "page_id": "PROS-10"
  },
@@ -8608,7 +8618,7 @@
     ],
     "id": "n226_15",
     "links": [],
-    "role": "entry",
+    "role": "step",
     "follow_up": false
    },
    {
@@ -9013,7 +9023,7 @@
    {
     "src": "n151_552",
     "dst": "n226_15",
-    "support": "verified"
+    "support": "agreed"
    },
    {
     "src": "n190_570",
@@ -9106,8 +9116,8 @@
    "rr": "Enzalutamide with or without leuprolide is an option for patients who have the following high-risk criteria: M0 by CT, MRI, or bone scan; PSADT \u22649 months; PSA \u22652 ng/mL above nadir after RT or \u22651 ng/mL after RP with or without postoperative RT; and not considered a candidate for pelvic-directed therapy (Freedland SJ, et al. N Engl J Med 2023;389:1453-1465). See Principles of Androgen Deprivation Therapy (PROS-G).",
    "ss": "Apalutamide plus ADT is an option for patients with biochemical recurrence after RP who meet the following high-risk criteria: PSADT \u22649 months; PSA \u22650.5 ng/ mL; and prior adjuvant or secondary RT or not considered a candidate for RT (Aggarwal R, et al. J Clin Oncol 2024;42:1114-1123.) See Principles of Androgen Deprivation Therapy (PROS-G)."
   },
-  "n_connectors": 15,
-  "n_brackets": 9,
+  "n_connectors": 16,
+  "n_brackets": 8,
   "n_unattached": 0,
   "page_id": "PROS-12"
  },
@@ -9569,9 +9579,9 @@
    "xx": "ADT alone (PROS-G) or observation are recommended for asymptomatic patients with metastatic disease or M0 CRPC and life expectancy \u22645 years.",
    "yy": "See Principles of MDT (PROS-M)."
   },
-  "n_connectors": 6,
-  "n_brackets": 7,
-  "n_unattached": 0,
+  "n_connectors": 8,
+  "n_brackets": 6,
+  "n_unattached": 2,
   "page_id": "PROS-13"
  },
  "PROS-14": {

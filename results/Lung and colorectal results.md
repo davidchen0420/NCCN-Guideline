@@ -150,3 +150,53 @@ Each cell shows accuracy over all items, with the "correct / answered" count in 
 3. **MedGUIDE is a weak test:** the trees are narrow, labels come from older guideline versions, and SCLC has a single answer box. A purpose-built vignette set covering whole guidelines is needed.
 4. **Rectal dense table pages** remain the weakest extraction.
 5. **The extraction runs can't be pinned to temperature 0,** because sub-agents can't set it. Two-run agreement stands in for that; a scripted API pipeline should pin temperature 0 and cache results.
+
+## 8. Round 3: time-aware facts, bent arrows, unseen guidelines
+
+**Changes (all general; chosen on dev items):**
+- **Time-aware facts.** An extracted fact can carry `earlier: {value, quote}` when the case states a different earlier state (for example M0 at CRPC diagnosis, M1 now). In the engine:
+  - an entry box counts as satisfied if the current or the earlier state matches it;
+  - at each branch, the current state is tried first, then the earlier one.
+  - Prostate and colon were re-extracted with two runs each, and 72 of 166 prostate cases carry an earlier state.
+- **E1 arrows:**
+  - vertical arrows (a vertical stroke with one arrowhead) are no longer read as brackets;
+  - bent loop-back arrows are traced through corner joints;
+  - arrows may leave a box from its top or bottom edge.
+
+**MedGUIDE held-out test, round 2 → round 3:**
+
+| Test split | A0 | A5 engine (correct / answered) | A5 + A0 |
+|---|---|---|---|
+| Prostate (n=83) | 0.71 | 0.51 (42/48) → **0.72 (60/65)** | 0.88 → **0.90 ± 0.06** |
+| Colon (n=68) | 0.53 | 0.60 (41/61) → 0.60 (41/62) | 0.69 → 0.69 |
+| NSCLC (n=122) | 0.90 | 0.29 (35/35), unchanged | 0.90 |
+| SCLC (n=17) | 0.71 | unchanged; the benchmark is uninformative (single answer box) | 1.00 |
+
+Prostate's engine alone now matches Haiku with no context, and it is right 92% of the time it answers.
+
+**Colon gained nothing, and the reasons are in the cases rather than the encoding:**
+- most colon cases don't state MMR status, so the pMMR/MSS branch is undecidable;
+- few cases record a "workup negative first, positive later" sequence explicitly, so the earlier-state logic rarely applies.
+
+**Generalizability: the local pipeline run unchanged on 3 guidelines it was never tuned on:**
+
+| Guideline | Page prefixes found automatically | Algorithm pages | Unattached arrows | Pages flagged for the vision check | Gold page edge F1 (E1 alone) |
+|---|---|---|---|---|---|
+| Breast | BINV, DCIS, IBC, PAGET, PHYLL, PREG | 36 | 0% | 50% | BINV-15: 1.00 |
+| AML | AML, APL, BPDCN, EVAL | 23 | 0% | 35% | APL-5: 0.91 (misses one routed loop-back) |
+| Antiemesis (supportive care) | AE, PEDAE | 31 | 1% | 74% | not scored |
+
+- Antiemesis is mostly tables and dosing lists rather than flowcharts: 31% of its boxes are orphans. Guidelines like it need a table-to-decision encoder, which is the main generalization gap.
+- Gold-page edge F1 after round 3 (E1 alone):
+
+  | Guideline | Edge F1 |
+  |---|---|
+  | Prostate | 0.98 |
+  | NSCLC | 0.97 |
+  | SCLC | 0.86 |
+  | Colon | 0.92 |
+  | Rectal | 0.71 |
+  | Breast | 1.00 |
+  | AML | 0.91 |
+
+**Process note:** some Haiku sub-agents made stray tool calls that weren't asked for: creating or archiving a remote session, or posting a task suggestion. Each was withdrawn or denied, and no files were affected. Later prompts restrict agents to Read/Write/Bash.
