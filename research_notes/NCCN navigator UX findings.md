@@ -1,28 +1,36 @@
 # NCCN Guidelines Navigator: UX observations used to design our dashboard
 
-Scope: interaction design only. No NCCN guideline text, data payloads, API calls or code were copied.
+Scope: interaction design only. No NCCN guideline text, data payloads, API calls, source code or image assets were copied.
 
-## What REA could and could not reach
-- REA 6.4.0 (`npx rea-agents`, MIT) drove a headless Chromium over CDP (`list-browser-targets`, `analyze-web-bundle`).
-- The public Prostate "Guidelines Detail" page links to "NCCN Guidelines Navigator™ — Interactive Digital Guideline Tool" at `guidelines.nccn.org/guidelines/prostate`.
-- That app redirects to an NCCN OAuth login (free account). We did **not** sign in or bypass it, so its runtime UI, bundle and network behaviour were **not** inspected.
-- Findings below come from NCCN's public description (launch release, June 2025) and the public landing pages.
+## What was and wasn't observable
+- REA 6.4.0 (`npx rea-agents`, MIT) drove a headless Chromium over CDP against NCCN's public pages (`nccn.org/navigator`, the Prostate "Guidelines Detail" page).
+- The Navigator app itself (`guidelines.nccn.org/guidelines/prostate`) redirects to an NCCN login. Sign-in from the agent session was blocked by the session's permission system, so **the real app's runtime UI, layout, styling and network behaviour were not inspected**. This document is therefore built from NCCN's public feature description only; the dashboard approximates the behaviours, not the look.
+- Follow-up if wanted: capture screenshots from a signed-in session (by the account holder) and refine the layout and styling from those.
 
-## Publicly described behaviour
-- Same content as the PDF, as an interactive tool.
-- Move through it with a table of contents or search; search autocompletes and has filters.
-- Selecting an answer at a decision node highlights the matching pathway(s).
-- Sections are colour-coded and linked; footnotes link from the pathways; zoom is supported.
-- Direct links to patient guidelines and the PDF; built-in tutorial/FAQ; mobile friendly.
+## Publicly described features (NCCN's page and the June 2025 launch release)
+1. Same content as the PDF in a digital format.
+2. Move through a guideline with the table of contents or search.
+3. Select answers in nodes to highlight relevant pathways.
+4. Sections are colour-coded and linked.
+5. A **Clear** button resets selected answers.
+6. Footnotes are viewable directly from the pathways.
+7. Search auto-completes typed prompts; filters highlight content of interest.
+8. Zoom, including zooming out to see the whole algorithm.
+9. Built-in tutorial and FAQ; links to the PDF and to patient guidelines; mobile friendly.
+10. Chemotherapy order template links (subscribers only) and AI search for a limited set of diseases are mentioned as available/planned. Not replicated.
 
-## What our dashboard copies (the interaction ideas)
-| Navigator idea | Our version |
+## How the dashboard implements each
+| Navigator feature | Dashboard |
 |---|---|
-| Table of contents | Left sidebar grouped into algorithm pages, principles, discussion; filterable |
-| Pick an answer to highlight a pathway | Guided walk: choose a child at each box; the path is highlighted on the chart and in a breadcrumb |
-| Linked footnotes | Clickable footnote letters on a box open the footnote text in the side panel |
-| Linked sections | "See PROS-x" boxes jump to that page; back/forward and deep links |
-| Search with autocomplete | Client-side search over boxes, footnotes and principles/discussion chunks |
-| Zoom | Wheel/drag/buttons on the flowchart |
+| Table of contents | Left list: algorithm pages (blue), principles (teal), discussion (amber); filterable; drawer on mobile |
+| Select answers → pathway highlight | Click a box: it becomes an answer; all pathways through the selected boxes (ancestors and descendants, across linked pages) are highlighted and the rest dim; chips in the Details tab remove one answer |
+| Clear | Toolbar **Clear** button |
+| Footnotes from pathways | Hover a box for a footnote preview; Details tab lists them and highlights every box using one |
+| Colour-coded linked sections | Section colour on page list and link chips; "See PROS-x" boxes jump to the page; Back/Forward and deep links |
+| Search auto-complete + filters | Word completions, filter chips (All, Algorithm, Footnotes, Principles, Discussion), arrow-key and Enter navigation |
+| Zoom / whole algorithm | Wheel, +/−, Fit; **Whole guideline** map of all pages and their links |
+| Tutorial and FAQ | **? Help** dialog, shown on first visit |
+| PDF / patient guidelines | Toolbar links to NCCN's public pages |
+| Mobile | Single column, page list in a drawer |
 
-Our addition: a patient-facts form that decides branches automatically from `predicates.json` and says where judgment is needed.
+Our additions (not in NCCN's tool): guided walk with undo/export, and a patient-facts form that follows branches the encoded conditions can decide.

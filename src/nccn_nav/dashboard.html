@@ -59,20 +59,47 @@ code{font-size:11px;word-break:break-all}
 .field{display:grid;grid-template-columns:1fr 120px;gap:6px;align-items:center;margin:4px 0;font-size:13px}
 .card{background:var(--box);border-radius:8px;padding:10px;margin:8px 0;font-size:13px}
 @media (max-width:1000px){#app{grid-template-columns:1fr;grid-auto-rows:auto;overflow:auto}body{height:auto}aside{max-height:none}#side{max-height:200px}}
+:root{--sec-alg:#2563eb;--sec-pri:#0d9488;--sec-dis:#d97706;--sec-oth:#78716c}
+#side button.pg{border-left:3px solid transparent}
+#side button.pg[data-sec=alg],.chip[data-sec=alg]{border-left:3px solid var(--sec-alg)}
+#side button.pg[data-sec=pri],.chip[data-sec=pri]{border-left:3px solid var(--sec-pri)}
+#side button.pg[data-sec=dis],.chip[data-sec=dis]{border-left:3px solid var(--sec-dis)}
+.node.dim,.e.dim{opacity:.18}.e.path{stroke:var(--sec-alg)!important;stroke-width:2;stroke-dasharray:none!important}
+.node.path rect{stroke:var(--sec-alg);stroke-width:1.8}
+.node.ans rect{fill:color-mix(in srgb,var(--sec-alg) 22%,var(--box));stroke:var(--sec-alg);stroke-width:2.6}
+.toolbar a{font-size:12px;color:var(--link);text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:4px 8px}
+.toolbar a:hover{border-color:var(--link)}
+#menu{display:none}
+.filters{display:flex;flex-wrap:wrap;gap:4px;padding:6px 10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel)}
+#results div.active{background:var(--box)}#results .sugg{display:flex;flex-wrap:wrap;gap:4px;cursor:default}
+#results .sugg:hover{background:none}
+#tip{position:fixed;max-width:360px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px;
+pointer-events:none;display:none;box-shadow:0 4px 18px rgba(0,0,0,.18);z-index:30}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:40;padding:16px}
+#modal.on{display:flex}#modal .box{background:var(--panel);border-radius:12px;max-width:640px;width:100%;max-height:86vh;overflow:auto;padding:18px 20px}
+#modal h2{margin:0 0 8px;font-size:17px}#modal h4{margin:14px 0 4px;font-size:13px}#modal ol,#modal ul{margin:4px 0 4px 18px;padding:0}
+#modal details{margin:6px 0}#modal summary{cursor:pointer;font-weight:600}
+.mapnode{cursor:pointer}.mapnode rect{stroke-width:1.5;fill:var(--box)}.mapnode text{font-size:10px;fill:var(--ink);text-anchor:middle}
+@media (max-width:1000px){#menu{display:inline-block}#side{display:none;max-height:none}#side.open{display:block}
+#app{display:flex;flex-direction:column;overflow:auto}main{min-height:70vh}#panel{border-left:0;border-top:1px solid var(--line)}
+.toolbar a,.toolbar label{display:none}}
 </style>
 </head>
 <body>
 <header>
+  <button id="menu" aria-label="Toggle page list">☰</button>
   <div><h1 id="title">Guideline dashboard</h1><div class="sub" id="stats"></div></div>
-  <div class="search"><input type="search" id="q" placeholder="Search boxes, footnotes, principles, discussion" aria-label="Search"><div id="results"></div></div>
+  <div class="search"><input type="search" id="q" placeholder="Search boxes, footnotes, principles, discussion" aria-label="Search" autocomplete="off"><div id="results"></div></div>
+  <button id="help">? Help</button>
 </header>
 <div id="app">
   <aside id="side"><input type="search" id="pf" placeholder="Filter pages" aria-label="Filter pages"><div id="pagelist"></div></aside>
   <main>
     <div class="toolbar">
-      <button id="zout" aria-label="Zoom out">−</button><button id="zin" aria-label="Zoom in">+</button><button id="zreset">Fit</button>
+      <button id="zout" aria-label="Zoom out">−</button><button id="zin" aria-label="Zoom in">+</button><button id="zreset">Fit</button><button id="map" title="Zoom out to the whole guideline">Whole guideline</button><button id="clear" title="Clear selected answers">Clear</button>
       <button id="back">◀ Back</button><button id="fwd">Forward ▶</button>
       <label><input type="checkbox" id="conf"> show extraction confidence</label>
+      <a href="https://www.nccn.org/guidelines/category_1" target="_blank" rel="noopener">NCCN PDF</a><a href="https://www.nccn.org/patients" target="_blank" rel="noopener">Patient guidelines</a>
       <span id="pagetitle" style="margin-left:auto;font-weight:600"></span>
     </div>
     <div id="chart"></div>
@@ -89,6 +116,24 @@ code{font-size:11px;word-break:break-all}
     <div class="pane" id="p-facts"></div>
   </aside>
 </div>
+<div id="tip"></div>
+<div id="modal" role="dialog" aria-modal="true" aria-label="Help"><div class="box">
+<h2>How to use this navigator</h2>
+<ol>
+<li><b>Move around</b>: pick a page in the left list (colour = section: blue algorithm, teal principles, amber discussion) or use search.</li>
+<li><b>Select answers</b>: click a box to answer at that node. The pathway through it is highlighted and everything else dims. Click again to unselect; <b>Clear</b> resets all answers.</li>
+<li><b>Footnotes</b>: hover a box to preview its footnotes; open the Details tab to read them and highlight every box that uses one.</li>
+<li><b>Linked pages</b>: boxes that say "See PROS-x" jump to that page; Back and Forward retrace your steps.</li>
+<li><b>Zoom</b>: scroll or use + and −; <b>Whole guideline</b> zooms out to a map of all pages.</li>
+<li><b>Patient facts</b>: enter what you know and run a walk; conditions that the facts decide are followed automatically.</li>
+</ol>
+<h4>FAQ</h4>
+<details><summary>Why does a walk stop?</summary>The box has no encoded condition, or a needed fact is blank. Choose the branch yourself.</details>
+<details><summary>Are the branch conditions clinician-reviewed?</summary>No. They are machine-drafted from the guideline and flagged as drafts. Always check the source guideline.</details>
+<details><summary>What do the arrow styles mean?</summary>Turn on "show extraction confidence": dashed blue arrows were confirmed by image review, dotted red ones are uncertain.</details>
+<details><summary>Is this the official NCCN tool?</summary>No. It is an independent research prototype. For clinical decisions use the official NCCN Guidelines.</details>
+<p style="text-align:right"><button class="primary" id="closehelp">Got it</button></p>
+</div></div>
 <script>
 /*PREDICATES_JS*/
 </script>
@@ -99,7 +144,8 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const NODES={},PRED={};
 for(const [page,g] of Object.entries(B.pages)){for(const n of g.nodes){const id=page+':'+n.id;NODES[id]={...n,page,full:id};if(n.pred)PRED[id]=n.pred}}
 const parents={};for(const [s,ks] of Object.entries(B.children))for(const k of ks)(parents[k]=parents[k]||[]).push(s);
-const S={page:null,sel:null,fn:null,walk:null,facts:{},zoom:null,hist:[],hpos:-1};
+const S={page:null,sel:null,fn:null,walk:null,facts:{},zoom:null,hist:[],hpos:-1,ans:new Set(),sf:'all'};
+const secOf=p=>B.pages[p]?'alg':B.principles.includes(p)?'pri':B.discussion.includes(p)?'dis':'oth';
 const TEXT_PAGES=[...B.principles,...B.discussion];
 function getNode(id){if(id.endsWith(':START')){const p=id.split(':')[0];return{text:'Entry of '+p,page:p,full:id,links:[],footnotes:[]}}return NODES[id]}
 function kidsOf(id){return id.endsWith(':START')?B.roots[id.split(':')[0]]:(B.children[id]||[])}
@@ -107,7 +153,7 @@ function kidsOf(id){return id.endsWith(':START')?B.roots[id.split(':')[0]]:(B.ch
 /* ---------- sidebar ---------- */
 function renderList(){const f=$('#pf').value.toLowerCase();let h='';
  const grp=(name,items,fmt)=>{items=items.filter(p=>p.toLowerCase().includes(f));if(!items.length)return;
-  h+=`<div class="group">${name}</div>`+items.map(p=>`<button class="pg${p===S.page?' on':''}" data-p="${esc(p)}"><span>${esc(p)}</span><small>${fmt(p)}</small></button>`).join('')};
+  h+=`<div class="group">${name}</div>`+items.map(p=>`<button class="pg${p===S.page?' on':''}" data-p="${esc(p)}" data-sec="${secOf(p)}"><span>${esc(p)}</span><small>${fmt(p)}</small></button>`).join('')};
  grp('Algorithm pages',Object.keys(B.pages),p=>B.pages[p].nodes.length+' boxes');
  grp('Principles',B.principles,p=>B.chunks.filter(c=>c.page===p).length+' §');
  grp('Discussion',B.discussion,p=>B.chunks.filter(c=>c.page===p).length+' §');
@@ -117,13 +163,13 @@ $('#pf').oninput=renderList;
 
 /* ---------- navigation / history ---------- */
 function go(page,nid,fromHist){
- if(!B.pages[page]&&!TEXT_PAGES.includes(page))return;
+ if(page!=='__map'&&!B.pages[page]&&!TEXT_PAGES.includes(page))return;
  if(S.page!==page){S.zoom=null;S.fn=null}
  S.page=page;S.sel=nid||null;
  if(!fromHist){S.hist=S.hist.slice(0,S.hpos+1);S.hist.push([page,nid||null]);S.hpos=S.hist.length-1;
   try{history.replaceState(null,'','#'+page+(nid?':'+nid.split(':')[1]:''))}catch(e){}
   try{localStorage.setItem('dash-page',page)}catch(e){}}
- renderList();renderChart();renderDetails();$('#pagetitle').textContent=page}
+ renderList();renderChart();renderDetails();$('#pagetitle').textContent=page==='__map'?'Whole guideline':page}
 $('#back').onclick=()=>{if(S.hpos>0){S.hpos--;go(...S.hist[S.hpos],true)}};
 $('#fwd').onclick=()=>{if(S.hpos<S.hist.length-1){S.hpos++;go(...S.hist[S.hpos],true)}};
 function fromHash(){const h=decodeURIComponent(location.hash.slice(1));if(!h)return false;
@@ -136,28 +182,50 @@ function anchor(b,t){const[cx,cy]=center(b);const dx=t[0]-cx,dy=t[1]-cy;const hw
 function walkSets(){const nodes=new Set(),edges=new Set();let cur=null;
  if(S.walk){let prev=null;for(const st of S.walk.path){nodes.add(st.node);if(prev)edges.add(prev+'>'+st.node);prev=st.node}cur=S.walk.at}
  return{nodes,edges,cur}}
+function pathSets(){const nodes=new Set(),edges=new Set();if(!S.ans.size)return{nodes,edges};
+ const walk=(start,next,fwd)=>{const seen=new Set([start]),st=[start];while(st.length){const x=st.pop();nodes.add(x);
+  for(const y of next(x)||[]){edges.add(fwd?x+'>'+y:y+'>'+x);if(!seen.has(y)){seen.add(y);st.push(y)}}}};
+ for(const a of S.ans){walk(a,kidsFn,true);walk(a,parFn,false)}
+ return{nodes,edges}}
+const kidsFn=x=>B.children[x],parFn=x=>parents[x];
+function renderMap(){const ps=Object.keys(B.pages),cols=Math.min(6,ps.length),cw=130,rh=84,pos={};
+ ps.forEach((p,i)=>pos[p]=[20+(i%cols)*cw,24+Math.floor(i/cols)*rh]);
+ const extra=[...new Set(B.links.map(l=>l[1]).filter(x=>!pos[x]))].sort(),base=24+Math.ceil(ps.length/cols)*rh+10;
+ extra.forEach((p,i)=>pos[p]=[20+(i%cols)*cw,base+Math.floor(i/cols)*50]);
+ const H=Math.max(...Object.values(pos).map(v=>v[1]))+50;let g=`<svg viewBox="0 0 ${cols*cw+20} ${H}" style="cursor:default">`;
+ B.links.forEach(([a,b])=>{if(!pos[a]||!pos[b]||a===b)return;const[x1,y1]=pos[a],[x2,y2]=pos[b];
+  g+=`<path d="M${x1+50},${y1+14} Q${(x1+x2)/2+50},${Math.min(y1,y2)-18} ${x2+50},${y2+14}" fill="none" stroke="var(--link)" opacity=".35"/>`});
+ Object.entries(pos).forEach(([p,[x,y]])=>{const flow=!!B.pages[p];
+  g+=`<g class="mapnode" data-p="${esc(p)}"><rect x="${x}" y="${y}" width="100" height="28" rx="6" stroke="var(--sec-${secOf(p)})"/><text x="${x+50}" y="${y+18}">${esc(p)}${flow?' · '+B.pages[p].nodes.length:''}</text></g>`});
+ $('#chart').innerHTML=`<p class="muted">Whole guideline: algorithm pages (blue) and the pages they refer to. Click a page to open it.</p>${g}</svg>`;
+ $('#chart').querySelectorAll('.mapnode').forEach(el=>el.onclick=()=>go(el.dataset.p))}
 function renderChart(){const box=$('#chart');
+ if(S.page==='__map'){renderMap();$('#legend').style.display='none';return}
  if(!B.pages[S.page]){const cs=B.chunks.filter(c=>c.page===S.page);
   box.innerHTML=cs.map(c=>`<div class="card"><b>${esc(c.page)}</b> <span class="muted">${esc(c.source)}</span><p>${esc(c.text)}</p></div>`).join('')||'<p class="muted">No text.</p>';
   $('#legend').style.display='none';return}
  $('#legend').style.display='';
  const g=B.pages[S.page],byId={};g.nodes.forEach(n=>byId[n.id]=n);
- const z=S.zoom||(S.zoom={x:0,y:B.top,w:B.w,h:B.bottom-B.top});const ws=walkSets();
+ const z=S.zoom||(S.zoom={x:0,y:B.top,w:B.w,h:B.bottom-B.top});const ws=walkSets(),PATH=pathSets();
  let s=`<svg viewBox="${z.x} ${z.y} ${z.w} ${z.h}"><defs></defs>`;
  g.edges.forEach(e=>{const a=byId[e.src],b=byId[e.dst];if(!a||!b)return;
   const p1=anchor(a.bbox,center(b.bbox)),p2=anchor(b.bbox,center(a.bbox));
-  const w=ws.edges.has(S.page+':'+e.src+'>'+S.page+':'+e.dst)?' walk':'';
+  const ek=S.page+':'+e.src+'>'+S.page+':'+e.dst;const w=(ws.edges.has(ek)?' walk':'')+(S.ans.size?(PATH.edges.has(ek)?' path':' dim'):'');
   s+=`<path class="e ${e.cls}${w}" d="M${p1[0]},${p1[1]} L${p2[0]},${p2[1]}"/>`;
   const ang=Math.atan2(p2[1]-p1[1],p2[0]-p1[0]),L=5;
   s+=`<path class="e ${e.cls}${w}" d="M${p2[0]-L*Math.cos(ang-.45)},${p2[1]-L*Math.sin(ang-.45)} L${p2[0]},${p2[1]} L${p2[0]-L*Math.cos(ang+.45)},${p2[1]-L*Math.sin(ang+.45)}"/>`});
  g.nodes.forEach(n=>{const[x0,y0,x1,y1]=n.bbox,full=S.page+':'+n.id;
-  const cls=['node',n.kind==='header'?'hdr':'',n.pred?'pred':'',n.links.length?'ref':'',full===S.sel?'sel':'',ws.nodes.has(full)?'walk':'',full===ws.cur?'cur':'',
+  const cls=['node',n.kind==='header'?'hdr':'',n.pred?'pred':'',n.links.length?'ref':'',full===S.sel?'sel':'',ws.nodes.has(full)?'walk':'',full===ws.cur?'cur':'',S.ans.has(full)?'ans':'',(S.ans.size&&PATH.nodes.has(full))?'path':'',(S.ans.size&&n.kind==='box'&&!PATH.nodes.has(full))?'dim':'',
    S.fn&&n.footnotes.some(f=>f[0]===S.fn)?'fn':''].filter(Boolean).join(' ');
   const fn=n.footnotes.length?`<sup> ${n.footnotes.map(f=>esc(f[0])).join(',')}</sup>`:'';
   s+=`<g class="${cls}" data-id="${full}"><rect x="${x0-2}" y="${y0-2}" width="${x1-x0+4}" height="${y1-y0+4}" rx="3"/>
   <foreignObject x="${x0-2}" y="${y0-2}" width="${x1-x0+4}" height="${y1-y0+4}"><div xmlns="http://www.w3.org/1999/xhtml">${esc(n.text)}${fn}</div></foreignObject></g>`});
  s+='</svg>';box.innerHTML=s;const svg=box.querySelector('svg');
- svg.querySelectorAll('.node').forEach(el=>{el.onclick=ev=>{ev.stopPropagation();S.sel=el.dataset.id;renderChart();renderDetails();showTab('details')}});
+ svg.querySelectorAll('.node').forEach(el=>{const nd=NODES[el.dataset.id];
+  el.onclick=ev=>{ev.stopPropagation();S.sel=el.dataset.id;if(nd&&nd.kind==='box'){S.ans.has(el.dataset.id)?S.ans.delete(el.dataset.id):S.ans.add(el.dataset.id)}renderChart();renderDetails();showTab('details')};
+  el.onmouseenter=()=>{if(!nd||!nd.footnotes.length)return;$('#tip').innerHTML=nd.footnotes.slice(0,4).map(f=>`<div style="margin-bottom:4px"><sup>${esc(f[0])}</sup> ${esc(f[1].slice(0,240))}</div>`).join('');$('#tip').style.display='block'};
+  el.onmousemove=ev=>{const t=$('#tip');t.style.left=Math.min(ev.clientX+14,innerWidth-380)+'px';t.style.top=(ev.clientY+14)+'px'};
+  el.onmouseleave=()=>$('#tip').style.display='none'});
  let drag=null;svg.onpointerdown=ev=>{drag={x:ev.clientX,y:ev.clientY,zx:z.x,zy:z.y,id:ev.pointerId,cap:false}};
  svg.onpointermove=ev=>{if(!drag)return;
   if(!drag.cap){if(Math.hypot(ev.clientX-drag.x,ev.clientY-drag.y)<4)return;drag.cap=true;svg.setPointerCapture(drag.id)}
@@ -180,10 +248,12 @@ function principlesFor(n){const txt=n.text+' '+n.footnotes.map(f=>f[1]).join(' '
  return B.chunks.filter(c=>cited.includes(c.page)).slice(0,4)}
 function predText(p){if(!p)return'';if(p.all)return'('+p.all.map(predText).join(' AND ')+')';if(p.any)return'('+p.any.map(predText).join(' OR ')+')';
  if(p.not)return'NOT '+predText(p.not);return`${p.fact} ${p.op} ${JSON.stringify(p.value)}`}
-function pageBtn(p,nid){const ok=B.pages[p]||TEXT_PAGES.includes(p);return ok?`<button class="chip" data-go="${esc(p)}" data-n="${esc(nid||'')}">${esc(p)}</button>`:`<span class="chip">${esc(p)}</span>`}
+function pageBtn(p,nid){const ok=B.pages[p]||TEXT_PAGES.includes(p);return ok?`<button class="chip" data-sec="${secOf(p)}" data-go="${esc(p)}" data-n="${esc(nid||'')}">${esc(p)}</button>`:`<span class="chip">${esc(p)}</span>`}
+function ansHtml(){if(!S.ans.size)return'';return'<h3>Selected answers</h3><div>'+[...S.ans].map(a=>`<span class="chip on" data-rm="${esc(a)}" title="Remove">${esc(a)} ✕</span>`).join('')+'</div><p class="muted">Highlighted: every pathway that passes through these boxes.</p>'}
+function bindAns(el){el.querySelectorAll('[data-rm]').forEach(c=>c.onclick=()=>{S.ans.delete(c.dataset.rm);renderChart();renderDetails()})}
 function renderDetails(){const el=$('#p-details');const n=S.sel&&NODES[S.sel];
- if(!n){el.innerHTML=B.pages[S.page]?`<p class="muted">Click a box to see its condition, footnotes, linked pages and supporting text. Drag to pan, scroll to zoom.</p>`:`<p class="muted">Text page ${esc(S.page)}.</p>`;return}
- let h=`<b>${esc(n.full)}</b><p>${esc(n.text)}</p>`;
+ if(!n){el.innerHTML=ansHtml()+(S.page==='__map'?'<p class="muted">Pick a page on the map.</p>':B.pages[S.page]?`<p class="muted">Click a box to select it as an answer (its pathway lights up) and see its condition, footnotes and links. Drag to pan, scroll to zoom.</p>`:`<p class="muted">Text page ${esc(S.page)}.</p>`);bindAns(el);return}
+ let h=ansHtml()+`<b>${esc(n.full)}</b><p>${esc(n.text)}</p>`;
  if(n.pred)h+=`<h3>Branch condition${B.preds_draft?' <span class="muted">(draft, not clinician-reviewed)</span>':''}</h3><div class="card"><code>${esc(predText(n.pred))}</code></div>`;
  if(n.footnotes.length){h+='<h3>Footnotes</h3>'+n.footnotes.map(f=>`<span class="chip${S.fn===f[0]?' on':''}" data-fn="${esc(f[0])}">${esc(f[0])}</span>`).join('');
   h+=n.footnotes.map(f=>`<div class="fnote${S.fn===f[0]?' on':''}"><sup>${esc(f[0])}</sup> ${esc(f[1])}</div>`).join('')}
@@ -193,7 +263,7 @@ function renderDetails(){const el=$('#p-details');const n=S.sel&&NODES[S.sel];
  if(inc.length)h+='<h3>Reached from</h3>'+inc.map(c=>`<button class="choice" data-go="${esc(c.split(':')[0])}" data-n="${esc(c)}">${esc(c)}: ${esc(NODES[c].text.slice(0,80))}</button>`).join('');
  const pr=principlesFor(n);if(pr.length)h+='<h3>Cited principles</h3>'+pr.map(c=>`<div class="fnote"><b>${esc(c.page)}</b> ${esc(c.text.slice(0,420))}${c.text.length>420?'…':''}</div>`).join('');
  h+=`<p><button id="startwalk">Start guided walk here</button></p>`;
- el.innerHTML=h;
+ el.innerHTML=h;bindAns(el);
  el.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go,b.dataset.n||null));
  el.querySelectorAll('[data-fn]').forEach(b=>b.onclick=()=>{S.fn=S.fn===b.dataset.fn?null:b.dataset.fn;renderChart();renderDetails()});
  $('#startwalk').onclick=()=>{startWalk(S.page,n.full)}}
@@ -207,11 +277,35 @@ function search(q){const toks=q.toLowerCase().split(/\s+/).filter(Boolean);if(!t
  return DOCS.map(d=>{const t=d.text.toLowerCase();if(!toks.every(w=>t.includes(w)))return null;
   let sc=0;toks.forEach(w=>{sc+=t.split(w).length-1});return{d,s:sc/Math.sqrt(t.length)+(d.k==='box'?.05:0)}}).filter(Boolean).sort((a,b)=>b.s-a.s).slice(0,25).map(x=>x.d)}
 function snippet(d,q){const t=d.text,i=t.toLowerCase().indexOf(q.toLowerCase().split(/\s+/)[0]);const a=Math.max(0,i-30);return(a?'…':'')+t.slice(a,a+110)}
-$('#q').oninput=e=>{const q=e.target.value.trim(),r=$('#results');if(!q){r.style.display='none';return}
- const hits=search(q);r.innerHTML=hits.map((d,i)=>`<div data-i="${i}"><b>${esc(d.label)}</b> <small>${esc(d.k)}</small><br>${esc(snippet(d,q))}</div>`).join('')||'<div class="muted">No matches</div>';
- r.style.display='block';r.querySelectorAll('[data-i]').forEach(el=>el.onclick=()=>{const d=hits[+el.dataset.i];r.style.display='none';
-  if(d.k==='box')go(d.page,d.id);else if(d.page)go(d.page);else{const hit=DOCS.find(x=>x===d);const owner=Object.entries(B.pages).find(([p,g])=>g.nodes.some(n=>n.footnotes.some(f=>f[1]===d.text)));if(owner)go(owner[0])}})};
+const VOCAB=new Map();for(const d of DOCS)for(const w of d.text.toLowerCase().match(/[a-z][a-z-]{3,}/g)||[])VOCAB.set(w,(VOCAB.get(w)||0)+1);
+const FILT=[['all','All'],['box','Algorithm'],['footnote','Footnotes'],['principles','Principles'],['discussion','Discussion']];
+let hits=[],act=-1;
+function runSearch(){const input=$('#q'),q=input.value.trim(),r=$('#results');if(!q){r.style.display='none';return}
+ hits=search(q).filter(d=>S.sf==='all'||d.k===S.sf);act=-1;
+ const last=q.split(/\s+/).pop().toLowerCase();
+ const sug=last.length>=2?[...VOCAB.entries()].filter(([w])=>w.startsWith(last)&&w!==last).sort((x,y)=>y[1]-x[1]).slice(0,6).map(x=>x[0]):[];
+ r.innerHTML=`<div class="filters">${FILT.map(([k,l])=>`<span class="chip${S.sf===k?' on':''}" data-f="${k}">${l}</span>`).join('')}</div>`+
+  (sug.length?`<div class="sugg">${sug.map(w=>`<span class="chip" data-s="${esc(w)}">${esc(w)}</span>`).join('')}</div>`:'')+
+  (hits.map((d,i)=>`<div data-i="${i}"><b>${esc(d.label)}</b> <small>${esc(d.k)}</small><br>${esc(snippet(d,q))}</div>`).join('')||'<div class="muted">No matches</div>');
+ r.style.display='block';
+ r.querySelectorAll('[data-f]').forEach(c=>c.onclick=ev=>{ev.stopPropagation();S.sf=c.dataset.f;runSearch()});
+ r.querySelectorAll('[data-s]').forEach(c=>c.onclick=ev=>{ev.stopPropagation();const parts=input.value.split(/(\s+)/);parts[parts.length-1]=c.dataset.s;input.value=parts.join('')+' ';input.focus();runSearch()});
+ r.querySelectorAll('[data-i]').forEach(el=>el.onclick=()=>pick(hits[+el.dataset.i]))}
+function pick(d){$('#results').style.display='none';if(!d)return;
+ if(d.k==='box')go(d.page,d.id);else if(d.page)go(d.page);else{const owner=Object.entries(B.pages).find(([p,g])=>g.nodes.some(n=>n.footnotes.some(f=>f[1]===d.text)));if(owner)go(owner[0])}}
+$('#q').oninput=runSearch;$('#q').onfocus=runSearch;
+$('#q').onkeydown=e=>{const items=[...document.querySelectorAll('#results [data-i]')];if(!items.length)return;
+ if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();act=(act+(e.key==='ArrowDown'?1:-1)+items.length)%items.length;items.forEach((x,i)=>x.classList.toggle('active',i===act));items[act].scrollIntoView({block:'nearest'})}
+ else if(e.key==='Enter'){pick(hits[act>=0?act:0])}else if(e.key==='Escape'){$('#results').style.display='none'}};
 document.addEventListener('click',e=>{if(!e.target.closest('.search'))$('#results').style.display='none'});
+/* toolbar, help, drawer */
+$('#clear').onclick=()=>{S.ans.clear();S.fn=null;S.sel=null;renderChart();renderDetails()};
+$('#map').onclick=()=>go('__map');
+$('#menu').onclick=()=>$('#side').classList.toggle('open');
+function showHelp(on){$('#modal').classList.toggle('on',on);if(!on){try{localStorage.setItem('dash-help','1')}catch(e){}}}
+$('#help').onclick=()=>showHelp(true);$('#closehelp').onclick=()=>showHelp(false);
+$('#modal').onclick=e=>{if(e.target.id==='modal')showHelp(false)};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')showHelp(false)});
 
 /* ---------- guided walk + patient facts (port of navigator.py A4/A5 logic) ---------- */
 const hasFacts=()=>Object.values(S.facts).some(v=>v!==null&&v!==undefined);
@@ -288,7 +382,8 @@ renderFacts();renderWalk();
 window.addEventListener('hashchange',fromHash);
 if(!fromHash()){let p=null;try{p=localStorage.getItem('dash-page')}catch(e){}
  const first=Object.keys(B.pages)[0];go(B.pages[p]||TEXT_PAGES.includes(p)?p:first)}
-window.__dash={S,startWalk,choose,evaluate,derive,F};
+try{if(!localStorage.getItem('dash-help'))showHelp(true)}catch(e){}
+window.__dash={S,startWalk,choose,evaluate,derive,F,showHelp};
 </script>
 </body>
 </html>
