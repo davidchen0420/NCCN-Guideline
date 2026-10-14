@@ -12,7 +12,7 @@ Inputs from the data folder: `merged_graphs.json` (or `e1_graphs.json`), `footno
 
 - The facts form is built from `fact_schema.json` raw variables; derived classes (risk group, life-expectancy band, ...) are computed in the page by `predicates.js` (a port of `predicates.py` and `facts.derive`; interval facts and `not_in` supported).
 - Branch conditions are machine-drafted and not clinician-reviewed; the panel says so. Boxes without a condition (null drafts) need a manual choice, which is common at entry boxes.
-- Navigator-style features: click a box to select it as an answer (pathways through it light up, Clear resets), search with completions and filters, a whole-guideline map, help dialog, and a mobile page drawer. See the UX notes for the source of each.
+- Layout and behaviour follow NCCN's public Navigator FAQ and its screenshots: icon rail, title bar with a Non-active paths toggle and reset, card-style boxes with footnote badges, zoom slider, a bottom dock (footnotes with "i of N instances", E, P), and a left-panel search with exact-match quotes and graying filters. See the UX notes for details and what is not replicated.
 - The walk mirrors `navigator.py` (`_auto_step`, reconvergence).
 
 Tests: `python -m unittest discover -s tests -t .`

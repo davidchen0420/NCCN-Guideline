@@ -5,133 +5,167 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Guideline Dashboard</title>
 <style>
-:root{--bg:#fafaf9;--panel:#fff;--ink:#1c1917;--muted:#78716c;--line:#e7e5e4;--box:#f5f5f4;
---agreed:#334155;--verified:#2563eb;--unsure:#dc2626;--pred:#16a34a;--link:#9333ea;--walk:#ea580c;--hl:#fde68a}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0c0a09;--panel:#1c1917;--ink:#f5f5f4;
---muted:#a8a29e;--line:#292524;--box:#292524;--agreed:#cbd5e1;--verified:#60a5fa;--unsure:#f87171;--pred:#4ade80;
---link:#c084fc;--walk:#fb923c;--hl:#713f12}}
+:root{--bg:#e9edf1;--panel:#fff;--ink:#1b2733;--muted:#64748b;--line:#d8dee6;--box:#f1f4f8;--navy:#0f3557;--navy2:#0b2a45;--dock:#006094;
+--blue:#1f5eff;--pink:#d81b7a;--teal:#b8d4cf;--agreed:#334155;--verified:#2563eb;--unsure:#dc2626;--pred:#16a34a;--link:#7c3aed;--walk:#ea580c;--hl:#fde68a;
+--sec-alg:#1f5eff;--sec-pri:#0d9488;--sec-dis:#d97706;--sec-oth:#78716c}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e141a;--panel:#18212b;--ink:#e6edf3;--muted:#94a3b8;--line:#2a3643;--box:#1f2a36;
+--navy:#0b2236;--navy2:#071827;--agreed:#cbd5e1;--verified:#60a5fa;--unsure:#f87171;--pred:#4ade80;--link:#c084fc;--walk:#fb923c;--hl:#713f12;--blue:#3b82f6}}
 *{box-sizing:border-box}
 body{margin:0;font:14px/1.4 system-ui,sans-serif;background:var(--bg);color:var(--ink);height:100vh;display:flex;flex-direction:column}
-header{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
-h1{font-size:16px;margin:0}.sub{color:var(--muted);font-size:12px}
-.search{position:relative;flex:1;min-width:200px;max-width:460px}
-input,select,button{font:inherit;color:var(--ink)}
-input[type=search],input[type=text],input[type=number],select{width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+input,select,button,textarea{font:inherit;color:var(--ink)}
+input[type=search],input[type=text],input[type=number],select{width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
 button{border:1px solid var(--line);background:var(--panel);border-radius:6px;padding:4px 9px;cursor:pointer}
-button:hover{border-color:var(--link)}button.primary{background:var(--link);color:#fff;border-color:var(--link)}
-#results{position:absolute;top:36px;left:0;right:0;max-height:60vh;overflow:auto;background:var(--panel);border:1px solid var(--line);
-border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.2);z-index:20;display:none}
-#results div{padding:7px 10px;border-bottom:1px solid var(--line);cursor:pointer;font-size:13px}
-#results div:hover{background:var(--box)}#results small{color:var(--muted)}
-#app{flex:1;display:grid;grid-template-columns:230px minmax(0,1fr) 340px;min-height:0}
-aside{background:var(--panel);overflow:auto;min-height:0}#side{border-right:1px solid var(--line);padding:10px}
-#panel{border-left:1px solid var(--line)}
-main{display:flex;flex-direction:column;min-width:0;min-height:0}
+button:hover{border-color:var(--link)}button.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+header{display:flex;align-items:center;gap:12px;padding:6px 16px;background:var(--panel);border-bottom:1px solid var(--line)}
+header h1{font-size:15px;margin:0}.sub{color:var(--muted);font-size:12px}header .sp{flex:1}
+#app{flex:1;display:grid;grid-template-columns:52px 0 minmax(0,1fr) 340px;min-height:0}
+#app.left-open{grid-template-columns:52px 300px minmax(0,1fr) 340px}
+#rail{background:var(--navy);display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 0}
+#rail button{width:40px;height:40px;border:0;border-radius:8px;background:none;color:#cfe0f0;font-size:18px;padding:0}
+#rail button:hover,#rail button.on{background:var(--navy2);color:#fff}#rail .sp{flex:1}
+#left{background:var(--panel);border-right:1px solid var(--line);overflow:auto;min-height:0;display:none}
+#app.left-open #left{display:block}
+.lv{display:none;padding:12px}.lv.on{display:block}.lv h2{margin:0 0 8px;font-size:15px}
 .group{margin:10px 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
-#side button.pg{display:flex;justify-content:space-between;width:100%;margin:2px 0;text-align:left;border-color:transparent;background:none}
-#side button.pg.on{border-color:var(--link);color:var(--link)}#side button.pg small{color:var(--muted)}
-.toolbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line)}
-.toolbar label{font-size:12px;color:var(--muted);display:flex;gap:4px;align-items:center}
-#chart{flex:1;overflow:auto;padding:8px 12px;min-height:0}
+#left button.pg{display:flex;justify-content:space-between;width:100%;margin:2px 0;text-align:left;border:0;border-left:3px solid transparent;border-radius:0;background:none}
+#left button.pg.on{background:var(--box);font-weight:600}#left button.pg small{color:var(--muted)}
+#left button.pg[data-sec=alg]{border-left-color:var(--sec-alg)}#left button.pg[data-sec=pri]{border-left-color:var(--sec-pri)}#left button.pg[data-sec=dis]{border-left-color:var(--sec-dis)}
+.chip[data-sec=alg]{border-left:3px solid var(--sec-alg)}.chip[data-sec=pri]{border-left:3px solid var(--sec-pri)}.chip[data-sec=dis]{border-left:3px solid var(--sec-dis)}
+.stabs{display:flex;border-bottom:1px solid var(--line);margin-bottom:8px}.stabs button{flex:1;border:0;border-radius:0;border-bottom:2px solid transparent;font-size:11px;letter-spacing:.05em}
+.stabs button.on{border-bottom-color:var(--blue);color:var(--blue)}.stabs button:disabled{opacity:.45;cursor:not-allowed}
+.fchips{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0}.switch{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--muted);margin:6px 0}
+.counts{display:flex;gap:10px;font-size:12px;color:var(--muted);margin:6px 0;border-bottom:1px solid var(--line);padding-bottom:6px}.counts b{color:var(--ink)}
+.res{padding:7px 4px;border-bottom:1px solid var(--line);cursor:pointer;font-size:13px}.res:hover,.res.active{background:var(--box)}.res small{color:var(--muted)}
+.res.gray{opacity:.5}.res mark{background:var(--hl);color:inherit;padding:0 1px;border-radius:2px}
+.sugg{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0}
+main{display:flex;flex-direction:column;min-width:0;min-height:0}
+#titlebar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--panel);border-bottom:1px solid var(--line);margin:8px 10px 0;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+#titlebar .tb{border:0;background:none;font-size:18px;padding:2px 8px;color:var(--muted)}#titlebar .tb:hover{color:var(--blue)}
+#pagetitle{font-weight:600;border-left:3px solid var(--blue);padding-left:8px;flex:1}
+.toggle{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--muted);cursor:pointer}
+.toggle i{width:34px;height:18px;border-radius:9px;background:#b8c2cc;position:relative;display:inline-block}.toggle i:after{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .15s}
+.toggle.on i{background:var(--blue)}.toggle.on i:after{left:18px}
+#wrap{flex:1;position:relative;min-height:0}
+#chart{position:absolute;inset:0;overflow:auto;padding:8px 12px}
 #chart svg{width:100%;height:100%;min-height:360px;display:block;cursor:grab;touch-action:none}
-.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);padding:6px 12px;border-top:1px solid var(--line)}
+#zoomctl{position:absolute;left:14px;top:14px;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:5}
+#zoomctl button{width:30px;height:30px;padding:0;background:var(--blue);border-color:var(--blue);color:#fff}
+#zoomctl .z{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 3px;display:flex;flex-direction:column;align-items:center;gap:4px}
+#zoomctl .z button{background:none;border:0;color:var(--muted);height:22px}
+#zoomctl input[type=range]{writing-mode:vertical-lr;direction:rtl;width:18px;height:110px;padding:0;accent-color:var(--blue)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);padding:4px 14px;background:var(--panel);border-top:1px solid var(--line)}
 .legend i{display:inline-block;width:20px;height:0;border-top:2px solid;vertical-align:middle;margin-right:4px}
-.node rect{fill:var(--box);stroke:var(--line);cursor:pointer}.node.pred rect{stroke:var(--pred);stroke-width:1.6}
-.node.ref rect{stroke:var(--link);stroke-dasharray:3 2}.node div{font-size:7.2px;line-height:1.18;padding:2px 3px;overflow:hidden;height:100%;pointer-events:none}
-.node:hover rect{stroke:var(--link);stroke-width:2}.node.sel rect{stroke:var(--link);stroke-width:2.6}
-.node.hdr rect{fill:none;stroke-dasharray:1 3;cursor:default}.node.hdr div{font-weight:600;color:var(--muted)}
-.node.walk rect{fill:color-mix(in srgb,var(--walk) 18%,var(--box));stroke:var(--walk);stroke-width:2}
-.node.cur rect{stroke-width:3.2}.node.fn rect{fill:var(--hl)}sup{color:var(--link);font-weight:600}
-.e{fill:none;stroke-width:1.1}.e.agreed{stroke:var(--agreed)}
-body:not(.conf) .e.verified,body:not(.conf) .e.unsure{stroke:var(--agreed);stroke-dasharray:none}
-body.conf .e.verified{stroke:var(--verified);stroke-dasharray:4 2}body.conf .e.unsure{stroke:var(--unsure);stroke-dasharray:2 2}
-.e.walk{stroke:var(--walk)!important;stroke-width:2.6;stroke-dasharray:none!important}
-.tabs{display:flex;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel)}
-.tabs button{flex:1;border:0;border-radius:0;border-bottom:2px solid transparent}.tabs button.on{border-bottom-color:var(--link);color:var(--link)}
-.pane{padding:12px;display:none}.pane.on{display:block}
-.pane h3{margin:12px 0 4px;font-size:13px}.muted{color:var(--muted);font-size:12px}
-.chip{display:inline-block;border:1px solid var(--line);border-radius:12px;padding:1px 8px;margin:2px 4px 2px 0;font-size:12px;cursor:pointer;background:var(--box)}
-.chip.on{border-color:var(--link);color:var(--link)}
-.fnote{font-size:12px;margin:4px 0;padding:6px;border-radius:6px;background:var(--box)}
-.fnote.on{outline:2px solid var(--link)}
+#dock{background:var(--dock);color:#fff}#dock .dt{display:flex;gap:2px;padding:4px 8px}
+#dock .dt button{background:none;border:0;color:#d6e8f5;font-size:17px;width:44px;height:36px;border-radius:6px;padding:0}
+#dock .dt button.on{background:#003e63;color:#fff}#dock .dt .grow{flex:1}#dock .dt .x{font-size:13px;width:auto;padding:0 10px}
+#dockbody{background:var(--panel);color:var(--ink);padding:10px 16px;max-height:30vh;overflow:auto;display:none}
+#dock.open #dockbody{display:block}#dockbody h3{margin:0 0 8px;font-size:14px;color:var(--navy)}
+.fb{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;border-radius:8px;background:#e4e9ee;color:#475569;font-size:10px;padding:0 4px;margin-right:2px;cursor:pointer;border:0}
+.fb.on{background:var(--pink);color:#fff}
+.fnrow{display:flex;gap:10px;align-items:flex-start;padding:8px;border-radius:6px;margin-bottom:4px}.fnrow.on{background:#e6eefc;color:#0f172a}
+.fnrow .fb{width:22px;height:22px;border-radius:11px;font-size:12px;flex:none}.inst{font-size:12px;color:var(--muted);display:flex;gap:4px;align-items:center}
+.inst button{padding:0 6px}.tag{display:inline-block;border-radius:10px;padding:1px 10px;font-size:12px;margin-right:6px}
+.tag.pref{background:var(--pink);color:#fff}.tag.other{background:var(--teal);color:#1b2733}
+#panel{background:var(--panel);border-left:1px solid var(--line);overflow:auto;min-height:0}
+.tabs{display:flex;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:2}
+.tabs button{flex:1;border:0;border-radius:0;border-bottom:2px solid transparent}.tabs button.on{border-bottom-color:var(--blue);color:var(--blue)}
+.pane{padding:12px;display:none}.pane.on{display:block}.pane h3{margin:12px 0 4px;font-size:13px}.muted{color:var(--muted);font-size:12px}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:12px;padding:1px 8px;margin:2px 4px 2px 0;font-size:12px;cursor:pointer;background:var(--box)}.chip.on{border-color:var(--blue);color:var(--blue)}
+.fnote{font-size:12px;margin:4px 0;padding:6px;border-radius:6px;background:var(--box)}.fnote.on{outline:2px solid var(--blue)}
 code{font-size:11px;word-break:break-all}
 .choice{display:block;width:100%;text-align:left;margin:4px 0}.crumb{display:block;text-align:left;width:100%;border:0;border-left:3px solid var(--walk);border-radius:0;margin:2px 0;font-size:12px}
 .field{display:grid;grid-template-columns:1fr 120px;gap:6px;align-items:center;margin:4px 0;font-size:13px}
 .card{background:var(--box);border-radius:8px;padding:10px;margin:8px 0;font-size:13px}
-@media (max-width:1000px){#app{grid-template-columns:1fr;grid-auto-rows:auto;overflow:auto}body{height:auto}aside{max-height:none}#side{max-height:200px}}
-:root{--sec-alg:#2563eb;--sec-pri:#0d9488;--sec-dis:#d97706;--sec-oth:#78716c}
-#side button.pg{border-left:3px solid transparent}
-#side button.pg[data-sec=alg],.chip[data-sec=alg]{border-left:3px solid var(--sec-alg)}
-#side button.pg[data-sec=pri],.chip[data-sec=pri]{border-left:3px solid var(--sec-pri)}
-#side button.pg[data-sec=dis],.chip[data-sec=dis]{border-left:3px solid var(--sec-dis)}
-.node.dim,.e.dim{opacity:.18}.e.path{stroke:var(--sec-alg)!important;stroke-width:2;stroke-dasharray:none!important}
-.node.path rect{stroke:var(--sec-alg);stroke-width:1.8}
-.node.ans rect{fill:color-mix(in srgb,var(--sec-alg) 22%,var(--box));stroke:var(--sec-alg);stroke-width:2.6}
-.toolbar a{font-size:12px;color:var(--link);text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:4px 8px}
-.toolbar a:hover{border-color:var(--link)}
-#menu{display:none}
-.filters{display:flex;flex-wrap:wrap;gap:4px;padding:6px 10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel)}
-#results div.active{background:var(--box)}#results .sugg{display:flex;flex-wrap:wrap;gap:4px;cursor:default}
-#results .sugg:hover{background:none}
-#tip{position:fixed;max-width:360px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px;
-pointer-events:none;display:none;box-shadow:0 4px 18px rgba(0,0,0,.18);z-index:30}
+/* cards on the canvas */
+.node rect{fill:var(--panel);stroke:var(--line);stroke-width:.8;cursor:pointer}
+.node.entry rect{fill:var(--blue);stroke:#9db8ff;stroke-width:2.2}.node.entry div{color:#fff}.node.entry sup{color:#fff}
+.node.pred rect{stroke:var(--pred);stroke-width:1.2}
+.node.ref rect{stroke-dasharray:3 2;stroke:var(--link)}
+.node div{font-size:7px;line-height:1.2;padding:2px 4px;overflow:hidden;height:100%;pointer-events:none;color:var(--ink)}
+.node:hover rect{stroke:var(--blue);stroke-width:2}.node.sel rect{stroke:var(--blue);stroke-width:2.6}
+.node.hdr rect{fill:none;stroke:none;cursor:default}.node.hdr div{font-weight:700;color:var(--muted);text-transform:uppercase;font-size:6.5px}
+.node.ans rect{fill:#dbe7ff;stroke:var(--blue);stroke-width:2.6}.node.ans.entry rect{fill:var(--blue)}
+.node.path rect{stroke:var(--blue);stroke-width:1.8}
+.node.walk rect{stroke:var(--walk);stroke-width:2.4}.node.cur rect{stroke-width:3.4}.node.fn rect{fill:var(--hl)}
+.node.gray{opacity:.3}.node.hit rect{stroke:var(--pink);stroke-width:2.2}
+.node.hide,.e.hide{opacity:0;pointer-events:none}.node.dim,.e.dim{opacity:.18}
+.fbs{display:flex;gap:1px;position:absolute;bottom:1px;left:2px}
+sup{color:var(--link);font-weight:600}
+.e{fill:none;stroke-width:1.1}.e.agreed{stroke:var(--agreed)}
+body:not(.conf) .e.verified,body:not(.conf) .e.unsure{stroke:var(--agreed);stroke-dasharray:none}
+body.conf .e.verified{stroke:var(--verified);stroke-dasharray:4 2}body.conf .e.unsure{stroke:var(--unsure);stroke-dasharray:2 2}
+.e.path{stroke:var(--blue)!important;stroke-width:2;stroke-dasharray:none!important}.e.walk{stroke:var(--walk)!important;stroke-width:2.6;stroke-dasharray:none!important}
+#tip{position:fixed;max-width:360px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px;pointer-events:none;display:none;box-shadow:0 4px 18px rgba(0,0,0,.18);z-index:30}
 #modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:40;padding:16px}
 #modal.on{display:flex}#modal .box{background:var(--panel);border-radius:12px;max-width:640px;width:100%;max-height:86vh;overflow:auto;padding:18px 20px}
-#modal h2{margin:0 0 8px;font-size:17px}#modal h4{margin:14px 0 4px;font-size:13px}#modal ol,#modal ul{margin:4px 0 4px 18px;padding:0}
+#modal h2{margin:0 0 8px;font-size:17px}#modal h4{margin:14px 0 4px;font-size:13px}#modal ol{margin:4px 0 4px 18px;padding:0}
 #modal details{margin:6px 0}#modal summary{cursor:pointer;font-weight:600}
-.mapnode{cursor:pointer}.mapnode rect{stroke-width:1.5;fill:var(--box)}.mapnode text{font-size:10px;fill:var(--ink);text-anchor:middle}
-@media (max-width:1000px){#menu{display:inline-block}#side{display:none;max-height:none}#side.open{display:block}
-#app{display:flex;flex-direction:column;overflow:auto}main{min-height:70vh}#panel{border-left:0;border-top:1px solid var(--line)}
-.toolbar a,.toolbar label{display:none}}
+.mapnode{cursor:pointer}.mapnode rect{stroke-width:1.5;fill:var(--panel)}.mapnode text{font-size:10px;fill:var(--ink);text-anchor:middle}
+@media (max-width:1000px){body{height:auto}#app,#app.left-open{display:flex;flex-direction:column;overflow:auto}
+#rail{flex-direction:row;justify-content:center;padding:4px}#rail .sp{display:none}#left{max-height:50vh}main{min-height:75vh}#panel{border-left:0;border-top:1px solid var(--line)}
+.legend{display:none}#zoomctl input[type=range]{display:none}#stats,header a{display:none}#titlebar{flex-wrap:wrap}.toggle{font-size:12px}}
 </style>
 </head>
 <body>
-<header>
-  <button id="menu" aria-label="Toggle page list">☰</button>
-  <div><h1 id="title">Guideline dashboard</h1><div class="sub" id="stats"></div></div>
-  <div class="search"><input type="search" id="q" placeholder="Search boxes, footnotes, principles, discussion" aria-label="Search" autocomplete="off"><div id="results"></div></div>
-  <button id="help">? Help</button>
-</header>
-<div id="app">
-  <aside id="side"><input type="search" id="pf" placeholder="Filter pages" aria-label="Filter pages"><div id="pagelist"></div></aside>
+<header><h1 id="title">Guideline dashboard</h1><span class="sub" id="stats"></span><span class="sp"></span>
+<a class="sub" href="https://www.nccn.org/guidelines/category_1" target="_blank" rel="noopener">NCCN PDF</a>
+<a class="sub" href="https://www.nccn.org/patients" target="_blank" rel="noopener">Patient guidelines</a><button id="help">? Help</button></header>
+<div id="app" class="left-open">
+  <nav id="rail" aria-label="Navigator">
+    <button id="rhome" title="Whole guideline" aria-label="Whole guideline">⌂</button>
+    <button id="rtoc" class="on" title="Table of contents" aria-label="Table of contents">☰</button>
+    <button id="rsearch" title="Search" aria-label="Search">⌕</button>
+    <button id="rhist" title="Walk history" aria-label="Walk history">⟲</button>
+    <span class="sp"></span>
+  </nav>
+  <aside id="left">
+    <div class="lv on" id="v-toc"><h2>Table of contents</h2><input type="search" id="pf" placeholder="Filter pages" aria-label="Filter pages"><div id="pagelist"></div></div>
+    <div class="lv" id="v-search"><h2>Search</h2>
+      <div class="stabs"><button class="on" id="kwtab">KEYWORD SEARCH</button><button id="aitab" disabled title="AI search is not part of this prototype">AI SEARCH</button></div>
+      <input type="search" id="q" placeholder="Find… (use quotes for an exact match)" aria-label="Search" autocomplete="off">
+      <div class="sugg" id="sugg"></div>
+      <div class="fchips" id="fchips"></div>
+      <label class="switch"><span class="toggle" id="tnon"><i></i></span> Show results for non-active paths</label>
+      <div class="counts" id="counts"></div><div id="results"></div></div>
+    <div class="lv" id="v-hist"><h2>Walk history</h2><div id="histbody" class="muted">Start a guided walk to see its steps here.</div></div>
+  </aside>
   <main>
-    <div class="toolbar">
-      <button id="zout" aria-label="Zoom out">−</button><button id="zin" aria-label="Zoom in">+</button><button id="zreset">Fit</button><button id="map" title="Zoom out to the whole guideline">Whole guideline</button><button id="clear" title="Clear selected answers">Clear</button>
-      <button id="back">◀ Back</button><button id="fwd">Forward ▶</button>
-      <label><input type="checkbox" id="conf"> show extraction confidence</label>
-      <a href="https://www.nccn.org/guidelines/category_1" target="_blank" rel="noopener">NCCN PDF</a><a href="https://www.nccn.org/patients" target="_blank" rel="noopener">Patient guidelines</a>
-      <span id="pagetitle" style="margin-left:auto;font-weight:600"></span>
+    <div id="titlebar">
+      <button class="tb" id="back" aria-label="Back">‹</button><button class="tb" id="fwd" aria-label="Forward">›</button>
+      <span id="pagetitle"></span>
+      <label class="toggle" id="tpaths" title="Show non-active paths"><i></i> Non-active paths</label>
+      <button class="tb" id="clear" title="Clear selected answers" aria-label="Clear selected answers">↺</button>
+      <button class="tb" id="map" title="Zoom out to the whole guideline" aria-label="Whole guideline">⤡</button>
+      <label class="toggle" id="tconf" title="Show extraction confidence"><i></i> Confidence</label>
     </div>
-    <div id="chart"></div>
-    <div class="legend" id="legend">
-      <span><i style="border-color:var(--pred)"></i>box has a branch condition</span>
-      <span><i style="border-color:var(--link);border-top-style:dashed"></i>refers to another page</span>
-      <span><i style="border-color:var(--walk)"></i>walked path</span>
+    <div id="wrap"><div id="chart"></div>
+      <div id="zoomctl"><button id="zreset" title="Fit" aria-label="Fit">◎</button>
+        <div class="z"><button id="zin" aria-label="Zoom in">+</button><input type="range" id="zslide" min="0" max="100" value="0" aria-label="Zoom"><button id="zout" aria-label="Zoom out">−</button></div></div>
     </div>
+    <div class="legend" id="legend"><span><i style="border-color:var(--pred)"></i>box has a branch condition</span><span><i style="border-color:var(--link);border-top-style:dashed"></i>refers to another page</span><span><i style="border-color:var(--walk)"></i>walked path</span></div>
+    <div id="dock"><div class="dt"><button data-d="fn" title="Footnotes" aria-label="Footnotes">✱</button><button data-d="E" title="Categories of evidence and consensus">E</button><button data-d="P" title="Categories of preference">P</button><span class="grow"></span><button class="x" id="dockx" aria-label="Close panel">▾</button></div><div id="dockbody"></div></div>
   </main>
   <aside id="panel">
     <div class="tabs"><button data-t="details" class="on">Details</button><button data-t="walk">Walk</button><button data-t="facts">Patient facts</button></div>
-    <div class="pane on" id="p-details"></div>
-    <div class="pane" id="p-walk"></div>
-    <div class="pane" id="p-facts"></div>
+    <div class="pane on" id="p-details"></div><div class="pane" id="p-walk"></div><div class="pane" id="p-facts"></div>
   </aside>
 </div>
 <div id="tip"></div>
 <div id="modal" role="dialog" aria-modal="true" aria-label="Help"><div class="box">
 <h2>How to use this navigator</h2>
 <ol>
-<li><b>Move around</b>: pick a page in the left list (colour = section: blue algorithm, teal principles, amber discussion) or use search.</li>
-<li><b>Select answers</b>: click a box to answer at that node. The pathway through it is highlighted and everything else dims. Click again to unselect; <b>Clear</b> resets all answers.</li>
-<li><b>Footnotes</b>: hover a box to preview its footnotes; open the Details tab to read them and highlight every box that uses one.</li>
-<li><b>Linked pages</b>: boxes that say "See PROS-x" jump to that page; Back and Forward retrace your steps.</li>
-<li><b>Zoom</b>: scroll or use + and −; <b>Whole guideline</b> zooms out to a map of all pages.</li>
-<li><b>Patient facts</b>: enter what you know and run a walk; conditions that the facts decide are followed automatically.</li>
+<li><b>Table of contents</b> (☰): pick a page; section colours are blue algorithm, teal principles, amber discussion. <b>⌂</b> shows the whole guideline.</li>
+<li><b>Select answers</b>: click a card to answer at that node. Its pathway is highlighted; other paths hide until you switch on <b>Non-active paths</b>. <b>↺</b> clears every answer.</li>
+<li><b>Footnotes</b>: click a letter badge on a card, or open ✱ at the bottom, to read it and step through every place it applies ("1 of N instances").</li>
+<li><b>E</b> and <b>P</b> at the bottom explain evidence categories and preference tags.</li>
+<li><b>Search</b> (⌕): results appear in this panel; use quotes for an exact match; filters gray out content that does not apply.</li>
+<li><b>Zoom</b>: wheel or the slider; ◎ fits the page; ⤡ zooms out to all pages. Back/forward follow your path through pages.</li>
+<li><b>Patient facts</b> (right panel): enter what you know and run a walk; conditions the facts decide are followed automatically.</li>
 </ol>
 <h4>FAQ</h4>
-<details><summary>Why does a walk stop?</summary>The box has no encoded condition, or a needed fact is blank. Choose the branch yourself.</details>
-<details><summary>Are the branch conditions clinician-reviewed?</summary>No. They are machine-drafted from the guideline and flagged as drafts. Always check the source guideline.</details>
-<details><summary>What do the arrow styles mean?</summary>Turn on "show extraction confidence": dashed blue arrows were confirmed by image review, dotted red ones are uncertain.</details>
-<details><summary>Is this the official NCCN tool?</summary>No. It is an independent research prototype. For clinical decisions use the official NCCN Guidelines.</details>
+<details><summary>Why does a walk stop?</summary>The box has no encoded condition or a needed fact is blank. Choose the branch yourself.</details>
+<details><summary>Are branch conditions clinician-reviewed?</summary>No. They are machine-drafted and flagged as drafts. Always check the source guideline.</details>
+<details><summary>Is this the official NCCN tool?</summary>No. It is an independent research prototype built from public descriptions of the Navigator. For clinical decisions use the official NCCN Guidelines.</details>
 <p style="text-align:right"><button class="primary" id="closehelp">Got it</button></p>
 </div></div>
 <script>
@@ -144,7 +178,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const NODES={},PRED={};
 for(const [page,g] of Object.entries(B.pages)){for(const n of g.nodes){const id=page+':'+n.id;NODES[id]={...n,page,full:id};if(n.pred)PRED[id]=n.pred}}
 const parents={};for(const [s,ks] of Object.entries(B.children))for(const k of ks)(parents[k]=parents[k]||[]).push(s);
-const S={page:null,sel:null,fn:null,walk:null,facts:{},zoom:null,hist:[],hpos:-1,ans:new Set(),sf:'all'};
+const S={page:null,sel:null,fn:null,fnIdx:0,walk:null,facts:{},zoom:null,hist:[],hpos:-1,ans:new Set(),showNon:false,q:'',filt:new Set(),dock:null};
 const secOf=p=>B.pages[p]?'alg':B.principles.includes(p)?'pri':B.discussion.includes(p)?'dis':'oth';
 const TEXT_PAGES=[...B.principles,...B.discussion];
 function getNode(id){if(id.endsWith(':START')){const p=id.split(':')[0];return{text:'Entry of '+p,page:p,full:id,links:[],footnotes:[]}}return NODES[id]}
@@ -164,12 +198,12 @@ $('#pf').oninput=renderList;
 /* ---------- navigation / history ---------- */
 function go(page,nid,fromHist){
  if(page!=='__map'&&!B.pages[page]&&!TEXT_PAGES.includes(page))return;
- if(S.page!==page){S.zoom=null;S.fn=null}
+ if(S.page!==page){S.zoom=null;S.fn=null;S.fnIdx=0}
  S.page=page;S.sel=nid||null;
  if(!fromHist){S.hist=S.hist.slice(0,S.hpos+1);S.hist.push([page,nid||null]);S.hpos=S.hist.length-1;
   try{history.replaceState(null,'','#'+page+(nid?':'+nid.split(':')[1]:''))}catch(e){}
   try{localStorage.setItem('dash-page',page)}catch(e){}}
- renderList();renderChart();renderDetails();$('#pagetitle').textContent=page==='__map'?'Whole guideline':page}
+ renderList();renderChart();renderDetails();renderDock();$('#pagetitle').textContent=page==='__map'?'Whole guideline':page}
 $('#back').onclick=()=>{if(S.hpos>0){S.hpos--;go(...S.hist[S.hpos],true)}};
 $('#fwd').onclick=()=>{if(S.hpos<S.hist.length-1){S.hpos++;go(...S.hist[S.hpos],true)}};
 function fromHash(){const h=decodeURIComponent(location.hash.slice(1));if(!h)return false;
@@ -199,31 +233,41 @@ function renderMap(){const ps=Object.keys(B.pages),cols=Math.min(6,ps.length),cw
   g+=`<g class="mapnode" data-p="${esc(p)}"><rect x="${x}" y="${y}" width="100" height="28" rx="6" stroke="var(--sec-${secOf(p)})"/><text x="${x+50}" y="${y+18}">${esc(p)}${flow?' · '+B.pages[p].nodes.length:''}</text></g>`});
  $('#chart').innerHTML=`<p class="muted">Whole guideline: algorithm pages (blue) and the pages they refer to. Click a page to open it.</p>${g}</svg>`;
  $('#chart').querySelectorAll('.mapnode').forEach(el=>el.onclick=()=>go(el.dataset.p))}
+function qMatch(text){const q=S.q.trim();if(!q)return true;const t=text.toLowerCase();
+ const ex=q.match(/^"(.*)"$/);if(ex)return t.includes(ex[1].toLowerCase());return q.toLowerCase().split(/\s+/).filter(Boolean).every(w=>t.includes(w))}
+function nodeKind(n){return n.kind==='header'?'hdr':''}
 function renderChart(){const box=$('#chart');
- if(S.page==='__map'){renderMap();$('#legend').style.display='none';return}
- if(!B.pages[S.page]){const cs=B.chunks.filter(c=>c.page===S.page);
+ if(S.page==='__map'){renderMap();$('#legend').style.display='none';$('#zoomctl').style.display='none';return}
+ if(!B.pages[S.page]){const cs=B.chunks.filter(c=>c.page===S.page);$('#zoomctl').style.display='none';
   box.innerHTML=cs.map(c=>`<div class="card"><b>${esc(c.page)}</b> <span class="muted">${esc(c.source)}</span><p>${esc(c.text)}</p></div>`).join('')||'<p class="muted">No text.</p>';
   $('#legend').style.display='none';return}
- $('#legend').style.display='';
+ $('#legend').style.display='';$('#zoomctl').style.display='';
  const g=B.pages[S.page],byId={};g.nodes.forEach(n=>byId[n.id]=n);
  const z=S.zoom||(S.zoom={x:0,y:B.top,w:B.w,h:B.bottom-B.top});const ws=walkSets(),PATH=pathSets();
+ const hidden=id=>S.ans.size&&!PATH.nodes.has(id);
  let s=`<svg viewBox="${z.x} ${z.y} ${z.w} ${z.h}"><defs></defs>`;
  g.edges.forEach(e=>{const a=byId[e.src],b=byId[e.dst];if(!a||!b)return;
   const p1=anchor(a.bbox,center(b.bbox)),p2=anchor(b.bbox,center(a.bbox));
-  const ek=S.page+':'+e.src+'>'+S.page+':'+e.dst;const w=(ws.edges.has(ek)?' walk':'')+(S.ans.size?(PATH.edges.has(ek)?' path':' dim'):'');
+  const ek=S.page+':'+e.src+'>'+S.page+':'+e.dst;
+  const w=(ws.edges.has(ek)?' walk':'')+(S.ans.size?(PATH.edges.has(ek)?' path':(S.showNon?' dim':' hide')):'');
   s+=`<path class="e ${e.cls}${w}" d="M${p1[0]},${p1[1]} L${p2[0]},${p2[1]}"/>`;
   const ang=Math.atan2(p2[1]-p1[1],p2[0]-p1[0]),L=5;
   s+=`<path class="e ${e.cls}${w}" d="M${p2[0]-L*Math.cos(ang-.45)},${p2[1]-L*Math.sin(ang-.45)} L${p2[0]},${p2[1]} L${p2[0]-L*Math.cos(ang+.45)},${p2[1]-L*Math.sin(ang+.45)}"/>`});
- g.nodes.forEach(n=>{const[x0,y0,x1,y1]=n.bbox,full=S.page+':'+n.id;
-  const cls=['node',n.kind==='header'?'hdr':'',n.pred?'pred':'',n.links.length?'ref':'',full===S.sel?'sel':'',ws.nodes.has(full)?'walk':'',full===ws.cur?'cur':'',S.ans.has(full)?'ans':'',(S.ans.size&&PATH.nodes.has(full))?'path':'',(S.ans.size&&n.kind==='box'&&!PATH.nodes.has(full))?'dim':'',
-   S.fn&&n.footnotes.some(f=>f[0]===S.fn)?'fn':''].filter(Boolean).join(' ');
-  const fn=n.footnotes.length?`<sup> ${n.footnotes.map(f=>esc(f[0])).join(',')}</sup>`:'';
-  s+=`<g class="${cls}" data-id="${full}"><rect x="${x0-2}" y="${y0-2}" width="${x1-x0+4}" height="${y1-y0+4}" rx="3"/>
-  <foreignObject x="${x0-2}" y="${y0-2}" width="${x1-x0+4}" height="${y1-y0+4}"><div xmlns="http://www.w3.org/1999/xhtml">${esc(n.text)}${fn}</div></foreignObject></g>`});
- s+='</svg>';box.innerHTML=s;const svg=box.querySelector('svg');
+ const hasQ=!!S.q.trim();
+ g.nodes.forEach(n=>{const[x0,y0,x1,y1]=n.bbox,full=S.page+':'+n.id,isBox=n.kind==='box';
+  const entry=isBox&&!(parents[full]||[]).length&&(B.children[full]||[]).length;
+  const hit=hasQ&&isBox&&qMatch(n.text);
+  const cls=['node',nodeKind(n),entry?'entry':'',n.pred?'pred':'',n.links.length?'ref':'',full===S.sel?'sel':'',ws.nodes.has(full)?'walk':'',full===ws.cur?'cur':'',S.ans.has(full)?'ans':'',
+   (S.ans.size&&PATH.nodes.has(full))?'path':'',(S.ans.size&&isBox&&hidden(full))?(S.showNon?'dim':'hide'):'',
+   hasQ&&isBox?(hit?'hit':'gray'):'',S.fn&&n.footnotes.some(f=>f[0]===S.fn)?'fn':''].filter(Boolean).join(' ');
+  const fbs=n.footnotes.map(f=>`<span class="fb${S.fn===f[0]?' on':''}" data-fn="${esc(f[0])}" style="pointer-events:auto">${esc(f[0])}</span>`).join('');
+  s+=`<g class="${cls}" data-id="${full}"><rect x="${x0-2}" y="${y0-2}" width="${x1-x0+4}" height="${y1-y0+4}" rx="4"/>
+  <foreignObject x="${x0-2}" y="${y0-2}" width="${x1-x0+4}" height="${y1-y0+4}"><div xmlns="http://www.w3.org/1999/xhtml">${esc(n.text)} ${fbs}</div></foreignObject></g>`});
+ s+='</svg>';box.innerHTML=s;const svg=box.querySelector('svg');syncSlider();
  svg.querySelectorAll('.node').forEach(el=>{const nd=NODES[el.dataset.id];
+  el.querySelectorAll('.fb').forEach(fb=>fb.onclick=ev=>{ev.stopPropagation();openFootnote(fb.dataset.fn,el.dataset.id)});
   el.onclick=ev=>{ev.stopPropagation();S.sel=el.dataset.id;if(nd&&nd.kind==='box'){S.ans.has(el.dataset.id)?S.ans.delete(el.dataset.id):S.ans.add(el.dataset.id)}renderChart();renderDetails();showTab('details')};
-  el.onmouseenter=()=>{if(!nd||!nd.footnotes.length)return;$('#tip').innerHTML=nd.footnotes.slice(0,4).map(f=>`<div style="margin-bottom:4px"><sup>${esc(f[0])}</sup> ${esc(f[1].slice(0,240))}</div>`).join('');$('#tip').style.display='block'};
+  el.onmouseenter=()=>{if(!nd||!nd.footnotes.length)return;$('#tip').innerHTML=nd.footnotes.slice(0,4).map(f=>`<div style="margin-bottom:4px"><b>${esc(f[0])}</b> ${esc(f[1].slice(0,240))}</div>`).join('');$('#tip').style.display='block'};
   el.onmousemove=ev=>{const t=$('#tip');t.style.left=Math.min(ev.clientX+14,innerWidth-380)+'px';t.style.top=(ev.clientY+14)+'px'};
   el.onmouseleave=()=>$('#tip').style.display='none'});
  let drag=null;svg.onpointerdown=ev=>{drag={x:ev.clientX,y:ev.clientY,zx:z.x,zy:z.y,id:ev.pointerId,cap:false}};
@@ -232,12 +276,13 @@ function renderChart(){const box=$('#chart');
   const r=svg.getBoundingClientRect();z.x=drag.zx-(ev.clientX-drag.x)*z.w/r.width;z.y=drag.zy-(ev.clientY-drag.y)*z.h/r.height;svg.setAttribute('viewBox',`${z.x} ${z.y} ${z.w} ${z.h}`)};
  svg.onpointerup=()=>drag=null;
  svg.onwheel=ev=>{ev.preventDefault();zoomBy(ev.deltaY<0?1.15:1/1.15,ev)}}
+function syncSlider(){const z=S.zoom;if(!z)return;const f=B.w/z.w;$('#zslide').value=Math.round(100*Math.log(f)/Math.log(8)+ -0)}
 function zoomBy(f,ev){const z=S.zoom;if(!z)return;const svg=$('#chart svg');if(!svg)return;const r=svg.getBoundingClientRect();
  const px=ev?(ev.clientX-r.left)/r.width:.5,py=ev?(ev.clientY-r.top)/r.height:.5;
- const nw=Math.min(B.w*2,Math.max(60,z.w/f)),nh=nw*z.h/z.w;z.x+=(z.w-nw)*px;z.y+=(z.h-nh)*py;z.w=nw;z.h=nh;
- svg.setAttribute('viewBox',`${z.x} ${z.y} ${z.w} ${z.h}`)}
+ const nw=Math.min(B.w*2,Math.max(B.w/8,z.w/f)),nh=nw*z.h/z.w;z.x+=(z.w-nw)*px;z.y+=(z.h-nh)*py;z.w=nw;z.h=nh;
+ svg.setAttribute('viewBox',`${z.x} ${z.y} ${z.w} ${z.h}`);syncSlider()}
 $('#zin').onclick=()=>zoomBy(1.3);$('#zout').onclick=()=>zoomBy(1/1.3);$('#zreset').onclick=()=>{S.zoom=null;renderChart()};
-$('#conf').onchange=e=>document.body.classList.toggle('conf',e.target.checked);
+$('#zslide').oninput=e=>{const z=S.zoom;if(!z)return;const target=Math.pow(8,e.target.value/100),cur=B.w/z.w;zoomBy(target/cur)};
 
 /* ---------- details panel ---------- */
 function showTab(t){document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
@@ -255,7 +300,7 @@ function renderDetails(){const el=$('#p-details');const n=S.sel&&NODES[S.sel];
  if(!n){el.innerHTML=ansHtml()+(S.page==='__map'?'<p class="muted">Pick a page on the map.</p>':B.pages[S.page]?`<p class="muted">Click a box to select it as an answer (its pathway lights up) and see its condition, footnotes and links. Drag to pan, scroll to zoom.</p>`:`<p class="muted">Text page ${esc(S.page)}.</p>`);bindAns(el);return}
  let h=ansHtml()+`<b>${esc(n.full)}</b><p>${esc(n.text)}</p>`;
  if(n.pred)h+=`<h3>Branch condition${B.preds_draft?' <span class="muted">(draft, not clinician-reviewed)</span>':''}</h3><div class="card"><code>${esc(predText(n.pred))}</code></div>`;
- if(n.footnotes.length){h+='<h3>Footnotes</h3>'+n.footnotes.map(f=>`<span class="chip${S.fn===f[0]?' on':''}" data-fn="${esc(f[0])}">${esc(f[0])}</span>`).join('');
+ if(n.footnotes.length){h+='<h3>Footnotes</h3>'+n.footnotes.map(f=>`<span class="fb${S.fn===f[0]?' on':''}" data-fn="${esc(f[0])}">${esc(f[0])}</span>`).join(' ');
   h+=n.footnotes.map(f=>`<div class="fnote${S.fn===f[0]?' on':''}"><sup>${esc(f[0])}</sup> ${esc(f[1])}</div>`).join('')}
  const out=(B.children[n.full]||[]),inc=parents[n.full]||[];
  if(n.links.length)h+='<h3>Refers to</h3>'+n.links.map(l=>pageBtn(l)).join('');
@@ -265,46 +310,85 @@ function renderDetails(){const el=$('#p-details');const n=S.sel&&NODES[S.sel];
  h+=`<p><button id="startwalk">Start guided walk here</button></p>`;
  el.innerHTML=h;bindAns(el);
  el.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go,b.dataset.n||null));
- el.querySelectorAll('[data-fn]').forEach(b=>b.onclick=()=>{S.fn=S.fn===b.dataset.fn?null:b.dataset.fn;renderChart();renderDetails()});
+ el.querySelectorAll('[data-fn]').forEach(b=>b.onclick=()=>openFootnote(b.dataset.fn,S.sel));
  $('#startwalk').onclick=()=>{startWalk(S.page,n.full)}}
 
-/* ---------- search ---------- */
+/* ---------- left rail views ---------- */
+function showLeft(v){const app=$('#app');const open=!(app.classList.contains('left-open')&&$('#v-'+v).classList.contains('on'));
+ app.classList.toggle('left-open',open);
+ ['toc','search','hist'].forEach(k=>{$('#v-'+k).classList.toggle('on',k===v);$('#r'+k).classList.toggle('on',k===v&&open)});
+ if(v==='search'&&open)setTimeout(()=>$('#q').focus(),0)}
+$('#rtoc').onclick=()=>showLeft('toc');$('#rsearch').onclick=()=>showLeft('search');$('#rhist').onclick=()=>showLeft('hist');
+$('#rhome').onclick=()=>go('__map');
+
+/* ---------- search (keyword; results in the left panel; quotes = exact; filters gray out) ---------- */
 const DOCS=[];
-for(const [page,g] of Object.entries(B.pages))for(const n of g.nodes)DOCS.push({k:'box',page,id:page+':'+n.id,text:n.text,label:page+':'+n.id});
-const seenFn=new Set();for(const g of Object.values(B.pages))for(const n of g.nodes)for(const [r,t] of n.footnotes){if(!seenFn.has(r+t)){seenFn.add(r+t);DOCS.push({k:'footnote',page:null,text:t,label:'footnote '+r})}}
+for(const [page,g] of Object.entries(B.pages))for(const n of g.nodes)if(n.kind==='box')DOCS.push({k:'box',page,id:page+':'+n.id,text:n.text,label:page+':'+n.id});
+const seenFn=new Set();for(const [page,g] of Object.entries(B.pages))for(const n of g.nodes)for(const [r,t] of n.footnotes){if(!seenFn.has(page+r)){seenFn.add(page+r);DOCS.push({k:'footnote',page,text:t,label:'Footnote '+r+' · '+page})}}
 for(const c of B.chunks)DOCS.push({k:c.source,page:c.page,text:c.text,label:c.page});
-function search(q){const toks=q.toLowerCase().split(/\s+/).filter(Boolean);if(!toks.length)return[];
- return DOCS.map(d=>{const t=d.text.toLowerCase();if(!toks.every(w=>t.includes(w)))return null;
-  let sc=0;toks.forEach(w=>{sc+=t.split(w).length-1});return{d,s:sc/Math.sqrt(t.length)+(d.k==='box'?.05:0)}}).filter(Boolean).sort((a,b)=>b.s-a.s).slice(0,25).map(x=>x.d)}
-function snippet(d,q){const t=d.text,i=t.toLowerCase().indexOf(q.toLowerCase().split(/\s+/)[0]);const a=Math.max(0,i-30);return(a?'…':'')+t.slice(a,a+110)}
+const KINDS=[['box','Algorithm'],['footnote','Footnotes'],['principles','Principles'],['discussion','Discussion']];
 const VOCAB=new Map();for(const d of DOCS)for(const w of d.text.toLowerCase().match(/[a-z][a-z-]{3,}/g)||[])VOCAB.set(w,(VOCAB.get(w)||0)+1);
-const FILT=[['all','All'],['box','Algorithm'],['footnote','Footnotes'],['principles','Principles'],['discussion','Discussion']];
+function mark(text,q){const m=q.match(/^"(.*)"$/);const toks=(m?[m[1]]:q.split(/\s+/)).filter(Boolean).map(w=>w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
+ let h=esc(text);if(!toks.length)return h;return h.replace(new RegExp('('+toks.join('|')+')','gi'),'<mark>$1</mark>')}
+function snippet(d,q){const t=d.text,tok=(q.match(/^"(.*)"$/)?q.slice(1,-1):q.split(/\s+/)[0]).toLowerCase(),i=Math.max(0,t.toLowerCase().indexOf(tok));const a=Math.max(0,i-40);return(a?'…':'')+t.slice(a,a+140)}
 let hits=[],act=-1;
-function runSearch(){const input=$('#q'),q=input.value.trim(),r=$('#results');if(!q){r.style.display='none';return}
- hits=search(q).filter(d=>S.sf==='all'||d.k===S.sf);act=-1;
- const last=q.split(/\s+/).pop().toLowerCase();
- const sug=last.length>=2?[...VOCAB.entries()].filter(([w])=>w.startsWith(last)&&w!==last).sort((x,y)=>y[1]-x[1]).slice(0,6).map(x=>x[0]):[];
- r.innerHTML=`<div class="filters">${FILT.map(([k,l])=>`<span class="chip${S.sf===k?' on':''}" data-f="${k}">${l}</span>`).join('')}</div>`+
-  (sug.length?`<div class="sugg">${sug.map(w=>`<span class="chip" data-s="${esc(w)}">${esc(w)}</span>`).join('')}</div>`:'')+
-  (hits.map((d,i)=>`<div data-i="${i}"><b>${esc(d.label)}</b> <small>${esc(d.k)}</small><br>${esc(snippet(d,q))}</div>`).join('')||'<div class="muted">No matches</div>');
- r.style.display='block';
- r.querySelectorAll('[data-f]').forEach(c=>c.onclick=ev=>{ev.stopPropagation();S.sf=c.dataset.f;runSearch()});
- r.querySelectorAll('[data-s]').forEach(c=>c.onclick=ev=>{ev.stopPropagation();const parts=input.value.split(/(\s+)/);parts[parts.length-1]=c.dataset.s;input.value=parts.join('')+' ';input.focus();runSearch()});
- r.querySelectorAll('[data-i]').forEach(el=>el.onclick=()=>pick(hits[+el.dataset.i]))}
-function pick(d){$('#results').style.display='none';if(!d)return;
- if(d.k==='box')go(d.page,d.id);else if(d.page)go(d.page);else{const owner=Object.entries(B.pages).find(([p,g])=>g.nodes.some(n=>n.footnotes.some(f=>f[1]===d.text)));if(owner)go(owner[0])}}
-$('#q').oninput=runSearch;$('#q').onfocus=runSearch;
+function runSearch(){const q=$('#q').value.trim();S.q=q;
+ const PATHN=S.ans.size&&!S.sNon?pathSets().nodes:null;
+ const pool=DOCS.filter(d=>qMatch(d.text)&&!(PATHN&&d.k==='box'&&!PATHN.has(d.id)));
+ hits=pool.filter(d=>!S.filt.size||S.filt.has(d.k)).map(d=>({d,gray:false}));
+ if(S.filt.size)pool.filter(d=>!S.filt.has(d.k)).forEach(d=>hits.push({d,gray:true}));
+ hits=hits.slice(0,60);act=-1;
+ const last=q.split(/\s+/).pop().toLowerCase(),sug=last.length>=2&&!q.includes('"')?[...VOCAB.entries()].filter(([w])=>w.startsWith(last)&&w!==last).sort((x,y)=>y[1]-x[1]).slice(0,6).map(x=>x[0]):[];
+ $('#sugg').innerHTML=sug.map(w=>`<span class="chip" data-s="${esc(w)}">${esc(w)}</span>`).join('');
+ $('#fchips').innerHTML=KINDS.map(([k,l])=>`<span class="chip${S.filt.has(k)?' on':''}" data-f="${k}">${l}</span>`).join('');
+ const cnt={all:pool.length};KINDS.forEach(([k])=>cnt[k]=pool.filter(d=>d.k===k).length);
+ $('#counts').innerHTML=q?`<span>All <b>${cnt.all}</b></span>`+KINDS.map(([k,l])=>`<span>${l} <b>${cnt[k]}</b></span>`).join(''):'';
+ $('#results').innerHTML=q?(hits.map((h,i)=>`<div class="res${h.gray?' gray':''}" data-i="${i}"><b>${esc(h.d.label)}</b> <small>${esc(h.d.k==='box'?'algorithm':h.d.k)}</small><br>${mark(snippet(h.d,q),q)}</div>`).join('')||'<div class="muted">No matches</div>'):'<div class="muted">Type a term. Quotes find an exact match. Pick a filter to gray out content that does not apply.</div>';
+ $('#fchips').querySelectorAll('[data-f]').forEach(c=>c.onclick=()=>{S.filt.has(c.dataset.f)?S.filt.delete(c.dataset.f):S.filt.add(c.dataset.f);runSearch()});
+ $('#sugg').querySelectorAll('[data-s]').forEach(c=>c.onclick=()=>{const parts=$('#q').value.split(/(\s+)/);parts[parts.length-1]=c.dataset.s;$('#q').value=parts.join('')+' ';$('#q').focus();runSearch()});
+ $('#results').querySelectorAll('[data-i]').forEach(el=>el.onclick=()=>pick(hits[+el.dataset.i].d));
+ if(B.pages[S.page])renderChart()}
+function pick(d){if(!d)return;
+ if(d.k==='box')go(d.page,d.id);else if(d.page&&(B.pages[d.page]||TEXT_PAGES.includes(d.page))){go(d.page);if(d.k==='footnote'){const l=d.label.match(/Footnote (\S+)/);if(l)openFootnote(l[1])}}}
+$('#q').oninput=runSearch;
 $('#q').onkeydown=e=>{const items=[...document.querySelectorAll('#results [data-i]')];if(!items.length)return;
  if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();act=(act+(e.key==='ArrowDown'?1:-1)+items.length)%items.length;items.forEach((x,i)=>x.classList.toggle('active',i===act));items[act].scrollIntoView({block:'nearest'})}
- else if(e.key==='Enter'){pick(hits[act>=0?act:0])}else if(e.key==='Escape'){$('#results').style.display='none'}};
-document.addEventListener('click',e=>{if(!e.target.closest('.search'))$('#results').style.display='none'});
-/* toolbar, help, drawer */
-$('#clear').onclick=()=>{S.ans.clear();S.fn=null;S.sel=null;renderChart();renderDetails()};
+ else if(e.key==='Enter'){pick(hits[act>=0?act:0].d)}};
+$('#tnon').parentElement.onclick=e=>{e.preventDefault();S.sNon=!S.sNon;$('#tnon').classList.toggle('on',S.sNon);runSearch()};
+
+/* ---------- title bar controls ---------- */
+$('#clear').onclick=()=>{S.ans.clear();S.fn=null;S.sel=null;renderChart();renderDetails();renderDock()};
 $('#map').onclick=()=>go('__map');
-$('#menu').onclick=()=>$('#side').classList.toggle('open');
+$('#tpaths').onclick=()=>{S.showNon=!S.showNon;$('#tpaths').classList.toggle('on',S.showNon);renderChart()};
+$('#tconf').onclick=()=>{document.body.classList.toggle('conf');$('#tconf').classList.toggle('on',document.body.classList.contains('conf'))};
 function showHelp(on){$('#modal').classList.toggle('on',on);if(!on){try{localStorage.setItem('dash-help','1')}catch(e){}}}
 $('#help').onclick=()=>showHelp(true);$('#closehelp').onclick=()=>showHelp(false);
 $('#modal').onclick=e=>{if(e.target.id==='modal')showHelp(false)};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')showHelp(false)});
+
+/* ---------- bottom dock: footnotes (*), evidence (E), preference (P) ---------- */
+function pageFootnotes(){const m=new Map();if(!B.pages[S.page])return m;
+ for(const n of B.pages[S.page].nodes)for(const [r,t] of n.footnotes){if(!m.has(r))m.set(r,{text:t,nodes:[]});m.get(r).nodes.push(S.page+':'+n.id)}
+ return new Map([...m.entries()].sort((a,b)=>a[0].length-b[0].length||a[0].localeCompare(b[0])))}
+function openFootnote(letter,nid){S.dock='fn';S.fn=letter;const inst=(pageFootnotes().get(letter)||{nodes:[]}).nodes;S.fnIdx=Math.max(0,inst.indexOf(nid));renderChart();renderDock()}
+function stepFn(d){const inst=(pageFootnotes().get(S.fn)||{nodes:[]}).nodes;if(!inst.length)return;S.fnIdx=(S.fnIdx+d+inst.length)%inst.length;S.sel=inst[S.fnIdx];renderChart();renderDetails();renderDock()}
+const EVID=[['Category 1','Based on high-level evidence, with uniform NCCN consensus that the intervention is appropriate.'],
+ ['Category 2A','Based on lower-level evidence, with uniform NCCN consensus. This is the default for most recommendations.'],
+ ['Category 2B','Based on lower-level evidence, with NCCN consensus that the intervention is appropriate.'],
+ ['Category 3','Based on any level of evidence, with major NCCN disagreement that the intervention is appropriate.']];
+const PREF=[['Preferred','pref','Interventions favoured on superior efficacy, safety and evidence and, where relevant, affordability.'],
+ ['Other recommended','other','Interventions that may be somewhat less effective, more toxic, or based on less mature data, or less affordable.'],
+ ['Useful in certain circumstances','other','Interventions used for selected patient populations, as defined with the recommendation.']];
+function renderDock(){const d=$('#dock'),body=$('#dockbody');d.querySelectorAll('.dt button[data-d]').forEach(b=>b.classList.toggle('on',b.dataset.d===S.dock));
+ d.classList.toggle('open',!!S.dock);if(!S.dock){body.innerHTML='';return}
+ if(S.dock==='E')body.innerHTML='<h3>Categories of evidence and consensus (summary in our own words; see the guideline for NCCN\'s wording)</h3>'+EVID.map(([k,t])=>`<p><span class="tag other">${k}</span>${esc(t)}</p>`).join('');
+ else if(S.dock==='P')body.innerHTML='<h3>Categories of preference (summary in our own words)</h3>'+PREF.map(([k,c,t])=>`<p><span class="tag ${c}">${k}</span>${esc(t)}</p>`).join('');
+ else{const m=pageFootnotes();body.innerHTML='<h3>Footnotes'+(B.pages[S.page]?` · ${esc(S.page)}`:'')+'</h3>'+([...m.entries()].map(([r,v])=>{const on=S.fn===r;
+   return`<div class="fnrow${on?' on':''}" data-r="${esc(r)}"><span class="fb${on?' on':''}">${esc(r)}</span><div>${on&&v.nodes.length?`<div class="inst"><button data-st="-1" aria-label="Previous instance">‹</button>${S.fnIdx+1} of ${v.nodes.length} instance${v.nodes.length>1?'s':''}<button data-st="1" aria-label="Next instance">›</button></div>`:''}${esc(v.text)}</div></div>`}).join('')||'<p class="muted">No footnotes on this page.</p>');
+  body.querySelectorAll('.fnrow').forEach(row=>row.onclick=ev=>{if(ev.target.closest('[data-st]'))return;openFootnote(row.dataset.r,(m.get(row.dataset.r).nodes||[])[0])});
+  body.querySelectorAll('[data-st]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();stepFn(+b.dataset.st)})}}
+$('#dock').querySelectorAll('.dt button[data-d]').forEach(b=>b.onclick=()=>{S.dock=S.dock===b.dataset.d?null:b.dataset.d;renderDock()});
+$('#dockx').onclick=()=>{S.dock=null;renderDock()};
 document.addEventListener('keydown',e=>{if(e.key==='Escape')showHelp(false)});
 
 /* ---------- guided walk + patient facts (port of navigator.py A4/A5 logic) ---------- */
@@ -333,7 +417,10 @@ function startWalk(page,nid){const roots=B.roots[page]||[];const w={path:[],at:n
 function choose(c){S.walk.path.push({node:c,by:'manual'});S.walk.at=c;autoStep(S.walk);afterWalk()}
 function afterWalk(){const at=S.walk.at;const pg=at.split(':')[0];
  if(S.page!==pg){go(pg,at.endsWith(':START')?null:at)}else{S.sel=at.endsWith(':START')?null:at;renderChart();renderDetails()}
- renderWalk();showTab('walk')}
+ renderWalk();showTab('walk');renderHist()}
+function renderHist(){const el=$('#histbody'),w=S.walk;if(!w){el.innerHTML='Start a guided walk to see its steps here.';return}
+ el.innerHTML=w.path.map((s,i)=>`<button class="crumb" data-hi="${i}">${i+1}. ${esc(s.node)} <span class="muted">${esc(s.by)}</span><br>${esc(getNode(s.node).text.slice(0,70))}</button>`).join('');
+ el.querySelectorAll('[data-hi]').forEach(b=>b.onclick=()=>{const nd=w.path[+b.dataset.hi].node;go(nd.split(':')[0],nd.endsWith(':START')?null:nd)})}
 function renderWalk(){const el=$('#p-walk'),w=S.walk;
  if(!w){el.innerHTML='<p class="muted">Pick an algorithm page, then start a walk from its entry box (or from the selected box). At each step choose the branch that fits the patient; with facts entered, branches they decide are followed automatically.</p>'+
   Object.keys(B.pages).map(p=>`<button class="chip" data-start="${esc(p)}">${esc(p)}</button>`).join('');
@@ -378,12 +465,12 @@ function renderFacts(){const el=$('#p-facts'),names=Object.keys(VARS);
 $('#title').textContent=B.title;document.title=B.title;
 const nb=Object.values(B.pages).reduce((a,g)=>a+g.nodes.length,0),ne=Object.values(B.pages).reduce((a,g)=>a+g.edges.length,0);
 $('#stats').textContent=`${Object.keys(B.pages).length} algorithm pages · ${nb} boxes · ${ne} arrows · ${Object.keys(PRED).length} branch conditions`;
-renderFacts();renderWalk();
+renderFacts();renderWalk();renderDock();
 window.addEventListener('hashchange',fromHash);
 if(!fromHash()){let p=null;try{p=localStorage.getItem('dash-page')}catch(e){}
  const first=Object.keys(B.pages)[0];go(B.pages[p]||TEXT_PAGES.includes(p)?p:first)}
 try{if(!localStorage.getItem('dash-help'))showHelp(true)}catch(e){}
-window.__dash={S,startWalk,choose,evaluate,derive,F,showHelp};
+window.__dash={S,startWalk,choose,evaluate,derive,F,showHelp,openFootnote};
 </script>
 </body>
 </html>
