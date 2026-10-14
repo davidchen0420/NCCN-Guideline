@@ -156,7 +156,18 @@ def _parse_footnotes(lines, page_width):
     """Footnotes run in two columns; each starts with a letter marker: a superscript, a letter
     and a tab, or (in some guidelines) a plain letter and a space at a hanging indent."""
     notes, current = {}, None
-    ordered = sorted(lines, key=lambda l: (l["bbox"][0] > page_width / 2, l["bbox"][1]))
+    # Columns start where marker lines start (they need not split at the page midline).
+    starts = []
+    for x in sorted(l["bbox"][0] for l in lines
+                    if (l["marker"] and MARK_RE.fullmatch(l["marker"])) or re.match(MARK + r"[\t ]", l["text"])):
+        if not starts or x - starts[-1] > 40:
+            starts.append(x)
+    starts = starts or [0, page_width / 2]
+
+    def column(l):
+        return max([i for i, x in enumerate(starts) if x <= l["bbox"][0] + 8] or [0])
+
+    ordered = sorted(lines, key=lambda l: (column(l), l["bbox"][1]))
     for k, line in enumerate(ordered):
         if re.match(r"(Footnotes?|References|Continued)\b", line["text"]):
             current = None  # navigation lines ("Footnotes on AE-7A", "Continued") end a note
@@ -168,8 +179,7 @@ def _parse_footnotes(lines, page_width):
         if not marker and plain:
             # A plain letter counts only if it continues the sequence and the next line of the
             # column is indented past it (hanging indent) or starts another note.
-            nxt = next((l for l in ordered[k + 1:]
-                        if (l["bbox"][0] > page_width / 2) == (line["bbox"][0] > page_width / 2)), None)
+            nxt = next((l for l in ordered[k + 1:] if column(l) == column(line)), None)
             hanging = nxt is None or nxt["bbox"][0] > line["bbox"][0] + 2 or re.match(r"([a-z])\1{0,3} ", nxt["text"])
             if hanging and (current is None or _letter_key(plain.group(1)) > _letter_key(current)):
                 marker = plain.group(1)
