@@ -1,0 +1,22 @@
+{
+ "A0 no context (Haiku)": {
+  "V1": true,
+  "V2": false,
+  "V3": true,
+  "V4": true,
+  "V5": true,
+  "V6": true,
+  "V7": true,
+  "V8": true
+ },
+ "A2 BM25 RAG (Haiku)": {
+  "V1": true,
+  "V2": true,
+  "V3": true,
+  "V4": true,
+  "V5": true,
+  "V6": true,
+  "V7": true,
+  "V8": true
+ }
+}

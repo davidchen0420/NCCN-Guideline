@@ -1,0 +1,61 @@
+{"id": "PROS-7:n245_32", "parent": "(entry box: where a patient starts)", "box": ">5 y or symptomatic", "siblings": []}
+{"id": "PROS-7:n491_23", "parent": "(entry box: where a patient starts)", "box": "≤5 y and asymptomatic", "siblings": []}
+{"id": "PROS-8:n222_28", "parent": "(entry box: where a patient starts)", "box": "Initial definitive therapy", "siblings": []}
+{"id": "PROS-8:n451_28", "parent": "(entry box: where a patient starts)", "box": "N1 on ADT or Localized on observation", "siblings": []}
+{"id": "PROS-9:n342_13", "parent": "(entry box: where a patient starts)", "box": "PSA persistence/ recurrence", "siblings": []}
+{"id": "PROS-10:n360_14", "parent": "(entry box: where a patient starts)", "box": "PSA recurrence or Positive DRE", "siblings": []}
+{"id": "PROS-11:n237_22", "parent": "(entry box: where a patient starts)", "box": "Second Biochemical Recurrence (BCR2)", "siblings": []}
+{"id": "PROS-13:n168_24", "parent": "(entry box: where a patient starts)", "box": "• Perform physical exam • Perform imaging for staging • Perform and/or collect PSA and calculate PSADT • Estimate life expectancy (Principles of Life Expectancy Estimation [PROS-A]) • Perform germline and somatic genetic testing (if not previously done) • Obtain family history • Assess quality-of-life measures", "siblings": []}
+{"id": "PROS-7:n134_387", "parent": "RT + ADT (24 mo) + abiraterone (preferred) or RT + ADT(24–36 mo)", "box": "Biochemical recurrence", "siblings": ["No biochemical recurrence"]}
+{"id": "PROS-7:n171_387", "parent": "RT + ADT (24 mo) + abiraterone (preferred) or RT + ADT(24–36 mo)", "box": "No biochemical recurrence", "siblings": ["Biochemical recurrence"]}
+{"id": "PROS-7:n137_136", "parent": ">5 y or symptomatic", "box": "RT + ADT (24 mo) + abiraterone (preferred) or RT + ADT(24–36 mo)", "siblings": ["ADT ± abiraterone", "RPin select patients"]}
+{"id": "PROS-7:n238_136", "parent": ">5 y or symptomatic", "box": "ADT ± abiraterone", "siblings": ["RT + ADT (24 mo) + abiraterone (preferred) or RT + ADT(24–36 mo)", "RPin select patients"]}
+{"id": "PROS-7:n338_136", "parent": ">5 y or symptomatic", "box": "RPin select patients", "siblings": ["RT + ADT (24 mo) + abiraterone (preferred) or RT + ADT(24–36 mo)", "ADT ± abiraterone"]}
+{"id": "PROS-7:n263_374", "parent": "Undetectable PSA", "box": "No adverse features and no lymph node metastases", "siblings": ["Adverse feature(s) or lymph node metastases"]}
+{"id": "PROS-7:n326_374", "parent": "Undetectable PSA", "box": "Adverse feature(s) or lymph node metastases", "siblings": ["No adverse features and no lymph node metastases"]}
+{"id": "PROS-7:n309_222", "parent": "RPin select patients", "box": "Undetectable PSA", "siblings": ["PSA persistence"]}
+{"id": "PROS-7:n399_218", "parent": "RPin select patients", "box": "PSA persistence", "siblings": ["Undetectable PSA"]}
+{"id": "PROS-7:n472_292", "parent": "Observation or RT or ADT± RT", "box": "Symptomatic progression", "siblings": ["Symptomatic progression"]}
+{"id": "PROS-7:n526_292", "parent": "Observation or RT or ADT± RT", "box": "Symptomatic progression", "siblings": ["Symptomatic progression"]}
+{"id": "PROS-7:n433_501", "parent": "Symptomatic progression", "box": "Workup and Treatment of Metachronous Oligometastatic M1 CSPC (PROS-13)", "siblings": ["Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)", "Workup and Treatment of High-Volume M1 CSPC (PROS-15)"]}
+{"id": "PROS-7:n462_501", "parent": "Symptomatic progression", "box": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)", "siblings": ["Workup and Treatment of Metachronous Oligometastatic M1 CSPC (PROS-13)", "Workup and Treatment of High-Volume M1 CSPC (PROS-15)"]}
+{"id": "PROS-7:n500_500", "parent": "Symptomatic progression", "box": "Workup and Treatment of High-Volume M1 CSPC (PROS-15)", "siblings": ["Workup and Treatment of Metachronous Oligometastatic M1 CSPC (PROS-13)", "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)"]}
+{"id": "PROS-8:n154_345", "parent": "• PSA every 6–12 mo for 5 y, then every year • Consider DRE if suspicion of recurrence", "box": "Post-RP", "siblings": ["Post-RT", "Radiographic evidence of metastatic disease without PSA persistence/ recurrence"]}
+{"id": "PROS-8:n219_345", "parent": "• PSA every 6–12 mo for 5 y, then every year • Consider DRE if suspicion of recurrence", "box": "Post-RT", "siblings": ["Post-RP", "Radiographic evidence of metastatic disease without PSA persistence/ recurrence"]}
+{"id": "PROS-8:n288_345", "parent": "• PSA every 6–12 mo for 5 y, then every year • Consider DRE if suspicion of recurrence", "box": "Radiographic evidence of metastatic disease without PSA persistence/ recurrence", "siblings": ["Post-RP", "Post-RT"]}
+{"id": "PROS-8:n254_573", "parent": "Biopsy of metastatic site", "box": "Workup and Treatment of Metachronous Oligometastatic CSPC (PROS-13)", "siblings": ["Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)", "Workup and Treatment of High- Volume M1 CSPC (PROS-15)"]}
+{"id": "PROS-8:n295_573", "parent": "Biopsy of metastatic site", "box": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)", "siblings": ["Workup and Treatment of Metachronous Oligometastatic CSPC (PROS-13)", "Workup and Treatment of High- Volume M1 CSPC (PROS-15)"]}
+{"id": "PROS-8:n350_573", "parent": "Biopsy of metastatic site", "box": "Workup and Treatment of High- Volume M1 CSPC (PROS-15)", "siblings": ["Workup and Treatment of Metachronous Oligometastatic CSPC (PROS-13)", "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)"]}
+{"id": "PROS-8:n442_492", "parent": "Progression", "box": "N1,M0", "siblings": ["M1"]}
+{"id": "PROS-8:n482_494", "parent": "Progression", "box": "M1", "siblings": ["N1,M0"]}
+{"id": "PROS-9:n175_239", "parent": "Life expectancy >5 y: • Risk stratification Consider: • Bone and soft tissue imaging • Prostate bed biopsy", "box": "No evidence of M1", "siblings": ["M1"]}
+{"id": "PROS-9:n317_239", "parent": "Life expectancy >5 y: • Risk stratification Consider: • Bone and soft tissue imaging • Prostate bed biopsy", "box": "M1", "siblings": ["No evidence of M1"]}
+{"id": "PROS-9:n277_303", "parent": "M1", "box": "Oligometastatic", "siblings": ["Polymetastatic"]}
+{"id": "PROS-9:n356_303", "parent": "M1", "box": "Polymetastatic", "siblings": ["Oligometastatic"]}
+{"id": "PROS-9:n216_97", "parent": "PSA persistence/ recurrence", "box": "Life expectancy >5 y: • Risk stratification Consider: • Bone and soft tissue imaging • Prostate bed biopsy", "siblings": ["Life expectancy ≤5 y"]}
+{"id": "PROS-9:n434_100", "parent": "PSA persistence/ recurrence", "box": "Life expectancy ≤5 y", "siblings": ["Life expectancy >5 y: • Risk stratification Consider: • Bone and soft tissue imaging • Prostate bed biopsy"]}
+{"id": "PROS-9:n316_432", "parent": "Polymetastatic", "box": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)", "siblings": ["Workup and Treatment of High- Volume M1 CSPC (PROS-15)"]}
+{"id": "PROS-9:n380_432", "parent": "Polymetastatic", "box": "Workup and Treatment of High- Volume M1 CSPC (PROS-15)", "siblings": ["Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)"]}
+{"id": "PROS-10:n136_356", "parent": "No evidence", "box": "• Monitoring", "siblings": ["• Local secondary therapy ± ADT (± abiraterone for N1) or • ADT based on PSADT or • ADT ± abiraterone for N1"]}
+{"id": "PROS-10:n184_358", "parent": "No evidence", "box": "• Local secondary therapy ± ADT (± abiraterone for N1) or • ADT based on PSADT or • ADT ± abiraterone for N1", "siblings": ["• Monitoring"]}
+{"id": "PROS-10:n162_291", "parent": "• Risk stratification \u0017PSADT • Bone and soft tissue imaging • Consider prostate/ seminal vesicle biopsy", "box": "No evidence", "siblings": ["of M1", "M1"]}
+{"id": "PROS-10:n186_291", "parent": "• Risk stratification \u0017PSADT • Bone and soft tissue imaging • Consider prostate/ seminal vesicle biopsy", "box": "of M1", "siblings": ["No evidence", "M1"]}
+{"id": "PROS-10:n360_291", "parent": "• Risk stratification \u0017PSADT • Bone and soft tissue imaging • Consider prostate/ seminal vesicle biopsy", "box": "M1", "siblings": ["No evidence", "of M1"]}
+{"id": "PROS-10:n325_340", "parent": "M1", "box": "Oligometastatic", "siblings": ["Polymetastatic"]}
+{"id": "PROS-10:n399_340", "parent": "M1", "box": "Polymetastatic", "siblings": ["Oligometastatic"]}
+{"id": "PROS-10:n263_104", "parent": "PSA recurrence or Positive DRE", "box": "Life expectancy >5 y", "siblings": ["Life expectancy ≤5 y"]}
+{"id": "PROS-10:n471_104", "parent": "PSA recurrence or Positive DRE", "box": "Life expectancy ≤5 y", "siblings": ["Life expectancy >5 y"]}
+{"id": "PROS-10:n366_470", "parent": "Polymetastatic", "box": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)", "siblings": ["Workup and Treatment of High- Volume M1 CSPC (PROS-15)"]}
+{"id": "PROS-10:n412_470", "parent": "Polymetastatic", "box": "Workup and Treatment of High- Volume M1 CSPC (PROS-15)", "siblings": ["Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)"]}
+{"id": "PROS-11:n118_259", "parent": "Perform imaging for staging", "box": "N0M0 CSPC", "siblings": ["M0 CRPC (N0 or N1)", "N1M0 CSPC", "M1"]}
+{"id": "PROS-11:n186_259", "parent": "Perform imaging for staging", "box": "M0 CRPC (N0 or N1)", "siblings": ["N0M0 CSPC", "N1M0 CSPC", "M1"]}
+{"id": "PROS-11:n312_259", "parent": "Perform imaging for staging", "box": "N1M0 CSPC", "siblings": ["N0M0 CSPC", "M0 CRPC (N0 or N1)", "M1"]}
+{"id": "PROS-11:n398_259", "parent": "Perform imaging for staging", "box": "M1", "siblings": ["N0M0 CSPC", "M0 CRPC (N0 or N1)", "N1M0 CSPC"]}
+{"id": "PROS-11:n353_534", "parent": "Polymetastatic CSPC", "box": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)", "siblings": ["Workup and Treatment of High-Volume M1 CSPC (PROS-15)"]}
+{"id": "PROS-11:n418_534", "parent": "Polymetastatic CSPC", "box": "Workup and Treatment of High-Volume M1 CSPC (PROS-15)", "siblings": ["Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)"]}
+{"id": "PROS-11:n310_378", "parent": "M1", "box": "Oligometastatic CSPC", "siblings": ["Polymetastatic CSPC", "M1 CRPC"]}
+{"id": "PROS-11:n396_378", "parent": "M1", "box": "Polymetastatic CSPC", "siblings": ["Oligometastatic CSPC", "M1 CRPC"]}
+{"id": "PROS-11:n467_378", "parent": "M1", "box": "M1 CRPC", "siblings": ["Oligometastatic CSPC", "Polymetastatic CSPC"]}
+{"id": "PROS-13:n126_619", "parent": "Progression", "box": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)", "siblings": ["Workup and Treatment of High-Volume M1 CSPC (PROS-15)", "Workup and Treatment of M1 CRPC (PROS-17)"]}
+{"id": "PROS-13:n240_620", "parent": "Progression", "box": "Workup and Treatment of High-Volume M1 CSPC (PROS-15)", "siblings": ["Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)", "Workup and Treatment of M1 CRPC (PROS-17)"]}
+{"id": "PROS-13:n305_619", "parent": "Progression", "box": "Workup and Treatment of M1 CRPC (PROS-17)", "siblings": ["Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)", "Workup and Treatment of High-Volume M1 CSPC (PROS-15)"]}

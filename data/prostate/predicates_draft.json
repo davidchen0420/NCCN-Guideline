@@ -1,0 +1,43 @@
+{
+  "PROS-3:n2": {"fact": "progression", "op": "==", "value": true},
+  "PROS-3:n3": {"fact": "initial_therapy", "op": "==", "value": "active_surveillance"},
+  "PROS-3:n4": null,
+  "PROS-3:n5": {"fact": "biochemical_recurrence_after_rt", "op": "==", "value": true},
+  "PROS-3:n6": {"fact": "initial_therapy", "op": "==", "value": "radiation_therapy"},
+  "PROS-3:n7": {"fact": "life_expectancy_years", "op": ">=", "value": 10},
+  "PROS-3:n8": {"fact": "biochemical_recurrence_after_rt", "op": "==", "value": false},
+  "PROS-3:n9": null,
+  "PROS-3:n10": {"all": [
+    {"fact": "adverse_features", "op": "==", "value": false},
+    {"fact": "lymph_node_metastases", "op": "==", "value": false}
+  ]},
+  "PROS-3:n11": {"fact": "post_rp_psa_undetectable", "op": "==", "value": true},
+  "PROS-3:n12": null,
+  "PROS-3:n13": {"any": [
+    {"fact": "adverse_features", "op": "==", "value": true},
+    {"fact": "lymph_node_metastases", "op": "==", "value": true}
+  ]},
+  "PROS-3:n14": {"fact": "initial_therapy", "op": "==", "value": "radical_prostatectomy"},
+  "PROS-3:n15": null,
+  "PROS-3:n16": {"fact": "post_rp_psa_undetectable", "op": "==", "value": false},
+  "PROS-3:n17": {"fact": "life_expectancy_years", "op": "<", "value": 10},
+  "PROS-3:n18": {"fact": "initial_therapy", "op": "==", "value": "observation"},
+  "PROS-3:n19": null,
+  "PROS-9:n2": null,
+  "PROS-9:n3": null,
+  "PROS-9:n4": null,
+  "PROS-9:n5": {"fact": "m1", "op": "==", "value": false},
+  "PROS-9:n6": null,
+  "PROS-9:n7": {"fact": "life_expectancy_years", "op": ">", "value": 5},
+  "PROS-9:n8": null,
+  "PROS-9:n9": {"fact": "metastatic_pattern", "op": "==", "value": "oligometastatic"},
+  "PROS-9:n10": {"fact": "high_volume", "op": "==", "value": false},
+  "PROS-9:n11": {"fact": "m1", "op": "==", "value": true},
+  "PROS-9:n12": {"fact": "post_rp_psa_undetectable", "op": "==", "value": false},
+  "PROS-9:n13": {"fact": "metastatic_pattern", "op": "==", "value": "polymetastatic"},
+  "PROS-9:n14": {"fact": "high_volume", "op": "==", "value": true},
+  "PROS-9:n15": {"fact": "life_expectancy_years", "op": "<=", "value": 5},
+  "PROS-9:n16": null,
+  "PROS-9:n17": null,
+  "PROS-9:n18": {"fact": "progression", "op": "==", "value": true}
+}

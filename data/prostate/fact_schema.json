@@ -1,0 +1,222 @@
+{
+  "variables": {
+    "life_expectancy_years": {"type": "number", "unit": "years", "definition": "Estimated life expectancy of the patient, in years."},
+    "psa_ng_ml": {"type": "number", "unit": "ng/ml", "definition": "Serum PSA level, in ng/mL, at diagnosis or at the time being assessed."},
+    "psa_doubling_time_months": {"type": "number", "unit": "months", "definition": "PSA doubling time (PSADT), in months."},
+    "testosterone_ng_dl": {"type": "number", "unit": "ng/dl", "definition": "Serum testosterone level, in ng/dL, at the time being assessed."},
+    "clinical_t_category": {"type": "enum", "values": ["T1a", "T1b", "T1c", "T2a", "T2b", "T2c", "T3a", "T3b", "T4", "other"], "definition": "Clinical T category as stated in the case."},
+    "n_category": {"type": "enum", "values": ["N0", "N1", "NX", "other"], "definition": "Nodal (N) category as stated in the case."},
+    "m_category": {"type": "enum", "values": ["M0", "M1", "MX", "other"], "definition": "Metastatic (M) category as stated in the case."},
+    "bone_metastases_count": {"type": "number", "unit": "count", "definition": "Number of bone metastases (lesions) on staging bone imaging."},
+    "bone_metastases_beyond_vertebrae_pelvis_count": {"type": "number", "unit": "count", "definition": "Number of bone metastases located outside the vertebral bodies and pelvis."},
+    "visceral_metastases_present": {"type": "bool", "definition": "Case states visceral metastases are present."},
+    "grade_group": {"type": "enum", "values": ["1", "2", "3", "4", "5", "other"], "definition": "Grade Group as stated in the case."},
+    "positive_cores_percent": {"type": "number", "unit": "percent", "definition": "Percentage of biopsy cores that are positive for cancer."},
+    "histology": {"type": "enum", "values": ["adenocarcinoma", "small_cell_neuroendocrine", "other"], "definition": "Histologic type of the prostate cancer."},
+    "psa_status": {"type": "enum", "values": ["undetectable", "persistence", "recurrence", "no_recurrence", "other"], "definition": "PSA state at follow-up. After radical prostatectomy: undetectable (PSA undetectable), persistence (detectable PSA after surgery), recurrence (PSA recurrence). After radiation therapy: recurrence (biochemical recurrence) or no_recurrence (no biochemical recurrence)."},
+    "psa_trend": {"type": "enum", "values": ["stable", "increasing", "other"], "definition": "Trend of serial PSA values on androgen deprivation therapy."},
+    "metastasis_timing": {"type": "enum", "values": ["synchronous", "metachronous", "other"], "definition": "Whether metastases were present at initial diagnosis (synchronous) or appeared after initial treatment (metachronous)."},
+    "definitive_treatment_received": {"type": "enum", "values": ["radical_prostatectomy", "radiation_therapy", "radiation_plus_adt", "none", "other"], "definition": "Initial definitive treatment the patient has received."},
+    "current_treatment_phase": {"type": "enum", "values": ["initial_definitive_therapy", "on_adt", "on_observation", "other"], "definition": "Treatment phase the patient is currently in."},
+    "symptomatic_progression": {"type": "bool", "definition": "Case states the patient has symptomatic progression of prostate cancer."},
+    "adverse_pathologic_features": {"type": "bool", "definition": "Case states adverse pathologic features are present on the surgical or treatment specimen. The criteria are not printed in schema_input.txt."},
+    "positive_digital_rectal_exam": {"type": "bool", "definition": "Digital rectal exam is positive for a suspicious finding of prostate cancer."},
+    "prior_arpi_treatment": {"type": "bool", "definition": "Patient has previously received an androgen receptor pathway inhibitor (ARPI), such as abiraterone or enzalutamide."},
+    "brca1_2_mutation": {"type": "bool", "definition": "A BRCA1 or BRCA2 mutation is present."},
+    "hrr_mutation_other_than_brca": {"type": "bool", "definition": "A homologous recombination repair (HRR) gene mutation other than BRCA1 or BRCA2 is present."},
+    "crpc_stated": {"type": "bool", "definition": "Case explicitly states the patient has castration-resistant prostate cancer (CRPC). Used to accept the stated classification instead of the rules of castration_resistant."},
+    "clinician_judges_oligometastatic": {"type": "bool", "definition": "Clinician judgement that the metastatic disease is oligometastatic. The volume criteria are not printed in schema_input.txt, so no case text states this as a fact."},
+    "high_volume_stated": {"type": "bool", "definition": "Case explicitly states the metastatic disease is high-volume. Used to accept the stated classification instead of the rules of clinician_judges_high_volume."},
+    "high_risk_bcr_stated": {"type": "bool", "definition": "Case explicitly states the biochemical recurrence is high-risk. Used to accept the stated classification instead of the rules of high_risk_biochemical_recurrence."},
+    "second_biochemical_recurrence": {"type": "bool", "definition": "Case states a second biochemical recurrence (BCR2) after prior treatment."}
+  },
+  "derived": {
+    "disease_extent": {
+      "type": "enum",
+      "definition": "Clinical extent of disease at initial presentation.",
+      "rules": [
+        {"if": {"fact": "m_category", "op": "==", "value": "M1"}, "then": "metastatic"},
+        {"if": {"fact": "n_category", "op": "==", "value": "N1"}, "then": "regional"}
+      ],
+      "else": "clinically_localized"
+    },
+    "risk_group": {
+      "type": "enum",
+      "definition": "NCCN risk group from clinical T category, Grade Group and PSA.",
+      "rules": [
+        {"if": {"any": [
+          {"all": [{"fact": "clinical_t_category", "op": "in", "value": ["T3a", "T3b", "T4"]}, {"fact": "grade_group", "op": "in", "value": ["4", "5"]}]},
+          {"all": [{"fact": "clinical_t_category", "op": "in", "value": ["T3a", "T3b", "T4"]}, {"fact": "psa_ng_ml", "op": ">", "value": 40}]},
+          {"all": [{"fact": "grade_group", "op": "in", "value": ["4", "5"]}, {"fact": "psa_ng_ml", "op": ">", "value": 40}]}
+        ]}, "then": "very_high"},
+        {"if": {"any": [
+          {"fact": "clinical_t_category", "op": "in", "value": ["T3a", "T3b", "T4"]},
+          {"fact": "grade_group", "op": "in", "value": ["4", "5"]},
+          {"fact": "psa_ng_ml", "op": ">", "value": 20}
+        ]}, "then": "high"},
+        {"if": {"any": [
+          {"fact": "clinical_t_category", "op": "in", "value": ["T2b", "T2c"]},
+          {"fact": "grade_group", "op": "in", "value": ["2", "3"]},
+          {"all": [{"fact": "psa_ng_ml", "op": ">=", "value": 10}, {"fact": "psa_ng_ml", "op": "<=", "value": 20}]}
+        ]}, "then": "intermediate"},
+        {"if": {"all": [
+          {"fact": "clinical_t_category", "op": "in", "value": ["T1a", "T1b", "T1c", "T2a"]},
+          {"fact": "grade_group", "op": "==", "value": "1"},
+          {"fact": "psa_ng_ml", "op": "<", "value": 10}
+        ]}, "then": "low"}
+      ]
+    },
+    "intermediate_subgroup": {
+      "type": "enum",
+      "definition": "Favorable or unfavorable intermediate risk. Applies only when risk_group is intermediate.",
+      "rules": [
+        {"if": {"all": [
+          {"fact": "risk_group", "op": "==", "value": "intermediate"},
+          {"any": [
+            {"all": [{"fact": "clinical_t_category", "op": "in", "value": ["T2b", "T2c"]}, {"fact": "grade_group", "op": "in", "value": ["2", "3"]}]},
+            {"all": [{"fact": "clinical_t_category", "op": "in", "value": ["T2b", "T2c"]}, {"all": [{"fact": "psa_ng_ml", "op": ">=", "value": 10}, {"fact": "psa_ng_ml", "op": "<=", "value": 20}]}]},
+            {"all": [{"fact": "grade_group", "op": "in", "value": ["2", "3"]}, {"all": [{"fact": "psa_ng_ml", "op": ">=", "value": 10}, {"fact": "psa_ng_ml", "op": "<=", "value": 20}]}]},
+            {"fact": "grade_group", "op": "==", "value": "3"},
+            {"fact": "positive_cores_percent", "op": ">=", "value": 50}
+          ]}
+        ]}, "then": "unfavorable_intermediate"},
+        {"if": {"fact": "risk_group", "op": "==", "value": "intermediate"}, "then": "favorable_intermediate"}
+      ]
+    },
+    "life_expectancy_band": {
+      "type": "enum",
+      "definition": "Life expectancy band, using the boundaries 5 and 10 years as printed in the boxes.",
+      "rules": [
+        {"if": {"fact": "life_expectancy_years", "op": ">", "value": 10}, "then": "gt_10"},
+        {"if": {"fact": "life_expectancy_years", "op": "==", "value": 10}, "then": "eq_10"},
+        {"if": {"fact": "life_expectancy_years", "op": ">", "value": 5}, "then": "between_5_and_10_exclusive"},
+        {"if": {"fact": "life_expectancy_years", "op": "==", "value": 5}, "then": "eq_5"},
+        {"if": {"fact": "life_expectancy_years", "op": "<", "value": 5}, "then": "lt_5"}
+      ]
+    },
+    "psadt_group": {
+      "type": "enum",
+      "definition": "PSA doubling time group, using the 10-month threshold as printed.",
+      "rules": [
+        {"if": {"fact": "psa_doubling_time_months", "op": "<=", "value": 10}, "then": "le_10_months"},
+        {"if": {"fact": "psa_doubling_time_months", "op": ">", "value": 10}, "then": "gt_10_months"}
+      ]
+    },
+    "castration_resistant": {
+      "type": "bool",
+      "definition": "Castration-resistant prostate cancer (CRPC): progression despite castrate serum testosterone levels (<50 ng/dL), as in the PROS-16 boxes. Progression is PSA increasing or radiographic evidence of metastases, per PROS-16 ('PSA increasing or radiographic evidence of metastases'). A case that explicitly states CRPC is accepted as stated.",
+      "rules": [
+        {"if": {"fact": "crpc_stated", "op": "==", "value": true}, "then": true},
+        {"if": {"all": [
+          {"fact": "testosterone_ng_dl", "op": "<", "value": 50},
+          {"any": [
+            {"fact": "psa_trend", "op": "==", "value": "increasing"},
+            {"fact": "m_category", "op": "==", "value": "M1"}
+          ]}
+        ]}, "then": true}
+      ],
+      "else": false
+    },
+    "clinician_judges_high_volume": {
+      "type": "bool",
+      "definition": "High-volume metastatic disease (PROS-15), using the CHAARTED criteria named in guideline footnote ccc: the presence of visceral metastasis, or 4 or more bone lesions with at least 1 beyond the vertebral bodies and pelvis. A case that explicitly states high-volume disease is accepted as stated.",
+      "rules": [
+        {"if": {"fact": "high_volume_stated", "op": "==", "value": true}, "then": true},
+        {"if": {"fact": "visceral_metastases_present", "op": "==", "value": true}, "then": true},
+        {"if": {"all": [
+          {"fact": "bone_metastases_count", "op": ">=", "value": 4},
+          {"fact": "bone_metastases_beyond_vertebrae_pelvis_count", "op": ">=", "value": 1}
+        ]}, "then": true}
+      ],
+      "else": false
+    },
+    "high_risk_biochemical_recurrence": {
+      "type": "bool",
+      "definition": "High-risk biochemical recurrence. The guideline footnote states that high-risk BCR definitions vary across trials and generally include a PSADT of 9 months or less and other adverse prognostic features. Operationalized here as PSADT of 9 months or less plus at least one adverse prognostic feature (Grade Group 4 or 5, cT3-cT4, N1, or adverse pathologic features). The adverse-feature list is this schema's choice, not a printed criterion. A case that explicitly states high-risk BCR is accepted as stated.",
+      "rules": [
+        {"if": {"fact": "high_risk_bcr_stated", "op": "==", "value": true}, "then": true},
+        {"if": {"all": [
+          {"fact": "psa_doubling_time_months", "op": "<=", "value": 9},
+          {"any": [
+            {"fact": "grade_group", "op": "in", "value": ["4", "5"]},
+            {"fact": "clinical_t_category", "op": "in", "value": ["T3a", "T3b", "T4"]},
+            {"fact": "n_category", "op": "==", "value": "N1"},
+            {"fact": "adverse_pathologic_features", "op": "==", "value": true}
+          ]}
+        ]}, "then": true}
+      ],
+      "else": false
+    },
+    "gt5y_or_symptomatic": {
+      "type": "bool",
+      "definition": "Life expectancy greater than 5 years, or symptomatic progression. False means life expectancy 5 years or less and asymptomatic.",
+      "rules": [
+        {"if": {"any": [
+          {"fact": "life_expectancy_band", "op": "in", "value": ["between_5_and_10_exclusive", "eq_10", "gt_10"]},
+          {"fact": "symptomatic_progression", "op": "==", "value": true}
+        ]}, "then": true}
+      ],
+      "else": false
+    },
+    "adverse_features_or_node_positive": {
+      "type": "bool",
+      "definition": "Adverse pathologic feature(s) or lymph node metastases (N1).",
+      "rules": [
+        {"if": {"any": [
+          {"fact": "adverse_pathologic_features", "op": "==", "value": true},
+          {"fact": "n_category", "op": "==", "value": "N1"}
+        ]}, "then": true}
+      ],
+      "else": false
+    },
+    "psa_persistence_or_recurrence": {
+      "type": "bool",
+      "definition": "PSA persistence or PSA recurrence.",
+      "rules": [
+        {"if": {"fact": "psa_status", "op": "in", "value": ["persistence", "recurrence"]}, "then": true}
+      ],
+      "else": false
+    },
+    "psa_recurrence_or_positive_dre": {
+      "type": "bool",
+      "definition": "PSA recurrence or positive digital rectal exam. False corresponds to 'No evidence'.",
+      "rules": [
+        {"if": {"any": [
+          {"fact": "psa_status", "op": "==", "value": "recurrence"},
+          {"fact": "positive_digital_rectal_exam", "op": "==", "value": true}
+        ]}, "then": true}
+      ],
+      "else": false
+    },
+    "staging_state": {
+      "type": "enum",
+      "definition": "Combined stage state for castration-sensitive and castration-resistant disease.",
+      "rules": [
+        {"if": {"all": [{"fact": "m_category", "op": "==", "value": "M1"}, {"fact": "castration_resistant", "op": "==", "value": true}]}, "then": "m1_crpc"},
+        {"if": {"fact": "m_category", "op": "==", "value": "M1"}, "then": "m1_cspc"},
+        {"if": {"all": [{"fact": "m_category", "op": "==", "value": "M0"}, {"fact": "castration_resistant", "op": "==", "value": true}, {"fact": "n_category", "op": "in", "value": ["N0", "N1"]}]}, "then": "m0_crpc"},
+        {"if": {"all": [{"fact": "n_category", "op": "==", "value": "N1"}, {"fact": "m_category", "op": "==", "value": "M0"}, {"fact": "castration_resistant", "op": "==", "value": false}]}, "then": "n1m0_cspc"},
+        {"if": {"all": [{"fact": "n_category", "op": "==", "value": "N0"}, {"fact": "m_category", "op": "==", "value": "M0"}, {"fact": "castration_resistant", "op": "==", "value": false}]}, "then": "n0m0_cspc"}
+      ]
+    },
+    "metastatic_pattern": {
+      "type": "enum",
+      "definition": "Oligometastatic or polymetastatic pattern. Oligometastatic is the clinician judgement; all other metastatic disease is polymetastatic.",
+      "rules": [
+        {"if": {"fact": "clinician_judges_oligometastatic", "op": "==", "value": true}, "then": "oligometastatic"}
+      ],
+      "else": "polymetastatic"
+    },
+    "adt_monitoring_result": {
+      "type": "enum",
+      "definition": "Result of periodic disease assessment (PSA and imaging) during ADT for CRPC.",
+      "rules": [
+        {"if": {"any": [
+          {"fact": "psa_trend", "op": "==", "value": "increasing"},
+          {"fact": "m_category", "op": "==", "value": "M1"}
+        ]}, "then": "progression"}
+      ],
+      "else": "stable_no_metastases"
+    }
+  }
+}

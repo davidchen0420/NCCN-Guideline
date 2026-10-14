@@ -1,0 +1,42 @@
+[
+ {
+  "id": "V1",
+  "start": "PROS-3",
+  "text": "64-year-old man with low-risk prostate cancer (cT1c, Grade Group 1, PSA 5 ng/mL), healthy, estimated life expectancy about 18 years. He chose radical prostatectomy. PSA 8 weeks after surgery is undetectable. Pathology: organ-confined, negative margins, no adverse features, 0/12 lymph nodes positive. What is the next step?"
+ },
+ {
+  "id": "V2",
+  "start": "PROS-3",
+  "text": "82-year-old man with low-risk prostate cancer (Grade Group 1, PSA 6), with heart failure and COPD; estimated life expectancy about 6 years. Asymptomatic. How should he be managed?"
+ },
+ {
+  "id": "V3",
+  "start": "PROS-3",
+  "text": "58-year-old man treated with external beam radiation therapy 4 years ago for low-risk prostate cancer; life expectancy >20 years. PSA nadir was 0.4; PSA is now 3.1 ng/mL on two measurements (above nadir + 2). What pathway applies now?"
+ },
+ {
+  "id": "V4",
+  "start": "PROS-3",
+  "text": "66-year-old man with low-risk prostate cancer, life expectancy about 15 years, underwent radical prostatectomy. PSA at 8 weeks is 0.3 ng/mL (never became undetectable). PSMA PET shows no distant metastases. What treatment is recommended?"
+ },
+ {
+  "id": "V5",
+  "start": "PROS-9",
+  "text": "79-year-old man who had radical prostatectomy 6 years ago; PSA had been undetectable and is now 0.4 and rising (PSA recurrence). He has severe heart failure with estimated life expectancy about 3 years, and no symptoms. What is recommended?"
+ },
+ {
+  "id": "V6",
+  "start": "PROS-9",
+  "text": "70-year-old man with PSA recurrence 3 years after radical prostatectomy; life expectancy about 12 years. PSMA PET shows two small bone lesions in the pelvis and no visceral disease. What is the next pathway?"
+ },
+ {
+  "id": "V7",
+  "start": "PROS-9",
+  "text": "68-year-old man with PSA recurrence 2 years after radical prostatectomy; life expectancy about 10 years. Imaging shows 9 bone metastases (spine, pelvis, ribs, femur) and two liver lesions. Castrate status not applicable (no prior ADT). What is the next pathway?"
+ },
+ {
+  "id": "V8",
+  "start": "PROS-3",
+  "text": "61-year-old man with low-risk prostate cancer, life expectancy about 25 years, chose active surveillance. Confirmatory biopsy 1 year later shows Grade Group 3 disease. What pathway applies now?"
+ }
+]

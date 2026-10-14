@@ -1,0 +1,6142 @@
+{
+ "PROS-1": {
+  "page_index": 11,
+  "nodes": [
+   {
+    "text": "INITIAL PROSTATE CANCER DIAGNOSIS",
+    "bbox": [
+     23.550384521484375,
+     86.03231811523438,
+     181.92840576171875,
+     113.78532409667969
+    ],
+    "kind": "header",
+    "footnote_refs": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "id": "n86_24",
+    "links": []
+   },
+   {
+    "text": "WORKUP",
+    "bbox": [
+     276.938720703125,
+     86.04281616210938,
+     328.7927551269531,
+     101.79481506347656
+    ],
+    "kind": "header",
+    "footnote_refs": [],
+    "id": "n86_277",
+    "links": []
+   },
+   {
+    "text": "\u2022 Perform physical exam \u2022 Perform digital rectal examination (DRE) to confirm clinical stage \u2022 Perform and/or collect prostate-specific antigen (PSA) \u2022 Review diagnostic prostate biopsies \u2022 Estimate life expectancy (Principles of Life Expectancy Estimation [PROS-A]) \u2022 Inquire about known high-risk germline mutations and family history \u0017Perform somatic and/or germline testing as appropriate \u2022 Assess quality-of-life measures",
+    "bbox": [
+     276.731201171875,
+     112.809814453125,
+     554.4263305664062,
+     272.5617980957031
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "e",
+     "f"
+    ],
+    "id": "n113_277",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Initial Risk Stratification and Staging Workup for Clinically Localized Disease (PROS-2)",
+    "bbox": [
+     635.6376953125,
+     160.809814453125,
+     740.5458374023438,
+     224.5658416748047
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n161_636",
+    "links": [
+     "PROS-2"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "Clinically localized prostate cancer (Any T, N0, M0 or Any T, NX, MX)",
+    "bbox": [
+     26.0492000579834,
+     178.809814453125,
+     211.9051513671875,
+     206.5628204345703
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n179_26",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "Regional Prostate Cancer (PROS-7)",
+    "bbox": [
+     635.6376953125,
+     273.5757141113281,
+     732.2178344726562,
+     301.3287048339844
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n274_636",
+    "links": [
+     "PROS-7"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "\u2022 Perform physical examination \u2022 Perform bone and soft tissue imaging for staging \u2022 Consider DRE to confirm clinical stage \u2022 Perform and/or collect PSA and calculate PSA doubling time (PSADT) \u2022 Estimate life expectancy (Principles of Life Expectancy Estimation [PROS-A]) \u2022 Inquire about known high-risk germline mutations and family history \u0017Perform somatic and/or germline testing as appropriate \u2022 Assess quality-of-life measures",
+    "bbox": [
+     276.731201171875,
+     286.5841064453125,
+     548.2994995117188,
+     434.3360900878906
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "e",
+     "f",
+     "g"
+    ],
+    "id": "n287_277",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic Castration-Sensitive Prostate Cancer (CSPC) (PROS-14)",
+    "bbox": [
+     635.6378173828125,
+     304.5841064453125,
+     763.9970092773438,
+     416.3381042480469
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n305_636",
+    "links": [
+     "PROS-14"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Regional prostate cancer (Any T, N1, M0)",
+    "bbox": [
+     23.5492000579834,
+     310.85650634765625,
+     158.03518676757812,
+     338.6094970703125
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n311_24",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "Metastatic prostate cancer (Any T, Any N, M1)",
+    "bbox": [
+     23.5492000579834,
+     371.8294982910156,
+     165.3721923828125,
+     399.5824890136719
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n372_24",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of High-Volume M1 CSPC (PROS-15)",
+    "bbox": [
+     635.6376953125,
+     423.50030517578125,
+     724.0502319335938,
+     475.25531005859375
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n424_636",
+    "links": [
+     "PROS-15"
+    ],
+    "role": "branch",
+    "follow_up": false
+   }
+  ],
+  "edges": [
+   {
+    "src": "n113_277",
+    "dst": "n161_636"
+   },
+   {
+    "src": "n179_26",
+    "dst": "n113_277"
+   },
+   {
+    "src": "n287_277",
+    "dst": "n274_636"
+   },
+   {
+    "src": "n287_277",
+    "dst": "n305_636"
+   },
+   {
+    "src": "n287_277",
+    "dst": "n424_636"
+   },
+   {
+    "src": "n311_24",
+    "dst": "n287_277"
+   },
+   {
+    "src": "n372_24",
+    "dst": "n287_277"
+   }
+  ],
+  "footnotes": {
+   "a": "See NCCN Guidelines for Older Adult Oncology for tools to aid optimal assessment and management of disease in older adults.",
+   "b": "NCCN Guidelines for Prostate Cancer Early Detection.",
+   "c": "Principles of Survivorship in Prostate Cancer (PROS-B).",
+   "d": "Refer to the NCCN Distress Thermometer and Problem List, which includes social determinants of health. See NCCN Guidelines for Distress Management (DIS-A).",
+   "e": "Principles of Genetics and Molecular/Biomarker Analysis (PROS-C).",
+   "f": "Principles of Quality of Life and Shared Decision-Making (PROS-D).",
+   "g": "Principles of Imaging (PROS-E).",
+   "h": "See Number of Metastatic Sites in the Principles of MDT (PROS-M)."
+  },
+  "n_connectors": 7,
+  "n_brackets": 7,
+  "n_unattached": 0,
+  "page_id": "PROS-1"
+ },
+ "PROS-2": {
+  "page_index": 12,
+  "nodes": [
+   {
+    "text": "Clinical/Pathologic Features",
+    "bbox": [
+     174.20790100097656,
+     122.67559814453125,
+     310.9178466796875,
+     136.99559020996094
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n123_174",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Additional Evaluation",
+    "bbox": [
+     477.2379150390625,
+     126.36419677734375,
+     588.7999877929688,
+     142.7755889892578
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "g",
+     "l"
+    ],
+    "id": "n126_477",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Risk Group",
+    "bbox": [
+     29.846599578857422,
+     128.45620727539062,
+     83.7466049194336,
+     142.7761993408203
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n128_30",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Initial Therapy",
+    "bbox": [
+     683.42529296875,
+     128.45620727539062,
+     751.2254028320312,
+     142.7761993408203
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n128_683",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "(Staging, ST-1)",
+    "bbox": [
+     206.16790771484375,
+     134.235595703125,
+     276.1658630371094,
+     148.5555877685547
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n134_206",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Has all of the following: \u2022 cT1\u2013cT2a \u2022 Grade Group 1 \u2022 PSA <10 ng/mL",
+    "bbox": [
+     99.72859954833984,
+     150.25411987304688,
+     202.54856872558594,
+     192.28408813476562
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n150_100",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "\u2022 Confirmatory testing can be used to assess the appropriateness of active surveillance (PROS-F 2 of 5)",
+    "bbox": [
+     391.185302734375,
+     159.44271850585938,
+     643.6182861328125,
+     183.09271240234375
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n159_391",
+    "links": [
+     "PROS-F 2 of 5"
+    ],
+    "role": "orphan",
+    "follow_up": true
+   },
+   {
+    "text": "Low",
+    "bbox": [
+     50.435302734375,
+     162.522705078125,
+     70.55879974365234,
+     178.09619140625
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "j"
+    ],
+    "id": "n163_50",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "PROS-3",
+    "bbox": [
+     705.1646118164062,
+     164.44271850585938,
+     742.3945922851562,
+     178.09271240234375
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n164_705",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Has all of the following: \u2022 1 IRF \u2022 Grade Group 1 or 2 \u2022 <50% biopsy cores positive (eg, <6 of 12 cores)",
+    "bbox": [
+     277.7886047363281,
+     194.4874267578125,
+     381.3985595703125,
+     258.1374206542969
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "k"
+    ],
+    "id": "n194_278",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Has all of the following: \u2022 No high-risk group features \u2022 No very-high-risk group features \u2022 Has one or more intermediate risk factors (IRFs): \u0017cT2b\u2013cT2c \u0017Grade Group 2 or 3 \u0017PSA 10\u201320 ng/mL",
+    "bbox": [
+     99.72859954833984,
+     195.41741943359375,
+     193.9365692138672,
+     333.0674133300781
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n195_100",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Favorable intermediate",
+    "bbox": [
+     206.57859802246094,
+     214.4874267578125,
+     261.5986022949219,
+     238.13742065429688
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n214_207",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "\u2022 Confirmatory testing can be used to assess the appropriateness of active surveillance (PROS-F 2 of 5)",
+    "bbox": [
+     391.185302734375,
+     214.48870849609375,
+     644.0154418945312,
+     238.13870239257812
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n214_391",
+    "links": [
+     "PROS-F 2 of 5"
+    ],
+    "role": "orphan",
+    "follow_up": true
+   },
+   {
+    "text": "PROS-4",
+    "bbox": [
+     705.1646728515625,
+     219.48870849609375,
+     742.3946533203125,
+     233.13870239257812
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n219_705",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Intermediate",
+    "bbox": [
+     31.81463623046875,
+     255.49740600585938,
+     89.17939758300781,
+     271.0627136230469
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "j"
+    ],
+    "id": "n255_32",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "\u2022 Soft tissue imaging and consider bone imagingg \u0017If regional metastases are found, see PROS-7 \u0017If distant metastases are found, see PROS-14 for Low- Volume M1(Metachronous or Synchronous) or Synchronous Oligometastatich CSPC or PROS-15 for High-Volume M1 CSPC",
+    "bbox": [
+     391.1853942871094,
+     257.3861083984375,
+     674.0234985351562,
+     333.99609375
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n257_391",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Has one or more of the following: \u2022 2 or 3 IRFs \u2022 Grade Group 3 \u2022 \u226550% biopsy cores positive (eg, \u22656 of 12 cores)",
+    "bbox": [
+     277.7846374511719,
+     260.3487243652344,
+     382.8345642089844,
+     333.99871826171875
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "k"
+    ],
+    "id": "n260_278",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Unfavorable intermediate",
+    "bbox": [
+     206.57464599609375,
+     285.3487243652344,
+     263.2646484375,
+     308.99871826171875
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n285_207",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "PROS-5",
+    "bbox": [
+     705.1646728515625,
+     290.3460998535156,
+     742.3946533203125,
+     303.99609375
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n290_705",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Bone and soft tissue imagingg \u0017If regional metastases are found, see PROS-7 \u0017If distant metastases are found, see PROS-14 for Low- Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatich CSPC or PROS-15 for High-Volume M1 CSPC",
+    "bbox": [
+     391.1853942871094,
+     333.243408203125,
+     676.803466796875,
+     409.8533935546875
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n333_391",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Has one or more high-risk features, but does not meet criteria for very high risk: \u2022 cT3\u2013cT4 \u2022 Grade Group 4 or Grade Group 5 \u2022 PSA >20 ng/mL",
+    "bbox": [
+     99.72466278076172,
+     348.2060852050781,
+     374.8345642089844,
+     397.8560791015625
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n348_100",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "PROS-6",
+    "bbox": [
+     705.1646728515625,
+     366.2033996582031,
+     742.3946533203125,
+     379.8533935546875
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n366_705",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "High",
+    "bbox": [
+     50.21466064453125,
+     366.2060852050781,
+     70.774658203125,
+     379.8560791015625
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n366_50",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Bone and soft tissue imagingg \u0017If regional metastases are found, see PROS-7 \u0017If distant metastases are found, see PROS-14 for Low- Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatich CSPC or PROS-15 for High-Volume M1 CSPC",
+    "bbox": [
+     391.1853942871094,
+     409.100830078125,
+     676.803466796875,
+     485.7108154296875
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n409_391",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Has at least two of the following: \u2022 cT3\u2013cT4 \u2022 Grade Group 4 or 5 \u2022 PSA >40 ng/mL",
+    "bbox": [
+     99.73466491699219,
+     427.0633850097656,
+     245.9146270751953,
+     470.71337890625
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n427_100",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "PROS-6",
+    "bbox": [
+     705.1646728515625,
+     442.0608215332031,
+     742.3946533203125,
+     455.7108154296875
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n442_705",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Very high",
+    "bbox": [
+     39.6546630859375,
+     442.0633850097656,
+     81.34265899658203,
+     455.71337890625
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n442_40",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   }
+  ],
+  "edges": [],
+  "footnotes": {},
+  "n_connectors": 0,
+  "n_brackets": 32,
+  "n_unattached": 0,
+  "page_id": "PROS-2"
+ },
+ "PROS-3": {
+  "page_index": 14,
+  "nodes": [
+   {
+    "text": "LOW-RISK GROUP EXPECTED PATIENT SURVIVAL",
+    "bbox": [
+     23.542661666870117,
+     87.03109741210938,
+     126.56647491455078,
+     146.38710021972656
+    ],
+    "kind": "header",
+    "footnote_refs": [
+     "m"
+    ],
+    "id": "n87_24",
+    "links": []
+   },
+   {
+    "text": "INITIAL THERAPY",
+    "bbox": [
+     109.40160369873047,
+     106.32431030273438,
+     213.8415985107422,
+     123.96430969238281
+    ],
+    "kind": "header",
+    "footnote_refs": [
+     "n"
+    ],
+    "id": "n106_109",
+    "links": []
+   },
+   {
+    "text": "Progressive disease Initial Risk Stratification and Staging Workup for Clinically Localized Disease (PROS-2)",
+    "bbox": [
+     587.302490234375,
+     141.89608764648438,
+     743.5696411132812,
+     195.53810119628906
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "r"
+    ],
+    "id": "n142_587",
+    "links": [
+     "PROS-2"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "Active surveillance (preferred for most patients) Active Surveillance Program (PROS-F 2 of 5)",
+    "bbox": [
+     109.20829772949219,
+     153.89608764648438,
+     380.8456115722656,
+     183.5360870361328
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "o",
+     "p",
+     "s"
+    ],
+    "id": "n154_109",
+    "links": [
+     "PROS-F 2 of 5"
+    ],
+    "role": "branch",
+    "follow_up": true
+   },
+   {
+    "text": "Radiation Therapy Recurrence (PROS-10)",
+    "bbox": [
+     587.3024291992188,
+     238.40481567382812,
+     749.9047241210938,
+     266.1578063964844
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n238_587",
+    "links": [
+     "PROS-10"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "Biochemical recurrence",
+    "bbox": [
+     285.41229248046875,
+     242.51681518554688,
+     415.1438903808594,
+     260.15679931640625
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "v"
+    ],
+    "id": "n243_285",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Radiation therapy (RT)",
+    "bbox": [
+     109.20829772949219,
+     270.1191101074219,
+     230.1544952392578,
+     287.75909423828125
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "t"
+    ],
+    "id": "n270_109",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "\u226510 y",
+    "bbox": [
+     25.544599533081055,
+     272.0071105957031,
+     52.989601135253906,
+     287.75909423828125
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n272_26",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "No biochemical recurrence",
+    "bbox": [
+     286.5329895019531,
+     285.3882141113281,
+     427.75103759765625,
+     301.14019775390625
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n285_287",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Monitoring for Initial Definitive Therapy (PROS-8)",
+    "bbox": [
+     587.3024291992188,
+     290.985107421875,
+     696.6974487304688,
+     330.7391052246094
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n291_587",
+    "links": [
+     "PROS-8"
+    ],
+    "role": "leaf",
+    "follow_up": true
+   },
+   {
+    "text": "No adverse features and no lymph node metastases",
+    "bbox": [
+     416.205810546875,
+     307.3345947265625,
+     529.4298095703125,
+     348.9765930175781
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "x"
+    ],
+    "id": "n307_416",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Undetectable PSA",
+    "bbox": [
+     263.97943115234375,
+     353.0138244628906,
+     358.7224426269531,
+     368.76580810546875
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n353_264",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Monitoring (category 1, preferred for adverse features) (PROS-8) OR Consider treatment (PROS-9)",
+    "bbox": [
+     587.302490234375,
+     366.1123046875,
+     750.5208740234375,
+     429.8683166503906
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n366_587",
+    "links": [
+     "PROS-8",
+     "PROS-9"
+    ],
+    "role": "leaf",
+    "follow_up": true
+   },
+   {
+    "text": "Adverse feature(s) or lymph node metastases",
+    "bbox": [
+     416.205810546875,
+     378.22430419921875,
+     540.9130249023438,
+     419.86529541015625
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "x"
+    ],
+    "id": "n378_416",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Radical prostatectomy (RP)",
+    "bbox": [
+     109.20829772949219,
+     392.3424987792969,
+     219.22369384765625,
+     420.0954895019531
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "u"
+    ],
+    "id": "n392_109",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Radical Prostatectomy PSA Persistence/Recurrence (PROS-9)",
+    "bbox": [
+     587.3024291992188,
+     437.1922912597656,
+     763.9844970703125,
+     464.9452819824219
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n437_587",
+    "links": [
+     "PROS-9"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "PSA persistence",
+    "bbox": [
+     263.97943115234375,
+     441.3042907714844,
+     357.3943176269531,
+     458.9438171386719
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "w"
+    ],
+    "id": "n441_264",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "<10 y",
+    "bbox": [
+     25.243999481201172,
+     492.41290283203125,
+     55.57899856567383,
+     510.0528869628906
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "j"
+    ],
+    "id": "n492_25",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "Observation",
+    "bbox": [
+     109.20947265625,
+     492.41290283203125,
+     178.8918914794922,
+     510.0500793457031
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "q"
+    ],
+    "id": "n492_109",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Monitoring (PROS-8)",
+    "bbox": [
+     587.3024291992188,
+     494.3009033203125,
+     695.4544677734375,
+     510.0528869628906
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n494_587",
+    "links": [
+     "PROS-8"
+    ],
+    "role": "leaf",
+    "follow_up": true
+   }
+  ],
+  "edges": [
+   {
+    "src": "n154_109",
+    "dst": "n142_587"
+   },
+   {
+    "src": "n243_285",
+    "dst": "n238_587"
+   },
+   {
+    "src": "n270_109",
+    "dst": "n243_285"
+   },
+   {
+    "src": "n270_109",
+    "dst": "n285_287"
+   },
+   {
+    "src": "n272_26",
+    "dst": "n154_109"
+   },
+   {
+    "src": "n272_26",
+    "dst": "n270_109"
+   },
+   {
+    "src": "n272_26",
+    "dst": "n392_109"
+   },
+   {
+    "src": "n285_287",
+    "dst": "n291_587"
+   },
+   {
+    "src": "n307_416",
+    "dst": "n291_587"
+   },
+   {
+    "src": "n353_264",
+    "dst": "n307_416"
+   },
+   {
+    "src": "n353_264",
+    "dst": "n378_416"
+   },
+   {
+    "src": "n378_416",
+    "dst": "n366_587"
+   },
+   {
+    "src": "n392_109",
+    "dst": "n353_264"
+   },
+   {
+    "src": "n392_109",
+    "dst": "n441_264"
+   },
+   {
+    "src": "n441_264",
+    "dst": "n437_587"
+   },
+   {
+    "src": "n492_109",
+    "dst": "n494_587"
+   },
+   {
+    "src": "n492_25",
+    "dst": "n492_109"
+   }
+  ],
+  "footnotes": {},
+  "n_connectors": 17,
+  "n_brackets": 7,
+  "n_unattached": 0,
+  "page_id": "PROS-3"
+ },
+ "PROS-4": {
+  "page_index": 15,
+  "nodes": [
+   {
+    "text": "FAVORABLE INTERMEDIATE-RISK GROUP EXPECTED PATIENT SURVIVAL",
+    "bbox": [
+     23.544919967651367,
+     86.03103637695312,
+     259.82928466796875,
+     144.3860626220703
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "m"
+    ],
+    "id": "n86_24",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "INITIAL THERAPY",
+    "bbox": [
+     104.27339935302734,
+     103.144287109375,
+     208.71328735351562,
+     120.78428649902344
+    ],
+    "kind": "header",
+    "footnote_refs": [
+     "n"
+    ],
+    "id": "n103_104",
+    "links": []
+   },
+   {
+    "text": "Progressive disease Initial Risk Stratification and Staging Workup for Clinically Localized Disease (PROS-2)",
+    "bbox": [
+     598.2841796875,
+     120.94989013671875,
+     754.5513305664062,
+     174.59190368652344
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "r"
+    ],
+    "id": "n121_598",
+    "links": [
+     "PROS-2"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "Active surveillance Active Surveillance Program (PROS-F 2 of 5)",
+    "bbox": [
+     103.70770263671875,
+     138.94989013671875,
+     336.6107482910156,
+     168.5898895263672
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "o",
+     "p",
+     "y"
+    ],
+    "id": "n139_104",
+    "links": [
+     "PROS-F 2 of 5"
+    ],
+    "role": "branch",
+    "follow_up": true
+   },
+   {
+    "text": "No adverse features and no lymph node metastases",
+    "bbox": [
+     370.06719970703125,
+     184.40560913085938,
+     511.27703857421875,
+     214.04661560058594
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "x"
+    ],
+    "id": "n184_370",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Monitoring for Initial Definitive Therapy (PROS-8)",
+    "bbox": [
+     598.2841796875,
+     186.29360961914062,
+     760.248291015625,
+     214.04661560058594
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n186_598",
+    "links": [
+     "PROS-8"
+    ],
+    "role": "leaf",
+    "follow_up": true
+   },
+   {
+    "text": "Undetectable PSA",
+    "bbox": [
+     219.84539794921875,
+     215.21939086914062,
+     314.5884094238281,
+     230.9713897705078
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n215_220",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Monitoring (category 1, preferred for adverse features) (PROS-8) OR Consider treatment (PROS-9)",
+    "bbox": [
+     598.2841796875,
+     225.01251220703125,
+     761.5025634765625,
+     288.7685241699219
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n225_598",
+    "links": [
+     "PROS-8",
+     "PROS-9"
+    ],
+    "role": "leaf",
+    "follow_up": true
+   },
+   {
+    "text": "Adverse feature(s) or lymph node metastases",
+    "bbox": [
+     370.069091796875,
+     235.12451171875,
+     494.776123046875,
+     276.7655029296875
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "x"
+    ],
+    "id": "n235_370",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "RP",
+    "bbox": [
+     106.08599853515625,
+     256.72930908203125,
+     126.86579895019531,
+     274.3692932128906
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "u"
+    ],
+    "id": "n257_106",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": ">10 y",
+    "bbox": [
+     23.04400062561035,
+     257.50921630859375,
+     50.87400436401367,
+     273.2611999511719
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n258_23",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "Radical Prostatectomy PSA Persistence/Recurrence (PROS-9)",
+    "bbox": [
+     598.2841796875,
+     292.39801025390625,
+     745.2069702148438,
+     332.1520080566406
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n292_598",
+    "links": [
+     "PROS-9"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "PSA persistence",
+    "bbox": [
+     219.84539794921875,
+     302.510009765625,
+     313.25750732421875,
+     320.14837646484375
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "w"
+    ],
+    "id": "n303_220",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Radiation Therapy Recurrence (PROS-10)",
+    "bbox": [
+     598.2841796875,
+     344.9253845214844,
+     760.886474609375,
+     372.6783752441406
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n345_598",
+    "links": [
+     "PROS-10"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "Biochemical recurrence",
+    "bbox": [
+     175.70989990234375,
+     349.0373840332031,
+     305.44140625,
+     366.6773681640625
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "v"
+    ],
+    "id": "n349_176",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "RT",
+    "bbox": [
+     106.70770263671875,
+     369.6955871582031,
+     124.3677978515625,
+     387.3355712890625
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "t"
+    ],
+    "id": "n370_107",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Monitoring for Initial Definitive Therapy (PROS-8)",
+    "bbox": [
+     598.2841796875,
+     386.3742980957031,
+     760.248291015625,
+     414.1272888183594
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n386_598",
+    "links": [
+     "PROS-8"
+    ],
+    "role": "leaf",
+    "follow_up": true
+   },
+   {
+    "text": "No biochemical recurrence",
+    "bbox": [
+     175.70819091796875,
+     392.38031005859375,
+     316.9261474609375,
+     408.1322937011719
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n392_176",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "5\u201310 y",
+    "bbox": [
+     23.545166015625,
+     425.6083068847656,
+     59.691097259521484,
+     443.24957275390625
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "j"
+    ],
+    "id": "n426_24",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "Observation (preferred)",
+    "bbox": [
+     105.12000274658203,
+     482.904296875,
+     235.1512908935547,
+     500.5442810058594
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "q"
+    ],
+    "id": "n483_105",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Monitoring (PROS-8)",
+    "bbox": [
+     598.2841796875,
+     486.4245910644531,
+     706.4362182617188,
+     502.17657470703125
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n486_598",
+    "links": [
+     "PROS-8"
+    ],
+    "role": "leaf",
+    "follow_up": true
+   }
+  ],
+  "edges": [
+   {
+    "src": "n139_104",
+    "dst": "n121_598"
+   },
+   {
+    "src": "n184_370",
+    "dst": "n186_598"
+   },
+   {
+    "src": "n215_220",
+    "dst": "n184_370"
+   },
+   {
+    "src": "n215_220",
+    "dst": "n235_370"
+   },
+   {
+    "src": "n235_370",
+    "dst": "n225_598"
+   },
+   {
+    "src": "n257_106",
+    "dst": "n215_220"
+   },
+   {
+    "src": "n257_106",
+    "dst": "n303_220"
+   },
+   {
+    "src": "n258_23",
+    "dst": "n139_104"
+   },
+   {
+    "src": "n258_23",
+    "dst": "n257_106"
+   },
+   {
+    "src": "n258_23",
+    "dst": "n370_107"
+   },
+   {
+    "src": "n303_220",
+    "dst": "n292_598"
+   },
+   {
+    "src": "n349_176",
+    "dst": "n345_598"
+   },
+   {
+    "src": "n370_107",
+    "dst": "n349_176"
+   },
+   {
+    "src": "n370_107",
+    "dst": "n392_176"
+   },
+   {
+    "src": "n392_176",
+    "dst": "n386_598"
+   },
+   {
+    "src": "n426_24",
+    "dst": "n370_107"
+   },
+   {
+    "src": "n426_24",
+    "dst": "n483_105"
+   },
+   {
+    "src": "n483_105",
+    "dst": "n486_598"
+   }
+  ],
+  "footnotes": {},
+  "n_connectors": 18,
+  "n_brackets": 5,
+  "n_unattached": 0,
+  "page_id": "PROS-4"
+ },
+ "PROS-5": {
+  "page_index": 16,
+  "nodes": [
+   {
+    "text": "UNFAVORABLE INTERMEDIATE-RISK GROUP EXPECTED PATIENT SURVIVAL",
+    "bbox": [
+     23.539899826049805,
+     85.03231811523438,
+     276.6641540527344,
+     146.3903350830078
+    ],
+    "kind": "header",
+    "footnote_refs": [
+     "m"
+    ],
+    "id": "n85_24",
+    "links": []
+   },
+   {
+    "text": "INITIAL THERAPY",
+    "bbox": [
+     104.03340148925781,
+     105.144287109375,
+     208.66659545898438,
+     122.78428649902344
+    ],
+    "kind": "header",
+    "footnote_refs": [
+     "n"
+    ],
+    "id": "n105_104",
+    "links": []
+   },
+   {
+    "text": "No adverse features and no lymph node metastases",
+    "bbox": [
+     365.82269287109375,
+     136.00869750976562,
+     507.0311584472656,
+     165.6497039794922
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "x"
+    ],
+    "id": "n136_366",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Monitoring for Initial Definitive Therapy (PROS-8)",
+    "bbox": [
+     595.7886962890625,
+     137.89669799804688,
+     757.7528076171875,
+     165.6497039794922
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n138_596",
+    "links": [
+     "PROS-8"
+    ],
+    "role": "leaf",
+    "follow_up": true
+   },
+   {
+    "text": "Undetectable PSA",
+    "bbox": [
+     213.59930419921875,
+     182.13699340820312,
+     308.3423156738281,
+     197.8889923095703
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n182_214",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Monitoring (category 1, preferred for adverse features) (PROS-8) OR Consider treatment (PROS-9)",
+    "bbox": [
+     595.7886962890625,
+     192.92999267578125,
+     759.007080078125,
+     256.6860046386719
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n193_596",
+    "links": [
+     "PROS-8",
+     "PROS-9"
+    ],
+    "role": "leaf",
+    "follow_up": true
+   },
+   {
+    "text": "Adverse feature(s) or lymph node metastases",
+    "bbox": [
+     365.822998046875,
+     203.0419921875,
+     490.530029296875,
+     244.68299865722656
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "x"
+    ],
+    "id": "n203_366",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "RP",
+    "bbox": [
+     103.83999633789062,
+     224.64691162109375,
+     124.61979675292969,
+     242.2923126220703
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "u"
+    ],
+    "id": "n225_104",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Radical Prostatectomy PSA Persistence/Recurrence (PROS-9)",
+    "bbox": [
+     595.7886962890625,
+     260.31549072265625,
+     742.7114868164062,
+     300.0694885253906
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n260_596",
+    "links": [
+     "PROS-9"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "PSA persistence",
+    "bbox": [
+     217.65830993652344,
+     270.427490234375,
+     311.0694274902344,
+     288.0669860839844
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "w"
+    ],
+    "id": "n270_218",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": ">10 y",
+    "bbox": [
+     23.03887939453125,
+     278.552490234375,
+     55.37699890136719,
+     296.1969909667969
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "z"
+    ],
+    "id": "n279_23",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "Radiation Therapy Recurrence (PROS-10)",
+    "bbox": [
+     595.7886962890625,
+     319.21099853515625,
+     713.7747802734375,
+     346.9639892578125
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n319_596",
+    "links": [
+     "PROS-10"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "Biochemical recurrence",
+    "bbox": [
+     211.47067260742188,
+     325.08111572265625,
+     341.1954040527344,
+     342.7179870605469
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "v"
+    ],
+    "id": "n325_211",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "RT+ ADT (4\u20136 mo)",
+    "bbox": [
+     103.83999633789062,
+     338.1842956542969,
+     175.6953887939453,
+     367.82427978515625
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "c",
+     "t",
+     "aa"
+    ],
+    "id": "n338_104",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Monitoring for Initial Definitive Therapy (PROS-8)",
+    "bbox": [
+     595.78857421875,
+     360.9336853027344,
+     757.752685546875,
+     388.6866760253906
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n361_596",
+    "links": [
+     "PROS-8"
+    ],
+    "role": "leaf",
+    "follow_up": true
+   },
+   {
+    "text": "No biochemical recurrence",
+    "bbox": [
+     211.46380615234375,
+     368.6918029785156,
+     352.6817932128906,
+     384.44378662109375
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n369_211",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "5\u201310 y",
+    "bbox": [
+     25.1978759765625,
+     406.1443176269531,
+     61.346500396728516,
+     423.78900146484375
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "j"
+    ],
+    "id": "n406_25",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "Observation",
+    "bbox": [
+     103.83979797363281,
+     463.09600830078125,
+     173.52359008789062,
+     480.73779296875
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "q"
+    ],
+    "id": "n463_104",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Monitoring (PROS-8)",
+    "bbox": [
+     596.0208740234375,
+     464.9840087890625,
+     704.1729125976562,
+     480.7359924316406
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n465_596",
+    "links": [
+     "PROS-8"
+    ],
+    "role": "leaf",
+    "follow_up": true
+   }
+  ],
+  "edges": [
+   {
+    "src": "n136_366",
+    "dst": "n138_596"
+   },
+   {
+    "src": "n182_214",
+    "dst": "n136_366"
+   },
+   {
+    "src": "n182_214",
+    "dst": "n203_366"
+   },
+   {
+    "src": "n203_366",
+    "dst": "n193_596"
+   },
+   {
+    "src": "n225_104",
+    "dst": "n182_214"
+   },
+   {
+    "src": "n225_104",
+    "dst": "n270_218"
+   },
+   {
+    "src": "n270_218",
+    "dst": "n260_596"
+   },
+   {
+    "src": "n279_23",
+    "dst": "n225_104"
+   },
+   {
+    "src": "n279_23",
+    "dst": "n338_104"
+   },
+   {
+    "src": "n325_211",
+    "dst": "n319_596"
+   },
+   {
+    "src": "n338_104",
+    "dst": "n325_211"
+   },
+   {
+    "src": "n338_104",
+    "dst": "n369_211"
+   },
+   {
+    "src": "n369_211",
+    "dst": "n361_596"
+   },
+   {
+    "src": "n406_25",
+    "dst": "n338_104"
+   },
+   {
+    "src": "n406_25",
+    "dst": "n463_104"
+   },
+   {
+    "src": "n463_104",
+    "dst": "n465_596"
+   }
+  ],
+  "footnotes": {},
+  "n_connectors": 16,
+  "n_brackets": 4,
+  "n_unattached": 0,
+  "page_id": "PROS-5"
+ },
+ "PROS-6": {
+  "page_index": 17,
+  "nodes": [
+   {
+    "text": "HIGH- OR VERY-HIGH-RISK GROUP EXPECTED PATIENT SURVIVAL",
+    "bbox": [
+     23.737899780273438,
+     86.03231811523438,
+     219.25845336914062,
+     145.58631896972656
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "m"
+    ],
+    "id": "n86_24",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "INITIAL THERAPY",
+    "bbox": [
+     136.99339294433594,
+     104.94021606445312,
+     241.43328857421875,
+     122.58021545410156
+    ],
+    "kind": "header",
+    "footnote_refs": [
+     "n"
+    ],
+    "id": "n105_137",
+    "links": []
+   },
+   {
+    "text": "RT + androgen deprivation therapy (ADT) (12\u201336 mo) (category 1) or RT+ ADT (24 mo) + abiraterone (for very-high-risk only)",
+    "bbox": [
+     136.8000030517578,
+     139.80020141601562,
+     325.3121032714844,
+     229.4412078857422
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "c",
+     "t",
+     "aa"
+    ],
+    "id": "n140_137",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Radiation Therapy Recurrence (PROS-10)",
+    "bbox": [
+     594.2750854492188,
+     152.68820190429688,
+     712.2611694335938,
+     180.4412078857422
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n153_594",
+    "links": [
+     "PROS-10"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "Biochemical recurrence",
+    "bbox": [
+     387.1890869140625,
+     156.80020141601562,
+     516.9201049804688,
+     174.4462127685547
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "v"
+    ],
+    "id": "n157_387",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "No biochemical recurrence",
+    "bbox": [
+     387.1885986328125,
+     194.71231079101562,
+     528.4066772460938,
+     210.4643096923828
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n195_387",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Monitoring for Initial Definitive Therapy (PROS-8)",
+    "bbox": [
+     594.2750854492188,
+     224.28860473632812,
+     740.9713134765625,
+     252.04161071777344
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n224_594",
+    "links": [
+     "PROS-8"
+    ],
+    "role": "leaf",
+    "follow_up": true
+   },
+   {
+    "text": "No adverse features and no lymph node metastases",
+    "bbox": [
+     364.0782775878906,
+     251.97698974609375,
+     516.4172973632812,
+     281.61798095703125
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "x"
+    ],
+    "id": "n252_364",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": ">5 y or symptomatic",
+    "bbox": [
+     23.03387451171875,
+     270.06231689453125,
+     95.39700317382812,
+     297.8153076171875
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "z"
+    ],
+    "id": "n270_23",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "Undetectable PSA",
+    "bbox": [
+     211.85369873046875,
+     298.1051940917969,
+     306.5967102050781,
+     313.857177734375
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n298_212",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Monitoring (category 1, preferred for adverse features)(PROS-8) OR Consider treatment (PROS-9)",
+    "bbox": [
+     594.2750854492188,
+     311.0509948730469,
+     770.308349609375,
+     362.80499267578125
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "cc"
+    ],
+    "id": "n311_594",
+    "links": [
+     "PROS-8",
+     "PROS-9"
+    ],
+    "role": "leaf",
+    "follow_up": true
+   },
+   {
+    "text": "Adverse feature(s) or lymph node metastases",
+    "bbox": [
+     364.077392578125,
+     315.1629943847656,
+     488.784423828125,
+     356.8039855957031
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "x"
+    ],
+    "id": "n315_364",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "RP",
+    "bbox": [
+     136.8000030517578,
+     345.3157958984375,
+     171.07977294921875,
+     362.9557800292969
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "u",
+     "bb"
+    ],
+    "id": "n345_137",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Radical Prostatectomy PSA Persistence/Recurrence (PROS-9)",
+    "bbox": [
+     594.2750854492188,
+     376.2837829589844,
+     741.1978759765625,
+     416.03778076171875
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n376_594",
+    "links": [
+     "PROS-9"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "PSA persistence",
+    "bbox": [
+     215.91270446777344,
+     386.3957824707031,
+     309.3236999511719,
+     404.0351867675781
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "w"
+    ],
+    "id": "n386_216",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of Metachronous Oligometastatic M1 CSPC (PROS-13)",
+    "bbox": [
+     510.976806640625,
+     428.9627990722656,
+     724.6829223632812,
+     456.7157897949219
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n429_511",
+    "links": [
+     "PROS-13"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Observation or RT \u00b1 ADT",
+    "bbox": [
+     136.8000030517578,
+     461.6532897949219,
+     206.4835968017578,
+     503.2942810058594
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "c",
+     "q",
+     "t",
+     "aa"
+    ],
+    "id": "n462_137",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)",
+    "bbox": [
+     510.9768981933594,
+     464.5923156738281,
+     771.3472290039062,
+     504.3462829589844
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n465_511",
+    "links": [
+     "PROS-14"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "\u22645 y and asymptomatic",
+    "bbox": [
+     24.248600006103516,
+     469.5412902832031,
+     98.21260070800781,
+     497.2942810058594
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n470_24",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "Symptomatic progression",
+    "bbox": [
+     297.5199890136719,
+     475.54119873046875,
+     433.2160339355469,
+     491.2931823730469
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n476_298",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of High-Volume M1 CSPC (PROS-15)",
+    "bbox": [
+     509.9281005859375,
+     505.9013977050781,
+     733.815673828125,
+     533.6544189453125
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n506_510",
+    "links": [
+     "PROS-15"
+    ],
+    "role": "branch",
+    "follow_up": false
+   }
+  ],
+  "edges": [
+   {
+    "src": "n140_137",
+    "dst": "n157_387"
+   },
+   {
+    "src": "n140_137",
+    "dst": "n195_387"
+   },
+   {
+    "src": "n157_387",
+    "dst": "n153_594"
+   },
+   {
+    "src": "n195_387",
+    "dst": "n224_594"
+   },
+   {
+    "src": "n252_364",
+    "dst": "n224_594"
+   },
+   {
+    "src": "n270_23",
+    "dst": "n140_137"
+   },
+   {
+    "src": "n270_23",
+    "dst": "n345_137"
+   },
+   {
+    "src": "n298_212",
+    "dst": "n252_364"
+   },
+   {
+    "src": "n298_212",
+    "dst": "n315_364"
+   },
+   {
+    "src": "n315_364",
+    "dst": "n311_594"
+   },
+   {
+    "src": "n345_137",
+    "dst": "n298_212"
+   },
+   {
+    "src": "n345_137",
+    "dst": "n386_216"
+   },
+   {
+    "src": "n386_216",
+    "dst": "n376_594"
+   },
+   {
+    "src": "n462_137",
+    "dst": "n476_298"
+   },
+   {
+    "src": "n470_24",
+    "dst": "n462_137"
+   },
+   {
+    "src": "n476_298",
+    "dst": "n429_511"
+   },
+   {
+    "src": "n476_298",
+    "dst": "n465_511"
+   },
+   {
+    "src": "n476_298",
+    "dst": "n506_510"
+   }
+  ],
+  "footnotes": {},
+  "n_connectors": 18,
+  "n_brackets": 10,
+  "n_unattached": 0,
+  "page_id": "PROS-6"
+ },
+ "PROS-7": {
+  "page_index": 18,
+  "nodes": [
+   {
+    "text": "REGIONAL PROSTATE CANCER (ANY T, N1, M0) EXPECTED PATIENT SURVIVAL",
+    "bbox": [
+     23.55000114440918,
+     86.03103637695312,
+     287.14990234375,
+     145.39149475097656
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "m"
+    ],
+    "id": "n86_24",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "INITIAL THERAPY",
+    "bbox": [
+     135.83291625976562,
+     107.98703002929688,
+     234.75257873535156,
+     123.73902893066406
+    ],
+    "kind": "header",
+    "footnote_refs": [],
+    "id": "n108_136",
+    "links": []
+   },
+   {
+    "text": "Radiation Therapy Recurrence (PROS-10)",
+    "bbox": [
+     599.6569213867188,
+     129.91250610351562,
+     717.6430053710938,
+     157.66551208496094
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n130_600",
+    "links": [
+     "PROS-10"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "Biochemical recurrence",
+    "bbox": [
+     387.1919250488281,
+     134.02459716796875,
+     516.9201049804688,
+     151.67051696777344
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "v"
+    ],
+    "id": "n134_387",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "RT + ADT (24 mo) + abiraterone (preferred) or RT + ADT(24\u201336 mo)",
+    "bbox": [
+     135.63560485839844,
+     136.58041381835938,
+     265.5160827636719,
+     190.22242736816406
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "c",
+     "t",
+     "aa"
+    ],
+    "id": "n137_136",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "No biochemical recurrence",
+    "bbox": [
+     387.1885986328125,
+     171.25161743164062,
+     528.4066772460938,
+     187.0036163330078
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n171_387",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Monitoring for Initial Definitive Therapy (PROS-8)",
+    "bbox": [
+     599.6569213867188,
+     222.2991943359375,
+     746.3531494140625,
+     250.0522003173828
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n222_600",
+    "links": [
+     "PROS-8"
+    ],
+    "role": "leaf",
+    "follow_up": true
+   },
+   {
+    "text": "ADT \u00b1 abiraterone",
+    "bbox": [
+     135.64059448242188,
+     238.38580322265625,
+     247.82447814941406,
+     256.0285949707031
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "c",
+     "aa"
+    ],
+    "id": "n238_136",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": ">5 y or symptomatic",
+    "bbox": [
+     32.04399871826172,
+     245.28201293945312,
+     99.89199829101562,
+     273.0350036621094
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n245_32",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "No adverse features and no lymph node metastases",
+    "bbox": [
+     374.18994140625,
+     262.7984924316406,
+     526.5345458984375,
+     292.4394836425781
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "x"
+    ],
+    "id": "n263_374",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Undetectable PSA",
+    "bbox": [
+     221.97079467773438,
+     308.9267883300781,
+     316.71380615234375,
+     324.67877197265625
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n309_222",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Adverse feature(s) or lymph node metastases",
+    "bbox": [
+     374.19439697265625,
+     325.9845886230469,
+     498.90142822265625,
+     367.6255798339844
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "x"
+    ],
+    "id": "n326_374",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Monitoring (PROS-8) OR Consider treatment (PROS-9)",
+    "bbox": [
+     599.6569213867188,
+     327.8725891113281,
+     751.8421630859375,
+     367.6265869140625
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n328_600",
+    "links": [
+     "PROS-8",
+     "PROS-9"
+    ],
+    "role": "leaf",
+    "follow_up": true
+   },
+   {
+    "text": "RPin select patients",
+    "bbox": [
+     135.63999938964844,
+     338.4783935546875,
+     188.81178283691406,
+     380.1203918457031
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "u",
+     "dd"
+    ],
+    "id": "n338_136",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Radical Prostatectomy PSA Persistence/Recurrence (PROS-9)",
+    "bbox": [
+     599.6569213867188,
+     388.4281005859375,
+     746.5797119140625,
+     428.1820983886719
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n388_600",
+    "links": [
+     "PROS-9"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "PSA persistence",
+    "bbox": [
+     218.2967987060547,
+     398.54010009765625,
+     311.705322265625,
+     416.1767578125
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "w"
+    ],
+    "id": "n399_218",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of Metachronous Oligometastatic M1 CSPC (PROS-13)",
+    "bbox": [
+     500.614013671875,
+     433.4953918457031,
+     714.3201293945312,
+     461.2483825683594
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n433_501",
+    "links": [
+     "PROS-13"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)",
+    "bbox": [
+     500.614013671875,
+     461.9606018066406,
+     760.9843139648438,
+     501.714599609375
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n462_501",
+    "links": [
+     "PROS-14"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Observation or RT or ADT\u00b1 RT",
+    "bbox": [
+     135.63999938964844,
+     464.6283874511719,
+     205.32359313964844,
+     542.2703857421875
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "c",
+     "q",
+     "t",
+     "aa"
+    ],
+    "id": "n465_136",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Symptomatic progression",
+    "bbox": [
+     291.6239013671875,
+     472.0605163574219,
+     427.3199462890625,
+     487.8125
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n472_292",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "\u22645 y and asymptomatic",
+    "bbox": [
+     23.04400062561035,
+     490.5165100097656,
+     97.00799560546875,
+     518.2694702148438
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n491_23",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of High-Volume M1 CSPC (PROS-15)",
+    "bbox": [
+     500.089599609375,
+     500.1205139160156,
+     757.5931396484375,
+     527.8734741210938
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n500_500",
+    "links": [
+     "PROS-15"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Symptomatic progression",
+    "bbox": [
+     291.6239013671875,
+     526.2405395507812,
+     427.3199462890625,
+     541.9925537109375
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n526_292",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of M1 CRPC (PROS-17)",
+    "bbox": [
+     497.5439147949219,
+     526.2405395507812,
+     739.9710083007812,
+     541.9925537109375
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n526_498",
+    "links": [
+     "PROS-17"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   }
+  ],
+  "edges": [
+   {
+    "src": "n134_387",
+    "dst": "n130_600"
+   },
+   {
+    "src": "n137_136",
+    "dst": "n134_387"
+   },
+   {
+    "src": "n137_136",
+    "dst": "n171_387"
+   },
+   {
+    "src": "n171_387",
+    "dst": "n222_600"
+   },
+   {
+    "src": "n238_136",
+    "dst": "n222_600"
+   },
+   {
+    "src": "n245_32",
+    "dst": "n137_136"
+   },
+   {
+    "src": "n245_32",
+    "dst": "n238_136"
+   },
+   {
+    "src": "n245_32",
+    "dst": "n338_136"
+   },
+   {
+    "src": "n263_374",
+    "dst": "n222_600"
+   },
+   {
+    "src": "n309_222",
+    "dst": "n263_374"
+   },
+   {
+    "src": "n309_222",
+    "dst": "n326_374"
+   },
+   {
+    "src": "n326_374",
+    "dst": "n328_600"
+   },
+   {
+    "src": "n338_136",
+    "dst": "n309_222"
+   },
+   {
+    "src": "n338_136",
+    "dst": "n399_218"
+   },
+   {
+    "src": "n399_218",
+    "dst": "n388_600"
+   },
+   {
+    "src": "n465_136",
+    "dst": "n472_292"
+   },
+   {
+    "src": "n465_136",
+    "dst": "n526_292"
+   },
+   {
+    "src": "n472_292",
+    "dst": "n433_501"
+   },
+   {
+    "src": "n472_292",
+    "dst": "n462_501"
+   },
+   {
+    "src": "n472_292",
+    "dst": "n500_500"
+   },
+   {
+    "src": "n491_23",
+    "dst": "n465_136"
+   },
+   {
+    "src": "n526_292",
+    "dst": "n526_498"
+   }
+  ],
+  "footnotes": {},
+  "n_connectors": 22,
+  "n_brackets": 12,
+  "n_unattached": 0,
+  "page_id": "PROS-7"
+ },
+ "PROS-8": {
+  "page_index": 20,
+  "nodes": [
+   {
+    "text": "MONITORING See NCCN Guidelines for Survivorship",
+    "bbox": [
+     24.258800506591797,
+     106.03228759765625,
+     225.97677612304688,
+     133.78529357910156
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n106_24",
+    "links": [],
+    "role": "orphan",
+    "follow_up": true
+   },
+   {
+    "text": "RECURRENCE",
+    "bbox": [
+     345.3157958984375,
+     106.03228759765625,
+     426.38580322265625,
+     121.78428649902344
+    ],
+    "kind": "header",
+    "footnote_refs": [],
+    "id": "n106_345",
+    "links": []
+   },
+   {
+    "text": "Radical Prostatectomy PSA Persistence/ Recurrence (PROS-9)",
+    "bbox": [
+     628.1171264648438,
+     136.4639892578125,
+     749.766357421875,
+     176.21800231933594
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n136_628",
+    "links": [
+     "PROS-9"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "PSA persistence/recurrence",
+    "bbox": [
+     440.8439025878906,
+     148.4639892578125,
+     568.9157104492188,
+     176.2169952392578
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "w"
+    ],
+    "id": "n148_441",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Post-RP",
+    "bbox": [
+     345.13250732421875,
+     154.4639892578125,
+     387.9114990234375,
+     170.2159881591797
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n154_345",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "\u2022 PSA every 6\u201312 mo for 5 y, then every year \u2022 Consider DRE if suspicion of recurrence",
+    "bbox": [
+     190.2830047607422,
+     190.468994140625,
+     303.8910217285156,
+     266.2250061035156
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "ee"
+    ],
+    "id": "n190_190",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "PSA recurrence or Positive DRE",
+    "bbox": [
+     440.84381103515625,
+     205.40060424804688,
+     527.9826049804688,
+     247.04161071777344
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "v"
+    ],
+    "id": "n205_441",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Radiation Therapy Recurrence (PROS-10)",
+    "bbox": [
+     628.1171875,
+     207.28860473632812,
+     734.4874267578125,
+     247.04261779785156
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n207_628",
+    "links": [
+     "PROS-10"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "Post-RT",
+    "bbox": [
+     345.13250732421875,
+     219.2869873046875,
+     387.2955017089844,
+     235.0389862060547
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n219_345",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Initial definitive therapy",
+    "bbox": [
+     28.295806884765625,
+     221.84030151367188,
+     151.16578674316406,
+     237.59230041503906
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n222_28",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of Metachronous Oligometastatic CSPC (PROS-13)",
+    "bbox": [
+     572.6502685546875,
+     253.5703125,
+     741.9622802734375,
+     293.32330322265625
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n254_573",
+    "links": [
+     "PROS-13"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Radiographic evidence of metastatic disease without PSA persistence/ recurrence",
+    "bbox": [
+     345.13250732421875,
+     287.57861328125,
+     434.1159362792969,
+     363.33563232421875
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n288_345",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)",
+    "bbox": [
+     572.6552734375,
+     295.29791259765625,
+     778.0145874023438,
+     347.0509033203125
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n295_573",
+    "links": [
+     "PROS-14"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Biopsy of metastatic site",
+    "bbox": [
+     467.48089599609375,
+     302.849609375,
+     524.9448852539062,
+     342.6036071777344
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n303_467",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of High- Volume M1 CSPC (PROS-15)",
+    "bbox": [
+     572.6552734375,
+     349.57110595703125,
+     736.2342529296875,
+     377.3240966796875
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n350_573",
+    "links": [
+     "PROS-15"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Systemic Therapy for M0 CRPC (PROS-16)",
+    "bbox": [
+     599.3322143554688,
+     435.0558166503906,
+     714.2603759765625,
+     462.80877685546875
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n435_599",
+    "links": [
+     "PROS-16"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "N1,M0",
+    "bbox": [
+     492.3399963378906,
+     442.1081848144531,
+     524.7350463867188,
+     457.86016845703125
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n442_492",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "\u2022 Physical examination + PSA every 3\u20136 mo \u2022 Imaging for symptoms or increasing PSA",
+    "bbox": [
+     190.2917022705078,
+     445.0599060058594,
+     317.7079772949219,
+     496.8149108886719
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "g"
+    ],
+    "id": "n445_190",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "N1 on ADT or Localized on observation",
+    "bbox": [
+     27.520000457763672,
+     451.0599060058594,
+     159.55296325683594,
+     490.81390380859375
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n451_28",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "Progression",
+    "bbox": [
+     345.13250732421875,
+     461.1719055175781,
+     428.5951232910156,
+     478.8118896484375
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "ff",
+     "gg"
+    ],
+    "id": "n461_345",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of M1 CRPC (PROS-17)",
+    "bbox": [
+     596.1171264648438,
+     474.8536071777344,
+     731.591064453125,
+     502.6065673828125
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n475_596",
+    "links": [
+     "PROS-17"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "M1",
+    "bbox": [
+     494.32000732421875,
+     481.8511962890625,
+     509.5989990234375,
+     497.6031799316406
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n482_494",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   }
+  ],
+  "edges": [
+   {
+    "src": "n148_441",
+    "dst": "n136_628"
+   },
+   {
+    "src": "n154_345",
+    "dst": "n148_441"
+   },
+   {
+    "src": "n190_190",
+    "dst": "n154_345"
+   },
+   {
+    "src": "n190_190",
+    "dst": "n219_345"
+   },
+   {
+    "src": "n190_190",
+    "dst": "n288_345"
+   },
+   {
+    "src": "n205_441",
+    "dst": "n207_628"
+   },
+   {
+    "src": "n219_345",
+    "dst": "n205_441"
+   },
+   {
+    "src": "n222_28",
+    "dst": "n190_190"
+   },
+   {
+    "src": "n288_345",
+    "dst": "n303_467"
+   },
+   {
+    "src": "n303_467",
+    "dst": "n254_573"
+   },
+   {
+    "src": "n303_467",
+    "dst": "n295_573"
+   },
+   {
+    "src": "n303_467",
+    "dst": "n350_573"
+   },
+   {
+    "src": "n442_492",
+    "dst": "n435_599"
+   },
+   {
+    "src": "n445_190",
+    "dst": "n461_345"
+   },
+   {
+    "src": "n451_28",
+    "dst": "n445_190"
+   },
+   {
+    "src": "n461_345",
+    "dst": "n442_492"
+   },
+   {
+    "src": "n461_345",
+    "dst": "n482_494"
+   },
+   {
+    "src": "n482_494",
+    "dst": "n475_596"
+   }
+  ],
+  "footnotes": {},
+  "n_connectors": 18,
+  "n_brackets": 15,
+  "n_unattached": 0,
+  "page_id": "PROS-8"
+ },
+ "PROS-9": {
+  "page_index": 22,
+  "nodes": [
+   {
+    "text": "RADICAL PROSTATECTOMY PSA PERSISTENCE/RECURRENCE",
+    "bbox": [
+     23.73740005493164,
+     86.46408081054688,
+     210.66262817382812,
+     114.21708679199219
+    ],
+    "kind": "header",
+    "footnote_refs": [
+     "hh"
+    ],
+    "id": "n86_24",
+    "links": []
+   },
+   {
+    "text": "TREATMENT FOR FIRST PSA PERSISTENCE/RECURRENCE",
+    "bbox": [
+     344.1979064941406,
+     86.46408081054688,
+     507.5042419433594,
+     114.21708679199219
+    ],
+    "kind": "header",
+    "footnote_refs": [
+     "jj"
+    ],
+    "id": "n86_344",
+    "links": []
+   },
+   {
+    "text": "EBRT (preferred) \u00b1 ADT (\u00b1 abiraterone for N1 [category 2B]) or Monitoring",
+    "bbox": [
+     348.4613037109375,
+     149.30429077148438,
+     459.02642822265625,
+     226.9473114013672
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "c",
+     "t",
+     "aa",
+     "kk",
+     "ll"
+    ],
+    "id": "n149_348",
+    "links": [],
+    "role": "step",
+    "follow_up": true
+   },
+   {
+    "text": "Workup for Second Biochemical Recurrence (PROS-11)",
+    "bbox": [
+     699.8400268554688,
+     157.19229125976562,
+     767.6990966796875,
+     220.9483184814453
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n157_700",
+    "links": [
+     "PROS-11"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "Second biochemical recurrence (BCR)",
+    "bbox": [
+     573.52001953125,
+     169.19229125976562,
+     670.3810424804688,
+     208.94630432128906
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "ff"
+    ],
+    "id": "n169_574",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "No evidence of M1",
+    "bbox": [
+     238.55398559570312,
+     175.19229125976562,
+     306.41302490234375,
+     202.94529724121094
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n175_239",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Monitoring",
+    "bbox": [
+     480.6161804199219,
+     179.30429077148438,
+     547.4381713867188,
+     196.93919372558594
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "kk"
+    ],
+    "id": "n179_481",
+    "links": [],
+    "role": "step",
+    "follow_up": true
+   },
+   {
+    "text": "Life expectancy >5 y: \u2022 Risk stratification Consider: \u2022 Bone and soft tissue imaging \u2022 Prostate bed biopsy",
+    "bbox": [
+     97.1709976196289,
+     215.7322998046875,
+     215.32192993164062,
+     291.4842834472656
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "g",
+     "ii"
+    ],
+    "id": "n216_97",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of Metachronous Oligometastatic CSPC (PROS-13)",
+    "bbox": [
+     432.05419921875,
+     272.70819091796875,
+     645.7603759765625,
+     300.461181640625
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n273_432",
+    "links": [
+     "PROS-13"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "Oligometastatic",
+    "bbox": [
+     303.35650634765625,
+     276.8201904296875,
+     391.3769836425781,
+     294.4601745605469
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n277_303",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)",
+    "bbox": [
+     432.0541076660156,
+     315.8811950683594,
+     692.4242553710938,
+     355.63519287109375
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n316_432",
+    "links": [
+     "PROS-14"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "M1",
+    "bbox": [
+     238.55430603027344,
+     317.2881164550781,
+     253.8332977294922,
+     333.04010009765625
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n317_239",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "PSA persistence/ recurrence",
+    "bbox": [
+     12.960000038146973,
+     341.9523010253906,
+     89.99539947509766,
+     381.706298828125
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "w",
+     "hh"
+    ],
+    "id": "n342_13",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "Polymetastatic",
+    "bbox": [
+     303.35650634765625,
+     355.7281188964844,
+     380.9945068359375,
+     371.4801025390625
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n356_303",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of High- Volume M1 CSPC (PROS-15)",
+    "bbox": [
+     432.0541076660156,
+     380.13360595703125,
+     595.6331176757812,
+     407.8865966796875
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n380_432",
+    "links": [
+     "PROS-15"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Life expectancy \u22645 y",
+    "bbox": [
+     100.44000244140625,
+     434.3122863769531,
+     163.41497802734375,
+     474.0662841796875
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n434_100",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Palliative therapy/ Best supportive care",
+    "bbox": [
+     653.4530029296875,
+     440.3213195800781,
+     762.2652587890625,
+     468.0743103027344
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n440_653",
+    "links": [],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "Observation",
+    "bbox": [
+     196.1295928955078,
+     444.4242858886719,
+     265.8132019042969,
+     462.06427001953125
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "q"
+    ],
+    "id": "n444_196",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Progression",
+    "bbox": [
+     318.7460021972656,
+     444.4242858886719,
+     402.2110290527344,
+     462.0652770996094
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "ff",
+     "gg"
+    ],
+    "id": "n444_319",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   }
+  ],
+  "edges": [
+   {
+    "src": "n149_348",
+    "dst": "n179_481"
+   },
+   {
+    "src": "n169_574",
+    "dst": "n157_700"
+   },
+   {
+    "src": "n175_239",
+    "dst": "n149_348"
+   },
+   {
+    "src": "n179_481",
+    "dst": "n169_574"
+   },
+   {
+    "src": "n216_97",
+    "dst": "n175_239"
+   },
+   {
+    "src": "n216_97",
+    "dst": "n317_239"
+   },
+   {
+    "src": "n277_303",
+    "dst": "n273_432"
+   },
+   {
+    "src": "n317_239",
+    "dst": "n277_303"
+   },
+   {
+    "src": "n317_239",
+    "dst": "n356_303"
+   },
+   {
+    "src": "n342_13",
+    "dst": "n216_97"
+   },
+   {
+    "src": "n342_13",
+    "dst": "n434_100"
+   },
+   {
+    "src": "n356_303",
+    "dst": "n316_432"
+   },
+   {
+    "src": "n356_303",
+    "dst": "n380_432"
+   },
+   {
+    "src": "n434_100",
+    "dst": "n444_196"
+   },
+   {
+    "src": "n444_196",
+    "dst": "n444_319"
+   },
+   {
+    "src": "n444_319",
+    "dst": "n440_653"
+   }
+  ],
+  "footnotes": {},
+  "n_connectors": 16,
+  "n_brackets": 11,
+  "n_unattached": 0,
+  "page_id": "PROS-9"
+ },
+ "PROS-10": {
+  "page_index": 24,
+  "nodes": [
+   {
+    "text": "RADIATION THERAPY RECURRENCE",
+    "bbox": [
+     23.543304443359375,
+     86.03634643554688,
+     219.91534423828125,
+     101.78834533691406
+    ],
+    "kind": "header",
+    "footnote_refs": [],
+    "id": "n86_24",
+    "links": []
+   },
+   {
+    "text": "\u2022 Monitoring",
+    "bbox": [
+     356.4800109863281,
+     136.30429077148438,
+     437.71673583984375,
+     153.9442901611328
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "kk",
+     "ll"
+    ],
+    "id": "n136_356",
+    "links": [],
+    "role": "branch",
+    "follow_up": true
+   },
+   {
+    "text": "No evidence",
+    "bbox": [
+     291.43499755859375,
+     162.434326171875,
+     341.5730285644531,
+     190.1873321533203
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n162_291",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "\u2022 Local secondary therapy \u00b1 ADT (\u00b1 abiraterone for N1) or \u2022 ADT based on PSADT or \u2022 ADT \u00b1 abiraterone for N1",
+    "bbox": [
+     358.2799987792969,
+     184.0443115234375,
+     531.5079345703125,
+     261.685302734375
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "c",
+     "aa",
+     "nn",
+     "oo"
+    ],
+    "id": "n184_358",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "of M1",
+    "bbox": [
+     291.43499755859375,
+     186.43634033203125,
+     320.156005859375,
+     202.18833923339844
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n186_291",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Workup for Second Biochemical Recurrence (PROS-11)",
+    "bbox": [
+     712.8400268554688,
+     191.93231201171875,
+     780.6990966796875,
+     255.68833923339844
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n192_713",
+    "links": [
+     "PROS-11"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "Second biochemical recurrence",
+    "bbox": [
+     627.52001953125,
+     203.93231201171875,
+     694.1580810546875,
+     243.6863250732422
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "ff"
+    ],
+    "id": "n204_628",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Monitoring",
+    "bbox": [
+     544.6146240234375,
+     214.0443115234375,
+     611.4381713867188,
+     231.68431091308594
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "kk"
+    ],
+    "id": "n214_545",
+    "links": [],
+    "role": "step",
+    "follow_up": true
+   },
+   {
+    "text": "\u2022 Risk stratification \u0017PSADT \u2022 Bone and soft tissue imaging \u2022 Consider prostate/ seminal vesicle biopsy",
+    "bbox": [
+     186.61680603027344,
+     247.55230712890625,
+     277.59783935546875,
+     359.30731201171875
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "g",
+     "mm",
+     "nn"
+    ],
+    "id": "n248_187",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Life expectancy >5 y",
+    "bbox": [
+     103.54399871826172,
+     263.3923034667969,
+     166.5189666748047,
+     303.14630126953125
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n263_104",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of Metachronous Oligometastatic CSPC (PROS-13)",
+    "bbox": [
+     469.9136962890625,
+     320.872314453125,
+     683.6198120117188,
+     348.62530517578125
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n321_470",
+    "links": [
+     "PROS-13"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "Oligometastatic",
+    "bbox": [
+     340.452392578125,
+     324.98431396484375,
+     428.4727783203125,
+     342.6242980957031
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n325_340",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "M1",
+    "bbox": [
+     291.44000244140625,
+     359.5281066894531,
+     306.718994140625,
+     375.28009033203125
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n360_291",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "PSA recurrence or Positive DRE",
+    "bbox": [
+     14.399497985839844,
+     360.2322998046875,
+     82.8635025024414,
+     411.9862976074219
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "v"
+    ],
+    "id": "n360_14",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)",
+    "bbox": [
+     469.9136962890625,
+     365.8882141113281,
+     730.2838745117188,
+     405.6421813964844
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n366_470",
+    "links": [
+     "PROS-14"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Polymetastatic",
+    "bbox": [
+     340.452392578125,
+     398.8130187988281,
+     418.09039306640625,
+     414.56500244140625
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n399_340",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of High- Volume M1 CSPC (PROS-15)",
+    "bbox": [
+     469.9136962890625,
+     411.5837097167969,
+     633.49267578125,
+     439.3367004394531
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n412_470",
+    "links": [
+     "PROS-15"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Life expectancy \u22645 y",
+    "bbox": [
+     103.54399871826172,
+     471.3122863769531,
+     166.5189666748047,
+     511.0662841796875
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n471_104",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Palliative therapy/ Best supportive care",
+    "bbox": [
+     653.4510498046875,
+     477.31634521484375,
+     762.2633056640625,
+     505.0693359375
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n477_653",
+    "links": [],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "Observation",
+    "bbox": [
+     196.1199951171875,
+     481.4242858886719,
+     265.8132019042969,
+     499.06732177734375
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "q"
+    ],
+    "id": "n481_196",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Progression",
+    "bbox": [
+     318.74798583984375,
+     481.4242858886719,
+     402.2110290527344,
+     499.0652770996094
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "ff",
+     "gg"
+    ],
+    "id": "n481_319",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Footnotes on PROS-10A",
+    "bbox": [
+     635.3347778320312,
+     524.88818359375,
+     763.0669555664062,
+     540.6401977539062
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n525_635",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   }
+  ],
+  "edges": [
+   {
+    "src": "n162_291",
+    "dst": "n136_356"
+   },
+   {
+    "src": "n162_291",
+    "dst": "n184_358"
+   },
+   {
+    "src": "n184_358",
+    "dst": "n214_545"
+   },
+   {
+    "src": "n204_628",
+    "dst": "n192_713"
+   },
+   {
+    "src": "n214_545",
+    "dst": "n204_628"
+   },
+   {
+    "src": "n248_187",
+    "dst": "n186_291"
+   },
+   {
+    "src": "n248_187",
+    "dst": "n360_291"
+   },
+   {
+    "src": "n263_104",
+    "dst": "n248_187"
+   },
+   {
+    "src": "n325_340",
+    "dst": "n321_470"
+   },
+   {
+    "src": "n360_14",
+    "dst": "n263_104"
+   },
+   {
+    "src": "n360_14",
+    "dst": "n471_104"
+   },
+   {
+    "src": "n360_291",
+    "dst": "n325_340"
+   },
+   {
+    "src": "n360_291",
+    "dst": "n399_340"
+   },
+   {
+    "src": "n399_340",
+    "dst": "n366_470"
+   },
+   {
+    "src": "n399_340",
+    "dst": "n412_470"
+   },
+   {
+    "src": "n471_104",
+    "dst": "n481_196"
+   },
+   {
+    "src": "n481_196",
+    "dst": "n481_319"
+   },
+   {
+    "src": "n481_319",
+    "dst": "n477_653"
+   }
+  ],
+  "footnotes": {},
+  "n_connectors": 18,
+  "n_brackets": 14,
+  "n_unattached": 0,
+  "page_id": "PROS-10"
+ },
+ "PROS-11": {
+  "page_index": 26,
+  "nodes": [
+   {
+    "text": "WORKUP FOR SECOND BIOCHEMICAL RECURRENCE (BCR2)",
+    "bbox": [
+     23.544599533081055,
+     86.03231811523438,
+     351.2994079589844,
+     101.78431701660156
+    ],
+    "kind": "header",
+    "footnote_refs": [],
+    "id": "n86_24",
+    "links": []
+   },
+   {
+    "text": "Treatment and Monitoring for Second Biochemical Recurrence (N0M0) (PROS-12)",
+    "bbox": [
+     533.664794921875,
+     111.75228881835938,
+     759.2308959960938,
+     139.5052947998047
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n112_534",
+    "links": [
+     "PROS-12"
+    ],
+    "role": "leaf",
+    "follow_up": true
+   },
+   {
+    "text": "N0M0 CSPC",
+    "bbox": [
+     258.7528076171875,
+     117.75830078125,
+     321.7057800292969,
+     133.5102996826172
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n118_259",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of M0 CRPC (PROS-16)",
+    "bbox": [
+     533.664794921875,
+     186.20230102539062,
+     721.69677734375,
+     213.95530700683594
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n186_534",
+    "links": [
+     "PROS-16"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "M0 CRPC (N0 or N1)",
+    "bbox": [
+     258.7528076171875,
+     186.2113037109375,
+     311.310791015625,
+     213.9643096923828
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n186_259",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Second Biochemical Recurrence (BCR2)",
+    "bbox": [
+     21.600000381469727,
+     237.03228759765625,
+     89.45899963378906,
+     288.78729248046875
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n237_22",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "Perform imaging for staging",
+    "bbox": [
+     121.763671875,
+     249.03030395507812,
+     212.2276611328125,
+     276.7832946777344
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "g"
+    ],
+    "id": "n249_122",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of Metachronous Oligometastatic CSPC (PROS-13)",
+    "bbox": [
+     533.664794921875,
+     306.3443908691406,
+     747.3709106445312,
+     334.0973815917969
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n306_534",
+    "links": [
+     "PROS-13"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "Oligometastatic CSPC",
+    "bbox": [
+     377.9927978515625,
+     310.4563903808594,
+     499.6265869140625,
+     328.1112976074219
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n310_378",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "N1M0 CSPC",
+    "bbox": [
+     258.7528076171875,
+     312.35931396484375,
+     321.7057800292969,
+     328.1112976074219
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n312_259",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)",
+    "bbox": [
+     533.6649169921875,
+     352.8302917480469,
+     739.0242309570312,
+     404.5832824707031
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n353_534",
+    "links": [
+     "PROS-14"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Polymetastatic CSPC",
+    "bbox": [
+     377.9914855957031,
+     395.9543151855469,
+     489.2454833984375,
+     411.706298828125
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n396_378",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "M1",
+    "bbox": [
+     258.7528076171875,
+     397.5213317871094,
+     274.03179931640625,
+     413.2733154296875
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n398_259",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of High-Volume M1 CSPC (PROS-15)",
+    "bbox": [
+     533.6649169921875,
+     418.0362854003906,
+     739.2154541015625,
+     445.7892761230469
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n418_534",
+    "links": [
+     "PROS-15"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of M1 CRPC (PROS-17)",
+    "bbox": [
+     533.664794921875,
+     467.3323059082031,
+     771.69921875,
+     483.08428955078125
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n467_534",
+    "links": [
+     "PROS-17"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "M1 CRPC",
+    "bbox": [
+     377.98858642578125,
+     467.3343811035156,
+     427.4885559082031,
+     483.08636474609375
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n467_378",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   }
+  ],
+  "edges": [
+   {
+    "src": "n118_259",
+    "dst": "n112_534"
+   },
+   {
+    "src": "n186_259",
+    "dst": "n186_534"
+   },
+   {
+    "src": "n237_22",
+    "dst": "n249_122"
+   },
+   {
+    "src": "n249_122",
+    "dst": "n118_259"
+   },
+   {
+    "src": "n249_122",
+    "dst": "n186_259"
+   },
+   {
+    "src": "n249_122",
+    "dst": "n312_259"
+   },
+   {
+    "src": "n249_122",
+    "dst": "n398_259"
+   },
+   {
+    "src": "n310_378",
+    "dst": "n306_534"
+   },
+   {
+    "src": "n312_259",
+    "dst": "n310_378"
+   },
+   {
+    "src": "n396_378",
+    "dst": "n353_534"
+   },
+   {
+    "src": "n396_378",
+    "dst": "n418_534"
+   },
+   {
+    "src": "n398_259",
+    "dst": "n310_378"
+   },
+   {
+    "src": "n398_259",
+    "dst": "n396_378"
+   },
+   {
+    "src": "n398_259",
+    "dst": "n467_378"
+   },
+   {
+    "src": "n467_378",
+    "dst": "n467_534"
+   }
+  ],
+  "footnotes": {
+   "g": "Principles of Imaging (PROS-E).",
+   "h": "See Number of Metastatic Sites in the Principles of MDT (PROS-M)."
+  },
+  "n_connectors": 15,
+  "n_brackets": 2,
+  "n_unattached": 0,
+  "page_id": "PROS-11"
+ },
+ "PROS-12": {
+  "page_index": 27,
+  "nodes": [
+   {
+    "text": "TREATMENT AND MONITORING FOR SECOND BIOCHEMICAL RECURRENCE (N0M0)",
+    "bbox": [
+     23.544599533081055,
+     86.03231811523438,
+     468.6275939941406,
+     101.78431701660156
+    ],
+    "kind": "header",
+    "footnote_refs": [],
+    "id": "n86_24",
+    "links": []
+   },
+   {
+    "text": "N0M0",
+    "bbox": [
+     552.4080200195312,
+     151.2073974609375,
+     581.7451171875,
+     166.9593963623047
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n151_552",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of Metachronous Oligometastatic CSPC (PROS-13)",
+    "bbox": [
+     676.1199951171875,
+     160.95230102539062,
+     764.1405029296875,
+     221.7042999267578
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n161_676",
+    "links": [
+     "PROS-13"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "Oligometastatic CSPC",
+    "bbox": [
+     569.7553100585938,
+     190.10430908203125,
+     657.780517578125,
+     219.7443084716797
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n190_570",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "\u2022 Monitoring (preferred) or \u2022 ADT",
+    "bbox": [
+     268.63421630859375,
+     193.79229736328125,
+     356.3152160644531,
+     245.5473175048828
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "c",
+     "aa",
+     "kk",
+     "pp"
+    ],
+    "id": "n194_269",
+    "links": [],
+    "role": "step",
+    "follow_up": true
+   },
+   {
+    "text": "Low-risk BCR",
+    "bbox": [
+     194.11239624023438,
+     204.9923095703125,
+     242.40237426757812,
+     232.7453155517578
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "pp"
+    ],
+    "id": "n205_194",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Second Biochemical Recurrence (M0)",
+    "bbox": [
+     15.119999885559082,
+     225.7681884765625,
+     82.97899627685547,
+     277.523193359375
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n226_15",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)",
+    "bbox": [
+     676.4530029296875,
+     226.7681884765625,
+     767.532958984375,
+     326.52117919921875
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n227_676",
+    "links": [
+     "PROS-14"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Risk Stratification",
+    "bbox": [
+     97.5199966430664,
+     237.7681884765625,
+     175.74798583984375,
+     265.52117919921875
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "pp"
+    ],
+    "id": "n238_98",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "\u2022 Monitoring \u2022 Enzalutamide \u00b1 leuprolide \u2022 Apalutamide + ADT (category 2B) \u2022 ADT",
+    "bbox": [
+     267.19500732421875,
+     258.89599609375,
+     367.4795227050781,
+     348.5369873046875
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "c",
+     "aa",
+     "kk",
+     "pp",
+     "qq",
+     "rr",
+     "ss"
+    ],
+    "id": "n259_267",
+    "links": [],
+    "role": "step",
+    "follow_up": true
+   },
+   {
+    "text": "Progression",
+    "bbox": [
+     466.9599914550781,
+     259.6040954589844,
+     536.922607421875,
+     277.24407958984375
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "ff"
+    ],
+    "id": "n260_467",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Monitoring",
+    "bbox": [
+     384.20001220703125,
+     261.01611328125,
+     451.0234069824219,
+     278.6560974121094
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "kk"
+    ],
+    "id": "n261_384",
+    "links": [],
+    "role": "step",
+    "follow_up": true
+   },
+   {
+    "text": "High-risk BCR",
+    "bbox": [
+     194.11239624023438,
+     271.31231689453125,
+     244.84437561035156,
+     299.0653076171875
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "pp"
+    ],
+    "id": "n271_194",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Polymetastatic",
+    "bbox": [
+     570.5582885742188,
+     312.7882080078125,
+     648.1964721679688,
+     328.5401916503906
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n313_571",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "CSPC",
+    "bbox": [
+     570.5582885742188,
+     324.7892150878906,
+     601.1162719726562,
+     340.54119873046875
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n325_571",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of High-Volume M1 CSPC (PROS-15)",
+    "bbox": [
+     676.8773803710938,
+     332.43121337890625,
+     765.2899169921875,
+     384.18621826171875
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n332_677",
+    "links": [
+     "PROS-15"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "M1 CRPC",
+    "bbox": [
+     552.4080200195312,
+     383.7913818359375,
+     583.571044921875,
+     411.54437255859375
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n384_552",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of M1 CRPC (PROS-17)",
+    "bbox": [
+     614.3831176757812,
+     384.2964172363281,
+     736.4150390625,
+     412.04937744140625
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n384_614",
+    "links": [
+     "PROS-17"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   }
+  ],
+  "edges": [
+   {
+    "src": "n190_570",
+    "dst": "n161_676"
+   },
+   {
+    "src": "n194_269",
+    "dst": "n261_384"
+   },
+   {
+    "src": "n205_194",
+    "dst": "n194_269"
+   },
+   {
+    "src": "n226_15",
+    "dst": "n238_98"
+   },
+   {
+    "src": "n238_98",
+    "dst": "n205_194"
+   },
+   {
+    "src": "n238_98",
+    "dst": "n271_194"
+   },
+   {
+    "src": "n259_267",
+    "dst": "n261_384"
+   },
+   {
+    "src": "n260_467",
+    "dst": "n151_552"
+   },
+   {
+    "src": "n260_467",
+    "dst": "n190_570"
+   },
+   {
+    "src": "n260_467",
+    "dst": "n313_571"
+   },
+   {
+    "src": "n260_467",
+    "dst": "n384_552"
+   },
+   {
+    "src": "n261_384",
+    "dst": "n260_467"
+   },
+   {
+    "src": "n271_194",
+    "dst": "n259_267"
+   },
+   {
+    "src": "n313_571",
+    "dst": "n227_676"
+   },
+   {
+    "src": "n313_571",
+    "dst": "n332_677"
+   },
+   {
+    "src": "n384_552",
+    "dst": "n384_614"
+   }
+  ],
+  "footnotes": {
+   "c": "Principles of Survivorship in Prostate Cancer (PROS-B).",
+   "h": "See Number of Metastatic Sites in the Principles of MDT (PROS-M).",
+   "aa": "For details on the use of ADT and ARPIs, see Principles of Androgen Deprivation Therapy (PROS-G) and Discussion.",
+   "ff": "Document castrate levels of testosterone if clinically indicated. Workup for progression should include bone and soft tissue evaluation. See Principles of Imaging (PROS-E).",
+   "kk": "Monitoring should include physical exam, PSA every 3\u20136 months, and imaging for symptoms or increasing PSA.",
+   "pp": "PSA level and PSADT should be considered when deciding whether to begin ADT for patients considered to have lower risk disease. High-risk BCR has different definitions in different clinical trials that generally include a PSADT \u22649 months and other adverse prognostic features. qq \u0007If favorable PSA response, an intermittent ADT approach should be considered.",
+   "rr": "Enzalutamide with or without leuprolide is an option for patients who have the following high-risk criteria: M0 by CT, MRI, or bone scan; PSADT \u22649 months; PSA \u22652 ng/mL above nadir after RT or \u22651 ng/mL after RP with or without postoperative RT; and not considered a candidate for pelvic-directed therapy (Freedland SJ, et al. N Engl J Med 2023;389:1453-1465). See Principles of Androgen Deprivation Therapy (PROS-G).",
+   "ss": "Apalutamide plus ADT is an option for patients with biochemical recurrence after RP who meet the following high-risk criteria: PSADT \u22649 months; PSA \u22650.5 ng/ mL; and prior adjuvant or secondary RT or not considered a candidate for RT (Aggarwal R, et al. J Clin Oncol 2024;42:1114-1123.) See Principles of Androgen Deprivation Therapy (PROS-G)."
+  },
+  "n_connectors": 15,
+  "n_brackets": 9,
+  "n_unattached": 0,
+  "page_id": "PROS-12"
+ },
+ "PROS-13": {
+  "page_index": 28,
+  "nodes": [
+   {
+    "text": "WORKUP FOR METASTASES",
+    "bbox": [
+     23.401899337768555,
+     103.35128784179688,
+     186.1905975341797,
+     120.99128723144531
+    ],
+    "kind": "header",
+    "footnote_refs": [
+     "xx"
+    ],
+    "id": "n103_23",
+    "links": []
+   },
+   {
+    "text": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)",
+    "bbox": [
+     619.2372436523438,
+     126.11599731445312,
+     743.9331665039062,
+     213.86900329589844
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h"
+    ],
+    "id": "n126_619",
+    "links": [
+     "PROS-14"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "\u2022 Perform physical exam \u2022 Perform imaging for staging \u2022 Perform and/or collect PSA and calculate PSADT \u2022 Estimate life expectancy (Principles of Life Expectancy Estimation [PROS-A]) \u2022 Perform germline and somatic genetic testing (if not previously done) \u2022 Obtain family history \u2022 Assess quality-of-life measures",
+    "bbox": [
+     24.401899337768555,
+     167.98220825195312,
+     176.38560485839844,
+     351.7351989746094
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "e",
+     "f",
+     "g"
+    ],
+    "id": "n168_24",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "\u2022 Physical examination + PSA every 3\u20136 mo \u2022 Imaging for symptoms \u2022 Consider periodic imaging to monitor treatment response",
+    "bbox": [
+     346.3752136230469,
+     215.98220825195312,
+     468.222412109375,
+     303.7362060546875
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "g"
+    ],
+    "id": "n216_346",
+    "links": [],
+    "role": "step",
+    "follow_up": true
+   },
+   {
+    "text": "MDT\u00b1 ADT or For M1 only, treat as metachronous low-volume M1 (see PROS-14)",
+    "bbox": [
+     217.2740936279297,
+     220.09420776367188,
+     311.21624755859375,
+     297.7392272949219
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "aa",
+     "yy"
+    ],
+    "id": "n220_217",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of High-Volume M1 CSPC (PROS-15)",
+    "bbox": [
+     619.6614990234375,
+     239.69610595703125,
+     755.1276245117188,
+     279.4501037597656
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n240_620",
+    "links": [
+     "PROS-15"
+    ],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Progression",
+    "bbox": [
+     510.9599914550781,
+     248.68218994140625,
+     580.922607421875,
+     266.3221740722656
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "ff"
+    ],
+    "id": "n249_511",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of M1 CRPC (PROS-17)",
+    "bbox": [
+     618.8494262695312,
+     305.2760925292969,
+     754.3233642578125,
+     333.0290832519531
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n305_619",
+    "links": [
+     "PROS-17"
+    ],
+    "role": "branch",
+    "follow_up": false
+   }
+  ],
+  "edges": [
+   {
+    "src": "n168_24",
+    "dst": "n220_217"
+   },
+   {
+    "src": "n216_346",
+    "dst": "n249_511"
+   },
+   {
+    "src": "n220_217",
+    "dst": "n216_346"
+   },
+   {
+    "src": "n249_511",
+    "dst": "n126_619"
+   },
+   {
+    "src": "n249_511",
+    "dst": "n240_620"
+   },
+   {
+    "src": "n249_511",
+    "dst": "n305_619"
+   }
+  ],
+  "footnotes": {
+   "c": "Principles of Survivorship in Prostate Cancer (PROS-B).",
+   "e": "Principles of Genetics and Molecular/Biomarker Analysis (PROS-C).",
+   "f": "Principles of Quality of Life and Shared Decision-Making (PROS-D).",
+   "g": "Principles of Imaging (PROS-E).",
+   "h": "See Number of Metastatic Sites in the Principles of MDT (PROS-M).",
+   "aa": "For details on the use of ADT and ARPIs, see Principles of Androgen Deprivation Therapy (PROS-G) and Discussion.",
+   "ff": "Document castrate levels of testosterone if clinically indicated. Workup for progression should include bone and soft tissue evaluation. See Principles of Imaging (PROS-E).",
+   "tt": "EBRT to sites of bone metastases can be considered if metastases are in weight- bearing bones or if the patient is symptomatic.",
+   "uu": "Bone antiresorptive therapy is indicated for elevated fracture risk based upon FRAX in the castration-sensitive setting. See PROS-B.",
+   "vv": "The term \"castration-sensitive\" is used to define disease in patients who have not been treated with ADT and those who are not on ADT at the time of progression. The NCCN Prostate Cancer Panel uses the term \"castration- sensitive\" even when patients have had neoadjuvant, concurrent, or adjuvant ADT as part of RT provided they have recovered testicular function.",
+   "ww": "ADT is strongly recommended in combination therapy for metastatic castration- sensitive disease. The use of ADT monotherapy in metastatic castration-sensitive disease is discouraged unless there are clear contraindications to combination therapy. If ADT monotherapy is given, intermittent ADT can be considered to reduce toxicity. See Principles of Androgen Deprivation Therapy (PROS-G).",
+   "xx": "ADT alone (PROS-G) or observation are recommended for asymptomatic patients with metastatic disease or M0 CRPC and life expectancy \u22645 years.",
+   "yy": "See Principles of MDT (PROS-M)."
+  },
+  "n_connectors": 6,
+  "n_brackets": 7,
+  "n_unattached": 0,
+  "page_id": "PROS-13"
+ },
+ "PROS-14": {
+  "page_index": 29,
+  "nodes": [
+   {
+    "text": "WORKUP FOR METASTASES",
+    "bbox": [
+     23.034500122070312,
+     104.38650512695312,
+     170.8220977783203,
+     120.5945053100586
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "xx"
+    ],
+    "id": "n104_23",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "ADT with one of the following: \u2022  Preferred: \u0017Abiraterone (category 1) \u0017Apalutamide (category 1) \u0017Enzalutamide (category 1) \u2022 Other Recommended: \u0017Darolutamide (category 2B) or ADT with docetaxel and one of the following (low-volume disease only): \u0017Abiraterone (category 2B) \u0017Apalutamide (category 2B) \u0017Darolutamide (category 2B) \u0017Enzalutamide (category 2B) or ADT with EBRT to the primary tumor alone or with one of the following: \u0017Abiraterone \u0017Apalutamide (category 2B) \u0017Docetaxel (category 2B) \u0017Enzalutamide (category 2B) or ADT with: \u2022 Useful in Certain Circumstances \u0017Niraparib/abiraterone (BRCA2m only) (category 2B)",
+    "bbox": [
+     272.127197265625,
+     116.08010864257812,
+     457.39208984375,
+     392.2881164550781
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "t",
+     "aa",
+     "zz",
+     "aaa",
+     "bbb"
+    ],
+    "id": "n116_272",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Synchronous low-volume metastases or Synchronous oligometastatic disease",
+    "bbox": [
+     166.48460388183594,
+     175.2528076171875,
+     242.61459350585938,
+     249.5727996826172
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n175_166",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "\u2022 Perform physical exam \u2022 Perform imaging for staging \u2022 Perform and/or collect PSA and calculate PSADT \u2022 Estimate life expectancy (Principles of Life Expectancy Estimation [PROS-A]) \u2022 Perform germline and somatic genetic testing(if not previously done) \u2022 Obtain family history \u2022 Assess quality-of-life measures",
+    "bbox": [
+     23.034500122070312,
+     258.64190673828125,
+     141.4044952392578,
+     432.9619140625
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "e",
+     "f",
+     "g"
+    ],
+    "id": "n259_23",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "\u2022 Physical examination + PSA every 3\u20136 mo \u2022 Imaging for symptoms \u2022 Periodic imaging to monitor treatment response",
+    "bbox": [
+     489.1776123046875,
+     276.64190673828125,
+     591.0377807617188,
+     360.9619140625
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "g"
+    ],
+    "id": "n277_489",
+    "links": [],
+    "role": "step",
+    "follow_up": true
+   },
+   {
+    "text": "Progression on ADT \u00b1 androgen receptor pathway inhibitor (ARPI)",
+    "bbox": [
+     613.0911254882812,
+     279.75390625,
+     678.8006591796875,
+     355.9619140625
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "ff"
+    ],
+    "id": "n280_613",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of M1 CRPC (PROS-17)",
+    "bbox": [
+     699.3126220703125,
+     296.64190673828125,
+     759.6906127929688,
+     340.9619140625
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n297_699",
+    "links": [
+     "PROS-17"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "ADT with one of the following: \u2022  Preferred: \u0017Abiraterone (category 1) \u0017Apalutamide (category 1) \u0017Enzalutamide (category 1) \u2022 Other Recommended: \u0017Darolutamide (category 2B) or ADT with: \u2022 Useful in Certain Circumstances \u0017Niraparib/abiraterone (BRCA2m only) (category 2B)",
+    "bbox": [
+     272.1294860839844,
+     416.4276123046875,
+     453.76220703125,
+     542.6356201171875
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "aa",
+     "zz",
+     "bbb"
+    ],
+    "id": "n416_272",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Metachronous low-volume metastases",
+    "bbox": [
+     164.522705078125,
+     436.531982421875,
+     235.6427001953125,
+     470.85198974609375
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n437_165",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   }
+  ],
+  "edges": [
+   {
+    "src": "n116_272",
+    "dst": "n277_489"
+   },
+   {
+    "src": "n175_166",
+    "dst": "n116_272"
+   },
+   {
+    "src": "n259_23",
+    "dst": "n175_166"
+   },
+   {
+    "src": "n259_23",
+    "dst": "n437_165"
+   },
+   {
+    "src": "n277_489",
+    "dst": "n280_613"
+   },
+   {
+    "src": "n280_613",
+    "dst": "n297_699"
+   },
+   {
+    "src": "n416_272",
+    "dst": "n277_489"
+   },
+   {
+    "src": "n437_165",
+    "dst": "n416_272"
+   }
+  ],
+  "footnotes": {},
+  "n_connectors": 7,
+  "n_brackets": 13,
+  "n_unattached": 0,
+  "page_id": "PROS-14"
+ },
+ "PROS-15": {
+  "page_index": 30,
+  "nodes": [
+   {
+    "text": "WORKUP FOR METASTASES",
+    "bbox": [
+     23.40380859375,
+     103.35128784179688,
+     186.1905975341797,
+     120.98799133300781
+    ],
+    "kind": "header",
+    "footnote_refs": [
+     "xx"
+    ],
+    "id": "n103_23",
+    "links": []
+   },
+   {
+    "text": "ADT with docetaxel and one of the following: \u2022 Preferred: \u0017Abiraterone (category 1) \u0017Darolutamide (category 1) \u2022  Other Recommended: \u0017Apalutamide (category 2B) \u0017Enzalutamide (category 2B) or ADT with one of the following: \u2022 Preferred: \u0017Abiraterone (category 1) \u0017Apalutamide (category 1) \u0017Enzalutamide (category 1) \u2022 Other Recommended: \u0017Darolutamide or ADT with: \u2022 Useful in Certain Circumstances \u0017Niraparib/abiraterone (BRCA2m only) or ADT with: \u0017Capivasertib/abiraterone (in very select patients with PTEN deficiency only; category 2B)",
+    "bbox": [
+     287.3069152832031,
+     146.50021362304688,
+     464.3230895996094,
+     464.1431884765625
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "aa",
+     "bbb"
+    ],
+    "id": "n147_287",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "\u2022 Perform physical exam \u2022 Perform imaging for staging \u2022 Perform and/or collect PSA and calculate PSADT \u2022 Estimate life expectancy (Principles of Life Expectancy Estimation [PROS-A]) \u2022 Perform germline and somatic genetic testing (if not previously done) \u2022 Obtain family history \u2022 Assess quality-of-life measures",
+    "bbox": [
+     17.401899337768555,
+     208.38821411132812,
+     155.1438751220703,
+     404.14117431640625
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "e",
+     "f",
+     "g"
+    ],
+    "id": "n208_17",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "\u2022 Physical examination + PSA every 3\u20136 mo \u2022 Imaging for symptoms \u2022 Periodic imaging to monitor treatment response",
+    "bbox": [
+     500.2507019042969,
+     238.38821411132812,
+     585.9298095703125,
+     374.14422607421875
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "g"
+    ],
+    "id": "n238_500",
+    "links": [],
+    "role": "step",
+    "follow_up": true
+   },
+   {
+    "text": "Synchronous or metachronous high-volume metastases",
+    "bbox": [
+     184.08009338378906,
+     274.3882141113281,
+     266.9818115234375,
+     338.14019775390625
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "ccc"
+    ],
+    "id": "n274_184",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of M1 CRPC (PROS-17)",
+    "bbox": [
+     707.2880249023438,
+     280.3882141113281,
+     773.703857421875,
+     332.1432189941406
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n280_707",
+    "links": [
+     "PROS-17"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "Progression",
+    "bbox": [
+     612.9237060546875,
+     296.5002136230469,
+     682.8804931640625,
+     314.13922119140625
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "ff"
+    ],
+    "id": "n297_613",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   }
+  ],
+  "edges": [
+   {
+    "src": "n147_287",
+    "dst": "n238_500"
+   },
+   {
+    "src": "n208_17",
+    "dst": "n274_184"
+   },
+   {
+    "src": "n238_500",
+    "dst": "n297_613"
+   },
+   {
+    "src": "n274_184",
+    "dst": "n147_287"
+   },
+   {
+    "src": "n297_613",
+    "dst": "n280_707"
+   }
+  ],
+  "footnotes": {},
+  "n_connectors": 5,
+  "n_brackets": 8,
+  "n_unattached": 0,
+  "page_id": "PROS-15"
+ },
+ "PROS-16": {
+  "page_index": 32,
+  "nodes": [
+   {
+    "text": "Change or maintain current treatment and continue periodic disease assessment",
+    "bbox": [
+     695.3416748046875,
+     103.66409301757812,
+     771.1318359375,
+     203.4231414794922
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n104_695",
+    "links": [],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "No metastases (M0)",
+    "bbox": [
+     611.0178833007812,
+     133.66409301757812,
+     673.9931030273438,
+     173.41810607910156
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n134_611",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Monitoring (preferred) or Other secondary hormone therapy",
+    "bbox": [
+     269.1199951171875,
+     165.58428955078125,
+     368.9757080078125,
+     231.22731018066406
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "aa",
+     "kk"
+    ],
+    "id": "n166_269",
+    "links": [],
+    "role": "step",
+    "follow_up": true
+   },
+   {
+    "text": "PSA increasing or radiographic evidence of metastases",
+    "bbox": [
+     451.8150939941406,
+     177.71829223632812,
+     523.953125,
+     241.4743194580078
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n178_452",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "PSADT >10 mo",
+    "bbox": [
+     203.32012939453125,
+     185.47451782226562,
+     243.65713500976562,
+     213.22752380371094
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n185_203",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Imaging",
+    "bbox": [
+     541.6644287109375,
+     199.83029174804688,
+     589.61083984375,
+     217.4702911376953
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "ff"
+    ],
+    "id": "n200_542",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Continue ADT to maintain castrate serum levels of testosterone (<50 ng/dL)",
+    "bbox": [
+     110.56859588623047,
+     219.38821411132812,
+     179.63755798339844,
+     319.146240234375
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "c",
+     "aa"
+    ],
+    "id": "n219_111",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Workup and Treatment of M1 CRPC (PROS-17)",
+    "bbox": [
+     695.5701293945312,
+     230.66250610351562,
+     761.9859619140625,
+     282.4175109863281
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n231_696",
+    "links": [
+     "PROS-17"
+    ],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "CRPC, imaging studies negative for distant metastases",
+    "bbox": [
+     23.544599533081055,
+     231.38821411132812,
+     83.46159362792969,
+     307.1452331542969
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n231_24",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "Metastases (M1)",
+    "bbox": [
+     608.26806640625,
+     245.77532958984375,
+     670.6273193359375,
+     273.5283203125
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n246_608",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Consider periodic disease assessment (PSA and imaging)",
+    "bbox": [
+     396.2421875,
+     251.01229858398438,
+     462.2751770019531,
+     326.7693176269531
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "g"
+    ],
+    "id": "n251_396",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Preferred: \u2022 Apalutamide (category 1) \u2022 Darolutamide (category 1) \u2022 Enzalutamide (category 1) Other Recommended: \u2022 Other secondary hormone therapy",
+    "bbox": [
+     267.1150207519531,
+     272.5941162109375,
+     374.1188049316406,
+     408.35009765625
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "aa"
+    ],
+    "id": "n273_267",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "PSADT \u226410 mo",
+    "bbox": [
+     203.32000732421875,
+     326.5941162109375,
+     243.65701293945312,
+     354.34710693359375
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n327_203",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Stable PSA and no evidence of metastases",
+    "bbox": [
+     451.8150939941406,
+     336.01739501953125,
+     535.7660522460938,
+     375.7713928222656
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n336_452",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "Maintain current treatment and consider periodic disease assessment (PSA and imaging)",
+    "bbox": [
+     567.1199951171875,
+     336.01739501953125,
+     736.0345458984375,
+     375.7713928222656
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "g"
+    ],
+    "id": "n336_567",
+    "links": [],
+    "role": "leaf",
+    "follow_up": false
+   }
+  ],
+  "edges": [
+   {
+    "src": "n134_611",
+    "dst": "n104_695"
+   },
+   {
+    "src": "n166_269",
+    "dst": "n251_396"
+   },
+   {
+    "src": "n178_452",
+    "dst": "n200_542"
+   },
+   {
+    "src": "n185_203",
+    "dst": "n166_269"
+   },
+   {
+    "src": "n200_542",
+    "dst": "n134_611"
+   },
+   {
+    "src": "n200_542",
+    "dst": "n246_608"
+   },
+   {
+    "src": "n219_111",
+    "dst": "n185_203"
+   },
+   {
+    "src": "n219_111",
+    "dst": "n327_203"
+   },
+   {
+    "src": "n231_24",
+    "dst": "n219_111"
+   },
+   {
+    "src": "n246_608",
+    "dst": "n231_696"
+   },
+   {
+    "src": "n251_396",
+    "dst": "n178_452"
+   },
+   {
+    "src": "n251_396",
+    "dst": "n336_452"
+   },
+   {
+    "src": "n273_267",
+    "dst": "n251_396"
+   },
+   {
+    "src": "n327_203",
+    "dst": "n273_267"
+   },
+   {
+    "src": "n336_452",
+    "dst": "n336_567"
+   }
+  ],
+  "footnotes": {
+   "c": "Principles of Survivorship in Prostate Cancer (PROS-B).",
+   "g": "Principles of Imaging (PROS-E).",
+   "aa": "For details on the use of ADT and ARPIs, see Principles of Androgen Deprivation Therapy (PROS-G) and Discussion.",
+   "ff": "Document castrate levels of testosterone if clinically indicated. Workup for progression should include bone and soft tissue evaluation. See Principles of Imaging (PROS-E).",
+   "kk": "Monitoring should include physical exam, PSA every 3\u20136 mo, and imaging for symptoms or increasing PSA.",
+   "xx": "ADT alone (PROS-G) or observation are recommended for asymptomatic patients with metastatic disease or M0 CRPC and life expectancy \u22645 years.",
+   "ddd": "CRPC is prostate cancer that progresses clinically, radiographically, or biochemically despite castrate levels of serum testosterone (<50 ng/dL). Scher HI, et al. J Clin Oncol 2008;26:1148-1159."
+  },
+  "n_connectors": 14,
+  "n_brackets": 17,
+  "n_unattached": 0,
+  "page_id": "PROS-16"
+ },
+ "PROS-17": {
+  "page_index": 33,
+  "nodes": [
+   {
+    "text": "\u2022 Continue ADT to maintain castrate levels of serum testosterone (<50 ng/dL) \u2022 Additional treatment options: \u0017Bone antiresorptive therapy with denosumab (category 1, preferred) or zoledronic acid if bone metastases present \u0017Palliative RT for painful bone metastases \u0017Best supportive care",
+    "bbox": [
+     271.9796142578125,
+     142.7843017578125,
+     419.0281066894531,
+     328.4263000488281
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "c",
+     "t",
+     "aa"
+    ],
+    "id": "n143_272",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "\u2022 Metastatic lesion biopsy \u2022 Somatic testing for homologous recombination repair (HRR), microsatellite instability (MSI)/ mismatch repair deficiency (dMMR), and tumor mutational burden (TMB) \u0017Recommended if not previously done \u0017Re-evaluation may be considered",
+    "bbox": [
+     126.83999633789062,
+     144.67230224609375,
+     253.28794860839844,
+     328.42730712890625
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "e",
+     "eee",
+     "fff"
+    ],
+    "id": "n145_127",
+    "links": [],
+    "role": "step",
+    "follow_up": false
+   },
+   {
+    "text": "Adenocarcinoma",
+    "bbox": [
+     436.3599853515625,
+     172.3291015625,
+     540.6181640625,
+     189.96910095214844
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "eee"
+    ],
+    "id": "n172_436",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   },
+   {
+    "text": "PROS-18",
+    "bbox": [
+     575.280029296875,
+     174.21719360351562,
+     622.3490600585938,
+     189.9691925048828
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n174_575",
+    "links": [],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "CRPC, imaging studies positive for metastases",
+    "bbox": [
+     15.84000015258789,
+     216.67230224609375,
+     98.97798919677734,
+     256.4263000488281
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n217_16",
+    "links": [],
+    "role": "entry",
+    "follow_up": false
+   },
+   {
+    "text": "First-line and subsequent treatment options \u2022 Chemotherapy \u0017Cisplatin/etoposide \u0017Carboplatin/etoposide \u0017Docetaxel/carboplatin \u0017Cabazitaxel/carboplatin \u0017For additional options, see NCCN Guidelines for Small Cell Lung Cancer \u2022 Best supportive care",
+    "bbox": [
+     578.760009765625,
+     241.8861083984375,
+     768.8513793945312,
+     377.64111328125
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "ggg",
+     "hhh",
+     "iii"
+    ],
+    "id": "n242_579",
+    "links": [],
+    "role": "leaf",
+    "follow_up": false
+   },
+   {
+    "text": "Small cell/ neuroendocrine prostate cancer (NEPC)",
+    "bbox": [
+     439.9599914550781,
+     283.8861083984375,
+     526.14501953125,
+     335.64111328125
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "eee"
+    ],
+    "id": "n284_440",
+    "links": [],
+    "role": "branch",
+    "follow_up": false
+   }
+  ],
+  "edges": [
+   {
+    "src": "n143_272",
+    "dst": "n172_436"
+   },
+   {
+    "src": "n143_272",
+    "dst": "n284_440"
+   },
+   {
+    "src": "n145_127",
+    "dst": "n143_272"
+   },
+   {
+    "src": "n172_436",
+    "dst": "n174_575"
+   },
+   {
+    "src": "n217_16",
+    "dst": "n145_127"
+   },
+   {
+    "src": "n284_440",
+    "dst": "n242_579"
+   }
+  ],
+  "footnotes": {
+   "c": "Principles of Survivorship in Prostate Cancer (PROS-B).",
+   "e": "Principles of Genetics and Molecular/Biomarker Analysis (PROS-C).",
+   "t": "Principles of Radiation Therapy (PROS-J).",
+   "aa": "For details on the use of ADT and ARPIs, see Principles of Androgen Deprivation Therapy (PROS-G) and Discussion.",
+   "xx": "ADT alone (PROS-G) or observation are recommended for asymptomatic patients with metastatic disease or M0 CRPC and life expectancy \u22645 years.",
+   "ddd": "CRPC is prostate cancer that progresses clinically, radiographically, or biochemically despite castrate levels of serum testosterone (<50 ng/dL). Scher HI, et al. J Clin Oncol 2008;26:1148-1159.",
+   "eee": "Histologic evidence of both adenocarcinoma and small cell carcinoma may be present, in which case treatment can follow either pathway. Treat as adenocarcinoma if biopsy is not feasible or not performed.",
+   "fff": "Germline testing for HRR mutations is recommended if not performed previously. See Principles of Genetics and Molecular/Biomarker Analysis (PROS-C). ggg \u0007Document castrate levels of testosterone if progression occurs on ADT. See Principles of Imaging (PROS-E) and Discussion.",
+   "hhh": "For details on the efficacy and safety of these agents, see Principles of Non- Hormonal Systemic Therapy (PROS-N).",
+   "iii": "Cabazitaxel 20 or 25 mg/m\u00b2 plus carboplatin area under the curve [AUC] 4 mg/ mL per min with growth factor support can be considered for fit patients with aggressive variant metastatic CRPC (mCRPC) (ie, visceral metastases, low PSA and bulky disease, high lactate dehydrogenase [LDH], high carcinoembryonic antigen [CEA], lytic bone metastases, NEPC histology) or unfavorable genomics (defects in at least 2 of PTEN, TP53, and RB1). Corn PG, et al. Lancet Oncol 2019;20:1432-1443."
+  },
+  "n_connectors": 6,
+  "n_brackets": 8,
+  "n_unattached": 0,
+  "page_id": "PROS-17"
+ },
+ "PROS-18": {
+  "page_index": 34,
+  "nodes": [
+   {
+    "text": "Pre-ARPI",
+    "bbox": [
+     112.56610107421875,
+     110.27011108398438,
+     180.26129150390625,
+     127.91011047363281
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "aa",
+     "lll"
+    ],
+    "id": "n110_113",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Post-ARPI/Pre-Docetaxel",
+    "bbox": [
+     322.86090087890625,
+     110.27011108398438,
+     470.5763854980469,
+     127.91011047363281
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "aa",
+     "lll"
+    ],
+    "id": "n110_323",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Post-ARPI/Post-Docetaxel",
+    "bbox": [
+     568.3566284179688,
+     110.27011108398438,
+     722.1737670898438,
+     127.91011047363281
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "aa",
+     "lll"
+    ],
+    "id": "n110_568",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Preferred: \u2022 Abiraterone (category 1) \u2022 Enzalutamide (category 1) Other Recommended: \u2022 Docetaxel (category 1) Useful in Certain Circumstances: \u2022 Molecular Biomarker-Directed Therapy \u0017BRCA mutation \u25caNiraparib/abiraterone (category 1) \u25caOlaparib/abiraterone (category 1) \u25caTalazoparib/enzalutamide (category 1) \u0017HRRm (other than BRCA1/2) \u25caTalazoparib/enzalutamide (category 1) \u2022 Disease State-Specific Therapy \u0017Bone metastases \u25caRadium-223/enzalutamide",
+    "bbox": [
+     27.541893005371094,
+     129.27230834960938,
+     263.0135803222656,
+     360.46734619140625
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "hhh",
+     "mmm",
+     "ooo"
+    ],
+    "id": "n129_28",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Preferred: \u2022 Docetaxel (category 1) Useful in Certain Circumstances: \u2022 Molecular Biomarker-Directed Therapy \u0017BRCA mutation \u25caOlaparib (category 1, preferred) \u25caRucaparib (category 1, preferred) \u25caNiraparib/abiraterone (category 2B) \u25caTalazoparib/enzalutamide (category 2B) \u0017HRRm (other than BRCA1/2) \u25caOlaparib \u25caTalazoparib/enzalutamide (category 2B) \u2022 Disease State-Specific Therapy \u0017PSMA-positive metastases \u25caLutetium Lu 177 vipivotide tetraxetan (Lu- \u0017Aggressive variant \u25caCabazitaxel/Carboplatin",
+    "bbox": [
+     273.27789306640625,
+     129.27230834960938,
+     516.0866088867188,
+     372.46331787109375
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "hhh",
+     "iii",
+     "mmm"
+    ],
+    "id": "n129_273",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Preferred: \u2022 Cabazitaxel (category 1) \u2022 Docetaxel rechallenge Useful in Certain Circumstances: \u2022 Molecular Biomarker-Directed Therapy \u0017BRCA mutation \u25caOlaparib (category 1) \u25caRucaparib \u0017HRRm (other than BRCA1/2) \u25caOlaparib \u0017Other FDA-approved agents for tissue agnostic indications \u2022 Disease State-Specific Therapy \u0017PSMA-positive metastases \u25caLu-177-PSMA-617 (category 1) \u0017Aggressive variant \u25caCabazitaxel/carboplatin \u0017Palliation for symptomatic patients unable to tolerate other therapies \u25caMitoxantrone",
+    "bbox": [
+     528.1599731445312,
+     129.27230834960938,
+     761.0224609375,
+     396.46533203125
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "hhh",
+     "iii",
+     "mmm",
+     "qqq"
+    ],
+    "id": "n129_528",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "177-PSMA-617)",
+    "bbox": [
+     299.9145812988281,
+     331.5283203125,
+     393.80120849609375,
+     348.4683532714844
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "qqq"
+    ],
+    "id": "n332_300",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "Additional Options Irrespective of Prior ARPI or Prior Docetaxel",
+    "bbox": [
+     229.69729614257812,
+     402.2806091308594,
+     561.8008422851562,
+     418.0325927734375
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n402_230",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "(Useful in Certain Circumstances)",
+    "bbox": [
+     307.42327880859375,
+     414.2816162109375,
+     484.0722961425781,
+     430.0335998535156
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n414_307",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "\u2022 Disease State-Specific Therapy \u0017Asymptomatic without visceral metastases \u25caSipuleucel-T \u0017Oligometastatic/Oligoprogressive disease \u25caMetastasis-directed therapy with \u0017Symptomatic bone-predominant metastases \u25caRadium-223 (category 1)",
+    "bbox": [
+     27.54400062561035,
+     431.8482971191406,
+     257.33001708984375,
+     542.8673095703125
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "h",
+     "hhh",
+     "nnn",
+     "ooo",
+     "ppp"
+    ],
+    "id": "n432_28",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "\u2022 Molecular Biomarker-Directed Therapy \u0017MSI-High (MSI-H)/dMMR",
+    "bbox": [
+     277.1440124511719,
+     431.8482971191406,
+     472.74481201171875,
+     458.86431884765625
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n432_277",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "\u25caPembrolizumab (category 2B)",
+    "bbox": [
+     295.1400146484375,
+     453.9283142089844,
+     464.1517028808594,
+     470.8653259277344
+    ],
+    "kind": "box",
+    "footnote_refs": [
+     "hhh"
+    ],
+    "id": "n454_295",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   },
+   {
+    "text": "metastatic castration-resistant prostate cancer (mCRPC) systemic therapy",
+    "bbox": [
+     54.182098388671875,
+     491.84930419921875,
+     246.14303588867188,
+     518.8652954101562
+    ],
+    "kind": "box",
+    "footnote_refs": [],
+    "id": "n492_54",
+    "links": [],
+    "role": "orphan",
+    "follow_up": false
+   }
+  ],
+  "edges": [],
+  "footnotes": {},
+  "n_connectors": 0,
+  "n_brackets": 12,
+  "n_unattached": 0,
+  "page_id": "PROS-18"
+ }
+}

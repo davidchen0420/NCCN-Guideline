@@ -1,0 +1,285 @@
+{
+ "nodes": [
+  {
+   "text": "EBRTt (preferred) \u00b1 ADTc,aa (\u00b1 abiraterone for N1 [category 2B]) or Monitoringkk,ll",
+   "bbox": [
+    348.4613037109375,
+    149.30429077148438,
+    459.02642822265625,
+    226.9473114013672
+   ],
+   "kind": "box",
+   "id": "n2",
+   "links": []
+  },
+  {
+   "text": "Workup for Second Biochemical Recurrence (PROS-11)",
+   "bbox": [
+    699.8400268554688,
+    157.19229125976562,
+    767.6990966796875,
+    220.9483184814453
+   ],
+   "kind": "box",
+   "id": "n3",
+   "links": [
+    "PROS-11"
+   ]
+  },
+  {
+   "text": "Second biochemical recurrence (BCR)ff",
+   "bbox": [
+    573.52001953125,
+    169.19229125976562,
+    670.3810424804688,
+    208.94630432128906
+   ],
+   "kind": "box",
+   "id": "n4",
+   "links": []
+  },
+  {
+   "text": "No evidence of M1",
+   "bbox": [
+    238.55398559570312,
+    175.19229125976562,
+    306.41302490234375,
+    202.94529724121094
+   ],
+   "kind": "box",
+   "id": "n5",
+   "links": []
+  },
+  {
+   "text": "Monitoringkk",
+   "bbox": [
+    480.6161804199219,
+    179.30429077148438,
+    547.4381713867188,
+    196.93919372558594
+   ],
+   "kind": "box",
+   "id": "n6",
+   "links": []
+  },
+  {
+   "text": "Life expectancy >5 y: \u2022 Risk stratificationii Consider: \u2022 Bone and soft tissue imagingg \u2022 Prostate bed biopsy",
+   "bbox": [
+    97.1709976196289,
+    215.7322998046875,
+    215.32192993164062,
+    291.4842834472656
+   ],
+   "kind": "box",
+   "id": "n7",
+   "links": []
+  },
+  {
+   "text": "Workup and Treatment of Metachronous Oligometastatich CSPC (PROS-13)",
+   "bbox": [
+    432.05419921875,
+    272.70819091796875,
+    645.7603759765625,
+    300.461181640625
+   ],
+   "kind": "box",
+   "id": "n8",
+   "links": [
+    "PROS-13"
+   ]
+  },
+  {
+   "text": "Oligometastatich",
+   "bbox": [
+    303.35650634765625,
+    276.8201904296875,
+    391.3769836425781,
+    294.4601745605469
+   ],
+   "kind": "box",
+   "id": "n9",
+   "links": []
+  },
+  {
+   "text": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatich CSPC (PROS-14)",
+   "bbox": [
+    432.0541076660156,
+    315.8811950683594,
+    692.4242553710938,
+    355.63519287109375
+   ],
+   "kind": "box",
+   "id": "n10",
+   "links": [
+    "PROS-14"
+   ]
+  },
+  {
+   "text": "M1",
+   "bbox": [
+    238.55430603027344,
+    317.2881164550781,
+    253.8332977294922,
+    333.04010009765625
+   ],
+   "kind": "box",
+   "id": "n11",
+   "links": []
+  },
+  {
+   "text": "PSA persistence/ recurrencew,hh",
+   "bbox": [
+    12.960000038146973,
+    341.9523010253906,
+    89.99539947509766,
+    381.706298828125
+   ],
+   "kind": "box",
+   "id": "n12",
+   "links": []
+  },
+  {
+   "text": "Polymetastatic",
+   "bbox": [
+    303.35650634765625,
+    355.7281188964844,
+    380.9945068359375,
+    371.4801025390625
+   ],
+   "kind": "box",
+   "id": "n13",
+   "links": []
+  },
+  {
+   "text": "Workup and Treatment of High- Volume M1 CSPC (PROS-15)",
+   "bbox": [
+    432.0541076660156,
+    380.13360595703125,
+    595.6331176757812,
+    407.8865966796875
+   ],
+   "kind": "box",
+   "id": "n14",
+   "links": [
+    "PROS-15"
+   ]
+  },
+  {
+   "text": "Life expectancy \u22645 y",
+   "bbox": [
+    100.44000244140625,
+    434.3122863769531,
+    163.41497802734375,
+    474.0662841796875
+   ],
+   "kind": "box",
+   "id": "n15",
+   "links": []
+  },
+  {
+   "text": "Palliative therapy/ Best supportive care",
+   "bbox": [
+    653.4530029296875,
+    440.3213195800781,
+    762.2652587890625,
+    468.0743103027344
+   ],
+   "kind": "box",
+   "id": "n16",
+   "links": []
+  },
+  {
+   "text": "Observationq",
+   "bbox": [
+    196.1295928955078,
+    444.4242858886719,
+    265.8132019042969,
+    462.06427001953125
+   ],
+   "kind": "box",
+   "id": "n17",
+   "links": []
+  },
+  {
+   "text": "Progressionff,gg",
+   "bbox": [
+    318.7460021972656,
+    444.4242858886719,
+    402.2110290527344,
+    462.0652770996094
+   ],
+   "kind": "box",
+   "id": "n18",
+   "links": []
+  }
+ ],
+ "edges": [
+  {
+   "src": "n11",
+   "dst": "n13"
+  },
+  {
+   "src": "n11",
+   "dst": "n9"
+  },
+  {
+   "src": "n12",
+   "dst": "n15"
+  },
+  {
+   "src": "n12",
+   "dst": "n7"
+  },
+  {
+   "src": "n13",
+   "dst": "n10"
+  },
+  {
+   "src": "n13",
+   "dst": "n14"
+  },
+  {
+   "src": "n15",
+   "dst": "n17"
+  },
+  {
+   "src": "n17",
+   "dst": "n18"
+  },
+  {
+   "src": "n18",
+   "dst": "n16"
+  },
+  {
+   "src": "n2",
+   "dst": "n6"
+  },
+  {
+   "src": "n4",
+   "dst": "n3"
+  },
+  {
+   "src": "n5",
+   "dst": "n2"
+  },
+  {
+   "src": "n6",
+   "dst": "n4"
+  },
+  {
+   "src": "n7",
+   "dst": "n11"
+  },
+  {
+   "src": "n7",
+   "dst": "n5"
+  },
+  {
+   "src": "n9",
+   "dst": "n8"
+  }
+ ],
+ "review_edges": [],
+ "unmatched_vlm_nodes": [],
+ "agreement": 1.0
+}

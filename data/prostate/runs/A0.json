@@ -1,0 +1,10 @@
+[
+  {"id": "V1", "answer": "Observation with PSA monitoring; no adjuvant or salvage therapy is indicated for organ-confined, node-negative, margin-negative disease with undetectable PSA."},
+  {"id": "V2", "answer": "Active surveillance (observation is also acceptable given limited life expectancy of about 6 years)."},
+  {"id": "V3", "answer": "Workup for recurrence after radiation therapy (PSA above nadir + 2) with PSMA PET/CT or other imaging and biopsy as indicated, to guide salvage local therapy options."},
+  {"id": "V4", "answer": "Salvage radiation therapy to the prostate bed (PSMA PET-guided), with ADT not routinely added for low-risk disease."},
+  {"id": "V5", "answer": "Observation with monitoring; no salvage therapy is recommended given severe heart failure and limited life expectancy of about 3 years."},
+  {"id": "V6", "answer": "Metastasis-directed therapy (e.g., SBRT) to the pelvic bone lesions in the oligorecurrent pathway, with or without ADT."},
+  {"id": "V7", "answer": "Workup and treatment of high-volume metastatic castration-sensitive disease: ADT plus an androgen receptor pathway inhibitor, with or without docetaxel."},
+  {"id": "V8", "answer": "Discontinue active surveillance and offer definitive treatment for Grade Group 3 (intermediate-risk) disease, such as radical prostatectomy, EBRT with or without ADT, or brachytherapy."}
+]

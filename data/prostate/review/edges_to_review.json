@@ -1,0 +1,362 @@
+[
+ {
+  "page": "PROS-2",
+  "image": "/home/user/NCCN-Guideline/private/render/PROS-2.png",
+  "edges": [
+   {
+    "edge_id": "PROS-2:n14->n10",
+    "from": "Intermediate",
+    "to": "Has all of the following: \u2022 No high-risk group features \u2022 No very-high-risk group features \u2022 Has one or more intermediate risk factors (IRFs): \u0017cT2b\u2013cT2c \u0017Grade",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-2:n14->n11",
+    "from": "Intermediate",
+    "to": "Favorable intermediate",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-2:n14->n13",
+    "from": "Intermediate",
+    "to": "PROS-4",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-2:n14->n15",
+    "from": "Intermediate",
+    "to": "\u2022 Soft tissue imaging and consider bone imagingg \u0017If regional metastases are found, see PROS-7 \u0017If distant metastases are found, see PROS-14 for Low- Volume M1(",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-2:n14->n16",
+    "from": "Intermediate",
+    "to": "Has one or more of the following: \u2022 2 or 3 IRFs \u2022 Grade Group 3 \u2022 \u226550% biopsy cores positive (eg, \u22656 of 12 cores)",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-2:n14->n17",
+    "from": "Intermediate",
+    "to": "Unfavorable intermediate",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-2:n14->n18",
+    "from": "Intermediate",
+    "to": "PROS-5",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-2:n14->n6",
+    "from": "Intermediate",
+    "to": "\u2022 Confirmatory testing can be used to assess the appropriateness of active surveillance (PROS-F 2 of 5)",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-2:n14->n9",
+    "from": "Intermediate",
+    "to": "Has all of the following: \u2022 1 IRF \u2022 Grade Group 1 or 2 \u2022 <50% biopsy cores positive (eg, <6 of 12 cores)",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-2:n22->n19",
+    "from": "High",
+    "to": "Bone and soft tissue imagingg \u0017If regional metastases are found, see PROS-7 \u0017If distant metastases are found, see PROS-14 for Low- Volume M1 (Metachronous or Sy",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-2:n22->n20",
+    "from": "High",
+    "to": "Has one or more high-risk features, but does not meet criteria for very high risk: \u2022 cT3\u2013cT4 \u2022 Grade Group 4 or Grade Group 5 \u2022 PSA >20 ng/mL",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-2:n22->n21",
+    "from": "High",
+    "to": "PROS-6",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-2:n26->n23",
+    "from": "Very high",
+    "to": "Bone and soft tissue imagingg \u0017If regional metastases are found, see PROS-7 \u0017If distant metastases are found, see PROS-14 for Low- Volume M1 (Metachronous or Sy",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-2:n26->n24",
+    "from": "Very high",
+    "to": "Has at least two of the following: \u2022 cT3\u2013cT4 \u2022 Grade Group 4 or 5 \u2022 PSA >40 ng/mL",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-2:n26->n25",
+    "from": "Very high",
+    "to": "PROS-6",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-2:n7->n12",
+    "from": "Low",
+    "to": "\u2022 Confirmatory testing can be used to assess the appropriateness of active surveillance (PROS-F 2 of 5)",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-2:n7->n5",
+    "from": "Low",
+    "to": "Has all of the following: \u2022 cT1\u2013cT2a \u2022 Grade Group 1 \u2022 PSA <10 ng/mL",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-2:n7->n8",
+    "from": "Low",
+    "to": "PROS-3",
+    "found_by": "e2_only"
+   }
+  ]
+ },
+ {
+  "page": "PROS-4",
+  "image": "/home/user/NCCN-Guideline/private/render/PROS-4.png",
+  "edges": [
+   {
+    "edge_id": "PROS-4:n17->n16",
+    "from": "No biochemical recurrence",
+    "to": "Monitoring for Initial Definitive Therapy (PROS-8)",
+    "found_by": "e1_only"
+   },
+   {
+    "edge_id": "PROS-4:n17->n5",
+    "from": "No biochemical recurrence",
+    "to": "Monitoring for Initial Definitive Therapy (PROS-8)",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-4:n4->n16",
+    "from": "No adverse features and no lymph node metastases",
+    "to": "Monitoring for Initial Definitive Therapy (PROS-8)",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-4:n4->n5",
+    "from": "No adverse features and no lymph node metastases",
+    "to": "Monitoring for Initial Definitive Therapy (PROS-8)",
+    "found_by": "e1_only"
+   }
+  ]
+ },
+ {
+  "page": "PROS-5",
+  "image": "/home/user/NCCN-Guideline/private/render/PROS-5.png",
+  "edges": [
+   {
+    "edge_id": "PROS-5:n15->n14",
+    "from": "No biochemical recurrence",
+    "to": "Monitoring for Initial Definitive Therapy (PROS-8)",
+    "found_by": "e1_only"
+   },
+   {
+    "edge_id": "PROS-5:n15->n3",
+    "from": "No biochemical recurrence",
+    "to": "Monitoring for Initial Definitive Therapy (PROS-8)",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-5:n2->n14",
+    "from": "No adverse features and no lymph node metastases",
+    "to": "Monitoring for Initial Definitive Therapy (PROS-8)",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-5:n2->n3",
+    "from": "No adverse features and no lymph node metastases",
+    "to": "Monitoring for Initial Definitive Therapy (PROS-8)",
+    "found_by": "e1_only"
+   }
+  ]
+ },
+ {
+  "page": "PROS-7",
+  "image": "/home/user/NCCN-Guideline/private/render/PROS-7.png",
+  "edges": [
+   {
+    "edge_id": "PROS-7:n18->n19",
+    "from": "Observation or RT or ADT\u00b1 RT",
+    "to": "Symptomatic progression",
+    "found_by": "e1_only"
+   }
+  ]
+ },
+ {
+  "page": "PROS-10",
+  "image": "/home/user/NCCN-Guideline/private/render/PROS-10.png",
+  "edges": [
+   {
+    "edge_id": "PROS-10:n1->n8",
+    "from": "\u2022 Monitoring",
+    "to": "\u2022 Risk stratification \u0017PSADT \u2022 Bone and soft tissue imaging \u2022 Consider prostate/ seminal vesicle biopsy",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-10:n2->n1",
+    "from": "No evidence",
+    "to": "\u2022 Monitoring",
+    "found_by": "e1_only"
+   },
+   {
+    "edge_id": "PROS-10:n2->n3",
+    "from": "No evidence",
+    "to": "\u2022 Local secondary therapy \u00b1 ADT (\u00b1 abiraterone for N1) or \u2022 ADT based on PSADT or \u2022 ADT \u00b1 abiraterone for N1",
+    "found_by": "e1_only"
+   },
+   {
+    "edge_id": "PROS-10:n3->n7",
+    "from": "\u2022 Local secondary therapy \u00b1 ADT (\u00b1 abiraterone for N1) or \u2022 ADT based on PSADT or \u2022 ADT \u00b1 abiraterone for N1",
+    "to": "Monitoring",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-10:n4->n1",
+    "from": "of M1",
+    "to": "\u2022 Monitoring",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-10:n4->n3",
+    "from": "of M1",
+    "to": "\u2022 Local secondary therapy \u00b1 ADT (\u00b1 abiraterone for N1) or \u2022 ADT based on PSADT or \u2022 ADT \u00b1 abiraterone for N1",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-10:n7->n6",
+    "from": "Monitoring",
+    "to": "Second biochemical recurrence",
+    "found_by": "e2_only"
+   }
+  ]
+ },
+ {
+  "page": "PROS-12",
+  "image": "/home/user/NCCN-Guideline/private/render/PROS-12.png",
+  "edges": [
+   {
+    "edge_id": "PROS-12:n1->n6",
+    "from": "N0M0",
+    "to": "Second Biochemical Recurrence (M0)",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-12:n10->n13",
+    "from": "Progression",
+    "to": "Polymetastatic",
+    "found_by": "e1_only"
+   },
+   {
+    "edge_id": "PROS-12:n10->n14",
+    "from": "Progression",
+    "to": "CSPC",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-12:n11->n10",
+    "from": "Monitoring",
+    "to": "Progression",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-12:n13->n15",
+    "from": "Polymetastatic",
+    "to": "Workup and Treatment of High-Volume M1 CSPC (PROS-15)",
+    "found_by": "e1_only"
+   },
+   {
+    "edge_id": "PROS-12:n13->n7",
+    "from": "Polymetastatic",
+    "to": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)",
+    "found_by": "e1_only"
+   },
+   {
+    "edge_id": "PROS-12:n14->n15",
+    "from": "CSPC",
+    "to": "Workup and Treatment of High-Volume M1 CSPC (PROS-15)",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-12:n14->n7",
+    "from": "CSPC",
+    "to": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)",
+    "found_by": "e2_only"
+   }
+  ]
+ },
+ {
+  "page": "PROS-14",
+  "image": "/home/user/NCCN-Guideline/private/render/PROS-14.png",
+  "edges": [
+   {
+    "edge_id": "PROS-14:n1->n4",
+    "from": "ADT with one of the following: \u2022  Preferred: \u0017Abiraterone (category 1) \u0017Apalutamide (category 1) \u0017Enzalutamide (category 1) \u2022 Other Recommended: \u0017Darolutamide (",
+    "to": "\u2022 Physical examination + PSA every 3\u20136 mo \u2022 Imaging for symptoms \u2022 Periodic imaging to monitor treatment response",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-14:n5->n6",
+    "from": "Progression on ADT \u00b1 androgen receptor pathway inhibitor (ARPI)",
+    "to": "Workup and Treatment of M1 CRPC (PROS-17)",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-14:n7->n4",
+    "from": "ADT with one of the following: \u2022  Preferred: \u0017Abiraterone (category 1) \u0017Apalutamide (category 1) \u0017Enzalutamide (category 1) \u2022 Other Recommended: \u0017Darolutamide (",
+    "to": "\u2022 Physical examination + PSA every 3\u20136 mo \u2022 Imaging for symptoms \u2022 Periodic imaging to monitor treatment response",
+    "found_by": "e2_only"
+   }
+  ]
+ },
+ {
+  "page": "PROS-17",
+  "image": "/home/user/NCCN-Guideline/private/render/PROS-17.png",
+  "edges": [
+   {
+    "edge_id": "PROS-17:n4->n1",
+    "from": "CRPC, imaging studies positive for metastases",
+    "to": "\u2022 Metastatic lesion biopsy \u2022 Somatic testing for homologous recombination repair (HRR), microsatellite instability (MSI)/ mismatch repair deficiency (dMMR), and",
+    "found_by": "e2_only"
+   }
+  ]
+ },
+ {
+  "page": "PROS-18",
+  "image": "/home/user/NCCN-Guideline/private/render/PROS-18.png",
+  "edges": [
+   {
+    "edge_id": "PROS-18:n0->n1",
+    "from": "Pre-ARPI",
+    "to": "Post-ARPI/Pre-Docetaxel",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-18:n0->n2",
+    "from": "Pre-ARPI",
+    "to": "Post-ARPI/Post-Docetaxel",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-18:n12->n11",
+    "from": "metastatic castration-resistant prostate cancer (mCRPC) systemic therapy",
+    "to": "\u25caPembrolizumab (category 2B)",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-18:n3->n4",
+    "from": "Preferred: \u2022 Abiraterone (category 1) \u2022 Enzalutamide (category 1) Other Recommended: \u2022 Docetaxel (category 1) Useful in Certain Circumstances: \u2022 Molecular Bioma",
+    "to": "Preferred: \u2022 Docetaxel (category 1) Useful in Certain Circumstances: \u2022 Molecular Biomarker-Directed Therapy \u0017BRCA mutation \u25caOlaparib (category 1, preferred) \u25caRu",
+    "found_by": "e2_only"
+   },
+   {
+    "edge_id": "PROS-18:n3->n5",
+    "from": "Preferred: \u2022 Abiraterone (category 1) \u2022 Enzalutamide (category 1) Other Recommended: \u2022 Docetaxel (category 1) Useful in Certain Circumstances: \u2022 Molecular Bioma",
+    "to": "Preferred: \u2022 Cabazitaxel (category 1) \u2022 Docetaxel rechallenge Useful in Certain Circumstances: \u2022 Molecular Biomarker-Directed Therapy \u0017BRCA mutation \u25caOlaparib (",
+    "found_by": "e2_only"
+   }
+  ]
+ }
+]

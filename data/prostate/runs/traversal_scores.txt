@@ -1,0 +1,7 @@
+A5 fact extraction (Haiku): 23/26 gold facts correct, 10 extra facts
+arm                        final correct  mean path Jaccard  per-case
+A4 graph walk (Haiku)           8/8                    0.96  V1:Y V2:Y V3:Y V4:Y V5:Y V6:Y V7:Y V8:Y
+A5 predicates+facts             5/8                    0.74  V1:Y V2:N V3:N V4:Y V5:N V6:Y V7:Y V8:Y
+A5 w/ gold facts                8/8                    1.00  V1:Y V2:Y V3:Y V4:Y V5:Y V6:Y V7:Y V8:Y
+A0 no context (Haiku)           7/8                     n/a  V1:Y V2:N V3:Y V4:Y V5:Y V6:Y V7:Y V8:Y
+A2 BM25 RAG (Haiku)             8/8                     n/a  V1:Y V2:Y V3:Y V4:Y V5:Y V6:Y V7:Y V8:Y

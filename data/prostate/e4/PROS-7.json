@@ -1,0 +1,381 @@
+{
+ "nodes": [
+  {
+   "text": "Radiation Therapy Recurrence (PROS-10)",
+   "bbox": [
+    599.6569213867188,
+    129.91250610351562,
+    717.6430053710938,
+    157.66551208496094
+   ],
+   "kind": "box",
+   "id": "n2",
+   "links": [
+    "PROS-10"
+   ]
+  },
+  {
+   "text": "Biochemical recurrencev",
+   "bbox": [
+    387.1919250488281,
+    134.02459716796875,
+    516.9201049804688,
+    151.67051696777344
+   ],
+   "kind": "box",
+   "id": "n3",
+   "links": []
+  },
+  {
+   "text": "RTt + ADTc,aa (24 mo) + abiraterone (preferred) or RTt + ADTc,aa (24\u201336 mo)",
+   "bbox": [
+    135.63560485839844,
+    136.58041381835938,
+    265.5160827636719,
+    190.22242736816406
+   ],
+   "kind": "box",
+   "id": "n4",
+   "links": []
+  },
+  {
+   "text": "No biochemical recurrence",
+   "bbox": [
+    387.1885986328125,
+    171.25161743164062,
+    528.4066772460938,
+    187.0036163330078
+   ],
+   "kind": "box",
+   "id": "n5",
+   "links": []
+  },
+  {
+   "text": "Monitoring for Initial Definitive Therapy (PROS-8)",
+   "bbox": [
+    599.6569213867188,
+    222.2991943359375,
+    746.3531494140625,
+    250.0522003173828
+   ],
+   "kind": "box",
+   "id": "n6",
+   "links": [
+    "PROS-8"
+   ]
+  },
+  {
+   "text": "ADTc,aa \u00b1 abiraterone",
+   "bbox": [
+    135.64059448242188,
+    238.38580322265625,
+    247.82447814941406,
+    256.0285949707031
+   ],
+   "kind": "box",
+   "id": "n7",
+   "links": []
+  },
+  {
+   "text": ">5 y or symptomatic",
+   "bbox": [
+    32.04399871826172,
+    245.28201293945312,
+    99.89199829101562,
+    273.0350036621094
+   ],
+   "kind": "box",
+   "id": "n8",
+   "links": []
+  },
+  {
+   "text": "No adverse featuresx and no lymph node metastases",
+   "bbox": [
+    374.18994140625,
+    262.7984924316406,
+    526.5345458984375,
+    292.4394836425781
+   ],
+   "kind": "box",
+   "id": "n9",
+   "links": []
+  },
+  {
+   "text": "Undetectable PSA",
+   "bbox": [
+    221.97079467773438,
+    308.9267883300781,
+    316.71380615234375,
+    324.67877197265625
+   ],
+   "kind": "box",
+   "id": "n10",
+   "links": []
+  },
+  {
+   "text": "Adverse feature(s)x or lymph node metastases",
+   "bbox": [
+    374.19439697265625,
+    325.9845886230469,
+    498.90142822265625,
+    367.6255798339844
+   ],
+   "kind": "box",
+   "id": "n11",
+   "links": []
+  },
+  {
+   "text": "Monitoring (PROS-8) OR Consider treatment (PROS-9)",
+   "bbox": [
+    599.6569213867188,
+    327.8725891113281,
+    751.8421630859375,
+    367.6265869140625
+   ],
+   "kind": "box",
+   "id": "n12",
+   "links": [
+    "PROS-8",
+    "PROS-9"
+   ]
+  },
+  {
+   "text": "RPu in select patientsdd",
+   "bbox": [
+    135.63999938964844,
+    338.4783935546875,
+    188.81178283691406,
+    380.1203918457031
+   ],
+   "kind": "box",
+   "id": "n13",
+   "links": []
+  },
+  {
+   "text": "Radical Prostatectomy PSA Persistence/Recurrence (PROS-9)",
+   "bbox": [
+    599.6569213867188,
+    388.4281005859375,
+    746.5797119140625,
+    428.1820983886719
+   ],
+   "kind": "box",
+   "id": "n14",
+   "links": [
+    "PROS-9"
+   ]
+  },
+  {
+   "text": "PSA persistencew",
+   "bbox": [
+    218.2967987060547,
+    398.54010009765625,
+    311.705322265625,
+    416.1767578125
+   ],
+   "kind": "box",
+   "id": "n15",
+   "links": []
+  },
+  {
+   "text": "Workup and Treatment of Metachronous Oligometastatich M1 CSPC (PROS-13)",
+   "bbox": [
+    500.614013671875,
+    433.4953918457031,
+    714.3201293945312,
+    461.2483825683594
+   ],
+   "kind": "box",
+   "id": "n16",
+   "links": [
+    "PROS-13"
+   ]
+  },
+  {
+   "text": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatich CSPC (PROS-14)",
+   "bbox": [
+    500.614013671875,
+    461.9606018066406,
+    760.9843139648438,
+    501.714599609375
+   ],
+   "kind": "box",
+   "id": "n17",
+   "links": [
+    "PROS-14"
+   ]
+  },
+  {
+   "text": "Observationq or RTt or ADTc,aa \u00b1 RTt",
+   "bbox": [
+    135.63999938964844,
+    464.6283874511719,
+    205.32359313964844,
+    542.2703857421875
+   ],
+   "kind": "box",
+   "id": "n18",
+   "links": []
+  },
+  {
+   "text": "Symptomatic progression",
+   "bbox": [
+    291.6239013671875,
+    472.0605163574219,
+    427.3199462890625,
+    487.8125
+   ],
+   "kind": "box",
+   "id": "n19",
+   "links": []
+  },
+  {
+   "text": "\u22645 y and asymptomatic",
+   "bbox": [
+    23.04400062561035,
+    490.5165100097656,
+    97.00799560546875,
+    518.2694702148438
+   ],
+   "kind": "box",
+   "id": "n20",
+   "links": []
+  },
+  {
+   "text": "Workup and Treatment of High-Volume M1 CSPC (PROS-15)",
+   "bbox": [
+    500.089599609375,
+    500.1205139160156,
+    757.5931396484375,
+    527.8734741210938
+   ],
+   "kind": "box",
+   "id": "n21",
+   "links": [
+    "PROS-15"
+   ]
+  },
+  {
+   "text": "Symptomatic progression",
+   "bbox": [
+    291.6239013671875,
+    526.2405395507812,
+    427.3199462890625,
+    541.9925537109375
+   ],
+   "kind": "box",
+   "id": "n22",
+   "links": []
+  },
+  {
+   "text": "Workup and Treatment of M1 CRPC (PROS-17)",
+   "bbox": [
+    497.5439147949219,
+    526.2405395507812,
+    739.9710083007812,
+    541.9925537109375
+   ],
+   "kind": "box",
+   "id": "n23",
+   "links": [
+    "PROS-17"
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "src": "n10",
+   "dst": "n11"
+  },
+  {
+   "src": "n10",
+   "dst": "n9"
+  },
+  {
+   "src": "n11",
+   "dst": "n12"
+  },
+  {
+   "src": "n13",
+   "dst": "n10"
+  },
+  {
+   "src": "n13",
+   "dst": "n15"
+  },
+  {
+   "src": "n15",
+   "dst": "n14"
+  },
+  {
+   "src": "n18",
+   "dst": "n19"
+  },
+  {
+   "src": "n19",
+   "dst": "n16"
+  },
+  {
+   "src": "n19",
+   "dst": "n17"
+  },
+  {
+   "src": "n19",
+   "dst": "n21"
+  },
+  {
+   "src": "n20",
+   "dst": "n18"
+  },
+  {
+   "src": "n22",
+   "dst": "n23"
+  },
+  {
+   "src": "n3",
+   "dst": "n2"
+  },
+  {
+   "src": "n4",
+   "dst": "n3"
+  },
+  {
+   "src": "n4",
+   "dst": "n5"
+  },
+  {
+   "src": "n5",
+   "dst": "n6"
+  },
+  {
+   "src": "n7",
+   "dst": "n6"
+  },
+  {
+   "src": "n8",
+   "dst": "n13"
+  },
+  {
+   "src": "n8",
+   "dst": "n4"
+  },
+  {
+   "src": "n8",
+   "dst": "n7"
+  },
+  {
+   "src": "n9",
+   "dst": "n6"
+  }
+ ],
+ "review_edges": [
+  [
+   "n18",
+   "n22"
+  ]
+ ],
+ "unmatched_vlm_nodes": [
+  "n17"
+ ],
+ "agreement": 0.875
+}

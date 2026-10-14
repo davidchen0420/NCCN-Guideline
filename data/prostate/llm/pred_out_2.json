@@ -1,0 +1,39 @@
+{
+  "PROS-14:n259_23": null,
+  "PROS-15:n208_17": null,
+  "PROS-16:n231_24": {"all": [
+    {"fact": "castration_resistant", "op": "==", "value": true},
+    {"fact": "m_category", "op": "==", "value": "M0"}
+  ]},
+  "PROS-17:n217_16": {"all": [
+    {"fact": "castration_resistant", "op": "==", "value": true},
+    {"fact": "m_category", "op": "==", "value": "M1"}
+  ]},
+  "PROS-18:n110_113": {"fact": "prior_arpi_treatment", "op": "==", "value": false},
+  "PROS-18:n129_28": null,
+  "PROS-18:n492_54": null,
+  "PROS-12:n205_194": {"fact": "high_risk_biochemical_recurrence", "op": "==", "value": false},
+  "PROS-12:n271_194": {"fact": "high_risk_biochemical_recurrence", "op": "==", "value": true},
+  "PROS-12:n151_552": {"fact": "m_category", "op": "==", "value": "M0"},
+  "PROS-12:n190_570": {"all": [
+    {"fact": "staging_state", "op": "==", "value": "m1_cspc"},
+    {"fact": "metastatic_pattern", "op": "==", "value": "oligometastatic"}
+  ]},
+  "PROS-12:n313_571": {"all": [
+    {"fact": "staging_state", "op": "==", "value": "m1_cspc"},
+    {"fact": "metastatic_pattern", "op": "==", "value": "polymetastatic"}
+  ]},
+  "PROS-12:n384_552": {"fact": "staging_state", "op": "==", "value": "m1_crpc"},
+  "PROS-12:n227_676": {"fact": "clinician_judges_high_volume", "op": "==", "value": false},
+  "PROS-12:n332_677": {"fact": "clinician_judges_high_volume", "op": "==", "value": true},
+  "PROS-14:n175_166": {"fact": "metastasis_timing", "op": "==", "value": "synchronous"},
+  "PROS-14:n437_165": {"fact": "metastasis_timing", "op": "==", "value": "metachronous"},
+  "PROS-16:n134_611": {"fact": "m_category", "op": "==", "value": "M0"},
+  "PROS-16:n246_608": {"fact": "m_category", "op": "==", "value": "M1"},
+  "PROS-16:n185_203": {"fact": "psadt_group", "op": "==", "value": "gt_10_months"},
+  "PROS-16:n327_203": {"fact": "psadt_group", "op": "==", "value": "le_10_months"},
+  "PROS-16:n178_452": {"fact": "adt_monitoring_result", "op": "==", "value": "progression"},
+  "PROS-16:n336_452": {"fact": "adt_monitoring_result", "op": "==", "value": "stable_no_metastases"},
+  "PROS-17:n172_436": {"fact": "histology", "op": "==", "value": "adenocarcinoma"},
+  "PROS-17:n284_440": {"fact": "histology", "op": "==", "value": "small_cell_neuroendocrine"}
+}

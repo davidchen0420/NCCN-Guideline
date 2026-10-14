@@ -1,0 +1,308 @@
+{
+ "nodes": [
+  {
+   "text": "Progressive diseaser Initial Risk Stratification and Staging Workup for Clinically Localized Disease (PROS-2)",
+   "bbox": [
+    587.302490234375,
+    141.89608764648438,
+    743.5696411132812,
+    195.53810119628906
+   ],
+   "kind": "box",
+   "id": "n2",
+   "links": [
+    "PROS-2"
+   ]
+  },
+  {
+   "text": "Active surveillance (preferred for most patients)o,p,s Active Surveillance Program (PROS-F 2 of 5)",
+   "bbox": [
+    109.20829772949219,
+    153.89608764648438,
+    380.8456115722656,
+    183.5360870361328
+   ],
+   "kind": "box",
+   "id": "n3",
+   "links": [
+    "PROS-F 2 of 5"
+   ]
+  },
+  {
+   "text": "Radiation Therapy Recurrence (PROS-10)",
+   "bbox": [
+    587.3024291992188,
+    238.40481567382812,
+    749.9047241210938,
+    266.1578063964844
+   ],
+   "kind": "box",
+   "id": "n4",
+   "links": [
+    "PROS-10"
+   ]
+  },
+  {
+   "text": "Biochemical recurrencev",
+   "bbox": [
+    285.41229248046875,
+    242.51681518554688,
+    415.1438903808594,
+    260.15679931640625
+   ],
+   "kind": "box",
+   "id": "n5",
+   "links": []
+  },
+  {
+   "text": "Radiation therapy (RT)t",
+   "bbox": [
+    109.20829772949219,
+    270.1191101074219,
+    230.1544952392578,
+    287.75909423828125
+   ],
+   "kind": "box",
+   "id": "n6",
+   "links": []
+  },
+  {
+   "text": "\u226510 y",
+   "bbox": [
+    25.544599533081055,
+    272.0071105957031,
+    52.989601135253906,
+    287.75909423828125
+   ],
+   "kind": "box",
+   "id": "n7",
+   "links": []
+  },
+  {
+   "text": "No biochemical recurrence",
+   "bbox": [
+    286.5329895019531,
+    285.3882141113281,
+    427.75103759765625,
+    301.14019775390625
+   ],
+   "kind": "box",
+   "id": "n8",
+   "links": []
+  },
+  {
+   "text": "Monitoring for Initial Definitive Therapy (PROS-8)",
+   "bbox": [
+    587.3024291992188,
+    290.985107421875,
+    696.6974487304688,
+    330.7391052246094
+   ],
+   "kind": "box",
+   "id": "n9",
+   "links": [
+    "PROS-8"
+   ]
+  },
+  {
+   "text": "No adverse featuresx and no lymph node metastases",
+   "bbox": [
+    416.205810546875,
+    307.3345947265625,
+    529.4298095703125,
+    348.9765930175781
+   ],
+   "kind": "box",
+   "id": "n10",
+   "links": []
+  },
+  {
+   "text": "Undetectable PSA",
+   "bbox": [
+    263.97943115234375,
+    353.0138244628906,
+    358.7224426269531,
+    368.76580810546875
+   ],
+   "kind": "box",
+   "id": "n11",
+   "links": []
+  },
+  {
+   "text": "Monitoring (category 1, preferred for adverse features) (PROS-8) OR Consider treatment (PROS-9)",
+   "bbox": [
+    587.302490234375,
+    366.1123046875,
+    750.5208740234375,
+    429.8683166503906
+   ],
+   "kind": "box",
+   "id": "n12",
+   "links": [
+    "PROS-8",
+    "PROS-9"
+   ]
+  },
+  {
+   "text": "Adverse feature(s)x or lymph node metastases",
+   "bbox": [
+    416.205810546875,
+    378.22430419921875,
+    540.9130249023438,
+    419.86529541015625
+   ],
+   "kind": "box",
+   "id": "n13",
+   "links": []
+  },
+  {
+   "text": "Radical prostatectomyu (RP)",
+   "bbox": [
+    109.20829772949219,
+    392.3424987792969,
+    219.22369384765625,
+    420.0954895019531
+   ],
+   "kind": "box",
+   "id": "n14",
+   "links": []
+  },
+  {
+   "text": "Radical Prostatectomy PSA Persistence/Recurrence (PROS-9)",
+   "bbox": [
+    587.3024291992188,
+    437.1922912597656,
+    763.9844970703125,
+    464.9452819824219
+   ],
+   "kind": "box",
+   "id": "n15",
+   "links": [
+    "PROS-9"
+   ]
+  },
+  {
+   "text": "PSA persistencew",
+   "bbox": [
+    263.97943115234375,
+    441.3042907714844,
+    357.3943176269531,
+    458.9438171386719
+   ],
+   "kind": "box",
+   "id": "n16",
+   "links": []
+  },
+  {
+   "text": "<10 yj",
+   "bbox": [
+    25.243999481201172,
+    492.41290283203125,
+    55.57899856567383,
+    510.0528869628906
+   ],
+   "kind": "box",
+   "id": "n17",
+   "links": []
+  },
+  {
+   "text": "Observationq",
+   "bbox": [
+    109.20947265625,
+    492.41290283203125,
+    178.8918914794922,
+    510.0500793457031
+   ],
+   "kind": "box",
+   "id": "n18",
+   "links": []
+  },
+  {
+   "text": "Monitoring (PROS-8)",
+   "bbox": [
+    587.3024291992188,
+    494.3009033203125,
+    695.4544677734375,
+    510.0528869628906
+   ],
+   "kind": "box",
+   "id": "n19",
+   "links": [
+    "PROS-8"
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "src": "n10",
+   "dst": "n9"
+  },
+  {
+   "src": "n11",
+   "dst": "n10"
+  },
+  {
+   "src": "n11",
+   "dst": "n13"
+  },
+  {
+   "src": "n13",
+   "dst": "n12"
+  },
+  {
+   "src": "n14",
+   "dst": "n11"
+  },
+  {
+   "src": "n14",
+   "dst": "n16"
+  },
+  {
+   "src": "n16",
+   "dst": "n15"
+  },
+  {
+   "src": "n17",
+   "dst": "n18"
+  },
+  {
+   "src": "n18",
+   "dst": "n19"
+  },
+  {
+   "src": "n3",
+   "dst": "n2"
+  },
+  {
+   "src": "n5",
+   "dst": "n4"
+  },
+  {
+   "src": "n6",
+   "dst": "n5"
+  },
+  {
+   "src": "n6",
+   "dst": "n8"
+  },
+  {
+   "src": "n7",
+   "dst": "n14"
+  },
+  {
+   "src": "n7",
+   "dst": "n3"
+  },
+  {
+   "src": "n7",
+   "dst": "n6"
+  },
+  {
+   "src": "n8",
+   "dst": "n9"
+  }
+ ],
+ "review_edges": [],
+ "unmatched_vlm_nodes": [],
+ "agreement": 1.0
+}

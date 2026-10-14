@@ -1,0 +1,10 @@
+[
+  {"id": "V1", "finish": {"final": "PROS-3:n9", "path": ["PROS-3:n7", "PROS-3:n14", "PROS-3:n11", "PROS-3:n10", "PROS-3:n9"], "steps_by": ["llm", "llm", "llm", "llm", "llm"]}},
+  {"id": "V2", "finish": {"final": "PROS-3:n18", "path": ["PROS-3:n17", "PROS-3:n18"], "steps_by": ["llm", "llm"]}},
+  {"id": "V3", "finish": {"final": "PROS-3:n4", "path": ["PROS-3:n7", "PROS-3:n6", "PROS-3:n5", "PROS-3:n4"], "steps_by": ["llm", "llm", "llm", "llm"]}},
+  {"id": "V4", "finish": {"final": "PROS-9:n2", "path": ["PROS-3:n7", "PROS-3:n14", "PROS-3:n16", "PROS-3:n15", "PROS-9:n12", "PROS-9:n7", "PROS-9:n5", "PROS-9:n2"], "steps_by": ["llm", "llm", "llm", "llm", "llm", "llm", "llm", "llm"]}},
+  {"id": "V5", "finish": {"final": "PROS-9:n17", "path": ["PROS-9:n12", "PROS-9:n15", "PROS-9:n17"], "steps_by": ["entry", "llm", "llm"]}},
+  {"id": "V6", "finish": {"final": "PROS-9:n8", "path": ["PROS-9:n12", "PROS-9:n7", "PROS-9:n11", "PROS-9:n9", "PROS-9:n8"], "steps_by": ["entry", "llm", "llm", "llm", "llm"]}},
+  {"id": "V7", "finish": {"final": "PROS-9:n14", "path": ["PROS-9:n12", "PROS-9:n7", "PROS-9:n11", "PROS-9:n13", "PROS-9:n14"], "steps_by": ["entry", "llm", "llm", "llm", "llm"]}},
+  {"id": "V8", "finish": {"final": "PROS-3:n2", "path": ["PROS-3:n7", "PROS-3:n3", "PROS-3:n2"], "steps_by": ["llm", "llm", "llm"]}}
+]

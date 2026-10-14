@@ -1,0 +1,58 @@
+{
+ "nodes": [
+  {
+   "id": "a",
+   "text": "Perform physical exam Perform imaging for staging Perform and/or collect PSA and calculate PSADT Estimate life expectancy Perform germline and somatic genetic testing Obtain family history Assess quality-of-life measures"
+  },
+  {
+   "id": "b",
+   "text": "MDT \u00b1 ADT or For M1 only, treat as metachronous low-volume M1"
+  },
+  {
+   "id": "c",
+   "text": "Physical examination + PSA every 3\u20136 mo Imaging for symptoms Consider periodic imaging to monitor treatment response"
+  },
+  {
+   "id": "d",
+   "text": "Progression"
+  },
+  {
+   "id": "e",
+   "text": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC"
+  },
+  {
+   "id": "f",
+   "text": "Workup and Treatment of High-Volume M1 CSPC"
+  },
+  {
+   "id": "g",
+   "text": "Workup and Treatment of M1 CRPC"
+  }
+ ],
+ "edges": [
+  {
+   "src": "a",
+   "dst": "b"
+  },
+  {
+   "src": "b",
+   "dst": "c"
+  },
+  {
+   "src": "c",
+   "dst": "d"
+  },
+  {
+   "src": "d",
+   "dst": "e"
+  },
+  {
+   "src": "d",
+   "dst": "f"
+  },
+  {
+   "src": "d",
+   "dst": "g"
+  }
+ ]
+}

@@ -1,0 +1,190 @@
+{
+ "nodes": [
+  {
+   "id": "a",
+   "text": ">5 y or symptomatic"
+  },
+  {
+   "id": "b",
+   "text": "\u22645 y and asymptomatic"
+  },
+  {
+   "id": "c",
+   "text": "RT + ADT (24 mo) + abiraterone (preferred) or RT + ADT (24\u201336 mo)"
+  },
+  {
+   "id": "d",
+   "text": "ADT \u00b1 abiraterone"
+  },
+  {
+   "id": "e",
+   "text": "RP in select patients"
+  },
+  {
+   "id": "f",
+   "text": "Biochemical recurrence"
+  },
+  {
+   "id": "g",
+   "text": "No biochemical recurrence"
+  },
+  {
+   "id": "h",
+   "text": "Radiation Therapy Recurrence"
+  },
+  {
+   "id": "i",
+   "text": "Monitoring for Initial Definitive Therapy"
+  },
+  {
+   "id": "j",
+   "text": "Undetectable PSA"
+  },
+  {
+   "id": "k",
+   "text": "PSA persistence"
+  },
+  {
+   "id": "l",
+   "text": "No adverse features and no lymph node metastases"
+  },
+  {
+   "id": "m",
+   "text": "Adverse feature(s) or lymph node metastases"
+  },
+  {
+   "id": "n",
+   "text": "Monitoring OR Consider treatment"
+  },
+  {
+   "id": "o",
+   "text": "Radical Prostatectomy PSA Persistence/Recurrence"
+  },
+  {
+   "id": "p",
+   "text": "Observation or RT"
+  },
+  {
+   "id": "q",
+   "text": "ADT \u00b1 RT"
+  },
+  {
+   "id": "r",
+   "text": "Symptomatic progression"
+  },
+  {
+   "id": "s",
+   "text": "Symptomatic progression"
+  },
+  {
+   "id": "t",
+   "text": "Workup and Treatment of Metachronous Oligometastatic M1 CSPC"
+  },
+  {
+   "id": "u",
+   "text": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC"
+  },
+  {
+   "id": "v",
+   "text": "Workup and Treatment of High-Volume M1 CSPC"
+  },
+  {
+   "id": "w",
+   "text": "Workup and Treatment of M1 CRPC"
+  }
+ ],
+ "edges": [
+  {
+   "src": "a",
+   "dst": "c"
+  },
+  {
+   "src": "a",
+   "dst": "d"
+  },
+  {
+   "src": "a",
+   "dst": "e"
+  },
+  {
+   "src": "c",
+   "dst": "f"
+  },
+  {
+   "src": "c",
+   "dst": "g"
+  },
+  {
+   "src": "f",
+   "dst": "h"
+  },
+  {
+   "src": "g",
+   "dst": "i"
+  },
+  {
+   "src": "d",
+   "dst": "i"
+  },
+  {
+   "src": "e",
+   "dst": "j"
+  },
+  {
+   "src": "e",
+   "dst": "k"
+  },
+  {
+   "src": "j",
+   "dst": "l"
+  },
+  {
+   "src": "j",
+   "dst": "m"
+  },
+  {
+   "src": "l",
+   "dst": "i"
+  },
+  {
+   "src": "m",
+   "dst": "n"
+  },
+  {
+   "src": "k",
+   "dst": "o"
+  },
+  {
+   "src": "b",
+   "dst": "p"
+  },
+  {
+   "src": "b",
+   "dst": "q"
+  },
+  {
+   "src": "p",
+   "dst": "r"
+  },
+  {
+   "src": "q",
+   "dst": "s"
+  },
+  {
+   "src": "r",
+   "dst": "t"
+  },
+  {
+   "src": "r",
+   "dst": "u"
+  },
+  {
+   "src": "r",
+   "dst": "v"
+  },
+  {
+   "src": "s",
+   "dst": "w"
+  }
+ ]
+}
