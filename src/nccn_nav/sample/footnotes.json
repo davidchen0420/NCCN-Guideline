@@ -1,0 +1,9 @@
+{
+ "SAMPLE-1": {
+  "a": "Synthetic footnote a: see Principles of Scoring (SAMPLE-A) and the discussion (MS-1).",
+  "b": "Synthetic footnote b."
+ },
+ "SAMPLE-2": {
+  "c": "Synthetic footnote c, see SAMPLE-A."
+ }
+}

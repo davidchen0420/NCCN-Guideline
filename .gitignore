@@ -6,3 +6,7 @@ research_notes/Prostate benchmark planning/prostate_pdf_profile.md
 private/
 __pycache__/
 .claude/settings.local.json
+sample_out/
+# Front-end build output (the built template is committed as src/nccn_nav/dashboard.html)
+web/node_modules/
+web/dist/

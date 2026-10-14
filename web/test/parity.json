@@ -1,0 +1,330 @@
+{
+ "derive": [
+  {
+   "age": 70,
+   "score": 12,
+   "tier": "high"
+  },
+  {
+   "score": 3,
+   "tier": "low"
+  },
+  {},
+  {
+   "age": 64,
+   "score": 10,
+   "tier": "high"
+  },
+  {
+   "age": null
+  },
+  {
+   "age": {
+    "max": 70,
+    "min": 60
+   },
+   "score": {
+    "min": 8
+   }
+  },
+  {
+   "age": "unknown",
+   "score": "x"
+  },
+  {
+   "stage": "late"
+  },
+  {
+   "score": {
+    "max": 9
+   },
+   "tier": "low"
+  },
+  {
+   "score": {
+    "max": 10,
+    "min": 10
+   },
+   "stage": "early",
+   "tier": "high"
+  }
+ ],
+ "evaluate": {
+  "all": [
+   true,
+   false,
+   null,
+   true,
+   null,
+   true,
+   null,
+   null,
+   null,
+   null
+  ],
+  "any": [
+   false,
+   true,
+   null,
+   true,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  "eq": [
+   false,
+   false,
+   null,
+   true,
+   null,
+   null,
+   false,
+   null,
+   false,
+   true
+  ],
+  "ge": [
+   true,
+   false,
+   null,
+   true,
+   null,
+   null,
+   null,
+   null,
+   false,
+   true
+  ],
+  "in": [
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   false,
+   null,
+   true
+  ],
+  "interval": [
+   false,
+   false,
+   null,
+   true,
+   null,
+   null,
+   null,
+   null,
+   false,
+   null
+  ],
+  "lt": [
+   false,
+   true,
+   null,
+   false,
+   null,
+   null,
+   null,
+   null,
+   true,
+   false
+  ],
+  "ne": [
+   true,
+   false,
+   null,
+   true,
+   null,
+   true,
+   true,
+   null,
+   null,
+   true
+  ],
+  "not_in": [
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   true,
+   null,
+   false
+  ]
+ },
+ "facts": [
+  {
+   "age": 70,
+   "score": 12
+  },
+  {
+   "score": 3
+  },
+  {},
+  {
+   "age": 64,
+   "score": 10
+  },
+  {
+   "age": null
+  },
+  {
+   "age": {
+    "max": 70,
+    "min": 60
+   },
+   "score": {
+    "min": 8
+   }
+  },
+  {
+   "age": "unknown",
+   "score": "x"
+  },
+  {
+   "stage": "late"
+  },
+  {
+   "score": {
+    "max": 9
+   }
+  },
+  {
+   "score": {
+    "max": 10,
+    "min": 10
+   },
+   "stage": "early"
+  }
+ ],
+ "preds": {
+  "all": {
+   "all": [
+    {
+     "fact": "score",
+     "op": ">=",
+     "value": 5
+    },
+    {
+     "not": {
+      "fact": "age",
+      "op": "in",
+      "value": [
+       1,
+       2
+      ]
+     }
+    }
+   ]
+  },
+  "any": {
+   "any": [
+    {
+     "fact": "score",
+     "op": "==",
+     "value": 3
+    },
+    {
+     "fact": "age",
+     "op": "!=",
+     "value": 70
+    }
+   ]
+  },
+  "eq": {
+   "fact": "score",
+   "op": "==",
+   "value": 10
+  },
+  "ge": {
+   "fact": "score",
+   "op": ">=",
+   "value": 10
+  },
+  "in": {
+   "fact": "stage",
+   "op": "in",
+   "value": [
+    "early",
+    "mid"
+   ]
+  },
+  "interval": {
+   "all": [
+    {
+     "fact": "score",
+     "op": ">=",
+     "value": 10
+    },
+    {
+     "fact": "age",
+     "op": "<",
+     "value": 65
+    }
+   ]
+  },
+  "lt": {
+   "fact": "score",
+   "op": "<",
+   "value": 10
+  },
+  "ne": {
+   "fact": "score",
+   "op": "!=",
+   "value": 3
+  },
+  "not_in": {
+   "fact": "stage",
+   "op": "not_in",
+   "value": [
+    "early"
+   ]
+  }
+ },
+ "schema": {
+  "derived": {
+   "tier": {
+    "definition": "Synthetic derived tier",
+    "else": "low",
+    "rules": [
+     {
+      "if": {
+       "fact": "score",
+       "op": ">=",
+       "value": 10
+      },
+      "then": "high"
+     }
+    ],
+    "type": "enum"
+   }
+  },
+  "variables": {
+   "age": {
+    "definition": "Age",
+    "type": "number",
+    "unit": "years"
+   },
+   "score": {
+    "definition": "Synthetic score",
+    "type": "number",
+    "unit": "points"
+   },
+   "stage": {
+    "definition": "Synthetic stage",
+    "type": "enum",
+    "values": [
+     "early",
+     "late"
+    ]
+   }
+  }
+ }
+}
