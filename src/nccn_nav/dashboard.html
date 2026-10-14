@@ -103,7 +103,8 @@ body.conf .e.verified{stroke:var(--verified);stroke-dasharray:4 2}body.conf .e.u
 .mapnode{cursor:pointer}.mapnode rect{stroke-width:1.5;fill:var(--panel)}.mapnode text{font-size:10px;fill:var(--ink);text-anchor:middle}
 @media (max-width:1000px){body{height:auto}#app,#app.left-open{display:flex;flex-direction:column;overflow:auto}
 #rail{flex-direction:row;justify-content:center;padding:4px}#rail .sp{display:none}#left{max-height:50vh}main{min-height:75vh}#panel{border-left:0;border-top:1px solid var(--line)}
-.legend{display:none}#zoomctl input[type=range]{display:none}#stats,header a{display:none}#titlebar{flex-wrap:wrap}.toggle{font-size:12px}}
+.legend{display:none}#zoomctl input[type=range]{display:none}#stats,header a,#tconf{display:none}#titlebar{flex-wrap:nowrap;margin:6px;padding:6px 8px;gap:4px}#titlebar .tb{padding:2px 6px}#pagetitle{white-space:nowrap;font-size:14px}.toggle{font-size:12px;white-space:nowrap}
+#wrap{min-height:52vh;flex:none;height:52vh}#left{max-height:60vh}#dockbody{max-height:34vh}.node div{font-size:8px}}
 </style>
 </head>
 <body>
@@ -203,6 +204,7 @@ function go(page,nid,fromHist){
  if(!fromHist){S.hist=S.hist.slice(0,S.hpos+1);S.hist.push([page,nid||null]);S.hpos=S.hist.length-1;
   try{history.replaceState(null,'','#'+page+(nid?':'+nid.split(':')[1]:''))}catch(e){}
   try{localStorage.setItem('dash-page',page)}catch(e){}}
+ if(isPhone()&&!fromHist!==undefined){document.getElementById('app').classList.remove('left-open');['toc','search','hist'].forEach(k=>$('#r'+k).classList.remove('on'))}
  renderList();renderChart();renderDetails();renderDock();$('#pagetitle').textContent=page==='__map'?'Whole guideline':page}
 $('#back').onclick=()=>{if(S.hpos>0){S.hpos--;go(...S.hist[S.hpos],true)}};
 $('#fwd').onclick=()=>{if(S.hpos<S.hist.length-1){S.hpos++;go(...S.hist[S.hpos],true)}};
@@ -233,6 +235,9 @@ function renderMap(){const ps=Object.keys(B.pages),cols=Math.min(6,ps.length),cw
   g+=`<g class="mapnode" data-p="${esc(p)}"><rect x="${x}" y="${y}" width="100" height="28" rx="6" stroke="var(--sec-${secOf(p)})"/><text x="${x+50}" y="${y+18}">${esc(p)}${flow?' · '+B.pages[p].nodes.length:''}</text></g>`});
  $('#chart').innerHTML=`<p class="muted">Whole guideline: algorithm pages (blue) and the pages they refer to. Click a page to open it.</p>${g}</svg>`;
  $('#chart').querySelectorAll('.mapnode').forEach(el=>el.onclick=()=>go(el.dataset.p))}
+const isPhone=()=>innerWidth<=700;
+function fullZoom(){return{x:0,y:B.top,w:B.w,h:B.bottom-B.top}}
+function defaultZoom(){if(!isPhone())return fullZoom();const w=B.w*.4,r=($('#wrap').clientHeight||480)/Math.max(300,$('#wrap').clientWidth||390);return{x:0,y:B.top,w,h:w*r}}
 function qMatch(text){const q=S.q.trim();if(!q)return true;const t=text.toLowerCase();
  const ex=q.match(/^"(.*)"$/);if(ex)return t.includes(ex[1].toLowerCase());return q.toLowerCase().split(/\s+/).filter(Boolean).every(w=>t.includes(w))}
 function nodeKind(n){return n.kind==='header'?'hdr':''}
@@ -243,7 +248,7 @@ function renderChart(){const box=$('#chart');
   $('#legend').style.display='none';return}
  $('#legend').style.display='';$('#zoomctl').style.display='';
  const g=B.pages[S.page],byId={};g.nodes.forEach(n=>byId[n.id]=n);
- const z=S.zoom||(S.zoom={x:0,y:B.top,w:B.w,h:B.bottom-B.top});const ws=walkSets(),PATH=pathSets();
+ const z=S.zoom||(S.zoom=defaultZoom());const ws=walkSets(),PATH=pathSets();
  const hidden=id=>S.ans.size&&!PATH.nodes.has(id);
  let s=`<svg viewBox="${z.x} ${z.y} ${z.w} ${z.h}"><defs></defs>`;
  g.edges.forEach(e=>{const a=byId[e.src],b=byId[e.dst];if(!a||!b)return;
@@ -266,8 +271,8 @@ function renderChart(){const box=$('#chart');
  s+='</svg>';box.innerHTML=s;const svg=box.querySelector('svg');syncSlider();
  svg.querySelectorAll('.node').forEach(el=>{const nd=NODES[el.dataset.id];
   el.querySelectorAll('.fb').forEach(fb=>fb.onclick=ev=>{ev.stopPropagation();openFootnote(fb.dataset.fn,el.dataset.id)});
-  el.onclick=ev=>{ev.stopPropagation();S.sel=el.dataset.id;if(nd&&nd.kind==='box'){S.ans.has(el.dataset.id)?S.ans.delete(el.dataset.id):S.ans.add(el.dataset.id)}renderChart();renderDetails();showTab('details')};
-  el.onmouseenter=()=>{if(!nd||!nd.footnotes.length)return;$('#tip').innerHTML=nd.footnotes.slice(0,4).map(f=>`<div style="margin-bottom:4px"><b>${esc(f[0])}</b> ${esc(f[1].slice(0,240))}</div>`).join('');$('#tip').style.display='block'};
+  el.onclick=ev=>{ev.stopPropagation();$('#tip').style.display='none';S.sel=el.dataset.id;if(nd&&nd.kind==='box'){S.ans.has(el.dataset.id)?S.ans.delete(el.dataset.id):S.ans.add(el.dataset.id)}renderChart();renderDetails();showTab('details')};
+  el.onmouseenter=()=>{if(!nd||!nd.footnotes.length||!matchMedia('(hover:hover)').matches)return;$('#tip').innerHTML=nd.footnotes.slice(0,4).map(f=>`<div style="margin-bottom:4px"><b>${esc(f[0])}</b> ${esc(f[1].slice(0,240))}</div>`).join('');$('#tip').style.display='block'};
   el.onmousemove=ev=>{const t=$('#tip');t.style.left=Math.min(ev.clientX+14,innerWidth-380)+'px';t.style.top=(ev.clientY+14)+'px'};
   el.onmouseleave=()=>$('#tip').style.display='none'});
  let drag=null;svg.onpointerdown=ev=>{drag={x:ev.clientX,y:ev.clientY,zx:z.x,zy:z.y,id:ev.pointerId,cap:false}};
@@ -281,7 +286,7 @@ function zoomBy(f,ev){const z=S.zoom;if(!z)return;const svg=$('#chart svg');if(!
  const px=ev?(ev.clientX-r.left)/r.width:.5,py=ev?(ev.clientY-r.top)/r.height:.5;
  const nw=Math.min(B.w*2,Math.max(B.w/8,z.w/f)),nh=nw*z.h/z.w;z.x+=(z.w-nw)*px;z.y+=(z.h-nh)*py;z.w=nw;z.h=nh;
  svg.setAttribute('viewBox',`${z.x} ${z.y} ${z.w} ${z.h}`);syncSlider()}
-$('#zin').onclick=()=>zoomBy(1.3);$('#zout').onclick=()=>zoomBy(1/1.3);$('#zreset').onclick=()=>{S.zoom=null;renderChart()};
+$('#zin').onclick=()=>zoomBy(1.3);$('#zout').onclick=()=>zoomBy(1/1.3);$('#zreset').onclick=()=>{S.zoom=(isPhone()&&S.zoom&&Math.round(S.zoom.w)!==B.w)?fullZoom():null;renderChart()};
 $('#zslide').oninput=e=>{const z=S.zoom;if(!z)return;const target=Math.pow(8,e.target.value/100),cur=B.w/z.w;zoomBy(target/cur)};
 
 /* ---------- details panel ---------- */
