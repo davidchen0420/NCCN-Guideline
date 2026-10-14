@@ -37,6 +37,7 @@ const META: Record<string, Meta> = {
   crpc_stated: { label: "Record states CRPC", group: "stated" },
   high_volume_stated: { label: "Record states high-volume disease", group: "stated" },
   high_risk_bcr_stated: { label: "Record states high-risk BCR", group: "stated" },
+  guideline_section: { label: "Disease or subtype" },
   // derived
   disease_extent: { label: "Disease extent" },
   risk_group: { label: "Risk group" },

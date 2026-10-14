@@ -1,0 +1,72 @@
+// Library smoke test: serves the repository over http and drives built/navigator.html.
+//   node e2e/library.mjs            (from web/, after `python -m nccn_nav.dashboard --library`)
+import { chromium } from "playwright-core";
+import { strict as assert } from "node:assert";
+import { createServer } from "node:http";
+import { readFile } from "node:fs/promises";
+import { extname, join, normalize } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const ROOT = fileURLToPath(new URL("../../", import.meta.url));
+const TYPES = { ".html": "text/html", ".json": "application/json", ".js": "text/javascript" };
+const server = createServer(async (req, res) => {
+  const path = normalize(decodeURIComponent(new URL(req.url, "http://x").pathname)).replace(/^(\.\.[/\\])+/, "");
+  try { const body = await readFile(join(ROOT, path)); res.writeHead(200, { "content-type": TYPES[extname(path)] ?? "application/octet-stream" }); res.end(body); }
+  catch { res.writeHead(404); res.end(); }
+}).listen(0, "127.0.0.1");
+await new Promise((r) => server.once("listening", r));
+const base = `http://127.0.0.1:${server.address().port}/built/navigator.html`;
+
+const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH, args: ["--no-sandbox"] });
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+const errors = [];
+page.on("pageerror", (e) => errors.push(e.message));
+page.on("console", (m) => { if (m.type() === "error" && !/404/.test(m.text())) errors.push(m.text()); });   // optional examples.json 404s
+let n = 0;
+const step = async (name, fn) => { await fn(); console.log(`ok ${++n} ${name}`); };
+const closeWelcome = async () => { if (await page.getByRole("dialog", { name: /Find where a patient sits/ }).count()) await page.getByRole("button", { name: /Browse the guideline/ }).click(); };
+
+await page.goto(base);
+await step("library lists every guideline by category", async () => {
+  await page.locator(".lib-row").first().waitFor();
+  assert.equal(await page.locator(".lib-row").count(), 91);
+});
+await step("search narrows the list and opens a guideline", async () => {
+  await page.getByLabel("Find a guideline").fill("prostate cancer");
+  await page.locator(".lib-row", { hasText: /^Prostate Cancer/ }).first().click();
+  await page.locator("[data-testid=card]").first().waitFor();
+  assert.match(await page.evaluate(() => location.hash), /^#prostate\//);
+  await closeWelcome();
+});
+await step("an example patient is routed with the data's option conditions", async () => {
+  await page.locator('select[aria-label="Load an example patient"]').selectOption("V1");
+  await page.getByRole("tab", { name: /Pathways/ }).click();
+  assert.match(await page.locator(".pcard").first().innerText(), /Most likely/);
+  assert.match(await page.locator(".trail").innerText(), /Matches treatment received/);
+});
+await step("multi-disease guidelines ask for the disease first", async () => {
+  await page.goto(base + "#aml/");
+  await page.locator("[data-testid=card]").first().waitFor();
+  await closeWelcome();
+  await page.getByRole("tab", { name: "Patient" }).click();
+  await page.locator("#fact-guideline_section").selectOption({ index: 1 });
+  await page.getByRole("tab", { name: /Pathways/ }).click();
+  assert.ok(await page.locator(".pcard").count() >= 1);
+});
+await step("a reference to another guideline opens it at that page", async () => {
+  await page.goto(base + "#nsclc/flow/NSCL-12");
+  const ref = page.locator('[data-testid=card] [data-ref="LCS-11"]');
+  await ref.first().waitFor({ state: "attached" });
+  await ref.first().evaluate((e) => e.click());
+  await page.waitForFunction(() => location.hash.startsWith("#lung_screening/"));
+  assert.match(await page.getByTestId("title").textContent(), /LCS-11/);
+});
+await step("the rail returns to the library", async () => {
+  await closeWelcome();
+  await page.getByTestId("rail-library").click();
+  await page.locator(".lib-row").first().waitFor();
+});
+await browser.close();
+server.close();
+assert.deepEqual(errors, [], "console errors: " + errors.join("; "));
+console.log(`\nall ${n} library checks passed`);

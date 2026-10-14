@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, type ReactNode } from "react";
-import type { Bundle, Facts } from "./types";
+import type { Bundle, Facts, LibraryEntry } from "./types";
 import { buildGraph, resolveRef, type Graph } from "./lib/graph";
 import { choose as walkChoose, startWalk, autoStep, type Walk } from "./lib/walk";
 import type { Kind } from "./lib/search";
@@ -69,18 +69,35 @@ export interface Ctx {
   selected: Pathway | null;
   showPath: (id: string | null) => void;
   focusFact: (name: string) => void;
+  library: LibraryNav | null;
+  slug: string | null;
 }
 
 const AppCtx = createContext<Ctx | null>(null);
 export const useApp = () => { const c = useContext(AppCtx); if (!c) throw new Error("no store"); return c; };
 
-export const locToHash = (l: Loc) => l.kind === "flow" ? `#flow/${l.page}${l.node ? "/" + l.node.split(":")[1] : ""}` : l.kind === "doc" ? `#doc/${l.code}${l.sub ? "/" + l.sub : ""}` : "#map";
-export function hashToLoc(h: string, g: Graph): Loc | null {
-  const p = decodeURIComponent(h.replace(/^#/, "")).split("/");
+/** In the library the hash starts with the guideline slug: "#prostate/flow/PROS-3". */
+export const locToHash = (l: Loc, prefix = "") => "#" + prefix + (l.kind === "flow" ? `flow/${encodeURIComponent(l.page)}${l.node ? "/" + l.node.split(":")[1] : ""}` : l.kind === "doc" ? `doc/${encodeURIComponent(l.code)}${l.sub ? "/" + l.sub : ""}` : "map");
+export function hashToLoc(h: string, g: Graph, prefix = ""): Loc | null {
+  let raw = h.replace(/^#/, "");
+  if (prefix) { if (!raw.startsWith(prefix)) return null; raw = raw.slice(prefix.length); }
+  const p = raw.split("/").map((x) => decodeURIComponent(x));
   if (p[0] === "map") return { kind: "map" };
   if (p[0] === "flow" && g.bundle.pages[p[1]]) return { kind: "flow", page: p[1], node: p[2] ? `${p[1]}:${p[2]}` : undefined };
   if (p[0] === "doc" && g.bundle.docs[p[1]]) return { kind: "doc", code: p[1], sub: p[2] ? Number(p[2]) : undefined };
+  if (p[0] === "ref" && p[1]) {   // a page code from another guideline's link: resolve it here
+    const t = resolveRef(g, p[1]);
+    if (t.type === "flow") return { kind: "flow", page: t.page };
+    if (t.type === "doc") return { kind: "doc", code: t.code, sub: p[2] ? Number(p[2]) : undefined };
+  }
   return null;
+}
+
+/** What the library offers to an open guideline. */
+export interface LibraryNav {
+  entries: LibraryEntry[];
+  open: (slug: string, code?: string | null) => void;
+  home: () => void;
 }
 
 const usePhone = () => {
@@ -91,14 +108,15 @@ const usePhone = () => {
   return v;
 };
 
-export function Provider({ bundle, children }: { bundle: Bundle; children: ReactNode }) {
+export function Provider({ bundle, children, slug = null, library = null }: { bundle: Bundle; children: ReactNode; slug?: string | null; library?: LibraryNav | null }) {
+  const prefix = slug ? `${slug}/` : "";
   const g = useMemo(() => buildGraph(bundle), [bundle]);
   const isPhone = usePhone();
   const init = useMemo<State>(() => {
-    const fromHash = hashToLoc(location.hash, g);
+    const fromHash = hashToLoc(location.hash, g, prefix);
     let saved: string | null = null;
     try { saved = localStorage.getItem("nav-help"); } catch { /* storage may be blocked */ }
-    const loc = fromHash ?? ({ kind: "flow", page: g.flowPages[0] } as Loc);
+    const loc = fromHash ?? ({ kind: "flow", page: g.flowPages.find((p) => (bundle.roots[p] ?? []).length) ?? g.flowPages[0] } as Loc);
     return {
       loc, hist: [loc], hpos: 0, answers: [], showNon: false, conf: false,
       left: window.innerWidth > 1180 ? "toc" : null, sheet: false,
@@ -109,12 +127,12 @@ export function Provider({ bundle, children }: { bundle: Bundle; children: React
   }, [g]);
   const [s, dispatch] = useReducer(reducer, init);
 
-  useEffect(() => { try { history.replaceState(null, "", locToHash(s.loc)); } catch { /* file:// may refuse */ } }, [s.loc]);
+  useEffect(() => { try { history.replaceState(null, "", locToHash(s.loc, prefix)); } catch { /* file:// may refuse */ } }, [s.loc, prefix]);
   useEffect(() => {
-    const f = () => { const l = hashToLoc(location.hash, g); if (l) dispatch({ type: "go", loc: l }); };
+    const f = () => { const l = hashToLoc(location.hash, g, prefix); if (l) dispatch({ type: "go", loc: l }); };
     window.addEventListener("hashchange", f);
     return () => window.removeEventListener("hashchange", f);
-  }, [g]);
+  }, [g, prefix]);
 
   const set = useCallback((patch: Partial<State>) => dispatch({ type: "set", patch }), []);
   const go = useCallback((loc: Loc) => {
@@ -125,7 +143,8 @@ export function Provider({ bundle, children }: { bundle: Bundle; children: React
     const t = resolveRef(g, code);
     if (t.type === "flow") go({ kind: "flow", page: t.page });
     else if (t.type === "doc") go({ kind: "doc", code: t.code, sub: idx });
-  }, [g, go]);
+    else if (t.type === "external") library?.open(t.slug, idx ? `${t.code}/${idx}` : t.code);
+  }, [g, go, library]);
   const openFootnote = useCallback((letter: string, node?: string) => {
     const page = s.loc.kind === "flow" ? s.loc.page : null;
     let idx = 0;
@@ -170,6 +189,6 @@ export function Provider({ bundle, children }: { bundle: Bundle; children: React
     }, 60);
   }, []);
 
-  const value: Ctx = { s, g, bundle, dispatch, go, goRef, set, openFootnote, startWalkAt, chooseStep, setFacts, isPhone, ranking, selected, showPath, focusFact };
+  const value: Ctx = { s, g, bundle, dispatch, go, goRef, set, openFootnote, startWalkAt, chooseStep, setFacts, isPhone, ranking, selected, showPath, focusFact, library, slug };
   return <AppCtx.Provider value={value}>{children}</AppCtx.Provider>;
 }

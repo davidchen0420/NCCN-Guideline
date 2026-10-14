@@ -5,6 +5,7 @@ import { derive } from "../lib/predicates";
 import { GROUPS, fieldCount, filledCount, formatNumber, groupOf, label, meta, numberText, parseNumber, unitLabel, valueLabel } from "../lib/factMeta";
 import { resolveRef } from "../lib/graph";
 import { SrcChip } from "../source";
+import { Search as SearchIcon } from "lucide-react";
 
 /** Enum options that fit on one row as buttons; longer lists use a menu. */
 const asButtons = (values: string[]) => values.length <= 6 && values.map(valueLabel).join("").length <= 44;
@@ -63,7 +64,7 @@ function Field({ name, spec, value, onChange, needed, used }: { name: string; sp
   return (
     <div className={`pf${needed ? " needed" : ""}${value !== undefined ? " set" : ""}`}>
       <label id={`${id}-l`} htmlFor={id} className="flabel">
-        <span>{m.label}</span>
+        <span>{m.label}{spec.time && spec.time !== "current" && <em className="time-tag">{spec.time === "at_diagnosis" ? "at diagnosis" : "history"}</em>}{spec.judgment && <em className="time-tag">judgment</em>}</span>
         {needed && <span className="need-tag">helps rank pathways</span>}
         {!needed && used && value === undefined && <span className="sr">used by the pathways shown</span>}
       </label>
@@ -136,11 +137,30 @@ export function PatientPanel() {
     set({ pathSel: null });
   };
 
+  // Multi-disease guidelines: the section variable ("which disease or subtype") comes first.
+  const sectionVar = bundle.sections?.variable && vars[bundle.sections.variable] ? bundle.sections.variable : null;
+  const [find, setFind] = useState("");
+  const term = find.trim().toLowerCase();
   const groups = useMemo(() => {
     const m = new Map<string, string[]>();
-    Object.keys(vars).forEach((n) => { const k = groupOf(n); m.set(k, [...(m.get(k) ?? []), n]); });
+    Object.keys(vars).filter((n) => n !== sectionVar)
+      .filter((n) => !term || `${label(n)} ${n} ${vars[n].definition ?? ""}`.toLowerCase().includes(term))
+      .forEach((n) => { const k = groupOf(n); m.set(k, [...(m.get(k) ?? []), n]); });
+    // Names that match no clinical group are grouped by when they apply (schema "time").
+    const other = m.get("other") ?? [];
+    if (other.length > 6) {
+      m.delete("other");
+      const byTime: [string, string, (n: string) => boolean][] = [
+        ["now", "Current findings", (n) => !vars[n].time || vars[n].time === "current"],
+        ["dx", "At diagnosis", (n) => vars[n].time === "at_diagnosis"],
+        ["hx", "History", (n) => vars[n].time === "history"],
+      ];
+      const extra = byTime.map(([key, title, f]) => ({ key, title, match: /$^/, names: other.filter(f) })).filter((x) => x.names.length);
+      return [...GROUPS.filter((gr) => m.has(gr.key)).map((gr) => ({ ...gr, names: m.get(gr.key)! })), ...extra];
+    }
     return GROUPS.filter((gr) => m.has(gr.key)).map((gr) => ({ ...gr, names: m.get(gr.key)! }));
-  }, [vars]);
+  }, [vars, sectionVar, term]);
+  const hasLE = Object.keys(vars).some((n) => n.startsWith("life_expectancy"));
 
   // Derived enums a record may state outright ("low-risk"); computed values otherwise.
   const statedOk = Object.entries(schema.derived ?? {}).filter(([, d]) => d.type === "enum" && !d.rules.some((r) => JSON.stringify(r.if).includes("_stated")));
@@ -168,12 +188,25 @@ export function PatientPanel() {
         </div>
       </div>
       <p className="note">Enter what the record says and leave the rest blank. Pathways update as you type.</p>
+      {sectionVar && (
+        <fieldset className="fgroup section-pick">
+          <legend>Disease or subtype</legend>
+          <Field name={sectionVar} spec={{ ...vars[sectionVar], definition: undefined }} value={s.facts[sectionVar]} onChange={(v) => set1(sectionVar, v)} needed={needed.has(sectionVar) && s.facts[sectionVar] === undefined} used={used.has(sectionVar)} />
+          <p className="hint">This guideline covers {bundle.sections!.values.length} diseases or subtypes; each has its own algorithm pages.</p>
+        </fieldset>
+      )}
+      {Object.keys(vars).length > 20 && (
+        <div className="field find-fact">
+          <SearchIcon size={14} aria-hidden />
+          <input type="search" value={find} onChange={(e) => setFind(e.target.value)} placeholder={`Find one of ${Object.keys(vars).length} details`} aria-label="Find a patient detail" />
+        </div>
+      )}
 
       {groups.map((gr) => (
         gr.key === "stated" ? null : (
           <fieldset key={gr.key} className="fgroup">
             <legend>{gr.title}<em>{gr.names.filter((n) => s.facts[n] !== undefined).length}/{gr.names.length}</em></legend>
-            {gr.key === "patient" && !vars.age && (
+            {gr.key === "patient" && !vars.age && hasLE && !term && (
               <div className="pf">
                 <label htmlFor="patient-age" className="flabel"><span>Age</span></label>
                 <NumberInput id="patient-age" value={s.age ?? undefined} unit="years" onChange={(v) => set({ age: typeof v === "number" ? v : null })} />

@@ -1,15 +1,18 @@
-import { ArrowLeft, ArrowRight, BookOpen, UserRound, ListChecks, FileText, CircleHelp, History, LayoutGrid, RotateCcw, Search, ExternalLink } from "lucide-react";
+import { Library as LibraryIcon, ArrowLeft, ArrowRight, BookOpen, UserRound, ListChecks, FileText, CircleHelp, History, LayoutGrid, RotateCcw, Search, ExternalLink } from "lucide-react";
 import { useApp } from "../store";
 import { PdfButton, useSource } from "../source";
+import { startingFacts } from "../lib/pathways";
+import { label } from "../lib/factMeta";
 
 export function Rail() {
-  const { s, set, go } = useApp();
+  const { s, set, go, library } = useApp();
   const toggle = (v: "toc" | "search" | "hist") => set({ left: s.left === v ? null : v });
   const b = (label: string, icon: React.ReactNode, on: boolean, f: () => void, id: string) => (
     <button className={on ? "on" : ""} aria-label={label} title={label} aria-pressed={on} onClick={f} data-testid={id}>{icon}</button>
   );
   return (
     <nav className="rail" aria-label="Navigator">
+      {library && b("All guidelines", <LibraryIcon size={20} />, false, library.home, "rail-library")}
       {b("Whole guideline", <LayoutGrid size={20} />, s.loc.kind === "map", () => go({ kind: "map" }), "rail-map")}
       {b("Contents", <BookOpen size={20} />, s.left === "toc", () => toggle("toc"), "rail-toc")}
       {b("Search", <Search size={20} />, s.left === "search", () => toggle("search"), "rail-search")}
@@ -76,7 +79,8 @@ export function Help() {
 
 /** First visit: three ways in, plus the optional PDF. Replaces a wall of help text. */
 export function Welcome() {
-  const { s, set, setFacts, bundle } = useApp();
+  const { s, set, setFacts, bundle, g } = useApp();
+  const start = startingFacts(g, 5);
   const { pdf, pick } = useSource();
   if (!s.welcome) return null;
   const close = (patch: Parameters<typeof set>[0] = {}) => {
@@ -92,7 +96,7 @@ export function Welcome() {
         <p className="wl-lead">Enter what the record says. The navigator ranks every route through the algorithm that fits, shows which criteria are met, and links each step to the guideline page it came from.</p>
         <div className="wl-choices">
           <button type="button" className="wl-choice" onClick={() => close({ rightTab: "patient", sheet: true })} autoFocus>
-            <UserRound size={20} aria-hidden /><b>Enter a patient</b><span>Start with T, N, M, Grade Group, PSA and life expectancy.</span>
+            <UserRound size={20} aria-hidden /><b>Enter a patient</b><span>{start.length ? <>Start with {start.map(label).join(", ")}.</> : "Enter what the record says; pathways update as you type."}</span>
           </button>
           {examples.length > 0 && (
             <div className="wl-choice as-div">

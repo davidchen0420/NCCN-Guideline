@@ -46,9 +46,18 @@ export function RightPanel() {
 }
 
 function RefCard({ code }: { code: string }) {
-  const { g, goRef } = useApp();
+  const { g, goRef, library } = useApp();
   const t = resolveRef(g, code);
-  if (t.type === "none") return null;
+  if (t.type === "none" || (t.type === "external" && !library)) return null;
+  if (t.type === "external") {
+    const e = library!.entries.find((x) => x.slug === t.slug);
+    return (
+      <button className="ref-card" onClick={() => goRef(code)}>
+        <span className="ref-top"><code>{code}</code><ArrowRight size={13} /></span>
+        <b>{e?.title ?? t.slug}</b><span className="ex">Another guideline in the library</span>
+      </button>
+    );
+  }
   const title = t.type === "doc" ? g.bundle.docs[t.code].title : g.bundle.pages[t.page].title;
   const excerpt = t.type === "doc" ? splitParagraphs(g.bundle.docs[t.code].pages[0].text).find((p) => p.length > 60) : undefined;
   return (
@@ -61,7 +70,7 @@ function RefCard({ code }: { code: string }) {
 }
 
 function Details() {
-  const { s, g, go, startWalkAt } = useApp();
+  const { s, g, go, startWalkAt, library } = useApp();
   const facts = useMemo(() => derive(s.facts, g.bundle.schema), [s.facts, g]);
   const loc = s.loc;
   const hits = loc.kind === "doc" ? g.refIndex.get(loc.code) ?? [] : [];
@@ -72,7 +81,7 @@ function Details() {
     if (!n || !parsed) return [] as string[];
     const set = new Set<string>([...parsed.refs, ...n.links]);
     n.footnotes.forEach(([, t]) => { (t.match(/\b[A-Z]+-(?:[A-Z]\b|\d+[A-Z]?)/g) ?? []).forEach((c) => set.add(c)); });
-    return [...set].filter((c) => resolveRef(g, c).type !== "none" && !(loc.kind === "flow" && c === loc.page));
+    return [...set].filter((c) => { const t = resolveRef(g, c).type; return t !== "none" && (t !== "external" || !!library) && !(loc.kind === "flow" && c === loc.page); });
   }, [n, parsed, g, loc]);
 
   if (loc.kind === "map") return <p className="note">Pick a page from the overview.</p>;
@@ -126,6 +135,19 @@ function Details() {
         </>
       )}
       {refs.length > 0 && <><h4>Related pages</h4><div className="refs">{refs.slice(0, 8).map((c) => <RefCard key={c} code={c} />)}</div></>}
+      {library && (n.ext ?? []).length > 0 && (
+        <><h4>Other guidelines cited</h4><div className="refs">
+          {[...new Map((n.ext ?? []).map((x) => [x.slug, x])).values()].map((x) => {
+            const e = library.entries.find((y) => y.slug === x.slug);
+            return (
+              <button key={x.slug} className="ref-card" onClick={() => library.open(x.slug, x.code)}>
+                <span className="ref-top"><code>{x.code ?? "Guideline"}</code><ArrowRight size={13} /></span>
+                <b>{e?.title ?? x.slug}</b>{e?.version && <span className="ex">Version {e.version}</span>}
+              </button>
+            );
+          })}
+        </div></>
+      )}
       {out.length > 0 && <><h4>Leads to</h4>{out.map((id) => <button key={id} className="usage-item" onClick={() => nav(id)}><code>{id.split(":")[0] !== n.page ? id.split(":")[0] : ""}</code>{clip(plainOf(g, id))}</button>)}</>}
       {inc.length > 0 && <><h4>Reached from</h4>{inc.map((id) => <button key={id} className="usage-item" onClick={() => nav(id)}><code>{id.split(":")[0] !== n.page ? id.split(":")[0] : ""}</code>{clip(plainOf(g, id))}</button>)}</>}
       <button className="primary" onClick={() => startWalkAt(n.page, n.full)}><Footprints size={15} /> Start guided walk here</button>

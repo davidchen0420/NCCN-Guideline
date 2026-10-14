@@ -16,7 +16,7 @@ export interface SrcTarget {
   label: string;                      // e.g. "PROS-3" or "Footnote o · PROS-7A"
   excerpt?: string;                   // text to show when the PDF is not connected
 }
-type PdfState = { status: "none" | "loading" | "ready" | "error"; doc?: PDFDocumentProxy; name?: string; note?: string };
+type PdfState = { status: "none" | "loading" | "ready" | "error"; doc?: PDFDocumentProxy; name?: string; note?: string; verified?: boolean };
 
 interface SourceCtx {
   pdf: PdfState;
@@ -61,7 +61,7 @@ export function SrcChip({ t, text }: { t: SrcTarget; text?: string }) {
 
 export function SourceProvider({ children }: { children: ReactNode }) {
   const { bundle } = useApp();
-  const key = `pdf:${bundle.title}`;
+  const key = `pdf:${bundle.guideline?.slug ?? bundle.title}`;
   const [pdf, setPdf] = useState<PdfState>({ status: "none" });
   const [peekT, setPeek] = useState<{ t: SrcTarget; rect: DOMRect } | null>(null);
   const [view, setView] = useState<SrcTarget | null>(null);
@@ -78,14 +78,22 @@ export function SourceProvider({ children }: { children: ReactNode }) {
   const use = useCallback(async (data: ArrayBuffer, name: string, save: boolean) => {
     setPdf({ status: "loading", name });
     try {
-      const copy = save ? data.slice(0) : null;   // pdf.js transfers the buffer to its worker
+      const copy = data.slice(0);   // pdf.js transfers the buffer to its worker
+      // The data records the SHA-256 of the PDF it was built from: a different file (another
+      // version or a re-saved copy) may have boxes in other places.
+      const want = bundle.guideline?.pdf_sha256;
+      let mismatch: string | undefined;
+      if (want && crypto?.subtle) {
+        const got = [...new Uint8Array(await crypto.subtle.digest("SHA-256", copy))].map((b) => b.toString(16).padStart(2, "0")).join("");
+        if (got !== want) mismatch = `This PDF is not the file the guideline was encoded from${bundle.guideline?.version ? ` (version ${bundle.guideline.version})` : ""}. Page previews and box outlines may point at the wrong place.`;
+      }
       const doc = await openPdf(data);
-      setPdf({ status: "ready", doc, name, note: check(doc) });
-      if (copy) void savePdf(key, name, copy);
+      setPdf({ status: "ready", doc, name, note: mismatch ?? check(doc), verified: !!want && !mismatch });
+      if (save) void savePdf(key, name, copy);
     } catch (e) {
       setPdf({ status: "error", name, note: `Could not open ${name}: ${String((e as Error).message ?? e)}` });
     }
-  }, [check, key]);
+  }, [check, key, bundle.guideline]);
 
   // On load: a PDF remembered in this browser, else one next to the data (http only).
   useEffect(() => {
@@ -183,8 +191,8 @@ function useRendered(page: number, width: number): Rendered | null | "none" {
 /** The page from the extracted layout: every box drawn where it sits, the target outlined. */
 function Reconstructed({ page, bbox, big }: { page: number; bbox?: number[]; big?: boolean }) {
   const { bundle } = useApp();
-  const W = bundle.w || 792, H = bundle.h || 612;
   const flow = Object.entries(bundle.pages).find(([, p]) => p.pdf === page);
+  const W = flow?.[1].size?.[0] ?? bundle.w ?? 792, H = flow?.[1].size?.[1] ?? bundle.h ?? 612;
   if (flow) {
     return (
       <svg className="recon" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Reconstructed layout of ${flow[0]}`}>
@@ -332,8 +340,8 @@ export function PdfButton() {
   return (
     <span className="pdf-ctl">
       <button type="button" className={`pdf-btn ${pdf.status}`} onClick={pick}
-        title={ready ? `${pdf.name} — click to choose a different file` : "Connect the guideline PDF to preview original pages. It stays in this browser."}>
-        <span className="dot" aria-hidden />{ready ? "Source PDF" : pdf.status === "loading" ? "Opening PDF…" : "Connect PDF"}
+        title={ready ? `${pdf.name}${pdf.verified ? " — matches the encoded guideline" : ""} — click to choose a different file` : "Connect the guideline PDF to preview original pages. It stays in this browser."}>
+        <span className="dot" aria-hidden />{ready ? (pdf.verified ? "Source PDF ✓" : "Source PDF") : pdf.status === "loading" ? "Opening PDF…" : "Connect PDF"}
       </button>
       {ready && <button type="button" className="ib sm" aria-label="Forget the connected PDF" title="Forget the connected PDF" onClick={disconnect}><X size={14} /></button>}
       {pdf.note && <span className="pdf-note" role="status">{pdf.note}</span>}

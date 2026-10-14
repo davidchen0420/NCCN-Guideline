@@ -40,6 +40,7 @@ export function Toc() {
   return (
     <div className="lv">
       <h2>Contents</h2>
+      {g.bundle.guideline && <p className="toc-gl">{g.bundle.guideline.title}{g.bundle.guideline.version ? ` · v${g.bundle.guideline.version}` : ""}{g.bundle.guideline.version_date ? ` · ${g.bundle.guideline.version_date}` : ""}</p>}
       <div className="field"><SearchIcon size={14} /><input type="search" value={f} onChange={(e) => setF(e.target.value)} placeholder="Filter contents" aria-label="Filter contents" /></div>
       <Group title="Algorithm" count={flows.length} open={t("alg")} onToggle={() => setOpen({ ...open, alg: !open.alg })}>
         {flows.map((p) => (

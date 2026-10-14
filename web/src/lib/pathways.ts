@@ -104,6 +104,15 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     fp.edges.forEach((e) => edgeKind.set(`${page}:${e.src}>${page}:${e.dst}`, e.cls));
   const reviewW = (id: string) => (g.preds[id] ? REVIEW_W[g.node(id)?.review === "reviewed" ? "reviewed" : "draft"] : 1);
   const verdict = (id: string): boolean | null | "none" => (g.preds[id] ? evaluate(g.preds[id], facts) : "none");
+  /** For picking where a patient enters: an entry box's own condition, else the conditions of
+   * the boxes that link to it (kept apart in the data because they only describe how the page
+   * is usually reached; they never exclude a box here). */
+  const entryVerdict = (id: string) => {
+    const v = verdict(id);
+    if (v !== "none") return v;
+    const lc = g.node(id)?.linkCond;
+    return lc ? evaluate(lc, facts) : "none";
+  };
   const linksOut = (id: string) => (g.node(id)?.links ?? []).some((l) => g.bundle.pages[l] && l !== id.split(":")[0]);
 
   const done: Omit<Pathway, "likelihood">[] = [];
@@ -170,12 +179,28 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     tr.forEach((gr) => out.push({ gr, kind: "met", share: 1 }));
     unk.forEach((gr) => out.push({ gr, kind: "unknown", share: tr.length ? RESIDUAL : 1 }));
     // A box with no condition is "not encoded" (rather than a free option) when review rejected
-    // its drafted condition, or when conditioned siblings show this branch is decided by facts.
+    // its drafted condition, or when the data types it as a condition. Older bundles have no
+    // decision types: there, conditioned siblings show the branch is decided by facts.
+    const structured = !!g.bundle.structured;
     const siblingHasPred = groups.some((gr) => g.preds[gr.id]);
-    const uncoded = none.filter((gr) => !gr.pre.length && (g.node(gr.id)?.review === "rejected" || siblingHasPred));
+    const uncoded = none.filter((gr) => {
+      const n = g.node(gr.id);
+      if (gr.pre.length) return false;
+      if (n?.review === "rejected") return true;
+      return structured ? n?.decision === "condition" : siblingHasPred;
+    });
     uncoded.forEach((gr) => out.push({ gr, kind: "uncoded", share: tr.length ? RESIDUAL : 1 }));
     none = none.filter((gr) => !uncoded.includes(gr));
-    if (none.length) {
+    if (none.length && structured) {
+      // Options carry "the patient already received this" conditions: a received option is
+      // the route taken; one ruled out by the treatment received keeps a small share.
+      const rv = none.map((gr) => { const r = g.node(gr.id)?.received; return r ? evaluate(r, facts) : null; });
+      const anyMine = rv.includes(true);
+      none.forEach((gr, i) => {
+        if (rv[i] === true) out.push({ gr, kind: "inferred", share: tr.length ? RESIDUAL : 1 });
+        else out.push({ gr, kind: "option", share: (tr.length || anyMine ? RESIDUAL : 1) * (rv[i] === false ? 0.5 : 1) });
+      });
+    } else if (none.length) {
       const m = none.map((gr) => textMatches(g, g.node(gr.id)?.text ?? "", raw));
       const anyMine = m.some((x) => x.mine);
       none.forEach((gr, i) => {
@@ -211,13 +236,15 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     const isCond = (n: string, i: number) =>
       !!g.preds[n] || i === 0 || (g.bundle.roots[n.split(":")[0]] ?? []).includes(n) || /\?\s*$/.test(g.node(n)?.text ?? "");
     const cond = isCond(id, steps.length - 1);
-    const pass = cond || linksOut(id) || (steps.length > 1 && isCond(steps[steps.length - 2].node, steps.length - 2));
+    // Cells of a structured table row (criteria, evaluation, "see PROS-4") read as one row.
+    const tableCell = /^table_/.test(g.node(id)?.role ?? "");
+    const pass = cond || tableCell || linksOut(id) || (steps.length > 1 && isCond(steps[steps.length - 2].node, steps.length - 2));
     const go = (gr: Group, kind: StepKind, share: number) => {
       const nx = new Set(seen); gr.pre.forEach((p) => nx.add(p)); nx.add(gr.id);
       const add = [...preSteps(id, gr), stepFor(id, gr.id, targetKind(gr, kind), share)];
       dfs(gr.id, [...steps, ...add], weight * share, nx);
     };
-    const groups = rowGroups(kids);
+    const groups = g.bundle.structured ? kids.map((id) => ({ id, pre: [] as string[] })) : rowGroups(kids);
     const v = groups.map(gVerdict);
     if (v.every((x) => x === false)) {
       ruledOut += groups.length;
@@ -246,14 +273,20 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
 
   let entries: string[];
   if (start === "auto") {
-    const first = g.flowPages[0];
-    entries = [...(g.bundle.roots[first] ?? [])];
-    explore(entries);
     // Page-level links: a box on page q continues on p's entry boxes or refers to page p.
     const out = new Map<string, Set<string>>();
     const link = (q: string, p: string) => { if (p !== q && g.bundle.pages[p]) (out.get(q) ?? out.set(q, new Set()).get(q)!).add(p); };
     for (const [id, ks] of Object.entries(g.bundle.children)) ks.forEach((k) => link(id.split(":")[0], k.split(":")[0]));
     g.bundle.links.forEach(([q, p]) => link(q, p));
+    // Starting pages: algorithm pages with entry boxes that no other page leads to (PROS-1;
+    // one per disease in multi-disease guidelines). Older bundles start on the first page.
+    const linkedTo = new Set([...out.values()].flatMap((x) => [...x]));
+    const starts = g.bundle.structured
+      ? g.flowPages.filter((p) => (g.bundle.roots[p] ?? []).length && !linkedTo.has(p))
+      : [g.flowPages[0]];
+    if (!starts.length) starts.push(g.flowPages.find((p) => (g.bundle.roots[p] ?? []).length) ?? g.flowPages[0]);
+    entries = starts.flatMap((p) => g.bundle.roots[p] ?? []);
+    explore(entries);
     for (const [code, hits] of g.refIndex) hits.forEach((h) => link(h.page, code));
     const reaches = (from: string, to: string) => {
       const seen = new Set([from]), st = [from];
@@ -269,9 +302,9 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     const reachedNodes = new Set(done.flatMap((d) => d.steps.map((st) => st.node)));
     const reachedPages = new Set([...reachedNodes].map((n) => n.split(":")[0]));
     const cands = g.flowPages.filter((p) => {
-      if (p === first || [...reachedPages].some((q) => q !== p && out.get(q)?.has(p))) return false;
+      if (starts.includes(p) || [...reachedPages].some((q) => q !== p && out.get(q)?.has(p))) return false;
       if (textMatches(g, g.bundle.pages[p].title ?? "", raw).other) return false;
-      return (g.bundle.roots[p] ?? []).some((r) => !reachedNodes.has(r) && verdict(r) === true);
+      return (g.bundle.roots[p] ?? []).some((r) => !reachedNodes.has(r) && entryVerdict(r) === true);
     });
     const later = cands.filter((p) => !cands.some((q) => q !== p && reaches(p, q)));
     if (later.length) {
@@ -282,7 +315,7 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
       entries = keep.length ? [...new Set(keep.map((d) => d.steps[0].node))] : [];
     }
     for (const p of later) {
-      const extra = (g.bundle.roots[p] ?? []).filter((r) => !reachedNodes.has(r) && verdict(r) === true);
+      const extra = (g.bundle.roots[p] ?? []).filter((r) => !reachedNodes.has(r) && entryVerdict(r) === true);
       explore(extra);
       entries = entries.concat(extra);
     }
@@ -304,3 +337,23 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
 /** Likelihood band in words, so the number is not read as a clinical probability. */
 export const likelihoodWord = (x: number) => (x >= 0.5 ? "Most likely" : x >= 0.2 ? "Possible" : x >= 0.05 ? "Less likely" : "Unlikely");
 export const confidenceWord = (c: number) => (c >= 75 ? "High" : c >= 45 ? "Moderate" : "Low");
+
+/** The raw facts that decide where a patient enters the guideline (for "start with ..." hints). */
+export function startingFacts(g: Graph, limit = 6): string[] {
+  const linked = new Set<string>();
+  for (const [id, ks] of Object.entries(g.bundle.children)) ks.forEach((k) => { if (k.split(":")[0] !== id.split(":")[0]) linked.add(k.split(":")[0]); });
+  g.bundle.links.forEach(([q, p]) => { if (q !== p) linked.add(p); });
+  const starts = g.flowPages.filter((p) => (g.bundle.roots[p] ?? []).length && !linked.has(p));
+  const pages = starts.length ? starts : g.flowPages.slice(0, 1);
+  const out: string[] = [];
+  const sv = g.bundle.sections?.variable;
+  if (sv && g.bundle.schema.variables[sv]) out.push(sv);
+  for (const p of pages) for (const r of g.bundle.roots[p] ?? []) {
+    const decide = (id: string) => {
+      for (const f of missingFacts(g, g.preds[id] ?? g.node(id)?.linkCond, {})) if (!out.includes(f)) out.push(f);
+    };
+    decide(r);
+    g.kids(r).forEach(decide);   // the first branch after the entry box
+  }
+  return out.slice(0, limit);
+}

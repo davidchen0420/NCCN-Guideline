@@ -33,7 +33,7 @@ export function Canvas({ page }: { page: string }) {
   useLayoutEffect(() => { measure(); }, [measure, boxes]);
   useEffect(() => { void document.fonts?.ready.then(measure); }, [measure]);
 
-  const layout = useMemo(() => (heights ? layoutPage(flow, heights, parsedByShort, g.bundle.top) : null), [flow, heights, parsedByShort, g.bundle.top]);
+  const layout = useMemo(() => (heights ? layoutPage(flow, heights, parsedByShort, flow.band?.[0] ?? g.bundle.top) : null), [flow, heights, parsedByShort, g.bundle.top]);
 
   const fit = useCallback((all: boolean) => {
     const el = wrapRef.current, t = tx.current;

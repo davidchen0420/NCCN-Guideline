@@ -33,6 +33,7 @@ let rx: Rx;
 let rxKey = "";
 /** Page codes look like PROS-12, PROS-F, ST-1, MS-7. Other guidelines use other prefixes (NSCL, COL...). */
 export function configureRefs(prefixes: string[]): void {
+  prefixes = prefixes.map((p) => p.replace(/\s.*$/, ""));
   const key = prefixes.join("|");
   if (key === rxKey) return;
   rxKey = key;

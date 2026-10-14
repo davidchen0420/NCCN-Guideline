@@ -43,6 +43,27 @@ class BundleTest(unittest.TestCase):
         self.assertEqual(dashboard.doc_title("discussion", "MS-9", "Example stage 4: score 4+4\nmore text."), "Page 9")
 
 
+class CanonicalBuildTest(unittest.TestCase):
+    DATA = ROOT / "data"
+
+    @unittest.skipUnless((DATA / "prostate" / "guideline.json").exists(), "canonical data not present")
+    def test_offline_build_embeds_guideline_json(self):
+        with tempfile.TemporaryDirectory() as d:
+            out, g = dashboard.build(self.DATA / "prostate", d)
+            html = out.read_text()
+            self.assertEqual(out.name, "prostate-navigator.html")
+            self.assertIn('"format": "nccn-guideline/1"', html)
+            self.assertIn("viewer_examples", html)
+            self.assertNotIn("/*GUIDELINE*/null", html)
+
+    def test_library_build_points_at_data(self):
+        with tempfile.TemporaryDirectory() as d:
+            out = dashboard.build_library(self.DATA, Path(d) / "built" / "navigator.html")
+            html = out.read_text()
+            self.assertIn("window.__LIBRARY__={", html)
+            self.assertIn("window.__GUIDELINE__=null", html)
+
+
 class ParityFixtureTest(unittest.TestCase):
     def test_fixture_matches_python(self):
         fixture = json.loads((ROOT / "web" / "test" / "parity.json").read_text())

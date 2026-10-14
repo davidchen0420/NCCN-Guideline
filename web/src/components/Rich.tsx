@@ -5,7 +5,7 @@ import { resolveRef } from "../lib/graph";
 import { useApp } from "../store";
 
 export function Inlines({ items, stop = true }: { items: Inline[]; stop?: boolean }) {
-  const { g, goRef } = useApp();
+  const { g, goRef, library } = useApp();
   return (
     <>
       {items.map((x, i) => {
@@ -15,7 +15,8 @@ export function Inlines({ items, stop = true }: { items: Inline[]; stop?: boolea
           case "tag": return <span key={i} className={`tag tag-${x.kind}`}>{x.label}</span>;
           case "url": return <a key={i} className="ext" href={x.href} target="_blank" rel="noopener noreferrer">{x.href.replace(/^https?:\/\//, "").slice(0, 40)}<ExternalLink size={11} /></a>;
           case "ref": case "link": {
-            const ok = resolveRef(g, x.code).type !== "none";
+            const kind = resolveRef(g, x.code).type;
+            const ok = kind !== "none" && (kind !== "external" || !!library);
             const label = x.t === "link" ? x.text : x.label;
             const cls = x.t === "link" ? "xlink" : "xref";
             if (!ok) return <span key={i} className={`${cls} dead`}>{label}</span>;

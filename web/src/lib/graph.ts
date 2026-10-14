@@ -17,13 +17,13 @@ export interface Graph {
   node: (id: string) => GNode | undefined;
 }
 
-export type Target = { type: "flow"; page: string } | { type: "doc"; code: string } | { type: "none" };
+export type Target = { type: "flow"; page: string } | { type: "doc"; code: string } | { type: "external"; slug: string; code: string } | { type: "none" };
 
 const natural = (a: string, b: string) => a.localeCompare(b, undefined, { numeric: true });
 
 export function buildGraph(bundle: Bundle): Graph {
   const flowPages = Object.keys(bundle.pages).sort(natural);
-  configureRefs([...new Set(flowPages.map((p) => p.split("-")[0]))]);
+  configureRefs([...new Set([...flowPages.map((p) => p.split("-")[0]), ...Object.keys(bundle.prefixes ?? {})])]);
 
   const nodes = new Map<string, GNode>();
   const preds: Record<string, Pred> = {};
@@ -67,6 +67,12 @@ export function resolveRef(g: Graph, code: string): Target {
   if (g.bundle.docs?.[code]) return { type: "doc", code };
   const fn = code.match(/^(.+-\d+)A$/);
   if (fn && g.bundle.pages[fn[1]]) return { type: "flow", page: fn[1] };
+  // Multi-part algorithm pages are keyed by page id ("GALL-4 1 of 3"): a bare code opens part 1.
+  const part = g.flowPages.find((p) => p.startsWith(code + " "));
+  if (part) return { type: "flow", page: part };
+  // A page of another guideline ("DIS-A" -> distress_management), opened through the library.
+  const slug = g.bundle.prefixes?.[code.split("-")[0]];
+  if (slug) return { type: "external", slug, code };
   return { type: "none" };
 }
 

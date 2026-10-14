@@ -1,12 +1,16 @@
-"""Build the interactive guideline dashboard as one self-contained HTML file.
+"""Package the navigator (the React app in web/, built into dashboard.html) with guideline data.
 
-Reads the processed guideline folder (merged_graphs.json or e1_graphs.json, footnotes.json,
-fact_schema.json, llm/pred_out_*.json predicate drafts, chunks_full.json) and writes
-private/viz/dashboard.html plus bundle.json. The output contains guideline text, so it
-belongs in the gitignored private directory. `--sample` builds from a synthetic demo.
+The viewer reads the canonical data/<slug>/guideline.json directly (web/src/lib/adapt.ts):
+- the library build points at data/ and loads any of the guidelines over http;
+- the offline build embeds one guideline.json in a single HTML file.
+Folders without guideline.json (the synthetic sample) are converted here by build_bundle.
+Outputs that embed guideline text are licensed-derived content.
 
-  python -m nccn_nav.dashboard [data_dir]  ->  private/viz/dashboard.html (default data_dir: data/prostate)
-  python -m nccn_nav.dashboard --sample    ->  <tmp or ./sample_out>/dashboard.html
+  python -m nccn_nav.dashboard data/<slug> [out_dir]  ->  <out_dir or private/viz>/<slug>-navigator.html
+                                                         (offline, one guideline embedded)
+  python -m nccn_nav.dashboard --library [data_dir] [out.html]  ->  built/navigator.html
+                                                         (all guidelines; serve the repo over http)
+  python -m nccn_nav.dashboard --sample                ->  ./sample_out/dashboard.html
 """
 import json
 import os
@@ -251,23 +255,56 @@ def front_title(store):
     return f"{name} · v{version}" if version else name
 
 
+def _template():
+    return (HERE / "dashboard.html").read_text()
+
+
+def _fill(template, bundle="null", guideline="null", library="null"):
+    safe = lambda x: x.replace("</", "<\\/")
+    return (template.replace("/*BUNDLE*/null", safe(bundle))
+            .replace("/*GUIDELINE*/null", safe(guideline))
+            .replace("/*LIBRARY*/null", safe(library)))
+
+
 def build(private, out_dir=None, title=None):
+    """One guideline as an offline single file. A folder with guideline.json (the canonical
+    format, data/<slug>/) is embedded as is and read by the viewer; older processed folders are
+    converted here (build_bundle)."""
+    private = Path(private)
+    out_dir = Path(out_dir) if out_dir else Path("private") / "viz"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    canonical = private / "guideline.json"
+    if canonical.exists():
+        g = json.loads(canonical.read_text())
+        examples = _load(private, "vignettes/examples.json")
+        if examples:
+            g["viewer_examples"] = examples
+        slug = g["guideline"]["slug"]
+        out = out_dir / f"{slug}-navigator.html"
+        out.write_text(_fill(_template(), guideline=json.dumps(g, ensure_ascii=False)))
+        return out, g
     bundle = build_bundle(private)
     if title:
         bundle["title"] = title
-    out_dir = Path(out_dir) if out_dir else Path("private") / "viz"
-    out_dir.mkdir(parents=True, exist_ok=True)
     # Where the viewer looks for the source PDF when served over http (never embedded: licensed).
-    slug = Path(private).resolve().name
-    spots = [Path(private) / "pdf" / f"{slug}.pdf", Path("private") / slug / "pdf" / f"{slug}.pdf"]
+    slug = private.resolve().name
+    spots = [private / "pdf" / f"{slug}.pdf", Path("private") / slug / "pdf" / f"{slug}.pdf"]
     bundle["pdf_candidates"] = list(dict.fromkeys(
         Path(os.path.relpath(p.resolve(), out_dir.resolve())).as_posix() for p in spots))
-    template = (HERE / "dashboard.html").read_text()
-    doc = template.replace("/*BUNDLE*/null", json.dumps(bundle).replace("</", "<\\/"))
     (out_dir / "bundle.json").write_text(json.dumps(bundle))
     out = out_dir / "dashboard.html"
-    out.write_text(doc)
+    out.write_text(_fill(_template(), bundle=json.dumps(bundle)))
     return out, bundle
+
+
+def build_library(data_dir="data", out_path="built/navigator.html"):
+    """The library viewer: no guideline embedded; it reads <data_dir>/index.json and each
+    <slug>/guideline.json over http, relative to where the page is served."""
+    out = Path(out_path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    base = Path(os.path.relpath(Path(data_dir).resolve(), out.parent.resolve())).as_posix().rstrip("/") + "/"
+    out.write_text(_fill(_template(), library=json.dumps({"base": base})))
+    return out
 
 
 if __name__ == "__main__":
@@ -275,6 +312,9 @@ if __name__ == "__main__":
     if args and args[0] == "--sample":
         out_dir = Path(args[1]) if len(args) > 1 else Path("sample_out")
         path, b = build(HERE / "sample", out_dir, "Sample guideline (synthetic demo data)")
+        print(path, len(b["pages"]), "flow pages", sum(len(p["nodes"]) for p in b["pages"].values()), "boxes")
+    elif args and args[0] == "--library":
+        print(build_library(*(args[1:3] or [])))
     else:
-        path, b = build(args[0] if args else "data/prostate")
-    print(path, len(b["pages"]), "flow pages", sum(len(p["nodes"]) for p in b["pages"].values()), "boxes")
+        path, b = build(args[0] if args else "data/prostate", args[1] if len(args) > 1 else None)
+        print(path)

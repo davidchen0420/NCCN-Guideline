@@ -2,7 +2,7 @@ import { Fragment, useState } from "react";
 import { Check, CircleDashed, CircleHelp, GitFork, ArrowRight, LocateFixed, Minus, FileText, ChevronDown, ChevronRight } from "lucide-react";
 import { useApp } from "../store";
 import type { Pathway, PStep } from "../lib/pathways";
-import { likelihoodWord } from "../lib/pathways";
+import { likelihoodWord, startingFacts } from "../lib/pathways";
 import { conditionTree, type CondNode } from "../lib/humanize";
 import { derive } from "../lib/predicates";
 import { label } from "../lib/factMeta";
@@ -344,7 +344,7 @@ export function PathwaysPanel() {
           {s.start === "auto" && !entered ? (
             <>
               <h3>Enter a few details to see pathways</h3>
-              <p>Start with the essentials: T, N and M category, Grade Group, PSA and life expectancy. Or load an example patient.</p>
+              <p>{startingFacts(g, 6).length ? <>Start with what decides the first branches: {startingFacts(g, 6).map(label).join(", ")}.</> : "Enter what the record says."}{(g.bundle.examples ?? []).length > 0 && " Or load an example patient."}</p>
               <button type="button" className="btn primary" onClick={() => set({ rightTab: "patient" })}>Enter patient details <ArrowRight size={14} /></button>
             </>
           ) : (
