@@ -30,7 +30,7 @@
    {
     "id": "n3",
     "kind": "box",
-    "text": "Score 10 or more: Option A (see SAMPLE-2)",
+    "text": "Option A for scores of 10 or more: \u2022 Preferred: \u0017Treatment alpha (category 1) \u0017Treatment beta (category 1) \u2022 Other Recommended: \u0017Treatment gamma (category 2B) or Option A2 with delayed schedule: \u0017Treatment delta Schedule details (SAMPLE-A)",
     "bbox": [
      150,
      260,
@@ -47,14 +47,17 @@
    {
     "id": "n4",
     "kind": "box",
-    "text": "Score below 10: Option B",
+    "text": "Option B for scores below 10: \u2022 Review the score again (Principles of Scoring [SAMPLE-A]) \u2022 Discuss follow-up (see SAMPLE-2)",
     "bbox": [
      450,
      260,
      640,
      300
     ],
-    "links": [],
+    "links": [
+     "SAMPLE-A",
+     "SAMPLE-2"
+    ],
     "footnote_refs": [
      "b"
     ]

@@ -1,0 +1,36 @@
+[
+ {
+  "index": 1,
+  "code": "SAMPLE-A",
+  "kind": "principles",
+  "text": "PRINCIPLES OF SCORING\n\n\u2022 The score is a synthetic example used for demos and tests.\n\u2022 Scores can be computed in two ways:\nMethod one uses a table\nMethod two uses a formula\n\u2022 Repeat the score if inputs change. See the discussion (MS-1).",
+  "tables": [],
+  "footnotes": {}
+ },
+ {
+  "index": 2,
+  "code": "SAMPLE-A",
+  "kind": "principles",
+  "text": "More notes on scoring, continued on a second page.",
+  "tables": [],
+  "footnotes": {}
+ },
+ {
+  "index": 3,
+  "code": "MS-1",
+  "kind": "discussion",
+  "text": "DISCUSSION\n\nSynthetic discussion paragraph on the sample score threshold. It cites the principles page (SAMPLE-A).",
+  "tables": [],
+  "footnotes": {}
+ },
+ {
+  "index": 4,
+  "code": "ST-1",
+  "kind": "staging",
+  "text": "Staging\n\nTable 1. Synthetic stages",
+  "tables": [
+   "### Table 1. Synthetic stages\n| Stage | Meaning |\n| --- | --- |\n| S1 | Early |\n| S2 | Late |"
+  ],
+  "footnotes": {}
+ }
+]
