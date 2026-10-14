@@ -305,6 +305,36 @@ class Bundler:
                               "support": e.get("support")})
 
         node_ids = {n["id"] for n in nodes}
+        # Entry boxes without a condition that other pages link to inherit the condition of the
+        # linking boxes: the nearest box with a predicate on the path to each link.
+        parents = defaultdict(list)
+        for nid, kids in gl.children.items():
+            for k in kids:
+                parents[k].append(nid)
+
+        def nearest_condition(nid, seen):
+            if nid in seen:
+                return None
+            seen.add(nid)
+            if effective.get(nid) is not None:
+                return effective[nid]
+            ups = [nearest_condition(p, seen) for p in parents.get(nid, []) if gl.nodes[p]["page"] == gl.nodes[nid]["page"]]
+            ups = [u for u in ups if u is not None]
+            return ups[0] if len(ups) == 1 else ({"any": ups} if ups else None)
+
+        by_id = {n["id"]: n for n in nodes}
+        for rec in nodes:
+            if rec.get("role") != "entry" or rec.get("predicate") is not None:
+                continue
+            srcs = [p for p in parents.get(rec["id"], []) if gl.nodes[p]["page"] != gl.nodes[rec["id"]]["page"]]
+            if not srcs:
+                continue
+            conds = [c for c in (nearest_condition(s, set()) for s in srcs) if c is not None]
+            rec["reached_from"] = srcs
+            if conds:
+                rec["predicate"] = conds[0] if len(conds) == 1 else {"any": conds}
+                rec["predicate_status"] = "inherited_from_link"
+                rec.setdefault("decision_type", "condition")
         continuations = []
         for nid, kids in gl.children.items():
             for k in kids:
@@ -326,7 +356,8 @@ class Bundler:
             "predicate_status": dict(Counter(n["predicate_status"] for n in decision)),
             "decision_types": dict(Counter(n.get("decision_type") for n in decision)),
             "entries": len(entries),
-            "entries_with_predicate": sum(effective.get(r) is not None for r in entries),
+            "entries_with_predicate": sum(by_id.get(r, {}).get("predicate") is not None for r in entries),
+            "entries_reached_by_link": sum(bool(by_id.get(r, {}).get("reached_from")) for r in entries),
             "roles": dict(Counter(n["role"] for n in nodes)),
             "links": dict(Counter(l["type"] for n in nodes for l in n["links"])),
             "footnote_refs_by_resolution": dict(Counter(f["resolved_by"] for n in nodes for f in n["footnotes"])),
