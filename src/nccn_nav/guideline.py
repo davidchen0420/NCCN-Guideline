@@ -14,7 +14,11 @@ from pathlib import Path
 
 import pymupdf
 
-LABEL_RE = re.compile(r"[A-Z]{2,6}-[A-Z0-9]{1,4}")
+from .layout import norm_hyphens
+
+# Page codes: PROS-3, NSCL-12A, WM/LPL-1, ICI_DERM-3A, EXTSARC-1, BINV-H.
+PREFIX = r"[A-Z][A-Z0-9_/]{1,11}"
+LABEL_RE = re.compile(rf"{PREFIX}-[A-Z0-9]{{1,4}}")
 NON_FLOW = {"ST", "MS", "ABBR", "CAT", "UPDATES"}
 
 
@@ -25,10 +29,9 @@ def page_labels(doc):
         w, h = page.rect.width, page.rect.height
         for b in page.get_text("dict")["blocks"]:
             for line in b.get("lines", []):
-                for s in line["spans"]:
-                    t = s["text"].strip()
-                    if LABEL_RE.fullmatch(t) and s["bbox"][1] > h * 0.85 and s["bbox"][0] > w * 0.6:
-                        out[i] = t
+                t = norm_hyphens("".join(s["text"] for s in line["spans"])).strip()
+                if LABEL_RE.fullmatch(t) and line["bbox"][1] > h * 0.85 and line["bbox"][0] > w * 0.6:
+                    out[i] = t
     return out
 
 
@@ -49,11 +52,11 @@ class Spec:
     @cached_property
     def prefixes(self):
         """Algorithm prefixes: those with at least one numbered page."""
-        counts = Counter(c.split("-")[0] for c in self.ids.values() if re.fullmatch(r"[A-Z]+-\d+", c))
+        counts = Counter(c.split("-")[0] for c in self.ids.values() if re.fullmatch(rf"{PREFIX}-\d+", c))
         return sorted(p for p in counts if p not in NON_FLOW)
 
     def _alt(self):
-        return "|".join(self.prefixes)
+        return "|".join(map(re.escape, self.prefixes))
 
     @cached_property
     def flow_re(self):

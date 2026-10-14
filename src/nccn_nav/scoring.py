@@ -4,7 +4,7 @@ from difflib import SequenceMatcher
 
 
 def norm(text):
-    text = re.sub(r"\([A-Z]{2,6}-[A-Z0-9]+[^)]*\)", " ", text)  # page references
+    text = re.sub(r"\([A-Z][A-Z0-9_/]{1,11}-[A-Z0-9]+[^)]*\)", " ", text)  # page references
     return re.sub(r"[^a-z0-9≥≤<>]+", " ", text.lower()).strip()
 
 

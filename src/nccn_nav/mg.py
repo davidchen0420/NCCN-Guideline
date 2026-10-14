@@ -64,7 +64,7 @@ def prepare(root, trees=None, seed=0):
           f"test {sum(v == 'test' for v in split.values())}")
 
 
-REF_RE = re.compile(r"\b([A-Z]{2,6}-[0-9]+[A-Z]?)\b")
+REF_RE = re.compile(r"\b([A-Z][A-Z0-9_/]{1,11}-[0-9]+[A-Z]?)\b")
 
 
 def _sim(a, b):

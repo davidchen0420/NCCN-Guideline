@@ -10,6 +10,15 @@ import re
 FOOTER_LINE_RE = re.compile(
     r"^(Note: All recommendations|Version \d+\.\d{4}\b.*©|PLEASE NOTE that use of this NCCN|Printed by)")
 
+# Hyphen look-alikes some guidelines use in page codes ("THYR\u20111"); en/em dashes are kept
+# because they mark ranges in doses and values.
+_HYPHENS = str.maketrans({"\u2010": "-", "\u2011": "-", "\u2012": "-"})
+
+
+def norm_hyphens(text):
+    return text.translate(_HYPHENS)
+
+
 # Fallback proportions (a 612pt-high page has its header rule near 80pt, its footer near 561pt).
 TOP_FRACTION, BOTTOM_FRACTION = 0.139, 0.907
 PAD = 5  # gap between a rule/footer line and the content kept

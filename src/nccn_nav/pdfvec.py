@@ -9,10 +9,10 @@ import re
 
 import pymupdf
 
-from .layout import page_bands
+from .layout import norm_hyphens, page_bands
 
 # Page references printed in boxes; `configure(spec)` narrows them to the guideline's prefixes.
-LINK_RE = re.compile(r"\(([A-Z]{2,6}-[A-Z0-9]+(?: \d+ of \d+)?)\)")
+LINK_RE = re.compile(r"\(([A-Z][A-Z0-9_/]{1,11}-[A-Z0-9]+(?: \d+ of \d+)?)\)")
 
 
 def configure(spec):
@@ -36,9 +36,9 @@ def _text_lines(page, bands=None):
                 for r in re.split(r"[,\s]+", s["text"].strip())
                 if re.fullmatch(r"[a-z]{1,3}", r)
             ]
-            text = "".join(
+            text = norm_hyphens("".join(
                 s["text"] for s in line["spans"] if not (s in spans[1:] and s["size"] <= body * 0.85)
-            ).strip()
+            )).strip()
             x0, y0, x1, y1 = line["bbox"]
             if text and top < y0 and y1 < bottom:
                 # A leading superscript (smaller font) marks the start of a footnote.

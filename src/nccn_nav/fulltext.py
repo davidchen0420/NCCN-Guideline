@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 from .guideline import Spec
-from .layout import PAD, page_bands
+from .layout import PAD, norm_hyphens, page_bands
 from .pdfvec import _parse_footnotes, _text_lines, configure, extract_page_graph
 from .textlayer import _discussion_label, _is_reference_list
 
@@ -36,7 +36,7 @@ def reading_order_text(page):
     top, bottom = page_bands(page)
     # From the header rule (page titles can touch it) down to the footer's first line.
     keep = [b[4] for b in blocks if top - PAD - 3 < b[1] < bottom + PAD + 1 and not FOOTER_RE.search(b[4])]
-    return re.sub(r"[ \t]+", " ", "\n".join(keep)).strip()
+    return norm_hyphens(re.sub(r"[ \t]+", " ", "\n".join(keep)).strip())
 
 
 def build(private):
