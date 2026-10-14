@@ -17,6 +17,10 @@
     "late"
    ],
    "definition": "Synthetic stage"
+  },
+  "late_stage_stated": {
+   "type": "bool",
+   "definition": "Case explicitly states late stage (synthetic)."
   }
  },
  "derived": {

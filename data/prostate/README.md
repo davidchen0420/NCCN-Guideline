@@ -22,4 +22,5 @@ Page images and embedding caches are omitted.
 | `medguide/` | Our outputs on MedGUIDE prostate_14: A0 answers, extracted facts, label checks, mapping, dev/test split, scores. The MedGUIDE items themselves are not copied; see HF `MedGUIDE/MedGUIDE-MCQA-8K` | Old facts and predicates are superseded |
 | `redflags.json` | E1 pages flagged for the vision cross-check | Current |
 | `viz/` | HTML graph viewer | Built from the old merged graph |
-| `runs/`, `vignettes/`, `e4/`, `chunks.json`, `chunks_all.json` | Earlier smoke tests and older chunkings | Historical |
+| `vignettes/examples.json` | Four public vignettes encoded by hand as patient facts, for the navigator's example menu | Current |
+| `runs/`, `vignettes/` (other files), `e4/`, `chunks.json`, `chunks_all.json` | Earlier smoke tests and older chunkings | Historical |

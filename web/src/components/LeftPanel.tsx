@@ -125,7 +125,7 @@ export function SearchPanel() {
       <div className="chips">
         {(Object.keys(KIND_LABEL) as Kind[]).map((k) => <button key={k} className={`chip kind${s.kinds.includes(k) ? " on" : ""}`} aria-pressed={s.kinds.includes(k)} onClick={() => set({ kinds: toggle(s.kinds, k) })}>{KIND_LABEL[k]}</button>)}
       </div>
-      <label className="switch"><input type="checkbox" checked={s.searchNon} onChange={(e) => set({ searchNon: e.target.checked })} /><i /><span>Show results for non-active paths</span></label>
+      <label className="switch"><input type="checkbox" checked={s.searchNon} onChange={(e) => set({ searchNon: e.target.checked })} /><i /><span>Include results on other paths</span></label>
       {(q.trim() || s.tags.length > 0) && (
         <div className="counts" data-testid="counts"><span>All <b>{pool.length}</b></span>
           {Object.entries(counts).map(([k, n]) => <span key={k}>{KIND_LABEL[k as Kind]} <b>{n}</b></span>)}</div>

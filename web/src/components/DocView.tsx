@@ -3,6 +3,7 @@ import { useApp } from "../store";
 import { formatDoc, parseTable } from "../lib/docFormat";
 import { Linked } from "./Rich";
 import { terms } from "../lib/search";
+import { SrcChip } from "../source";
 
 function Hl({ text, q }: { text: string; q: string }) {
   const ts = terms(q).map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
@@ -36,7 +37,10 @@ export function DocView({ code, sub }: { code: string; sub?: number }) {
         const blocks = formatDoc(pg.text);
         return (
           <section key={i} id={`sec-${i + 1}`} className="doc-sec">
-            {doc.pages.length > 1 && <div className="sec-label">Page {i + 1} of {doc.pages.length}</div>}
+            <div className="sec-label">
+              {doc.pages.length > 1 && <span>Page {i + 1} of {doc.pages.length}</span>}
+              {pg.pdf !== undefined && pg.pdf !== null && <SrcChip t={{ page: pg.pdf, label: doc.pages.length > 1 ? `${code} ${i + 1} of ${doc.pages.length}` : code, excerpt: pg.text.slice(0, 900) }} text={`Original page · p.${pg.pdf + 1}`} />}
+            </div>
             {blocks.map((b, j) => {
               if (i === 0 && j === 0 && b.t === "h") return null;
               switch (b.t) {

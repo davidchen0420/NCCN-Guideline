@@ -32,5 +32,21 @@
    "### Table 1. Synthetic stages\n| Stage | Meaning |\n| --- | --- |\n| S1 | Early |\n| S2 | Late |"
   ],
   "footnotes": {}
+ },
+ {
+  "index": 5,
+  "code": "SAMPLE-1",
+  "kind": "algorithm",
+  "text": "SAMPLE ALGORITHM: EVALUATION\nSample patient presents for evaluation",
+  "tables": [],
+  "footnotes": {}
+ },
+ {
+  "index": 6,
+  "code": "SAMPLE-2",
+  "kind": "algorithm",
+  "text": "SAMPLE ALGORITHM: OPTION A\nOption A pathway starts",
+  "tables": [],
+  "footnotes": {}
  }
 ]

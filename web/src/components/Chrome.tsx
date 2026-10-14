@@ -1,5 +1,6 @@
 import { ArrowLeft, ArrowRight, BookOpen, CircleHelp, History, LayoutGrid, RotateCcw, Search, ExternalLink } from "lucide-react";
 import { useApp } from "../store";
+import { PdfButton } from "../source";
 
 export function Rail() {
   const { s, set, go } = useApp();
@@ -32,13 +33,14 @@ export function TitleBar() {
       <h1 className="tb-title" data-testid="title">{code && <code>{code}</code>}<span>{title}</span></h1>
       {flow && (
         <>
-          <label className="switch sm"><input type="checkbox" checked={s.showNon} onChange={(e) => set({ showNon: e.target.checked })} data-testid="non-active" /><i /><span>Non-active paths</span></label>
+          <label className="switch sm" title="Other paths: show the paths that do not go through your selected answers"><input type="checkbox" aria-label="Other paths" checked={s.showNon} onChange={(e) => set({ showNon: e.target.checked })} data-testid="non-active" /><i /><span>Other paths</span></label>
           <button className="ib" aria-label="Clear selected answers" title="Clear selected answers" disabled={!s.answers.length} onClick={() => dispatch({ type: "clear" })} data-testid="clear">
             <RotateCcw size={17} />{s.answers.length > 0 && <b className="count">{s.answers.length}</b>}
           </button>
-          <label className="switch sm conf"><input type="checkbox" checked={s.conf} onChange={(e) => set({ conf: e.target.checked })} /><i /><span>Arrow confidence</span></label>
+          <label className="switch sm conf" title="Arrow certainty: mark arrows found by only one of the two extraction methods"><input type="checkbox" aria-label="Arrow certainty" checked={s.conf} onChange={(e) => set({ conf: e.target.checked })} /><i /><span>Arrow certainty</span></label>
         </>
       )}
+      <PdfButton />
       <a className="ib ext" href="https://www.nccn.org/guidelines/category_1" target="_blank" rel="noopener noreferrer" title="Official NCCN guidelines" aria-label="Official NCCN guidelines"><ExternalLink size={16} /></a>
     </div>
   );
@@ -53,14 +55,18 @@ export function Help() {
       <div className="modal-box">
         <h2>How to use this navigator</h2>
         <ol>
+          <li><b>Patient</b>: enter what the record says (or load an example). Leave anything unknown blank.</li>
+          <li><b>Pathways</b>: every route through the algorithm that your entries leave open, ranked by how well it fits. Each shows how many of its criteria are met and a confidence score; pick one to see every step and light it up on the page.</li>
+          <li><b>Sources</b>: hover a step, card or footnote to preview the guideline page it came from; click to open the page in a window you can move, zoom and pop out. Connect the PDF once (it stays in this browser) to see original pages.</li>
           <li><b>Contents</b>: pick a page; blue is the algorithm, teal the principles, amber the discussion. The grid icon shows the whole guideline.</li>
-          <li><b>Select answers</b>: click a card. Its pathway lights up and other paths hide until you switch on <i>Non-active paths</i>. The reset arrow clears every answer.</li>
+          <li><b>Select answers</b>: click a card. Its pathway lights up and other paths hide until you switch on <i>Other paths</i>. The reset arrow clears every answer.</li>
           <li><b>Links</b>: page references (blue chips and underlined titles) open that page; Back and Forward retrace your steps.</li>
           <li><b>Footnotes</b>: tap a letter on a card, then use the arrows to step through every place it applies.</li>
           <li><b>Search</b>: results are listed beside the page. Quotes find an exact phrase, and filters gray out cards that do not apply.</li>
-          <li><b>Patient facts</b>: enter what you know, then walk the algorithm. Branches your facts decide are followed for you.</li>
+          <li><b>Walk</b>: step through the algorithm yourself from any card. Branches your entries decide are followed for you.</li>
         </ol>
-        <details><summary>Are the branch conditions clinician-reviewed?</summary><p>No. They are machine-drafted and labelled as such. Always check the source guideline.</p></details>
+        <details><summary>Are the branch conditions clinician-reviewed?</summary><p>No. A language model drafted them and a second pass reviewed them; conditions that failed review are dropped. Always check the source page.</p></details>
+        <details><summary>What do likelihood and confidence mean?</summary><p>Likelihood shares 100% across the routes your entries leave open, split at each branch by which arms fit. Confidence multiplies how many of a route's criteria are met by how reliably its arrows and conditions were extracted. Neither is a clinical probability.</p></details>
         <details><summary>Is this the official NCCN tool?</summary><p>No. It is an independent research prototype built from public descriptions of the NCCN Guidelines Navigator. Use the official guidelines for clinical decisions.</p></details>
         <div className="modal-actions"><button className="primary" onClick={close}>Got it</button></div>
       </div>

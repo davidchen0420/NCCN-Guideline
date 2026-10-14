@@ -3,6 +3,7 @@ import { ChevronDown, ChevronLeft, ChevronRight, Asterisk } from "lucide-react";
 import { useApp } from "../store";
 import { Linked } from "./Rich";
 import type { DockTab } from "../store";
+import { SrcChip } from "../source";
 
 const EVID: [string, string][] = [
   ["Category 1", "Based on high-level evidence, with uniform NCCN consensus that the intervention is appropriate."],
@@ -23,9 +24,9 @@ export function Dock() {
   const page = s.loc.kind === "flow" ? s.loc.page : null;
   const tabs: [DockTab, string][] = [["fn", "Footnotes"], ["E", "Evidence"], ["P", "Preference"]];
 
-  const notes = new Map<string, { text: string; nodes: string[] }>();
-  if (page) for (const n of g.bundle.pages[page].nodes) for (const [l, t] of n.footnotes) {
-    const e = notes.get(l) ?? { text: t, nodes: [] };
+  const notes = new Map<string, { text: string; nodes: string[]; pdf?: number }>();
+  if (page) for (const n of g.bundle.pages[page].nodes) for (const [l, t, pdf] of n.footnotes) {
+    const e = notes.get(l) ?? { text: t, nodes: [], pdf: pdf ?? undefined };
     e.nodes.push(`${page}:${n.id}`);
     notes.set(l, e);
   }
@@ -72,7 +73,7 @@ export function Dock() {
                         <button aria-label="Next instance" onClick={(e) => { e.stopPropagation(); step(1); }}><ChevronRight size={14} /></button>
                       </div>
                     )}
-                    <p><Linked text={v.text} /></p>
+                    <p><Linked text={v.text} />{v.pdf !== undefined && <> <SrcChip t={{ page: v.pdf, label: `Footnote ${l}`, excerpt: v.text }} text={`p.${v.pdf + 1}`} /></>}</p>
                   </div>
                 </div>
               );

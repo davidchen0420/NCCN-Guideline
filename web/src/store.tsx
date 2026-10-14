@@ -3,13 +3,14 @@ import type { Bundle, Facts } from "./types";
 import { buildGraph, resolveRef, type Graph } from "./lib/graph";
 import { choose as walkChoose, startWalk, autoStep, type Walk } from "./lib/walk";
 import type { Kind } from "./lib/search";
+import { rankPathways, type Pathway, type Ranking } from "./lib/pathways";
 
 export type Loc =
   | { kind: "flow"; page: string; node?: string }
   | { kind: "doc"; code: string; sub?: number }
   | { kind: "map" };
 export type LeftView = "toc" | "search" | "hist" | null;
-export type RightTab = "details" | "walk" | "facts";
+export type RightTab = "patient" | "paths" | "details" | "walk";
 export type DockTab = "fn" | "E" | "P" | null;
 
 export interface State {
@@ -19,6 +20,7 @@ export interface State {
   query: string; kinds: Kind[]; tags: string[]; searchNon: boolean;
   dock: DockTab; fn: string | null; fnIdx: number;
   walk: Walk | null; facts: Facts; help: boolean;
+  age: number | null; start: string; pathSel: string | null;
 }
 
 type Action =
@@ -63,6 +65,10 @@ export interface Ctx {
   chooseStep: (child: string) => void;
   setFacts: (f: Facts) => void;
   isPhone: boolean;
+  ranking: Ranking;
+  selected: Pathway | null;
+  showPath: (id: string | null) => void;
+  focusFact: (name: string) => void;
 }
 
 const AppCtx = createContext<Ctx | null>(null);
@@ -95,9 +101,10 @@ export function Provider({ bundle, children }: { bundle: Bundle; children: React
     const loc = fromHash ?? ({ kind: "flow", page: g.flowPages[0] } as Loc);
     return {
       loc, hist: [loc], hpos: 0, answers: [], showNon: false, conf: false,
-      left: window.innerWidth > 820 ? "toc" : null, rightTab: "details", sheet: false,
+      left: window.innerWidth > 1180 ? "toc" : null, sheet: false,
       query: "", kinds: [], tags: [], searchNon: false,
       dock: null, fn: null, fnIdx: 0, walk: null, facts: {}, help: !saved,
+      rightTab: "patient", age: null, start: "auto", pathSel: null,
     };
   }, [g]);
   const [s, dispatch] = useReducer(reducer, init);
@@ -145,6 +152,24 @@ export function Provider({ bundle, children }: { bundle: Bundle; children: React
     dispatch({ type: "set", patch: { facts, walk: s.walk ? autoStep(g, { path: s.walk.path.slice(0, 1), at: s.walk.path[0].node }, facts) : null } });
   }, [g, s.walk]);
 
-  const value: Ctx = { s, g, bundle, dispatch, go, goRef, set, openFootnote, startWalkAt, chooseStep, setFacts, isPhone };
+  const ranking = useMemo(() => rankPathways(g, s.facts, s.start), [g, s.facts, s.start]);
+  const selected = useMemo(() => {
+    if (!ranking.paths.length) return null;
+    return ranking.paths.find((p) => p.id === s.pathSel) ?? ranking.paths[0];
+  }, [ranking, s.pathSel]);
+  const showPath = useCallback((id: string | null) => dispatch({ type: "set", patch: { pathSel: id } }), []);
+  const focusFact = useCallback((name: string) => {
+    dispatch({ type: "set", patch: { rightTab: "patient", sheet: true } });
+    window.setTimeout(() => {
+      const el = document.getElementById(`fact-${name}`);
+      const row = el?.closest(".pf");
+      el?.closest("details")?.setAttribute("open", "");
+      row?.scrollIntoView({ block: "center", behavior: "smooth" });
+      row?.classList.remove("flash"); void (row as HTMLElement | undefined)?.offsetWidth; row?.classList.add("flash");
+      (el as HTMLElement | null)?.focus({ preventScroll: true });
+    }, 60);
+  }, []);
+
+  const value: Ctx = { s, g, bundle, dispatch, go, goRef, set, openFootnote, startWalkAt, chooseStep, setFacts, isPhone, ranking, selected, showPath, focusFact };
   return <AppCtx.Provider value={value}>{children}</AppCtx.Provider>;
 }

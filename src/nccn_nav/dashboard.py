@@ -9,6 +9,7 @@ belongs in the gitignored private directory. `--sample` builds from a synthetic 
   python -m nccn_nav.dashboard --sample    ->  <tmp or ./sample_out>/dashboard.html
 """
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -32,31 +33,40 @@ def _load(private, *names):
     return None
 
 
-def footnote_text(store, page, letter):
-    """Same lookup as pdfvec.footnote_text (letters repeat across pages)."""
+def footnote_source(store, page, letter):
+    """(text, page code that prints it). Same lookup as pdfvec.footnote_text (letters repeat across pages)."""
     for code in (page, page + "A"):
         if letter in store.get(code, {}):
-            return store[code][letter]
+            return store[code][letter], code
     prefix = page.split("-")[0] + "-"
     for code, notes in store.items():
         if code.startswith(prefix) and letter in notes:
-            return notes[letter]
-    return None
+            return notes[letter], code
+    return None, None
+
+
+def footnote_text(store, page, letter):
+    return footnote_source(store, page, letter)[0]
 
 
 def load_predicates(private):
-    """Current predicates: position-id keys from the LLM drafting rounds (null = none).
-    Stale entries (e.g. old sequential ids in predicates.json) are dropped by the caller
-    because they match no box in the current graph."""
-    preds, draft = {}, False
-    path = Path(private) / "predicates.json"
+    """Branch conditions keyed by position-based box id, and their review status.
+
+    predicates.json is the current, reviewed set: a null value means review rejected the
+    draft, so the box has no condition. The raw LLM drafts in llm/pred_out_*.json are used
+    only when no predicates.json exists (they still contain the rejected conditions).
+    Returns (preds, review) where review maps box id -> "reviewed" | "draft"."""
+    private = Path(private)
+    path = private / "predicates.json"
     if path.exists():
-        preds.update({k: v for k, v in json.loads(path.read_text()).items() if v})
-    for f in sorted((Path(private) / "llm").glob("pred_out_*.json")):
-        out = json.loads(f.read_text())
-        preds.update({k: v for k, v in out.items() if v})
-        draft = True
-    return preds, draft
+        preds = {k: v for k, v in json.loads(path.read_text()).items() if v}
+    else:
+        preds = {}
+        for f in sorted((private / "llm").glob("pred_out_*.json")):
+            preds.update({k: v for k, v in json.loads(f.read_text()).items() if v})
+    status = _load(private, "predicates_status.json") or {}
+    reviewed = set(status.get("reviewed_correct", []))
+    return preds, {k: "reviewed" if k in reviewed else "draft" for k in preds}
 
 
 DOC_KINDS = {"principles": "principles", "staging": "staging", "discussion": "discussion", "other": "reference"}
@@ -82,7 +92,8 @@ def build_docs(private):
         if not kind or not code or not str(pg.get("text", "")).strip():
             continue
         d = docs.setdefault(code, {"code": code, "kind": kind, "title": "", "pages": []})
-        d["pages"].append({"text": clean(pg["text"]), "tables": [clean(t) for t in (pg.get("tables") or [])]})
+        d["pages"].append({"text": clean(pg["text"]), "tables": [clean(t) for t in (pg.get("tables") or [])],
+                           "pdf": pg.get("index")})
     for code, d in docs.items():
         d["title"] = doc_title(d["kind"], code, d["pages"][0]["text"])
     return docs
@@ -125,7 +136,7 @@ def smart_title(text):
         core = re.sub(r"[^A-Za-z0-9]", "", w)
         if core.upper() in ACRONYMS or re.search(r"\d", core) and core.isupper():
             out.append(w.upper() if core.upper() in ACRONYMS or re.search(r"\d", core) else w)
-        elif i and core.lower() in SMALL_WORDS:
+        elif i and core.lower() in SMALL_WORDS and not (core == "A" and i == len(words) - 1):  # "Option A"
             out.append(w.lower())
         else:
             out.append(re.sub(r"[A-Za-z]+", lambda m: m.group(0)[:1].upper() + m.group(0)[1:].lower(), w))
@@ -153,10 +164,15 @@ def build_bundle(private):
     if graphs is None:
         raise FileNotFoundError(f"no merged_graphs.json or e1_graphs.json in {private}")
     notes = _load(private, "footnotes.json") or {}
-    preds, preds_draft = load_predicates(private)
+    preds, review = load_predicates(private)
     valid = {f"{pg}:{n['id']}" for pg, g in graphs.items() for n in g["nodes"]}
     preds = {k: v for k, v in preds.items() if k in valid}
-    preds_draft = preds_draft and bool(preds)
+    preds_draft = any(review.get(k) != "reviewed" for k in preds)
+    store = _load(private, "pages.json") or []
+    first_index = {}  # page code -> PDF page index (0-based) of its first page
+    for pg in store:
+        if "index" in pg:
+            first_index.setdefault(pg.get("code"), pg["index"])
     schema = _load(private, "fact_schema.json") or {"variables": {}, "derived": {}}
     docs = build_docs(private)
     titles = page_titles(private)
@@ -170,10 +186,18 @@ def build_bundle(private):
         for n in g["nodes"]:
             nid = f"{page}:{n['id']}"
             node_links = [re.sub(r"\s.*", "", link) for link in n.get("links", [])]
-            fns = [[r, clean(footnote_text(notes, page, r) or "")] for r in n.get("footnote_refs", [])]
+            # A table cell that is only a page code ("PROS-3") points at that page.
+            only = re.fullmatch(r"\(?\s*([A-Z]+-\d+)\s*\)?", n["text"].strip())
+            if not node_links and only and only.group(1) != page:
+                node_links = [only.group(1)]
+            fns = []
+            for r in n.get("footnote_refs", []):
+                text, src = footnote_source(notes, page, r)
+                if text:  # [letter, text, PDF page index of the page that prints it]
+                    fns.append([r, clean(text), first_index.get(src, g.get("page_index"))])
             nodes.append({"id": n["id"], "kind": n.get("kind", "box"), "text": clean(n["text"], True), "bbox": n["bbox"],
-                          "pred": preds.get(nid), "links": node_links, "role": n.get("role"),
-                          "footnotes": [f for f in fns if f[1]]})
+                          "pred": preds.get(nid), "review": review.get(nid) if nid in preds else None,
+                          "links": node_links, "role": n.get("role"), "footnotes": fns})
             if n.get("kind", "box") == "box":
                 children[nid] = []
                 for link in node_links:
@@ -191,7 +215,8 @@ def build_bundle(private):
             children[f"{page}:{e['src']}"].append(f"{page}:{e['dst']}")
         roots[page] = [f"{page}:{n['id']}" for n in nodes
                        if n["kind"] == "box" and n["id"] not in has_parent and n["id"] in has_child]
-        pages[page] = {"nodes": nodes, "edges": edges, "counts": counts, "title": titles.get(page, "")}
+        pages[page] = {"nodes": nodes, "edges": edges, "counts": counts, "title": titles.get(page, ""),
+                       "pdf": g.get("page_index", first_index.get(page))}
 
     # A leaf that points at another flow page continues on that page's entry boxes (as in navigator.py).
     for page, pg in pages.items():
@@ -204,8 +229,22 @@ def build_bundle(private):
 
     return {"pages": pages, "links": sorted(links), "children": children, "roots": roots,
             "docs": docs, "schema": schema, "preds_draft": preds_draft,
-            "w": W, "top": TOP, "bottom": BOTTOM,
-            "title": _load(private, "title.json") or "Guideline navigator"}
+            "w": W, "h": H, "top": TOP, "bottom": BOTTOM,
+            "title": _load(private, "title.json") or front_title(store) or "Guideline navigator",
+            "pdf_pages": len(store), "pdf_candidates": [],
+            "examples": _load(private, "vignettes/examples.json") or []}
+
+
+def front_title(store):
+    """'Prostate Cancer · v6.2026' from the cover page text."""
+    if not store:
+        return None
+    lines = [ln.strip() for ln in str(store[0].get("text", "")).splitlines() if ln.strip()]
+    name = next((ln for ln in lines if "NCCN" not in ln and not ln.lower().startswith("version")), None)
+    version = next((m.group(1) for ln in lines for m in [re.search(r"Version (\S+)", ln)] if m), None)
+    if not name:
+        return None
+    return f"{name} · v{version}" if version else name
 
 
 def build(private, out_dir=None, title=None):
@@ -214,6 +253,11 @@ def build(private, out_dir=None, title=None):
         bundle["title"] = title
     out_dir = Path(out_dir) if out_dir else Path("private") / "viz"
     out_dir.mkdir(parents=True, exist_ok=True)
+    # Where the viewer looks for the source PDF when served over http (never embedded: licensed).
+    slug = Path(private).resolve().name
+    spots = [Path(private) / "pdf" / f"{slug}.pdf", Path("private") / slug / "pdf" / f"{slug}.pdf"]
+    bundle["pdf_candidates"] = list(dict.fromkeys(
+        Path(os.path.relpath(p.resolve(), out_dir.resolve())).as_posix() for p in spots))
     template = (HERE / "dashboard.html").read_text()
     doc = template.replace("/*BUNDLE*/null", json.dumps(bundle).replace("</", "<\\/"))
     (out_dir / "bundle.json").write_text(json.dumps(bundle))

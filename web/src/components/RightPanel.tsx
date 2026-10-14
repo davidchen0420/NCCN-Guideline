@@ -2,8 +2,11 @@ import { useMemo, useState } from "react";
 import { ArrowRight, Footprints, Undo2, RotateCcw, Copy } from "lucide-react";
 import { useApp } from "../store";
 import { Blocks, Linked } from "./Rich";
-import { humanizePred, factLabel } from "../lib/humanize";
+import { conditionTree } from "../lib/humanize";
 import { derive } from "../lib/predicates";
+import { PatientPanel } from "./PatientPanel";
+import { PathwaysPanel, boxSrc } from "./PathwaysPanel";
+import { SrcChip } from "../source";
 import { verdicts } from "../lib/walk";
 import { resolveRef } from "../lib/graph";
 import { splitParagraphs } from "../lib/docFormat";
@@ -13,17 +16,30 @@ const plainOf = (g: { parsed: Map<string, { plain: string }> }, id: string) => g
 
 export function RightPanel() {
   const { s, set } = useApp();
-  const tabs: ["details" | "walk" | "facts", string][] = [["details", "Details"], ["walk", "Walk"], ["facts", "Patient facts"]];
+  const { ranking } = useApp();
+  const tabs: ["patient" | "paths" | "details" | "walk", string][] = [["patient", "Patient"], ["paths", "Pathways"], ["details", "Details"], ["walk", "Walk"]];
+  const keys = tabs.map((t) => t[0]);
   return (
     <div className="rp">
-      <div className="rp-tabs" role="tablist">
-        {tabs.map(([k, l]) => <button key={k} role="tab" aria-selected={s.rightTab === k} className={s.rightTab === k ? "on" : ""} onClick={() => set({ rightTab: k })}>{l}</button>)}
+      <div className="rp-tabs" role="tablist" aria-label="Panel"
+        onKeyDown={(e) => {
+          if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+          const i = keys.indexOf(s.rightTab), n = keys[(i + (e.key === "ArrowRight" ? 1 : -1) + keys.length) % keys.length];
+          set({ rightTab: n }); document.getElementById(`tab-${n}`)?.focus();
+        }}>
+        {tabs.map(([k, l]) => (
+          <button key={k} id={`tab-${k}`} role="tab" aria-selected={s.rightTab === k} aria-controls="rp-panel" tabIndex={s.rightTab === k ? 0 : -1}
+            className={s.rightTab === k ? "on" : ""} onClick={() => set({ rightTab: k })}>
+            {l}{k === "paths" && ranking.paths.length > 0 && <span className="tab-n">{ranking.paths.length}</span>}
+          </button>
+        ))}
         <button className="sheet-close" aria-label="Close panel" onClick={() => set({ sheet: false })}>×</button>
       </div>
-      <div className="rp-body">
+      <div className="rp-body" id="rp-panel" role="tabpanel" aria-labelledby={`tab-${s.rightTab}`}>
+        {s.rightTab === "patient" && <PatientPanel />}
+        {s.rightTab === "paths" && <PathwaysPanel />}
         {s.rightTab === "details" && <Details />}
         {s.rightTab === "walk" && <WalkPanel />}
-        {s.rightTab === "facts" && <FactsPanel />}
       </div>
     </div>
   );
@@ -46,6 +62,7 @@ function RefCard({ code }: { code: string }) {
 
 function Details() {
   const { s, g, go, startWalkAt } = useApp();
+  const facts = useMemo(() => derive(s.facts, g.bundle.schema), [s.facts, g]);
   const loc = s.loc;
   const hits = loc.kind === "doc" ? g.refIndex.get(loc.code) ?? [] : [];
   const nodeId = loc.kind === "flow" ? loc.node : undefined;
@@ -83,7 +100,7 @@ function Details() {
       <div className="det">
         <h3>{g.bundle.pages[loc.page].title || loc.page}</h3>
         <p className="note">{loc.page} · {g.bundle.pages[loc.page].nodes.filter((x) => x.kind === "box").length} boxes</p>
-        <p>Click a card to select it as an answer. Its pathway lights up, and the other paths hide until you switch on “Non-active paths”.</p>
+        <p>Click a card to select it as an answer. Its pathway lights up, and the other paths hide until you switch on “Other paths”.</p>
         {entries.length > 0 && <button className="primary" onClick={() => startWalkAt(loc.page, null)}><Footprints size={15} /> Start guided walk</button>}
       </div>
     );
@@ -92,18 +109,20 @@ function Details() {
   const nav = (id: string) => go({ kind: "flow", page: id.split(":")[0], node: id });
   return (
     <div className="det">
-      <div className="det-head"><code>{n.full}</code>{s.answers.includes(n.full) && <span className="pill">Selected answer</span>}</div>
+      <div className="det-head"><code>{n.page}</code>{s.answers.includes(n.full) && <span className="pill">Selected answer</span>}<span className="grow" />{boxSrc(g, n.full) && <SrcChip t={boxSrc(g, n.full)!} text="View on the PDF page" />}</div>
       <div className="det-card"><Blocks blocks={parsed.blocks} /></div>
       {n.pred && (
         <>
-          <h4>Branch condition{g.bundle.preds_draft && <span className="draft">machine-drafted, not clinician-reviewed</span>}</h4>
-          <p className="cond">{humanizePred(n.pred, g.bundle.schema)}</p>
+          <h4>Branch condition<span className="draft">{n.review === "reviewed" ? "machine-drafted, model-reviewed" : "machine-drafted, not reviewed"} · not clinician-reviewed</span></h4>
+          <div className="cond-box"><CondView id={n.full} facts={facts} /></div>
         </>
       )}
       {n.footnotes.length > 0 && (
         <>
           <h4>Footnotes</h4>
-          {n.footnotes.map(([l, t]) => <div key={l} className="fn-line"><span className="fb big">{l}</span><p><Linked text={t} /></p></div>)}
+          {n.footnotes.map(([l, t, pg]) => (
+            <div key={l} className="fn-line"><span className="fb big">{l}</span><p><Linked text={t} />{pg !== undefined && pg !== null && <> <SrcChip t={{ page: pg, label: `Footnote ${l}`, excerpt: t }} text={`p.${pg + 1}`} /></>}</p></div>
+          ))}
         </>
       )}
       {refs.length > 0 && <><h4>Related pages</h4><div className="refs">{refs.slice(0, 8).map((c) => <RefCard key={c} code={c} />)}</div></>}
@@ -167,61 +186,16 @@ function WalkPanel() {
   );
 }
 
-const GROUPS: [string, RegExp][] = [
-  ["Patient", /life_expectancy|age|ecog|comorb|symptom|performance|health/],
-  ["Labs", /psa|testosterone|alk|ldh|hemoglobin|creatinine/],
-  ["Staging and pathology", /category|stage|grade|cores|histology|gleason|volume|extent|risk|gg_/],
-  ["Metastases and imaging", /metast|visceral|bone|nodal|imaging|pet|scan/],
-  ["Biomarkers and genetics", /brca|hrr|msi|mmr|tmb|pten|germline|somatic|mutation|biomarker/],
-  ["Treatment and history", /treatment|therapy|adt|arpi|rt_|radiation|prostatectomy|prior|progress|recurr|castrat|response|docetaxel/],
-];
-
-function FactsPanel() {
-  const { s, g, setFacts, startWalkAt } = useApp();
-  const [q, setQ] = useState("");
-  const [page, setPage] = useState(g.flowPages[0]);
-  const vars = g.bundle.schema.variables;
-  const names = Object.keys(vars).filter((n) => !q || n.replace(/_/g, " ").includes(q.toLowerCase()));
-  const grouped = useMemo(() => {
-    const m = new Map<string, string[]>();
-    names.forEach((n) => { const gk = GROUPS.find(([, r]) => r.test(n))?.[0] ?? "Other"; m.set(gk, [...(m.get(gk) ?? []), n]); });
-    return [...m.entries()];
-  }, [names]);
-  const derived = useMemo(() => { const d = derive(s.facts, g.bundle.schema); return Object.entries(d).filter(([k]) => !(k in s.facts) || s.facts[k] === undefined); }, [s.facts, g]);
-  const set1 = (name: string, v: unknown) => { const f = { ...s.facts }; if (v === "" || v === null || Number.isNaN(v)) delete f[name]; else f[name] = v; setFacts(f); };
-  const filled = Object.keys(s.facts).length;
-  if (!Object.keys(vars).length) return <p className="note">This guideline has no fact schema, so facts cannot decide branches.</p>;
-  return (
-    <div className="det facts">
-      <p className="note">Enter what you know and leave the rest blank. Only boxes with an encoded condition can be decided automatically. {g.bundle.preds_draft && "The conditions are machine-drafted and not clinician-reviewed."}</p>
-      <input type="search" className="mini" placeholder="Find a fact…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Find a fact" />
-      {grouped.map(([title, list]) => (
-        <details key={title} open={!!q || title === grouped[0][0]}>
-          <summary>{title}<em>{list.filter((n) => n in s.facts).length}/{list.length}</em></summary>
-          {list.map((n) => {
-            const v = vars[n];
-            const cur = s.facts[n];
-            return (
-              <label className="frow" key={n} title={v.definition}>
-                <span>{factLabel(n)}{v.unit && v.unit !== "count" ? <small> {v.unit}</small> : null}</span>
-                {v.type === "bool" ? (
-                  <select value={cur === undefined ? "" : String(cur)} onChange={(e) => set1(n, e.target.value === "" ? "" : e.target.value === "true")}><option value="">unknown</option><option value="true">yes</option><option value="false">no</option></select>
-                ) : v.type === "enum" ? (
-                  <select value={(cur as string) ?? ""} onChange={(e) => set1(n, e.target.value)}><option value="">unknown</option>{(v.values ?? []).map((x) => <option key={x}>{x}</option>)}</select>
-                ) : (
-                  <input type="number" step="any" value={cur === undefined ? "" : String(cur)} onChange={(e) => set1(n, e.target.value === "" ? "" : Number(e.target.value))} />
-                )}
-              </label>
-            );
-          })}
-        </details>
-      ))}
-      {derived.length > 0 && <><h4>Worked out from your facts</h4><div className="chips">{derived.map(([k, v]) => <span className="chip static" key={k}>{factLabel(k)}: <b>{String(v)}</b></span>)}</div></>}
-      <div className="run">
-        <select value={page} onChange={(e) => setPage(e.target.value)} aria-label="Start page">{g.flowPages.map((p) => <option key={p} value={p}>{p} · {clip(g.bundle.pages[p].title ?? "", 36)}</option>)}</select>
-        <button className="primary" onClick={() => startWalkAt(page, null)}><Footprints size={15} /> Walk with these facts</button>
-        <button onClick={() => setFacts({})} disabled={!filled}>Clear</button>
-      </div>
-    </div>
-  );
+function CondView({ id, facts }: { id: string; facts: Record<string, unknown> }) {
+  const { g } = useApp();
+  const c = conditionTree(g.preds[id], facts, g.bundle.schema);
+  const render = (x: ReturnType<typeof conditionTree>, top: boolean): React.ReactNode => {
+    if (x.t === "leaf") {
+      const cls = x.verdict === true ? "ok" : x.verdict === false ? "no" : "q";
+      return <span className={`cl ${cls}`}>{x.verdict === true ? "✓" : x.verdict === false ? "✕" : "?"} {x.text}{x.value !== null && <em> · patient: {x.value}</em>}</span>;
+    }
+    if (x.word === "not") return <span className="cl">not ( {render(x.items[0], false)} )</span>;
+    return <span className={`cg${top ? " top" : ""}`}>{x.items.map((y, i) => <span key={i}>{i > 0 && <span className="cw">{x.word === "all" ? "and" : "or"}</span>}{render(y, false)}</span>)}</span>;
+  };
+  return <>{render(c, true)}</>;
 }

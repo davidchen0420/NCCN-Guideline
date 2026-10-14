@@ -39,7 +39,7 @@ await step("selecting an answer highlights its path and hides the rest", async (
   await page.locator('[data-id="SAMPLE-1:n3"]').click();
   assert.equal(await page.locator(".card.answer").count(), 1);
   assert.ok(await page.locator(".card.hide").count() >= 1);
-  await page.getByText("Non-active paths").click();
+  await page.locator("label:has([data-testid=non-active])").click();
   assert.equal(await page.locator(".card.hide").count(), 0);
   assert.ok(await page.locator(".card.dim").count() >= 1);
   await page.getByTestId("clear").click();
@@ -76,14 +76,31 @@ await step("whole-guideline overview links to pages", async () => {
   await page.locator(".tile-main").first().click();
   assert.match(await page.getByTestId("title").innerText(), /SAMPLE-1/);
 });
-await step("patient facts drive a walk across pages", async () => {
-  await page.getByRole("tab", { name: "Patient facts" }).click();
-  for (const d of await page.locator(".facts details").all()) await d.evaluate((e) => (e.open = true));
-  await page.locator(".frow", { hasText: "score" }).locator("input").fill("12");
-  await page.locator(".frow", { hasText: "age" }).locator("input").fill("70");
-  await page.getByRole("button", { name: "Walk with these facts" }).click();
-  assert.equal(await page.locator(".steps li").count(), 6);
-  assert.match(await page.getByTestId("title").innerText(), /SAMPLE-2/);
+await step("patient details rank pathways across pages", async () => {
+  await page.getByRole("tab", { name: "Patient" }).click();
+  await page.locator("#fact-score").fill("12");
+  await page.locator("#fact-score").press("Tab");
+  await page.getByRole("tab", { name: /Pathways/ }).click();
+  assert.equal(await page.locator(".pcard").count(), 2, "age unknown: two routes");
+  assert.match(await page.locator(".nudge").innerText(), /Age/);
+  await page.locator(".nudge .need").click();
+  await page.locator("#fact-age").fill("70");
+  await page.locator("#fact-age").press("Tab");
+  await page.getByRole("tab", { name: /Pathways/ }).click();
+  assert.equal(await page.locator(".pcard").count(), 1);
+  assert.match(await page.locator(".pcard").innerText(), /100%/);
+  assert.equal(await page.locator(".trail .step").count(), 6);
+  assert.ok(await page.locator(".card.walk").count() >= 1, "route lit on the canvas");
+});
+await step("hovering a step previews its source page; clicking opens the page viewer", async () => {
+  await page.locator(".trail .st-text").nth(2).hover();
+  await page.locator(".peek").waitFor();
+  assert.match(await page.locator(".peek").innerText(), /SAMPLE-1/);
+  await page.mouse.move(2, 2);
+  await page.locator(".trail .src-chip").first().click();
+  await page.getByRole("dialog", { name: /Guideline page/ }).waitFor();
+  await page.getByRole("button", { name: "Close page viewer" }).click();
+  assert.equal(await page.locator(".viewer").count(), 0);
 });
 await page.close();
 
@@ -111,7 +128,7 @@ await step("phone: selecting a card opens the details sheet", async () => {
 await step("phone: contents drawer opens and navigates", async () => {
   await phone.getByTestId("rail-toc").tap();
   await phone.locator(".toc-item.alg").nth(1).tap();
-  assert.match(await phone.getByTestId("title").innerText(), /SAMPLE-2/);
+  assert.match(await phone.getByTestId("title").textContent(), /SAMPLE-2/);
   assert.equal(await phone.locator(".left").isVisible(), false);
 });
 await browser.close();

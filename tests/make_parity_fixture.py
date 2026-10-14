@@ -18,6 +18,8 @@ FACTS = [
     {"score": 12, "age": 70}, {"score": 3}, {}, {"score": 10, "age": 64}, {"age": None},
     {"score": {"min": 8}, "age": {"min": 60, "max": 70}}, {"score": "x", "age": "unknown"}, {"stage": "late"},
     {"score": {"max": 9}}, {"score": {"min": 10, "max": 10}, "stage": "early"},
+    {"score": {"min": 10, "max": None, "min_open": True, "max_open": False}},
+    {"score": {"min": None, "max": 10, "min_open": False, "max_open": True}, "age": {"min": 65, "max": 65}},
 ]
 PREDS = {
     "ge": {"fact": "score", "op": ">=", "value": 10},

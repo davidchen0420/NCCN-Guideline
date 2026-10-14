@@ -2,51 +2,86 @@
  "derive": [
   {
    "age": 70,
+   "late_stage_stated": false,
    "score": 12,
    "tier": "high"
   },
   {
+   "late_stage_stated": false,
    "score": 3,
    "tier": "low"
   },
-  {},
+  {
+   "late_stage_stated": false
+  },
   {
    "age": 64,
+   "late_stage_stated": false,
    "score": 10,
    "tier": "high"
   },
   {
-   "age": null
+   "age": null,
+   "late_stage_stated": false
   },
   {
    "age": {
     "max": 70,
     "min": 60
    },
+   "late_stage_stated": false,
    "score": {
     "min": 8
    }
   },
   {
    "age": "unknown",
+   "late_stage_stated": false,
    "score": "x"
   },
   {
+   "late_stage_stated": false,
    "stage": "late"
   },
   {
+   "late_stage_stated": false,
    "score": {
     "max": 9
    },
    "tier": "low"
   },
   {
+   "late_stage_stated": false,
    "score": {
     "max": 10,
     "min": 10
    },
    "stage": "early",
    "tier": "high"
+  },
+  {
+   "late_stage_stated": false,
+   "score": {
+    "max": null,
+    "max_open": false,
+    "min": 10,
+    "min_open": true
+   },
+   "tier": "high"
+  },
+  {
+   "age": {
+    "max": 65,
+    "min": 65
+   },
+   "late_stage_stated": false,
+   "score": {
+    "max": 10,
+    "max_open": true,
+    "min": null,
+    "min_open": false
+   },
+   "tier": "low"
   }
  ],
  "evaluate": {
@@ -57,6 +92,8 @@
    true,
    null,
    true,
+   null,
+   null,
    null,
    null,
    null,
@@ -72,7 +109,9 @@
    null,
    null,
    null,
-   null
+   null,
+   null,
+   true
   ],
   "eq": [
    false,
@@ -84,7 +123,9 @@
    false,
    null,
    false,
-   true
+   true,
+   false,
+   false
   ],
   "ge": [
    true,
@@ -96,7 +137,9 @@
    null,
    null,
    false,
-   true
+   true,
+   true,
+   false
   ],
   "in": [
    null,
@@ -108,7 +151,9 @@
    null,
    false,
    null,
-   true
+   true,
+   null,
+   null
   ],
   "interval": [
    false,
@@ -120,7 +165,9 @@
    null,
    null,
    false,
-   null
+   null,
+   null,
+   false
   ],
   "lt": [
    false,
@@ -132,7 +179,9 @@
    null,
    null,
    true,
-   false
+   false,
+   false,
+   true
   ],
   "ne": [
    true,
@@ -144,7 +193,9 @@
    true,
    null,
    null,
-   true
+   true,
+   true,
+   null
   ],
   "not_in": [
    null,
@@ -156,7 +207,9 @@
    null,
    true,
    null,
-   false
+   false,
+   null,
+   null
   ]
  },
  "facts": [
@@ -202,6 +255,26 @@
     "min": 10
    },
    "stage": "early"
+  },
+  {
+   "score": {
+    "max": null,
+    "max_open": false,
+    "min": 10,
+    "min_open": true
+   }
+  },
+  {
+   "age": {
+    "max": 65,
+    "min": 65
+   },
+   "score": {
+    "max": 10,
+    "max_open": true,
+    "min": null,
+    "min_open": false
+   }
   }
  ],
  "preds": {
@@ -311,6 +384,10 @@
     "definition": "Age",
     "type": "number",
     "unit": "years"
+   },
+   "late_stage_stated": {
+    "definition": "Case explicitly states late stage (synthetic).",
+    "type": "bool"
    },
    "score": {
     "definition": "Synthetic score",

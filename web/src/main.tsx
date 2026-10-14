@@ -3,9 +3,12 @@ import "@fontsource/ibm-plex-sans/latin-400.css";
 import "@fontsource/ibm-plex-sans/latin-500.css";
 import "@fontsource/ibm-plex-sans/latin-600.css";
 import "@fontsource/ibm-plex-mono/latin-400.css";
+import "@fontsource/source-serif-4/latin-400.css";
+import "@fontsource/source-serif-4/latin-600.css";
 import "./styles/app.css";
 import { App } from "./App";
 import { Provider } from "./store";
+import { SourceProvider } from "./source";
 import type { Bundle } from "./types";
 
 async function load(): Promise<Bundle> {
@@ -17,5 +20,5 @@ async function load(): Promise<Bundle> {
 
 load().then((bundle) => {
   document.title = bundle.title || "Guideline Navigator";
-  createRoot(document.getElementById("root")!).render(<Provider bundle={bundle}><App /></Provider>);
+  createRoot(document.getElementById("root")!).render(<Provider bundle={bundle}><SourceProvider><App /></SourceProvider></Provider>);
 }).catch((e) => { document.body.textContent = "Could not load guideline data: " + String(e); });

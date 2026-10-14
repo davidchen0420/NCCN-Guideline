@@ -6,11 +6,12 @@ import { Card, type CardFlags } from "./Card";
 import { cardWidth, edgePath, layoutPage } from "../lib/layout";
 import { pathSets } from "../lib/graph";
 import { matcher } from "../lib/search";
+import { boxSrc } from "./PathwaysPanel";
 
 const n_entry = (g: { bundle: { roots: Record<string, string[]> } }, full: string) => (g.bundle.roots[full.split(":")[0]] ?? []).includes(full);
 
 export function Canvas({ page }: { page: string }) {
-  const { s, g, set, dispatch, openFootnote } = useApp();
+  const { s, g, set, dispatch, openFootnote, selected: route } = useApp();
   const flow = g.bundle.pages[page];
   const boxes = useMemo(() => flow.nodes.filter((n) => n.kind === "box"), [flow]);
   const parsedByShort = useMemo(() => Object.fromEntries(boxes.map((n) => [n.id, g.parsed.get(`${page}:${n.id}`)!])), [boxes, g, page]);
@@ -63,12 +64,14 @@ export function Canvas({ page }: { page: string }) {
   }, [selected, layout]);
 
   const path = useMemo(() => pathSets(g, s.answers), [g, s.answers]);
-  const walkNodes = useMemo(() => new Set(s.walk?.path.map((x) => x.node) ?? []), [s.walk]);
+  // The manual walk when one is running, else the pathway picked in the Pathways tab.
+  const trail = useMemo(() => (s.walk ? s.walk.path.map((x) => x.node) : route ? route.steps.map((x) => x.node) : []), [s.walk, route]);
+  const walkNodes = useMemo(() => new Set(trail), [trail]);
   const walkEdges = useMemo(() => {
     const e = new Set<string>();
-    s.walk?.path.forEach((x, i) => { if (i) e.add(`${s.walk!.path[i - 1].node}>${x.node}`); });
+    trail.forEach((x, i) => { if (i) e.add(`${trail[i - 1]}>${x}`); });
     return e;
-  }, [s.walk]);
+  }, [trail]);
   const hasFilter = !!s.query.trim() || s.tags.length > 0;
   const match = useMemo(() => matcher(s.query), [s.query]);
 
@@ -81,7 +84,7 @@ export function Canvas({ page }: { page: string }) {
     return {
       selected: selected === full, answer: s.answers.includes(full), onPath: answerMode && inPath,
       dim: answerMode && !inPath && s.showNon, hide: answerMode && !inPath && !s.showNon,
-      gray: hasFilter && !hit, hit, fnActive: s.fn, walk: walkNodes.has(full), current: s.walk?.at === full,
+      gray: hasFilter && !hit, hit, fnActive: s.fn, walk: walkNodes.has(full), current: s.walk ? s.walk.at === full : !!route && route.steps[route.steps.length - 1].node === full,
       entry: g.node(full)?.role === "entry" || (g.node(full)?.role == null && !g.parents[full]?.length && g.kids(full).length > 0 && n_entry(g, full)),
     };
   };
@@ -135,7 +138,7 @@ export function Canvas({ page }: { page: string }) {
                 return (
                   <Card key={n.id} node={g.node(`${page}:${n.id}`)!} parsed={parsedByShort[n.id]} flags={flagsFor(n.id)}
                     style={{ left: p.x, top: p.y, width: p.w }} onSelect={() => select(n.id)}
-                    onFootnote={(l) => openFootnote(l, `${page}:${n.id}`)} />
+                    onFootnote={(l) => openFootnote(l, `${page}:${n.id}`)} src={boxSrc(g, `${page}:${n.id}`)} />
                 );
               })}
             </div>
