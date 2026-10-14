@@ -139,7 +139,8 @@ def _group_boxes(lines, brackets):
         letters = re.sub(r"[^A-Za-z]", "", text)
         kind = "header" if len(letters) > 3 and letters[:-2].isupper() else "box"
         refs = sorted({r for l in group["lines"] for r in l["refs"]}, key=lambda r: (len(r), r))
-        boxes.append({"text": text, "bbox": bbox(group), "kind": kind, "footnote_refs": refs})
+        boxes.append({"text": text, "bbox": bbox(group), "kind": kind, "footnote_refs": refs,
+                      "line_bboxes": [l["bbox"] for l in group["lines"]]})
     return sorted(boxes, key=lambda b: (b["bbox"][1], b["bbox"][0]))
 
 
@@ -243,6 +244,12 @@ def extract_page_graph(doc, index):
         cands = []
         for box in boxes:
             x0, _, x1, _ = box["bbox"]
+            if side == "src" and any(abs(lb[2] - pt[0]) < 12 and lb[1] - 3 <= pt[1] <= lb[3] + 3
+                                     for lb in box.get("line_bboxes", [])):
+                # The arrow starts at the end of one line inside a multi-line box
+                # ("... or Cabozantinib --> Progression").
+                cands.append((0, box["id"]))
+                continue
             if side == "src" and x1 > pt[0] + 15:
                 continue
             enters_vertically = x0 <= pt[0] <= x1 and not (box["bbox"][1] <= pt[1] <= box["bbox"][3])

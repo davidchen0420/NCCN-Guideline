@@ -64,6 +64,10 @@ def _to_number(v):
     if isinstance(v, (int, float)):
         return v
     if isinstance(v, dict):
+        if "gt" in v or "lt" in v:  # exclusive bounds ("exceeding 50", "under 6")
+            lo = _to_number(v.get("gt"))
+            hi = _to_number(v.get("lt"))
+            return {"min": None if lo is None else lo + 1e-6, "max": None if hi is None else hi - 1e-6}
         lo, hi = _to_number(v.get("min")), _to_number(v.get("max"))
         if lo is None and hi is None:
             return None
@@ -75,7 +79,8 @@ def _to_number(v):
             op = m.group(1)
             if not op:
                 return x
-            return {"min": x} if op in (">", ">=", "≥") else {"max": x}
+            eps = 1e-6 if op in (">", "<") else 0  # strict bounds stay strict
+            return {"min": x + eps} if op in (">", ">=", "≥") else {"max": x - eps}
     return None
 
 
@@ -145,6 +150,10 @@ def validate(extracted, schema, case_text):
 def derive(facts, schema):
     """Add derived variables (risk group, stage group, ...) computed by rule tables."""
     out = dict(facts)
+    # "<x>_stated" flags record an explicit statement in the case: not mentioned means not stated.
+    for name in schema.get("variables", {}):
+        if name.endswith("_stated") and name not in out:
+            out[name] = False
     for _ in range(3):  # derived variables may depend on other derived variables
         for name, spec in schema.get("derived", {}).items():
             if name in facts:

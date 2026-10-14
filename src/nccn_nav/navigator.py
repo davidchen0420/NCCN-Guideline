@@ -141,6 +141,14 @@ def _auto_step(gl, state):
             state["path"].append({"node": true[0], "by": "predicate"})
             state["at"] = true[0]
             continue
+        # "Otherwise" branch: every sibling with a condition is false and exactly one sibling has
+        # no condition at all (e.g. an unlabelled default arm), so that one is taken.
+        unconditioned = [c for c in kids if gl.predicates.get(c) is None]
+        if (not true and len(unconditioned) == 1 and len(kids) > 1
+                and all(verdicts[c] is False for c in kids if c not in unconditioned)):
+            state["path"].append({"node": unconditioned[0], "by": "otherwise"})
+            state["at"] = unconditioned[0]
+            continue
         merge = _reconvergence(gl, kids) if len(kids) > 1 and None in verdicts.values() and not true else None
         if merge:
             # Undecidable branch whose arms rejoin: skip to the join, recording the gap.
@@ -150,14 +158,14 @@ def _auto_step(gl, state):
         return
 
 
-def walk(gl, facts, max_entries=4):
+def walk(gl, facts, max_entries=None):
     """A5 without an LLM: choose the entry box(es) whose entry condition the facts satisfy, then
     follow predicates. Returns one walk per matching entry: {"entry", "path", "final"}.
     Facts are raw values; derived variables (risk group, stage group, ...) are computed first."""
     facts = derive(facts, gl.schema)
     entries = sorted({r for roots in gl.roots.values() for r in roots})
     verdicts = {r: evaluate(gl.predicates.get(r), facts) for r in entries}
-    chosen = [r for r, v in verdicts.items() if v is True][:max_entries]
+    chosen = [r for r, v in verdicts.items() if v is True][:max_entries]  # every entry the facts satisfy
     out = []
     for root in chosen:
         state = {"at": root, "path": [{"node": root, "by": "entry"}], "facts": facts}

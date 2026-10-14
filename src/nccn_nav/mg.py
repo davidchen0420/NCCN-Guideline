@@ -173,7 +173,8 @@ def build_facts(root):
 
 
 def engine_answer(gl, facts, option_nodes, n_options=None):
-    """Answer from deterministic walks: the last option box the walk actually passes through.
+    """Answer from deterministic walks from every entry the facts satisfy: the first option box
+    each walk passes through last; abstain if walks disagree.
     Abstain (None) when walks disagree or no option box is reached. (An earlier rule that took
     "the only option still reachable" leaked the label: distractors often sit on branches the
     walk can never reach, so it scored the same with shuffled facts.)"""
@@ -182,6 +183,7 @@ def engine_answer(gl, facts, option_nodes, n_options=None):
         inverse.setdefault(node, []).append(letter)
     answers = set()
     for w in walk(gl, facts):
+        # The last option box reached (chosen on the dev split over "first": 36/51 vs 14/51 on colon).
         hit = [n for n in w["path"] if n in inverse]
         if hit:
             answers.update(inverse[hit[-1]])
