@@ -120,7 +120,7 @@ def _auto_step(gl, state):
     """A5: follow children whose predicates decide the branch from structured facts."""
     while True:
         kids = gl.children[state["at"]]
-        if not kids or not state.get("facts") or len(state["path"]) > 80:
+        if not kids or not (state.get("facts") or state.get("initial")) or len(state["path"]) > 80:
             return  # leaf, no facts, or a cycle through page links
         here = gl.nodes[state["at"]]
         passthrough = (
@@ -141,8 +141,9 @@ def _auto_step(gl, state):
             state["path"].append({"node": true[0], "by": "predicate"})
             state["at"] = true[0]
             continue
-        if state.get("initial"):
-            # Undecided on the current state: the branch may describe an earlier point in time.
+        if state.get("initial") and not true:
+            # No branch is true on the current state: the branch may describe an earlier point
+            # in time. (Never overrides a branch the current facts already select.)
             early = {c: evaluate(gl.predicates.get(c), state["initial"]) for c in kids}
             etrue = [c for c, v in early.items() if v is True]
             if len(etrue) == 1 and all(v is not None for v in early.values()):

@@ -1,0 +1,16 @@
+{
+ "_comment": "Guideline slug -> MedGUIDE disease trees (HF MedGUIDE/MedGUIDE-MCQA-8K 'disease' field).",
+ "prostate": [
+  "prostate_14"
+ ],
+ "nsclc": [
+  "nscl_2",
+  "nscl_3"
+ ],
+ "sclc": [
+  "sclc_7"
+ ],
+ "colon": [
+  "col6"
+ ]
+}

@@ -18,27 +18,37 @@ OPS = {"==": operator.eq, "!=": operator.ne, ">": operator.gt, ">=": operator.ge
        "<": operator.lt, "<=": operator.le}
 
 
-def _compare_interval(lo, hi, op, v):
-    """Three-valued comparison of an unknown number x in [lo, hi] (None = unbounded)."""
+def _compare_interval(lo, hi, op, v, lo_open=False, hi_open=False):
+    """Three-valued comparison of an unknown number x in the interval lo..hi (None = unbounded;
+    *_open = the bound itself is excluded, e.g. "PSA >10")."""
     lo = float("-inf") if lo is None else lo
     hi = float("inf") if hi is None else hi
+
+    def surely_above(t, strict):  # every x in the interval satisfies x > t (or x >= t)
+        return lo > t or (lo == t and (lo_open or not strict))
+
+    def surely_below(t, strict):  # every x satisfies x < t (or x <= t)
+        return hi < t or (hi == t and (hi_open or not strict))
+
     if op in (">", ">="):
-        if OPS[op](lo, v):
+        strict = op == ">"
+        if surely_above(v, strict):
             return True
-        if not OPS[op](hi, v):
+        if surely_below(v, not strict):
             return False
         return None
     if op in ("<", "<="):
-        if OPS[op](hi, v):
+        strict = op == "<"
+        if surely_below(v, strict):
             return True
-        if not OPS[op](lo, v):
+        if surely_above(v, not strict):
             return False
         return None
-    if op == "==":
-        return True if lo == hi == v else (False if v < lo or v > hi else None)
-    if op == "!=":
-        r = _compare_interval(lo, hi, "==", v)
-        return None if r is None else not r
+    if op in ("==", "!="):
+        point = lo == hi == v and not lo_open and not hi_open
+        outside = surely_above(v, True) or surely_below(v, True)
+        r = True if point else (False if outside else None)
+        return r if op == "==" or r is None else not r
     return None
 
 
@@ -52,7 +62,7 @@ def compare(x, op, v):
     if isinstance(x, dict):  # interval
         if not isinstance(v, (int, float)) or isinstance(v, bool):
             return None
-        return _compare_interval(x.get("min"), x.get("max"), op, v)
+        return _compare_interval(x.get("min"), x.get("max"), op, v, x.get("min_open", False), x.get("max_open", False))
     try:
         return OPS[op](x, v)
     except TypeError:

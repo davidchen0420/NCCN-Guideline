@@ -22,17 +22,19 @@ def main(root):
     split = json.loads((root / "medguide" / "split.json").read_text())
     mapping = json.loads((root / "medguide" / "mapping.json").read_text())
     facts = json.loads((root / "medguide" / "facts_final.json").read_text())
+    earlier_path = root / "medguide" / "facts_earlier.json"
+    earlier = json.loads(earlier_path.read_text()) if earlier_path.exists() else {}
     causes, where = Counter(), Counter()
     for i, it in items.items():
         if split[i] != "dev" or not mapping[i]["valid"]:
             continue
         f = facts.get(i, {})
-        ans = engine_answer(gl, f, mapping[i]["option_nodes"])
+        ans = engine_answer(gl, f, mapping[i]["option_nodes"], earlier.get(i))
         if ans == it["answer"]:
             continue
         chain = mapping[i]["chain"]
         d = derive(f, gl.schema)
-        walks = walk(gl, f)
+        walks = walk(gl, f, earlier=earlier.get(i))
         if not walks:
             v = evaluate(gl.predicates.get(chain[0]), d)
             cause = "entry: gold entry has no predicate" if chain[0] not in gl.predicates or gl.predicates[chain[0]] is None \

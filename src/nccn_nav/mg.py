@@ -8,31 +8,41 @@ path (box texts) it was generated from.
 
 Label validation is deterministic: an item is "valid on our graph" when its whole path maps
 to a chain of connected boxes in our graph and its answer is the chain's last box. An
-optional LLM check (medguide/label_check_*.json) can further exclude items whose label
+optional LLM check (medguide/label_check*.json) further excludes items whose label
 contradicts the case text. Prints numbers only.
 """
 import json
 import random
 import re
 import sys
-from difflib import SequenceMatcher
 from pathlib import Path
 
 from .navigator import Guideline, walk
-from .scoring import norm
+from .scoring import text_sim
 
-DISEASES = {"prostate": ["prostate_14"], "nsclc": ["nscl_2", "nscl_3"], "sclc": ["sclc_7"],
-            "colon": ["col6"]}
+TREES_FILE = Path(__file__).resolve().parents[2] / "NCCN Guidelines" / "medguide_trees.json"
+
+
+def trees_for(root, override=None):
+    """MedGUIDE trees for a guideline: from the command line ("tree1,tree2") or the config file."""
+    if override:
+        return override.split(",")
+    trees = json.loads(TREES_FILE.read_text()).get(Path(root).name)
+    if not trees:
+        raise SystemExit(f"no MedGUIDE trees configured for {Path(root).name}: add it to {TREES_FILE} "
+                         "or pass them as `mg prepare <root> tree1,tree2`")
+    return trees
 PARQUET = Path(__file__).resolve().parents[2] / "private" / "medguide_all" / "data" / "train-00000-of-00001.parquet"
 
 
-def prepare(root, seed=0):
+def prepare(root, trees=None, seed=0):
     import pandas as pd
 
     root = Path(root)
+    trees = trees_for(root, trees)
     df = pd.read_parquet(PARQUET)
     items = []
-    for disease in DISEASES[root.name]:
+    for disease in trees:
         rows = df[df.disease == disease].reset_index(drop=True)
         for i, r in rows.iterrows():
             # Prostate keeps the ids used by earlier runs (M<n> in file order).
@@ -41,7 +51,7 @@ def prepare(root, seed=0):
                           "answer": r.answer, "answer_text": r.answer_text, "path": list(r.path)})
     rng = random.Random(seed)
     split = {}
-    for disease in DISEASES[root.name]:
+    for disease in trees:
         ids = [x["id"] for x in items if x["disease"] == disease]
         rng.shuffle(ids)
         half = len(ids) // 2
@@ -64,17 +74,7 @@ def _sim(a, b):
     # whose page numbers differ (e.g. PROS-15 there is PROS-17 in v6.2026).
     ra, rb = set(REF_RE.findall(a)), set(REF_RE.findall(b))
     penalty = 0.15 if ra and rb and not ra & rb else 0.0
-    return max(0.0, _sim_text(a, b) - penalty)
-
-
-def _sim_text(a, b):
-    a, b = norm(a), norm(b)
-    if not a or not b:
-        return 0.0
-    if a == b:
-        return 1.0
-    s = SequenceMatcher(None, a, b).ratio()
-    return max(s, 0.9) if (a in b or b in a) and min(len(a), len(b)) > 6 else s
+    return max(0.0, text_sim(a, b, min_len=7) - penalty)
 
 
 def _descendants(gl, start, depth=12):
@@ -108,27 +108,34 @@ def map_item(gl, item, thr=0.6):
     return chains[0]
 
 
+def option_boxes(gl, text, thr=0.6, band=0.02):
+    """Every box in the whole guideline whose text matches an option (look-alike boxes all
+    count). Deliberately does not look at the item's gold path, so a distractor that names a
+    box on another branch can be (wrongly) reached by the engine."""
+    scored = [(_sim(text, gl.nodes[n]["text"]), n) for n in gl.nodes if not n.endswith(":START")]
+    best = max((sc for sc, _ in scored), default=0)
+    return sorted(n for sc, n in scored if best >= thr and sc >= best - band)
+
+
 def map_all(root):
     root = Path(root)
     gl = Guideline(root)
     items = json.loads((root / "medguide" / "items.json").read_text())
     out = {}
+    letters = "ABCDEFGHIJKLMNOP"
     for item in items:
         chain = map_item(gl, item)
         rec = {"chain": chain, "valid": False, "option_nodes": {}}
+        for k, opt in enumerate(item["options"]):
+            boxes = option_boxes(gl, opt)
+            if boxes:
+                rec["option_nodes"][letters[k]] = boxes
         if chain:
-            pool = _descendants(gl, chain[0])
-            letters = "ABCDEFGHIJKLMNOP"
-            on_path = set(chain)
-            for k, opt in enumerate(item["options"]):
-                # Look-alike boxes ("Surveillance" on several branches): prefer the one on the
-                # item's own path, so the answer box is identified unambiguously.
-                scored = sorted(((round(_sim(opt, gl.nodes[n]["text"]), 2), n in on_path, n) for n in pool), reverse=True)
-                if scored and scored[0][0] >= 0.6:
-                    rec["option_nodes"][letters[k]] = scored[0][2]
-            ans = rec["option_nodes"].get(item["answer"])
-            # Valid: the answer box is the end of the mapped path and no other option maps to it.
-            rec["valid"] = ans == chain[-1] and list(rec["option_nodes"].values()).count(ans) == 1
+            # Valid: the item's path ends on a box that the answer option, and only the answer
+            # option, matches.
+            end = chain[-1]
+            owners = [l for l, boxes in rec["option_nodes"].items() if end in boxes]
+            rec["valid"] = owners == [item["answer"]]
         out[item["id"]] = rec
     (root / "medguide" / "mapping.json").write_text(json.dumps(out, indent=0))
     n_chain = sum(r["chain"] is not None for r in out.values())
@@ -180,21 +187,19 @@ def build_facts(root):
           f"schema variables never extracted {len(set(schema['variables']) - set(stats))}/{len(schema['variables'])}")
 
 
-def engine_answer(gl, facts, option_nodes, n_options=None, earlier=None):
-    """Answer from deterministic walks from every entry the facts satisfy: the first option box
-    each walk passes through last; abstain if walks disagree.
-    Abstain (None) when walks disagree or no option box is reached. (An earlier rule that took
-    "the only option still reachable" leaked the label: distractors often sit on branches the
-    walk can never reach, so it scored the same with shuffled facts.)"""
+def engine_answer(gl, facts, option_nodes, earlier=None):
+    """Answer from deterministic walks from every entry the facts satisfy: the last option box
+    each walk passes through (chosen on dev over "first"). Abstain (None) when walks disagree,
+    when a box belongs to several options, or when no option box is reached."""
     inverse = {}
-    for letter, node in option_nodes.items():
-        inverse.setdefault(node, []).append(letter)
+    for letter, boxes in option_nodes.items():
+        for node in boxes:
+            inverse.setdefault(node, set()).add(letter)
     answers = set()
     for w in walk(gl, facts, earlier=earlier):
-        # The last option box reached (chosen on the dev split over "first": 36/51 vs 14/51 on colon).
         hit = [n for n in w["path"] if n in inverse]
         if hit:
-            answers.update(inverse[hit[-1]])
+            answers |= inverse[hit[-1]]
     return answers.pop() if len(answers) == 1 else None
 
 
@@ -213,31 +218,31 @@ def score(root, split_name="test"):
     items = {x["id"]: x for x in json.loads((root / "medguide" / "items.json").read_text())}
     split = json.loads((root / "medguide" / "split.json").read_text())
     mapping = json.loads((root / "medguide" / "mapping.json").read_text())
-    checks = _load(root, "label_check.json")
+    # LLM label checks (label_check*.json): items whose label contradicts the case are excluded.
+    checks = _load(root, *sorted(f.name for f in (root / "medguide").glob("label_check*.json")))
     facts = _load(root, "facts_final.json")
     earlier = _load(root, "facts_earlier.json")
     a0 = _load(root, *sorted(f.name for f in (root / "medguide").glob("A0_*.json")))
     ids = [i for i in items if split[i] == split_name and mapping[i]["valid"]
            and checks.get(i, {}).get("verdict", "consistent") == "consistent"]
-    a5 = {i: engine_answer(gl, facts.get(i, {}), mapping[i]["option_nodes"], len(items[i]["options"]),
-                           earlier.get(i)) for i in ids} if facts else {}
+    a5 = {i: engine_answer(gl, facts.get(i, {}), mapping[i]["option_nodes"], earlier.get(i))
+          for i in ids} if facts else {}
     # Controls. (1) Majority box: always pick the option at the answer box most common among
     # dev items, which shows how much a tree's items share one answer. (2) The engine run on
     # facts shuffled between items, which shows how much the case's own facts matter.
     from collections import Counter
 
-    dev_boxes = Counter(mapping[i]["option_nodes"].get(items[i]["answer"]) for i in items
-                        if split[i] == "dev" and mapping[i]["valid"])
+    dev_boxes = Counter(mapping[i]["chain"][-1] for i in items if split[i] == "dev" and mapping[i]["valid"])
     rank = {box: r for r, (box, _) in enumerate(dev_boxes.most_common())}
     majority = {}
     for i in ids:
-        opts = [(rank[n], l) for l, n in mapping[i]["option_nodes"].items() if n in rank]
+        opts = [(rank[n], l) for l, boxes in mapping[i]["option_nodes"].items() for n in boxes if n in rank]
         majority[i] = min(opts)[1] if opts else None
     import random as _random
 
     shuffled_ids = ids[:]
     _random.Random(0).shuffle(shuffled_ids)
-    shuffled = {i: engine_answer(gl, facts.get(j, {}), mapping[i]["option_nodes"], None, earlier.get(j))
+    shuffled = {i: engine_answer(gl, facts.get(j, {}), mapping[i]["option_nodes"], earlier.get(j))
                 for i, j in zip(ids, shuffled_ids)} if facts else {}
     rows = [("B majority box (dev)", majority), ("A0 no context", a0), ("A5 engine (abstains)", a5),
             ("A5 shuffled facts", shuffled), ("A5 + A0 fallback", {i: a5.get(i) or a0.get(i) for i in ids})]

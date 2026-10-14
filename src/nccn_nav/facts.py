@@ -59,28 +59,30 @@ def _norm(text):
 
 
 def _to_number(v):
+    """A number, or an interval {"min", "max", "min_open", "max_open"} (open = strict bound)."""
     if isinstance(v, bool):
         return None
     if isinstance(v, (int, float)):
         return v
     if isinstance(v, dict):
         if "gt" in v or "lt" in v:  # exclusive bounds ("exceeding 50", "under 6")
-            lo = _to_number(v.get("gt"))
-            hi = _to_number(v.get("lt"))
-            return {"min": None if lo is None else lo + 1e-6, "max": None if hi is None else hi - 1e-6}
+            lo, hi = _to_number(v.get("gt")), _to_number(v.get("lt"))
+            if lo is None and hi is None:
+                return None
+            return {"min": lo, "max": hi, "min_open": lo is not None, "max_open": hi is not None}
         lo, hi = _to_number(v.get("min")), _to_number(v.get("max"))
         if lo is None and hi is None:
             return None
-        return {"min": lo, "max": hi}
+        return {"min": lo, "max": hi, "min_open": bool(v.get("min_open")), "max_open": bool(v.get("max_open"))}
     if isinstance(v, str):
         m = re.fullmatch(r"\s*([<>]=?|≤|≥)?\s*(-?\d+(?:\.\d+)?)\s*", v)
         if m:
-            x = float(m.group(2))
-            op = m.group(1)
+            x, op = float(m.group(2)), m.group(1)
             if not op:
                 return x
-            eps = 1e-6 if op in (">", "<") else 0  # strict bounds stay strict
-            return {"min": x + eps} if op in (">", ">=", "≥") else {"max": x - eps}
+            if op in (">", ">=", "≥"):
+                return {"min": x, "max": None, "min_open": op == ">", "max_open": False}
+            return {"min": None, "max": x, "min_open": False, "max_open": op == "<"}
     return None
 
 
@@ -94,8 +96,8 @@ def _convert(x, unit, target):
     if factor is None:
         return None  # unknown or incompatible unit: drop rather than guess
     if isinstance(x, dict):
-        return {k: (None if b is None else round(b * factor, 4)) for k, b in x.items()}
-    return round(x * factor, 4)
+        return {k: (b if k.endswith("_open") or b is None else round(b * factor, 6)) for k, b in x.items()}
+    return round(x * factor, 6)
 
 
 def validate_with_history(extracted, schema, case_text):

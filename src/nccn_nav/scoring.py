@@ -14,26 +14,22 @@ def _prf(tp, n_pred, n_gold):
     return {"precision": p, "recall": r, "f1": 2 * p * r / (p + r) if p + r else 0.0}
 
 
-def text_sim(a, b):
+def text_sim(a, b, min_len=0):
+    """Normalized text similarity; containment counts as 0.9 when the shorter text has more than
+    `min_len` characters (MedGUIDE mapping uses 7 so tiny labels like "N0" do not match inside
+    longer boxes). The single similarity used by graph scoring, consensus and MedGUIDE mapping."""
     a, b = norm(a), norm(b)
     if not a or not b:
         return 0.0
     score = 1.0 if a == b else SequenceMatcher(None, a, b).ratio()
-    if b in a or a in b:
+    if (b in a or a in b) and min(len(a), len(b)) > min_len:
         score = max(score, 0.9)
     return score
 
 
 def match_nodes(pred_nodes, gold_nodes, threshold=0.6):
     """Greedy one-to-one match on normalized text similarity. Returns {pred_id: gold_id}."""
-    pairs = []
-    for p in pred_nodes:
-        for g in gold_nodes:
-            a, b = norm(p["text"]), norm(g["text"])
-            score = 1.0 if a == b else SequenceMatcher(None, a, b).ratio()
-            if b and (b in a or a in b):
-                score = max(score, 0.9)
-            pairs.append((score, p["id"], g["id"]))
+    pairs = [(text_sim(p["text"], g["text"]), p["id"], g["id"]) for p in pred_nodes for g in gold_nodes]
     mapping, used = {}, set()
     for score, pid, gid in sorted(pairs, reverse=True):
         if score >= threshold and pid not in mapping and gid not in used:

@@ -195,6 +195,13 @@ def extract_page_graph(doc, index):
     def head_dist(pt):
         return min((math.hypot(pt[0] - h[0], pt[1] - h[1]) for h in heads), default=99)
 
+    def head_on_axis(end, other):
+        """The arrowhead at `end` continues this vertical stroke (not a horizontal arrow that
+        merely touches a bracket there)."""
+        h = min(heads, key=lambda h: math.hypot(end[0] - h[0], end[1] - h[1]))
+        beyond = (h[1] - other[1]) * (end[1] - other[1]) > 0 and abs(h[1] - other[1]) >= abs(end[1] - other[1]) - 2
+        return abs(h[0] - end[0]) < 2 and beyond
+
     connectors = []
     for a, b in segments:
         da, db = head_dist(a), head_dist(b)
@@ -203,21 +210,41 @@ def extract_page_graph(doc, index):
             # Both ends near a head: one belongs to another arrow ending on the same bar
             # (e.g. a junction's exit arrow); the end touching its own head is the closer one.
             ha, hb = da < db, db < da
-        if abs(a[0] - b[0]) < 1 and not (ha != hb and abs(a[1] - b[1]) > 6):
+        vertical_arrow = (abs(a[0] - b[0]) < 1 and ha != hb and abs(a[1] - b[1]) > 6
+                          and head_on_axis(a if ha else b, b if ha else a))
+        if abs(a[0] - b[0]) < 1 and not vertical_arrow:
             # Vertical strokes are box brackets (an arrow may touch one mid-way, splitting it);
-            # a vertical stroke with an arrowhead at exactly one end is a downward/upward arrow.
+            # a vertical stroke whose own arrowhead sits on its axis is a downward/upward arrow.
             brackets.append({"x": a[0], "y0": min(a[1], b[1]), "y1": max(a[1], b[1])})
         elif ha != hb:
             connectors.append((b, a) if ha else (a, b))  # (tail, head)
 
     # Bent arrows (loop-backs drawn as several segments meeting at corners, arrowhead only on the
-    # last piece): walk back from the tail through segments that join it end to end.
-    def extend(tail, used):
+    # last piece): walk back from the tail through segments that meet it at a right angle. A
+    # segment that other arrows start from (a fan-out stem) or that is itself an arrow is never
+    # followed, so straight arrows sharing a stem keep their own tails.
+    arrow_segments = {seg for seg in segments if (head_dist(seg[0]) < 8) != (head_dist(seg[1]) < 8)}
+
+    def on_segment(pt, seg):
+        (x0, y0), (x1, y1) = seg
+        if abs(x0 - x1) < 1:
+            return abs(pt[0] - x0) < 1.5 and min(y0, y1) - 1.5 <= pt[1] <= max(y0, y1) + 1.5
+        if abs(y0 - y1) < 1:
+            return abs(pt[1] - y0) < 1.5 and min(x0, x1) - 1.5 <= pt[0] <= max(x0, x1) + 1.5
+        return False
+
+    def extend(tail, leg):
+        tails = [t for t, _ in connectors if t != tail]
         for _ in range(8):
+            leg_vertical = abs(leg[0][0] - leg[1][0]) < 1
             nxt = None
             for seg in segments:
-                if seg in used:
+                if seg == leg or seg in arrow_segments:
                     continue
+                if (abs(seg[0][0] - seg[1][0]) < 1) == leg_vertical:
+                    continue  # not a corner
+                if any(on_segment(t, seg) for t in tails):
+                    continue  # a stem other arrows start from
                 for end, other in ((seg[0], seg[1]), (seg[1], seg[0])):
                     if math.hypot(end[0] - tail[0], end[1] - tail[1]) < 1.5 and head_dist(other) >= 8:
                         nxt = (seg, other)
@@ -226,14 +253,11 @@ def extract_page_graph(doc, index):
                     break
             if not nxt:
                 return tail
-            used.add(nxt[0])
-            tail = nxt[1]
+            leg, tail = nxt
         return tail
 
-    head_segments = {}
-    for a, b in segments:
-        head_segments[(a, b)] = True
-    connectors = [(extend(t, {seg for seg in segments if t in seg and h in seg}), h) for t, h in connectors]
+    connectors = [(extend(t, next((seg for seg in segments if t in seg and h in seg), (t, h))), h)
+                  for t, h in connectors]
 
     brackets = _merge_collinear(brackets)
     # Everything below the lowest connector or bracket is the footnote block.
@@ -276,10 +300,12 @@ def extract_page_graph(doc, index):
                 # ("... or Cabozantinib --> Progression").
                 cands.append((0, box["id"]))
                 continue
-            leaves_vertically = x0 <= pt[0] <= x1 and not (box["bbox"][1] <= pt[1] <= box["bbox"][3])
+            # An arrow may leave or enter a box through its top or bottom edge (within 10pt).
+            near_edge = 0 < box["bbox"][1] - pt[1] <= 10 or 0 < pt[1] - box["bbox"][3] <= 10
+            leaves_vertically = x0 <= pt[0] <= x1 and near_edge
             if side == "src" and x1 > pt[0] + 15 and not leaves_vertically:
                 continue
-            enters_vertically = x0 <= pt[0] <= x1 and not (box["bbox"][1] <= pt[1] <= box["bbox"][3])
+            enters_vertically = x0 <= pt[0] <= x1 and near_edge
             if side == "dst" and x0 < pt[0] - 15 and not enters_vertically:
                 continue
             cands.append((_dist_point_box(pt, box["bbox"], pad=2), box["id"]))
