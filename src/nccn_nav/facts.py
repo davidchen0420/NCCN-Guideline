@@ -42,7 +42,7 @@ def schema_problems(schema):
     """Variables that encode a judgment or threshold instead of a raw value."""
     out = []
     for name, var in schema.get("variables", {}).items():
-        if JUDGMENT_RE.search(name):
+        if JUDGMENT_RE.search(name) and not name.endswith("_stated"):  # "_stated": explicit statement
             out.append((name, "name encodes a threshold/judgment; store the raw measurement"))
         if var.get("type") == "bool" and re.search(r"[<>≤≥]\s*\d|\b\d+(\.\d+)?\s*(mo|months|years|cm|mm|ng)",
                                                    var.get("definition", "")):

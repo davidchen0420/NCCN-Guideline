@@ -104,11 +104,14 @@ def map_all(root):
         rec = {"chain": chain, "valid": False, "option_nodes": {}}
         if chain:
             pool = _descendants(gl, chain[0])
-            letters = "ABCDE"
+            letters = "ABCDEFGHIJKLMNOP"
+            on_path = set(chain)
             for k, opt in enumerate(item["options"]):
-                scored = sorted(((_sim(opt, gl.nodes[n]["text"]), n) for n in pool), reverse=True)
+                # Look-alike boxes ("Surveillance" on several branches): prefer the one on the
+                # item's own path, so the answer box is identified unambiguously.
+                scored = sorted(((round(_sim(opt, gl.nodes[n]["text"]), 2), n in on_path, n) for n in pool), reverse=True)
                 if scored and scored[0][0] >= 0.6:
-                    rec["option_nodes"][letters[k]] = scored[0][1]
+                    rec["option_nodes"][letters[k]] = scored[0][2]
             ans = rec["option_nodes"].get(item["answer"])
             # Valid: the answer box is the end of the mapped path and no other option maps to it.
             rec["valid"] = ans == chain[-1] and list(rec["option_nodes"].values()).count(ans) == 1
