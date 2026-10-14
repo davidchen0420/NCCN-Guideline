@@ -1,5 +1,33 @@
 import type { BNode, Bundle, Pred } from "../types";
 import { configureRefs, parseBox, parseInline, type Parsed } from "./parseBox";
+import { configureLabels } from "./factMeta";
+
+/**
+ * Words of the patient-fact names that this guideline's own text writes in capitals far more
+ * often than in lower case (ECOG, FLT3, ALT): they are shown as abbreviations in labels.
+ */
+export function guidelineAcronyms(bundle: Bundle): string[] {
+  const schema = bundle.schema ?? { variables: {}, derived: {} };
+  const words = new Set<string>();
+  const add = (s: string) => s.toLowerCase().split("_").forEach((w) => { if (/^[a-z][a-z0-9]{1,7}$/.test(w)) words.add(w); });
+  Object.keys(schema.variables ?? {}).forEach(add);
+  Object.keys(schema.derived ?? {}).forEach(add);
+  Object.values(schema.variables ?? {}).forEach((v) => (v.values ?? []).forEach((x) => typeof x === "string" && /^[a-z0-9_]+$/.test(x) && add(x)));
+  const up = new Map<string, number>(), low = new Map<string, number>();
+  const scan = (text: string) => text.split("\n").forEach((line) => {
+    const letters = line.replace(/[^A-Za-z]/g, "");
+    if (letters.replace(/[^a-z]/g, "").length < letters.length * 0.3) return;   // headings in capitals say nothing
+    for (const m of line.matchAll(/\b[A-Za-z][A-Za-z0-9]{1,7}\b/g)) {
+      const w = m[0], l = w.toLowerCase();
+      if (!words.has(l)) continue;
+      if (w === w.toUpperCase()) up.set(l, (up.get(l) ?? 0) + 1);
+      else if (w === l) low.set(l, (low.get(l) ?? 0) + 1);
+    }
+  });
+  Object.values(bundle.pages).forEach((p) => p.nodes.forEach((n) => scan(n.text)));
+  Object.values(bundle.docs ?? {}).forEach((d) => d.pages.forEach((p) => scan(p.text)));
+  return [...words].filter((w) => (up.get(w) ?? 0) >= 2 && (up.get(w) ?? 0) > 2 * (low.get(w) ?? 0));
+}
 
 export type GNode = BNode & { page: string; full: string };
 export interface RefHit { page: string; node?: string; via: "box" | "footnote" }
@@ -24,6 +52,7 @@ const natural = (a: string, b: string) => a.localeCompare(b, undefined, { numeri
 export function buildGraph(bundle: Bundle): Graph {
   const flowPages = Object.keys(bundle.pages).sort(natural);
   configureRefs([...new Set([...flowPages.map((p) => p.split("-")[0]), ...Object.keys(bundle.prefixes ?? {})])]);
+  configureLabels(bundle.schema ?? null, guidelineAcronyms(bundle));
 
   const nodes = new Map<string, GNode>();
   const preds: Record<string, Pred> = {};

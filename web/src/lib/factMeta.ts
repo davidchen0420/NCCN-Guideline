@@ -58,11 +58,11 @@ const META: Record<string, Meta> = {
 
 export const GROUPS: { key: string; title: string; match: RegExp }[] = [
   { key: "patient", title: "Patient", match: /life_expectancy|age|ecog|comorb|symptom|performance|health/ },
-  { key: "staging", title: "Diagnosis and staging", match: /category|stage|grade|cores|histology|gleason|psa_ng|dre|rectal/ },
-  { key: "treatment", title: "Treatment so far", match: /treatment|therapy|adt|arpi|radiation|prostatectomy|prior|recurr|castrat|psa|testosterone|patholog/ },
-  { key: "metastatic", title: "Metastatic disease", match: /metast|visceral|bone|nodal|oligo|volume/ },
-  { key: "molecular", title: "Genetics and biomarkers", match: /brca|hrr|msi|mmr|tmb|pten|germline|somatic|mutation|biomarker/ },
-  { key: "stated", title: "Stated in the record", match: /_stated$/ },
+  { key: "staging", title: "Diagnosis and Staging", match: /category|stage|grade|cores|histology|gleason|psa_ng|dre|rectal/ },
+  { key: "treatment", title: "Treatment So Far", match: /treatment|therapy|adt|arpi|radiation|prostatectomy|prior|recurr|castrat|psa|testosterone|patholog/ },
+  { key: "metastatic", title: "Metastatic Disease", match: /metast|visceral|bone|nodal|oligo|volume/ },
+  { key: "molecular", title: "Genetics and Biomarkers", match: /brca|hrr|msi|mmr|tmb|pten|germline|somatic|mutation|biomarker/ },
+  { key: "stated", title: "Stated in the Record", match: /_stated$/ },
   { key: "other", title: "Other", match: /.*/ },
 ];
 
@@ -76,26 +76,107 @@ const VALUE_LABEL: Record<string, string> = {
   le_10_months: "≤10 months", gt_10_months: ">10 months", m1_crpc: "M1 CRPC", m1_cspc: "M1 CSPC", m0_crpc: "M0 CRPC",
   stable_no_metastases: "Stable, no metastases", none: "None", other: "Other",
 };
-const ACRONYM = /\b(psa|adt|crpc|cspc|arpi|hrr|brca|bcr|rt|rp|dre|psadt|ebrt|mdt)\b/gi;
+// ---------------------------------------------------------------- labels
 
-export const humanName = (name: string) => {
-  const s = name.replace(/_/g, " ").replace(ACRONYM, (m) => m.toUpperCase());
-  return s.charAt(0).toUpperCase() + s.slice(1);
+/** Abbreviations used across guidelines; each guideline adds the ones its own text writes in capitals. */
+const BUILTIN_ACRONYMS = ["psa", "adt", "crpc", "cspc", "arpi", "hrr", "brca", "bcr", "rt", "rp", "dre", "psadt", "ebrt", "mdt",
+  "ecog", "kps", "aml", "all", "cll", "cml", "mds", "mpn", "apl", "nhl", "dlbcl", "cns", "hct", "gvhd", "mri", "ct", "pet", "psma",
+  "ldh", "uln", "lln", "hiv", "hpv", "hbv", "hcv", "egfr", "alk", "ros1", "braf", "kras", "nras", "her2", "er", "pr", "msi", "mmr",
+  "tmb", "pd", "dna", "rna", "fish", "ngs", "ihc", "bmi", "bsa", "wbc", "anc", "rbc", "iv", "po", "sc", "im", "ici", "tki", "car",
+  "nsclc", "sclc", "dcis", "lcis", "gist", "hcc", "rcc", "scc", "bcc", "vte", "dvt", "pe", "mrd", "cr", "pr", "pd", "sd", "ajcc",
+  "figo", "who", "eln", "fdg", "suv", "ptld", "ebv", "cmv", "covid", "lvef", "nyha", "copd", "acth", "tsh", "afp", "cea", "us",
+  "kd", "aya", "pt", "pn", "tg", "tgab", "mtx", "ph", "mb", "eac", "fdr", "hb", "adl", "alp", "pg", "sct", "tbi", "ocd", "src", "ida",
+  "htlv", "idh", "idrf", "nen", "tps", "nrs", "mdro", "mme", "lmd", "pdt", "sitm", "ifl", "fta", "hars", "jak", "stat", "ato", "atra",
+  "ecg", "ekg", "hla", "cbc", "cmp", "bun", "inr", "ptt", "crp", "esr", "bnp", "gfr", "ivc", "picc", "icu", "ed", "gi", "gu", "ent"];
+/** Abbreviations with their own mixed case, units, and names. */
+const MIXED: Record<string, string> = {
+  hcg: "hCG", qpcr: "qPCR", pcr: "PCR", dmmr: "dMMR", pmmr: "pMMR", irae: "irAE", qtcf: "QTcF", qtc: "QTc", bzip: "bZIP", btki: "BTKi",
+  xray: "X-ray", ph: "Ph", gcsf: "G-CSF", plp: "P/LP", iamp: "iAMP", miu: "mIU", yp: "yp", yc: "yc", tdap: "Tdap", hib: "Hib", igg: "IgG", igm: "IgM",
+  iga: "IgA", ige: "IgE", adls: "ADLs", mohs: "Mohs", gail: "Gail", pugh: "Pugh", echo: "Echo", ml: "mL", dl: "dL", mg: "mg",
+  mmol: "mmol", kg: "kg", cm: "cm", mm: "mm", gy: "Gy", ng: "ng", mcg: "mcg", egfr_kidney: "eGFR",
 };
-export const meta = (name: string): Meta => META[name] ?? { label: humanName(name) };
+/** Words the text writes in capitals that are still ordinary words or names in a variable name. */
+const NOT_ACRONYMS = new Set(["flag", "mets", "yes", "no", "not", "and", "or", "of", "the", "with", "lynch", "sellar", "supra", "stage", "grade", "risk", "score", "x", "y", "echo", "met", "mut", "tox", "fam"]);
+const SMALL_WORDS = new Set(["a", "an", "and", "or", "nor", "but", "of", "the", "in", "on", "at", "to", "for", "with", "vs", "by", "per", "as", "from", "into", "than", "via"]);
+/** Multi-word spellings that a plain word-by-word pass would get wrong. */
+const PHRASES: [RegExp, string | ((...m: string[]) => string)][] = [
+  [/\bli fraumeni\b/g, "Li-Fraumeni"], [/\blynch\b/g, "Lynch"], [/\bpd l1\b/g, "PD-L1"], [/\bpi rads\b/g, "PI-RADS"],
+  [/\bcar t\b/g, "CAR T"], [/\bbrca1 2\b/g, "BRCA1/2"], [/\bcovid ?19\b/g, "COVID-19"], [/\bjak stat\b/g, "JAK-STAT"], [/\bann arbor\b/g, "Ann Arbor"],
+  [/\bchild pugh\b/g, "Child-Pugh"], [/\bmpmri\b/g, "mpMRI"], [/\b([tbk]) cell\b/g, (_m: string, c: string) => `${c.toUpperCase()}-cell`],
+  [/\bnk cell\b/g, "NK-cell"], [/\by([pc]) ([tnm])\b/g, (_m: string, a: string, c: string) => `y${a}${c.toUpperCase()}`], [/\bfollow up\b/g, "follow-up"], [/\bx uln\b/g, "× ULN"], [/\begfr ml min\b/g, "eGFR"], [/\bpack years\b/g, "Pack-Years"],
+  [/\bng ml\b/g, "ng/mL"], [/\bng dl\b/g, "ng/dL"], [/\bmg dl\b/g, "mg/dL"], [/\bg dl\b/g, "g/dL"], [/\bu ml\b/g, "U/mL"],
+  [/\bml min\b/g, "mL/min"], [/\bmm hr\b/g, "mm/hr"], [/\bx10e9 l\b/g, "×10⁹/L"],
+  [/\bge\b/g, "≥"], [/\bgt\b/g, ">"], [/\ble\b/g, "≤"], [/\blt\b/g, "<"],
+];
+/** Trailing words that only repeat the field's unit ("psa_ng_ml" is shown as "PSA" with "ng/mL" beside it). */
+const UNIT_WORDS = /(?:\s+(?:years?|months?|weeks?|days?|hours?|cm|mm|percent|pct|ng\/mL|ng\/dL|mg\/dL|g\/dL|U\/mL|mL\/min|mm\/hr|kg|kg m2|gy|mmhg))+$/i;
+/** Lower-case words that stay lower case in Title Case (units, TNM prefixes). */
+const KEEP_LOWER = new Set(["mg", "mmol", "kg", "cm", "mm", "ng", "mcg", "yp", "yc", "vs"]);
+
+let acronyms = new Set(BUILTIN_ACRONYMS);
+let schemaRef: Schema | null = null;
+/** Called once per guideline (graph.ts): its schema and the abbreviations its text uses. */
+export function configureLabels(schema: Schema | null, extra: Iterable<string> = []) {
+  schemaRef = schema;
+  acronyms = new Set([...BUILTIN_ACRONYMS, ...[...extra].filter((x) => !NOT_ACRONYMS.has(x))]);
+}
+
+/** Title Case, with abbreviations in capitals and small words lower case (except first). */
+export function titleCase(text: string): string {
+  return text.split(/(\s+)/).map((w, i) => {
+    if (/^\s+$/.test(w) || !/[a-z]/i.test(w)) return w;
+    const core = w.replace(/^[^A-Za-z0-9]+|[^A-Za-z0-9]+$/g, "");
+    if (/[A-Z]/.test(core.slice(1)) || /^[A-Z0-9]+$/.test(core) && core.length > 1) return w;   // as printed: CRPC, Lung-RADS, eGFR
+    if (KEEP_LOWER.has(core)) return w;
+    if (i > 0 && SMALL_WORDS.has(core.toLowerCase())) return w.toLowerCase();
+    // "high-volume" -> "High-Volume"; short hyphen parts stay as they are ("T-cell" -> "T-Cell" is fine too)
+    return w.replace(/[A-Za-z]/, (c) => c.toUpperCase()).replace(/-([a-z])(?=[a-z]{2})/g, (_m, c: string) => "-" + c.toUpperCase());
+  }).join("");
+}
+
+function word(t: string): string {
+  if (!t) return t;
+  if (MIXED[t]) return MIXED[t];
+  if (acronyms.has(t) || /^(i{1,3}v?|iv|v|vi{1,3})[abc]?$/.test(t)) return t.toUpperCase();   // roman numerals: stage IIIA
+  if (/^\d+(st|nd|rd|th)$/.test(t) || /^\d+(\.\d+)?$/.test(t)) return t;                 // 1st, 4, 0.5
+  if (/^[a-z]{4,}\d+$/.test(t)) return t.replace(/(\d+)$/, " $1");                            // cycle4 -> cycle 4
+  if (/\d/.test(t) && /[a-z]/.test(t)) return t.toUpperCase();                                 // brca1, tp53, n0m0, cd20
+  return t;
+}
+
+/** "ecog_score" -> "ECOG Score"; "psa_ng_ml" -> "PSA"; "psa_lt_4" -> "PSA < 4"; "cycle4_pr" -> "Cycle 4 PR". */
+export function humanName(name: string): string {
+  let s = name.toLowerCase().replace(/_/g, " ").trim();
+  for (const [re, to] of PHRASES) s = s.replace(re, to as string);
+  s = s.split(" ").map((t) => (/[A-Z≥≤<>×/-]/.test(t) ? t : word(t))).join(" ");
+  const spec = schemaRef?.variables?.[name];
+  if (spec?.type === "number") { const cut = s.replace(UNIT_WORDS, ""); if (cut.trim()) s = cut; }
+  return titleCase(s.replace(/\s+/g, " ").trim());
+}
+export const meta = (name: string): Meta => {
+  const m = META[name];
+  return m ? { ...m, label: titleCase(m.label) } : { label: humanName(name) };
+};
 export const label = (name: string) => meta(name).label;
 export function groupOf(name: string): string {
   return META[name]?.group ?? GROUPS.find((g) => g.match.test(name))!.key;
 }
 
+/** Enum values: same casing rules as names, without unit stripping. */
+function humanValue(v: string): string {
+  let s = v.replace(/_/g, " ");
+  for (const [re, to] of PHRASES) s = s.replace(re, to as string);
+  return titleCase(s.split(" ").map((t) => (/[A-Z≥≤<>×/-]/.test(t) ? t : word(t))).join(" "));
+}
+
 export function valueLabel(v: unknown): string {
   if (typeof v === "boolean") return v ? "Yes" : "No";
-  if (typeof v === "string") return VALUE_LABEL[v] ?? (/^[a-z_]+$/.test(v) ? humanName(v) : v);
+  if (typeof v === "string") return VALUE_LABEL[v] ? titleCase(VALUE_LABEL[v]) : /^[a-z0-9_]+$/.test(v) && /[a-z]/.test(v) ? humanValue(v) : v;
   if (Array.isArray(v)) return v.map(valueLabel).join(", ");
   return String(v);
 }
 
-const UNIT: Record<string, string> = { "ng/ml": "ng/mL", "ng/dl": "ng/dL", years: "y", months: "mo", percent: "%", count: "" };
+const UNIT: Record<string, string> = { "ng/ml": "ng/mL", "ng/dl": "ng/dL", "mg/dl": "mg/dL", "g/dl": "g/dL", "u/ml": "U/mL", "ml/min": "mL/min", years: "y", months: "mo", percent: "%", count: "", score: "", points: "", index: "", ratio: "" };
 export const unitLabel = (u?: string) => (u === undefined ? "" : UNIT[u] ?? u);
 
 type Interval = { min?: number | null; max?: number | null; min_open?: boolean; max_open?: boolean };

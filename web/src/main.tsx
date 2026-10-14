@@ -16,7 +16,7 @@ import { adaptGuideline, isGuidelineFile } from "./lib/adapt";
 
 const root = createRoot(document.getElementById("root")!);
 const single = (bundle: Bundle) => {
-  document.title = bundle.title || "Guideline Navigator";
+  document.title = bundle.title ? `${bundle.title} · NCCN Explorer` : "NCCN Explorer";
   root.render(<Provider bundle={bundle}><SourceProvider><App /></SourceProvider></Provider>);
 };
 
@@ -42,7 +42,7 @@ function OpenFile() {
   return (
     <div className="lib-loading">
       <h1>Open a guideline</h1>
-      <p>This page could not find the guideline library next to it. Browsers do not let pages opened from disk read neighbouring files, so either serve the repository folder (for example <code>python -m http.server</code> in the repository, then open <code>/built/navigator.html</code>), or open one guideline file here.</p>
+      <p>This page could not find the guideline library next to it. Browsers do not let pages opened from disk read neighbouring files, so either serve the repository folder (for example <code>python -m http.server</code> in the repository, then open <code>/built/nccn-explorer.html</code>), or open one guideline file here.</p>
       <label className="btn primary">Choose a guideline.json
         <input type="file" accept=".json,application/json" hidden onChange={async (e) => {
           const f = e.target.files?.[0];

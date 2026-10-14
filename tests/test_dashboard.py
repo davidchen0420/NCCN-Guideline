@@ -51,14 +51,14 @@ class CanonicalBuildTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             out, g = dashboard.build(self.DATA / "prostate", d)
             html = out.read_text()
-            self.assertEqual(out.name, "prostate-navigator.html")
+            self.assertEqual(out.name, "prostate-explorer.html")
             self.assertIn('"format": "nccn-guideline/1"', html)
             self.assertIn("viewer_examples", html)
             self.assertNotIn("/*GUIDELINE*/null", html)
 
     def test_library_build_points_at_data(self):
         with tempfile.TemporaryDirectory() as d:
-            out = dashboard.build_library(self.DATA, Path(d) / "built" / "navigator.html")
+            out = dashboard.build_library(self.DATA, Path(d) / "built" / "nccn-explorer.html")
             html = out.read_text()
             self.assertIn("window.__LIBRARY__={", html)
             self.assertIn("window.__GUIDELINE__=null", html)

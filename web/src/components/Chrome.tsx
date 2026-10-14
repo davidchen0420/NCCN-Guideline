@@ -11,7 +11,7 @@ export function Rail() {
     <button className={on ? "on" : ""} aria-label={label} title={label} aria-pressed={on} onClick={f} data-testid={id}>{icon}</button>
   );
   return (
-    <nav className="rail" aria-label="Navigator">
+    <nav className="rail" aria-label="NCCN Explorer">
       {library && b("All guidelines", <LibraryIcon size={20} />, false, library.home, "rail-library")}
       {b("Whole guideline", <LayoutGrid size={20} />, s.loc.kind === "map", () => go({ kind: "map" }), "rail-map")}
       {b("Contents", <BookOpen size={20} />, s.left === "toc", () => toggle("toc"), "rail-toc")}
@@ -54,9 +54,9 @@ export function Help() {
   if (!s.help) return null;
   const close = () => { try { localStorage.setItem("nav-help", "1"); } catch { /* ignore */ } set({ help: false }); };
   return (
-    <div className="modal" role="dialog" aria-modal="true" aria-label="How to use this navigator" onClick={(e) => { if (e.target === e.currentTarget) close(); }}>
+    <div className="modal" role="dialog" aria-modal="true" aria-label="How to use NCCN Explorer" onClick={(e) => { if (e.target === e.currentTarget) close(); }}>
       <div className="modal-box">
-        <h2>How to use this navigator</h2>
+        <h2>How to use NCCN Explorer</h2>
         <ol>
           <li><b>Patient</b>: enter what the record says (or load an example). Leave anything unknown blank.</li>
           <li><b>Pathways</b>: every route through the algorithm that your entries leave open, ranked by how well it fits. Each shows how many of its criteria are met and a confidence score; pick one to see every step and light it up on the page.</li>
@@ -70,7 +70,7 @@ export function Help() {
         </ol>
         <details><summary>Are the branch conditions clinician-reviewed?</summary><p>No. A language model drafted them and a second pass reviewed them; conditions that failed review are dropped. Always check the source page.</p></details>
         <details><summary>What do likelihood and confidence mean?</summary><p>Likelihood shares 100% across the routes your entries leave open, split at each branch by which arms fit. Confidence multiplies how many of a route's criteria are met by how reliably its arrows and conditions were extracted. Neither is a clinical probability.</p></details>
-        <details><summary>Is this the official NCCN tool?</summary><p>No. It is an independent research prototype built from public descriptions of the NCCN Guidelines Navigator. Use the official guidelines for clinical decisions.</p></details>
+        <details><summary>Is NCCN Explorer an official NCCN tool?</summary><p>No. It is an independent research prototype, not made, reviewed or endorsed by NCCN. Use the official guidelines for clinical decisions.</p></details>
         <div className="modal-actions"><button className="primary" onClick={close}>Got it</button></div>
       </div>
     </div>
@@ -91,9 +91,9 @@ export function Welcome() {
   return (
     <div className="modal" onClick={(e) => { if (e.target === e.currentTarget) close(); }}>
       <div className="modal-box welcome" role="dialog" aria-modal="true" aria-labelledby="wl-h">
-        <span className="eyebrow">{bundle.title}</span>
+        <span className="eyebrow">NCCN Explorer · {bundle.title}</span>
         <h2 id="wl-h">Find where a patient sits in the guideline</h2>
-        <p className="wl-lead">Enter what the record says. The navigator ranks every route through the algorithm that fits, shows which criteria are met, and links each step to the guideline page it came from.</p>
+        <p className="wl-lead">Enter what the record says. NCCN Explorer ranks every route through the algorithm that fits, shows which criteria are met, and links each step to the guideline page it came from.</p>
         <div className="wl-choices">
           <button type="button" className="wl-choice" onClick={() => close({ rightTab: "patient", sheet: true })} autoFocus>
             <UserRound size={20} aria-hidden /><b>Enter a patient</b><span>{start.length ? <>Start with {start.map(label).join(", ")}.</> : "Enter what the record says; pathways update as you type."}</span>

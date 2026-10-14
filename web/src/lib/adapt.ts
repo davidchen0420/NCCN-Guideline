@@ -51,16 +51,22 @@ const SMALL = new Set(["and", "or", "for", "of", "the", "in", "to", "with", "on"
 
 /** "WORKUP FOR M1 CRPCxx,ddd" -> "Workup for M1 CRPC": title case, acronyms and stage codes kept. */
 export const stripMarks = (raw: string) =>
-  raw.trim().replace(/(?<=[A-Z0-9)\]])(?:[a-z]{1,3}|\d{1,2})(?:[,-](?:[a-z]{1,3}|\d{1,2}))*$/, "").trim();
+  raw.trim()
+    .replace(/(?<=[A-Z0-9)\]])(?:[a-z]{1,3}|\d{1,2})(?:[,-](?:[a-z]{1,3}|\d{1,2}))*$/, "")   // trailing marks: "INDUCTIONe,f,g"
+    .replace(/\b([A-Z]{4,})[a-z]{1,3}(?:,[a-z]{1,3})*(?=\s)/g, "$1")                         // glued inside: "SURVEILLANCEvv and"
+    .trim();
 export function smartTitle(raw: string): string {
   const text = stripMarks(raw);
   const letters = text.replace(/[^A-Za-z]/g, "");
-  if (!letters || letters.replace(/[^A-Z]/g, "").length / letters.length < 0.8) return text;   // already mixed case
+  if (!letters || letters.replace(/[^A-Z]/g, "").length / letters.length < 0.8) {
+    // Mixed case: only words printed in capitals that are not abbreviations get title case.
+    return text.replace(/\b[A-Z][A-Z-]{4,}\b/g, (w) => (ACRONYMS.has(w) ? w : w[0] + w.slice(1).toLowerCase()));
+  }
   const words = text.split(/\s+/);
   return words.map((w, i) => {
     const core = w.replace(/[^A-Za-z0-9-]/g, "");
     if (/[a-z]/.test(core)) return w;   // "Lung-RADS" as printed
-    if (ACRONYMS.has(core.toUpperCase()) || /\d/.test(core)) return w;
+    if (ACRONYMS.has(core.toUpperCase()) || /\d/.test(core) || /^[A-Z]+-[A-Z0-9]{1,3}$/.test(core)) return w;   // page codes: AML-A
     if (i > 0 && SMALL.has(core.toLowerCase()) && !(core === "A" && i === words.length - 1)) return w.toLowerCase();
     return w.replace(/[A-Za-z]+/g, (m) => m[0].toUpperCase() + m.slice(1).toLowerCase());
   }).join(" ");
@@ -80,7 +86,7 @@ function docTitle(kind: string, page: GPage): string {
  * extracted heading; skipping fragments and the guideline's running title. */
 function flowTitle(p: GPage, guideline: string): string {
   const first = stripMarks(p.text.split("\n").find((l) => l.trim()) ?? "");
-  const ok = (t?: string | null) => !!t && t.trim().length >= 12 && !/[/:]$/.test(t.trim()) && t.trim().toLowerCase() !== guideline.toLowerCase();
+  const ok = (t?: string | null) => !!t && t.trim().length >= 12 && !/[/:-]$/.test(t.trim()) && t.trim().toLowerCase() !== guideline.toLowerCase();
   const pick = [first, p.heading ?? "", p.title ?? ""].find(ok) ?? first ?? p.id;
   return smartTitle(pick || p.id);
 }

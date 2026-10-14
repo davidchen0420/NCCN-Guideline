@@ -1,4 +1,4 @@
-// Library smoke test: serves the repository over http and drives built/navigator.html.
+// Library smoke test: serves the repository over http and drives built/nccn-explorer.html.
 //   node e2e/library.mjs            (from web/, after `python -m nccn_nav.dashboard --library`)
 import { chromium } from "playwright-core";
 import { strict as assert } from "node:assert";
@@ -15,7 +15,7 @@ const server = createServer(async (req, res) => {
   catch { res.writeHead(404); res.end(); }
 }).listen(0, "127.0.0.1");
 await new Promise((r) => server.once("listening", r));
-const base = `http://127.0.0.1:${server.address().port}/built/navigator.html`;
+const base = `http://127.0.0.1:${server.address().port}/built/nccn-explorer.html`;
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH, args: ["--no-sandbox"] });
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
@@ -66,6 +66,35 @@ await step("the rail returns to the library", async () => {
   await page.getByTestId("rail-library").click();
   await page.locator(".lib-row").first().waitFor();
 });
+if (process.argv.includes("--all")) {
+  // Every guideline: opens, renders its first algorithm page, the patient form and the pathways tab.
+  const slugs = JSON.parse(await readFile(join(ROOT, "data/index.json"), "utf8")).guidelines.map((g) => g.slug);
+  const p = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  const fails = [];
+  for (const slug of slugs) {
+    const errs = [];
+    const onErr = (e) => errs.push(String(e.message ?? e));
+    p.on("pageerror", onErr);
+    try {
+      await p.goto(`${base}#${slug}/`);
+      await p.locator("[data-testid=card]").first().waitFor({ timeout: 15000 });
+      if (await p.getByRole("dialog", { name: /Find where a patient sits/ }).count()) await p.getByRole("button", { name: /Enter a patient/ }).click();
+      await p.getByRole("tab", { name: "Patient" }).click();
+      const labels = await p.locator(".patient .flabel > span:first-child").allTextContents();
+      const lower = labels.filter((l) => /\b(Ecog|Psa|Mri|Pet|Hiv|Covid|Ldh|Egfr|Her2)\b/.test(l) || /_/.test(l));
+      if (lower.length) errs.push("labels: " + lower.slice(0, 3).join(", "));
+      if (!labels.length) errs.push("no patient fields");
+      await p.getByRole("tab", { name: /Pathways/ }).click();
+      const start = p.locator("#start");
+      const opts = await start.locator("option").count();
+      if (opts > 1) { await start.selectOption({ index: 1 }); await p.locator(".pcard, .empty").first().waitFor({ timeout: 10000 }); }
+    } catch (e) { errs.push(String(e.message ?? e).split("\n")[0]); }
+    p.off("pageerror", onErr);
+    if (errs.length) fails.push(`${slug}: ${errs.join("; ")}`);
+  }
+  console.log(`ok ${++n} all ${slugs.length} guidelines open, list patient details and rank pathways${fails.length ? "" : " without errors"}`);
+  assert.deepEqual(fails, [], fails.join("\n"));
+}
 await browser.close();
 server.close();
 assert.deepEqual(errors, [], "console errors: " + errors.join("; "));

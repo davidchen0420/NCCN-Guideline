@@ -1,4 +1,4 @@
-"""Package the navigator (the React app in web/, built into dashboard.html) with guideline data.
+"""Package NCCN Explorer (the React app in web/, built into dashboard.html) with guideline data.
 
 The viewer reads the canonical data/<slug>/guideline.json directly (web/src/lib/adapt.ts):
 - the library build points at data/ and loads any of the guidelines over http;
@@ -6,9 +6,9 @@ The viewer reads the canonical data/<slug>/guideline.json directly (web/src/lib/
 Folders without guideline.json (the synthetic sample) are converted here by build_bundle.
 Outputs that embed guideline text are licensed-derived content.
 
-  python -m nccn_nav.dashboard data/<slug> [out_dir]  ->  <out_dir or private/viz>/<slug>-navigator.html
+  python -m nccn_nav.dashboard data/<slug> [out_dir]  ->  <out_dir or private/viz>/<slug>-explorer.html
                                                          (offline, one guideline embedded)
-  python -m nccn_nav.dashboard --library [data_dir] [out.html]  ->  built/navigator.html
+  python -m nccn_nav.dashboard --library [data_dir] [out.html]  ->  built/nccn-explorer.html
                                                          (all guidelines; serve the repo over http)
   python -m nccn_nav.dashboard --sample                ->  ./sample_out/dashboard.html
 """
@@ -280,7 +280,7 @@ def build(private, out_dir=None, title=None):
         if examples:
             g["viewer_examples"] = examples
         slug = g["guideline"]["slug"]
-        out = out_dir / f"{slug}-navigator.html"
+        out = out_dir / f"{slug}-explorer.html"
         out.write_text(_fill(_template(), guideline=json.dumps(g, ensure_ascii=False)))
         return out, g
     bundle = build_bundle(private)
@@ -297,7 +297,7 @@ def build(private, out_dir=None, title=None):
     return out, bundle
 
 
-def build_library(data_dir="data", out_path="built/navigator.html"):
+def build_library(data_dir="data", out_path="built/nccn-explorer.html"):
     """The library viewer: no guideline embedded; it reads <data_dir>/index.json and each
     <slug>/guideline.json over http, relative to where the page is served."""
     out = Path(out_path)

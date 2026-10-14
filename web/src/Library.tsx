@@ -53,7 +53,7 @@ export function LibraryShell({ lib }: { lib: Library }) {
     return () => window.removeEventListener("hashchange", f);
   }, []);
   useEffect(() => {
-    if (!slug) { setState(null); document.title = "Guideline navigator"; return; }
+    if (!slug) { setState(null); document.title = "NCCN Explorer"; return; }
     const e = lib.guidelines.find((x) => x.slug === slug);
     if (!e) { setState({ slug, error: `No guideline called “${slug}” in this library.` }); return; }
     let off = false;
@@ -61,7 +61,7 @@ export function LibraryShell({ lib }: { lib: Library }) {
     loadGuideline(lib, e).then((bundle) => {
       if (off) return;
       remember(slug);
-      document.title = `${e.title} · Guideline navigator`;
+      document.title = `${e.title} · NCCN Explorer`;
       setState({ slug, bundle });
     }).catch((err) => { if (!off) setState({ slug, error: String(err.message ?? err) }); });
     return () => { off = true; };
@@ -112,8 +112,8 @@ export function LibraryHome({ lib, onOpen }: { lib: Library; onOpen: (slug: stri
   return (
     <div className="lib">
       <header className="lib-head">
-        <span className="eyebrow">Guideline navigator</span>
-        <h1>{lib.guidelines.length} encoded NCCN Guidelines</h1>
+        <h1 className="brand">NCCN Explorer</h1>
+        <p className="lib-count">{lib.guidelines.length} encoded NCCN Guidelines</p>
         <p className="lib-lead">Pick a guideline to enter a patient, see the routes through its algorithm that fit, and check each step against the source page.</p>
         <div className="field lib-search">
           <SearchIcon size={15} aria-hidden />
@@ -141,7 +141,7 @@ export function LibraryHome({ lib, onOpen }: { lib: Library; onOpen: (slug: stri
         </section>
       ))}
       {!list.length && <p className="note lib-none">No guideline matches “{q}”.</p>}
-      <p className="lib-fine">An independent research prototype, not the official NCCN tool. The guidelines were encoded by software; branch conditions are machine-drafted and not clinician-reviewed. Always check the source page.</p>
+      <p className="lib-fine">NCCN Explorer is an independent research prototype. It is not made, reviewed or endorsed by NCCN. The guidelines were encoded by software; branch conditions are machine-drafted and not clinician-reviewed. Always check the source page.</p>
     </div>
   );
 }

@@ -151,7 +151,7 @@ export function PatientPanel() {
     if (other.length > 6) {
       m.delete("other");
       const byTime: [string, string, (n: string) => boolean][] = [
-        ["now", "Current findings", (n) => !vars[n].time || vars[n].time === "current"],
+        ["now", "Current Findings", (n) => !vars[n].time || vars[n].time === "current"],
         ["dx", "At diagnosis", (n) => vars[n].time === "at_diagnosis"],
         ["hx", "History", (n) => vars[n].time === "history"],
       ];

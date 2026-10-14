@@ -1,4 +1,4 @@
-/* Guideline navigator — calm, document-like UI. One accent (deep green), warm neutrals,
+/* NCCN Explorer — calm, document-like UI. One accent (deep green), warm neutrals,
    serif for guideline headings and recommendations, sans for interface text. */
 :root {
   --paper: #f3f1ec; --surface: #fdfcfa; --surface-2: #f6f4ef; --sunken: #ebe8e1;
@@ -550,7 +550,8 @@ button.wl-choice:hover { border-color: var(--ink-2); }
 .lib { height: 100dvh; overflow: auto; background: var(--paper); padding: 40px clamp(16px, 5vw, 64px) 64px; }
 .lib > * { max-width: 920px; margin-left: auto; margin-right: auto; }
 .lib-head { display: grid; gap: 12px; margin-bottom: 18px; }
-.lib-head h1 { font-family: var(--serif); font-size: 30px; font-weight: 600; letter-spacing: -.01em; }
+.lib-head h1 { font-family: var(--serif); font-size: 34px; font-weight: 600; letter-spacing: -.01em; }
+.lib-count { font-size: 12px; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin-top: -6px; }
 .lib-lead { color: var(--ink-2); font-size: 15px; line-height: 1.55; max-width: 64ch; }
 .lib-search { max-width: 520px; background: var(--surface); }
 .lib-search input { font-size: 15px; padding: 9px 0; }
