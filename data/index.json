@@ -131,8 +131,9 @@
     "decision_boxes": 37,
     "predicate_status": {
      "model_reviewed": 31,
-     "inherited_from_link": 2,
-     "none": 4
+     "inherited_from_link": 1,
+     "none": 4,
+     "rejected": 1
     },
     "decision_types": {
      "condition": 33,
@@ -140,7 +141,7 @@
      "option": 2
     },
     "entries": 12,
-    "entries_with_predicate": 11,
+    "entries_with_predicate": 10,
     "entries_reached_by_link": 9,
     "roles": {
      "page_heading": 10,
@@ -453,7 +454,8 @@
     "decision_boxes": 100,
     "predicate_status": {
      "model_reviewed": 93,
-     "inherited_from_link": 3,
+     "rejected": 2,
+     "inherited_from_link": 1,
      "none": 4
     },
     "decision_types": {
@@ -461,7 +463,7 @@
      "other": 3
     },
     "entries": 21,
-    "entries_with_predicate": 21,
+    "entries_with_predicate": 19,
     "entries_reached_by_link": 10,
     "roles": {
      "page_heading": 37,
@@ -789,8 +791,8 @@
     "predicate_status": {
      "none": 26,
      "model_reviewed": 162,
-     "inherited_from_link": 6,
-     "rejected": 1,
+     "inherited_from_link": 5,
+     "rejected": 2,
      "section_only": 5
     },
     "decision_types": {
@@ -799,7 +801,7 @@
      "other": 21
     },
     "entries": 54,
-    "entries_with_predicate": 52,
+    "entries_with_predicate": 51,
     "entries_reached_by_link": 27,
     "roles": {
      "page_heading": 49,
@@ -896,9 +898,9 @@
     "decision_boxes": 161,
     "predicate_status": {
      "model_reviewed": 152,
-     "inherited_from_link": 5,
+     "inherited_from_link": 4,
      "none": 3,
-     "rejected": 1
+     "rejected": 2
     },
     "decision_types": {
      "condition": 153,
@@ -906,7 +908,7 @@
      "option": 2
     },
     "entries": 31,
-    "entries_with_predicate": 29,
+    "entries_with_predicate": 28,
     "entries_reached_by_link": 12,
     "roles": {
      "page_heading": 26,
@@ -1002,8 +1004,8 @@
     "decision_boxes": 240,
     "predicate_status": {
      "model_reviewed": 216,
-     "rejected": 1,
-     "inherited_from_link": 9,
+     "rejected": 7,
+     "inherited_from_link": 3,
      "none": 12,
      "section_only": 2
     },
@@ -1013,7 +1015,7 @@
      "option": 9
     },
     "entries": 57,
-    "entries_with_predicate": 57,
+    "entries_with_predicate": 51,
     "entries_reached_by_link": 27,
     "roles": {
      "note": 30,
@@ -1112,8 +1114,8 @@
     "predicate_status": {
      "none": 9,
      "model_reviewed": 31,
-     "inherited_from_link": 4,
-     "rejected": 1
+     "inherited_from_link": 1,
+     "rejected": 4
     },
     "decision_types": {
      "other": 4,
@@ -1121,7 +1123,7 @@
      "option": 6
     },
     "entries": 15,
-    "entries_with_predicate": 11,
+    "entries_with_predicate": 8,
     "entries_reached_by_link": 8,
     "roles": {
      "note": 15,
@@ -1394,13 +1396,13 @@
     "predicate_status": {
      "none": 2,
      "model_reviewed": 6,
-     "inherited_from_link": 1
+     "rejected": 1
     },
     "decision_types": {
      "condition": 9
     },
     "entries": 3,
-    "entries_with_predicate": 1,
+    "entries_with_predicate": 0,
     "entries_reached_by_link": 1,
     "roles": {
      "page_heading": 8,
@@ -1499,14 +1501,15 @@
     "predicate_status": {
      "none": 25,
      "model_reviewed": 101,
-     "inherited_from_link": 7
+     "inherited_from_link": 6,
+     "rejected": 1
     },
     "decision_types": {
      "condition": 105,
      "option": 28
     },
     "entries": 37,
-    "entries_with_predicate": 36,
+    "entries_with_predicate": 35,
     "entries_reached_by_link": 23,
     "roles": {
      "page_heading": 50,
@@ -1550,7 +1553,8 @@
     "predicate_status": {
      "none": 8,
      "model_reviewed": 49,
-     "inherited_from_link": 3
+     "inherited_from_link": 2,
+     "rejected": 1
     },
     "decision_types": {
      "other": 1,
@@ -1558,7 +1562,7 @@
      "option": 9
     },
     "entries": 22,
-    "entries_with_predicate": 21,
+    "entries_with_predicate": 20,
     "entries_reached_by_link": 17,
     "roles": {
      "page_heading": 18,
@@ -1653,14 +1657,14 @@
      "model_reviewed": 66,
      "none": 17,
      "section_only": 1,
-     "inherited_from_link": 1
+     "rejected": 1
     },
     "decision_types": {
      "condition": 71,
      "other": 14
     },
     "entries": 10,
-    "entries_with_predicate": 8,
+    "entries_with_predicate": 7,
     "entries_reached_by_link": 7,
     "roles": {
      "note": 114,
@@ -2337,7 +2341,7 @@
     },
     "decision_boxes": 122,
     "predicate_status": {
-     "inherited_from_link": 1,
+     "rejected": 1,
      "model_reviewed": 107,
      "none": 14
     },
@@ -2347,7 +2351,7 @@
      "other": 2
     },
     "entries": 13,
-    "entries_with_predicate": 13,
+    "entries_with_predicate": 12,
     "entries_reached_by_link": 10,
     "roles": {
      "page_heading": 19,
@@ -2502,8 +2506,8 @@
     "predicate_status": {
      "model_reviewed": 74,
      "none": 17,
-     "inherited_from_link": 6,
-     "rejected": 1
+     "rejected": 5,
+     "inherited_from_link": 2
     },
     "decision_types": {
      "condition": 81,
@@ -2511,7 +2515,7 @@
      "option": 14
     },
     "entries": 23,
-    "entries_with_predicate": 22,
+    "entries_with_predicate": 18,
     "entries_reached_by_link": 17,
     "roles": {
      "page_heading": 45,
@@ -3040,9 +3044,9 @@
     },
     "decision_boxes": 193,
     "predicate_status": {
-     "inherited_from_link": 3,
+     "inherited_from_link": 2,
      "model_reviewed": 172,
-     "rejected": 2,
+     "rejected": 3,
      "none": 13,
      "section_only": 3
     },
@@ -3052,7 +3056,7 @@
      "option": 3
     },
     "entries": 42,
-    "entries_with_predicate": 41,
+    "entries_with_predicate": 40,
     "entries_reached_by_link": 14,
     "roles": {
      "table_root": 2,
@@ -3272,7 +3276,8 @@
     "decision_boxes": 138,
     "predicate_status": {
      "model_reviewed": 130,
-     "inherited_from_link": 2,
+     "rejected": 1,
+     "inherited_from_link": 1,
      "none": 6
     },
     "decision_types": {
@@ -3281,7 +3286,7 @@
      "option": 6
     },
     "entries": 34,
-    "entries_with_predicate": 34,
+    "entries_with_predicate": 33,
     "entries_reached_by_link": 21,
     "roles": {
      "page_heading": 41,
@@ -3326,16 +3331,16 @@
     "decision_boxes": 154,
     "predicate_status": {
      "none": 26,
-     "inherited_from_link": 6,
+     "inherited_from_link": 5,
      "model_reviewed": 120,
-     "rejected": 2
+     "rejected": 3
     },
     "decision_types": {
      "other": 26,
      "condition": 128
     },
     "entries": 73,
-    "entries_with_predicate": 69,
+    "entries_with_predicate": 68,
     "entries_reached_by_link": 60,
     "roles": {
      "note": 36,
@@ -3386,14 +3391,14 @@
     "predicate_status": {
      "model_reviewed": 63,
      "none": 6,
-     "inherited_from_link": 2
+     "rejected": 2
     },
     "decision_types": {
      "condition": 65,
      "option": 6
     },
     "entries": 13,
-    "entries_with_predicate": 13,
+    "entries_with_predicate": 11,
     "entries_reached_by_link": 12,
     "roles": {
      "page_heading": 21,
@@ -3605,8 +3610,8 @@
     "predicate_status": {
      "none": 66,
      "model_reviewed": 63,
-     "inherited_from_link": 4,
-     "rejected": 1
+     "inherited_from_link": 2,
+     "rejected": 3
     },
     "decision_types": {
      "condition": 97,
@@ -3614,7 +3619,7 @@
      "option": 25
     },
     "entries": 13,
-    "entries_with_predicate": 10,
+    "entries_with_predicate": 8,
     "entries_reached_by_link": 8,
     "roles": {
      "page_heading": 25,
@@ -3763,10 +3768,10 @@
     },
     "decision_boxes": 153,
     "predicate_status": {
-     "inherited_from_link": 6,
+     "inherited_from_link": 5,
      "model_reviewed": 81,
      "none": 65,
-     "rejected": 1
+     "rejected": 2
     },
     "decision_types": {
      "other": 37,
@@ -3774,7 +3779,7 @@
      "option": 29
     },
     "entries": 38,
-    "entries_with_predicate": 31,
+    "entries_with_predicate": 30,
     "entries_reached_by_link": 27,
     "roles": {
      "page_heading": 37,
@@ -4046,16 +4051,15 @@
     "decision_boxes": 52,
     "predicate_status": {
      "model_reviewed": 44,
-     "inherited_from_link": 2,
-     "none": 4,
-     "rejected": 2
+     "rejected": 4,
+     "none": 4
     },
     "decision_types": {
      "condition": 47,
      "option": 5
     },
     "entries": 10,
-    "entries_with_predicate": 10,
+    "entries_with_predicate": 8,
     "entries_reached_by_link": 9,
     "roles": {
      "page_heading": 12,
@@ -4147,8 +4151,8 @@
     "predicate_status": {
      "model_reviewed": 18,
      "none": 4,
-     "inherited_from_link": 2,
-     "rejected": 1
+     "rejected": 2,
+     "inherited_from_link": 1
     },
     "decision_types": {
      "condition": 22,
@@ -4156,7 +4160,7 @@
      "option": 1
     },
     "entries": 5,
-    "entries_with_predicate": 4,
+    "entries_with_predicate": 3,
     "entries_reached_by_link": 3,
     "roles": {
      "page_heading": 14,
@@ -4316,7 +4320,8 @@
      "none": 48,
      "section_only": 8,
      "model_reviewed": 76,
-     "inherited_from_link": 16
+     "inherited_from_link": 13,
+     "rejected": 3
     },
     "decision_types": {
      "other": 41,
@@ -4325,7 +4330,7 @@
      "null": 3
     },
     "entries": 74,
-    "entries_with_predicate": 54,
+    "entries_with_predicate": 51,
     "entries_reached_by_link": 40,
     "roles": {
      "page_heading": 88,
@@ -4540,14 +4545,14 @@
     "predicate_status": {
      "model_reviewed": 104,
      "none": 29,
-     "inherited_from_link": 2
+     "rejected": 2
     },
     "decision_types": {
      "condition": 106,
      "option": 29
     },
     "entries": 28,
-    "entries_with_predicate": 28,
+    "entries_with_predicate": 26,
     "entries_reached_by_link": 27,
     "roles": {
      "page_heading": 39,
@@ -4639,8 +4644,8 @@
     "decision_boxes": 222,
     "predicate_status": {
      "model_reviewed": 201,
-     "rejected": 2,
-     "inherited_from_link": 5,
+     "rejected": 4,
+     "inherited_from_link": 3,
      "none": 14
     },
     "decision_types": {
@@ -4650,7 +4655,7 @@
      "other": 3
     },
     "entries": 74,
-    "entries_with_predicate": 73,
+    "entries_with_predicate": 71,
     "entries_reached_by_link": 63,
     "roles": {
      "page_heading": 76,
