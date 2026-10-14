@@ -60,9 +60,14 @@ REF_RE = re.compile(r"\b([A-Z]{2,6}-[0-9]+[A-Z]?)\b")
 
 def _sim(a, b):
     # Page references are what tell look-alike boxes apart ("pMMR/MSS (COL-10)" vs "(COL-11)").
+    # A mismatch is a penalty, not a veto: MedGUIDE was built from an older guideline version
+    # whose page numbers differ (e.g. PROS-15 there is PROS-17 in v6.2026).
     ra, rb = set(REF_RE.findall(a)), set(REF_RE.findall(b))
-    if ra and rb and not ra & rb:
-        return 0.0
+    penalty = 0.15 if ra and rb and not ra & rb else 0.0
+    return max(0.0, _sim_text(a, b) - penalty)
+
+
+def _sim_text(a, b):
     a, b = norm(a), norm(b)
     if not a or not b:
         return 0.0

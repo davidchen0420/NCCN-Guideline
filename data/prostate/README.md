@@ -15,8 +15,9 @@ Page images and embedding caches are omitted.
 | `footnotes.json` | Footnotes per page code. Letters repeat across pages with different text | Current |
 | `pages.json`, `chunks_full.json` | Full page store: every page in reading order, tables as Markdown, plus retrieval chunks | Current |
 | `fact_schema.json` | Patient-fact schema: raw variables plus derived classifications computed by code | Current (round 1, Haiku-drafted; not clinician-reviewed) |
-| `llm/` | Inputs and outputs of the Haiku predicate-drafting step | In progress (round 1) |
-| `predicates.json`, `predicates_*draft*.json`, `predicates_status.json`, `nodes_for_predicates*` | **Old** predicates keyed by the old sequential box ids (`n0`, `n1`, …) | Superseded; do not use with the current graphs |
+| `llm/` | Inputs and outputs of the Haiku predicate drafting and review steps | Current (round 2) |
+| `predicates.json`, `predicates_status.json` | Branch conditions over `fact_schema.json`, keyed by position-based box ids; rejected ones are null | Current (round 2, Haiku-drafted and Haiku-reviewed) |
+| `predicates_*draft*.json`, `nodes_for_predicates*` | Old predicates keyed by sequential ids | Superseded |
 | `gold/` | Reference graphs for PROS-3, 7, 9 and 13, written by Claude | Not clinician-made |
 | `medguide/` | Our outputs on MedGUIDE prostate_14: A0 answers, extracted facts, label checks, mapping, dev/test split, scores. The MedGUIDE items themselves are not copied; see HF `MedGUIDE/MedGUIDE-MCQA-8K` | Old facts and predicates are superseded |
 | `redflags.json` | E1 pages flagged for the vision cross-check | Current |
