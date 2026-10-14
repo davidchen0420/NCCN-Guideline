@@ -16,8 +16,6 @@ from pathlib import Path
 
 from .pdfvec import footnote_text
 
-W, H = 792, 612  # PDF page size in points
-TOP, BOTTOM = 85, 560
 
 CSS = """
 :root{--bg:#fafaf9;--panel:#fff;--ink:#1c1917;--muted:#78716c;--line:#e7e5e4;--box:#f5f5f4;
@@ -54,7 +52,7 @@ function anchor(b,toward){const [cx,cy]=center(b);const dx=toward[0]-cx,dy=towar
  const hw=(b[2]-b[0])/2+2,hh=(b[3]-b[1])/2+2;const s=Math.min(Math.abs(dx)>1e-6?hw/Math.abs(dx):1e9,Math.abs(dy)>1e-6?hh/Math.abs(dy):1e9);
  return [cx+dx*s,cy+dy*s]}
 function showPage(p){const g=D.pages[p];const byId={};g.nodes.forEach(n=>byId[n.id]=n);
- let s=`<svg viewBox="0 ${D.top} ${D.w} ${D.bottom-D.top}">${defs()}`;
+ const [vx,vy,vw,vh]=g.view;let s=`<svg viewBox="${vx} ${vy} ${vw} ${vh}">${defs()}`;
  g.edges.forEach(e=>{const a=byId[e.src],b=byId[e.dst];if(!a||!b)return;
   const p1=anchor(a.bbox,center(b.bbox)),p2=anchor(b.bbox,center(a.bbox));
   s+=`<path class="e ${e.cls}" marker-end="url(#m-${e.cls})" d="M${p1[0]},${p1[1]} L${p2[0]},${p2[1]}"/>`});
@@ -126,8 +124,13 @@ def build(private):
             cls = "unsure" if "unsure" in sup else ("verified" if "verified" in sup else "agreed")
             counts[cls] = counts.get(cls, 0) + 1
             edges.append({"src": e["src"], "dst": e["dst"], "cls": cls})
-        pages[page] = {"nodes": nodes, "edges": edges, "counts": counts}
-    data = {"pages": pages, "links": sorted(links), "w": W, "top": TOP, "bottom": BOTTOM}
+        # View box: the page's content band (recorded at extraction), else the nodes' extent.
+        w = g.get("page_size", [max([n["bbox"][2] for n in nodes] + [1]) + 20])[0]
+        top, bottom = g.get("content_band") or (min([n["bbox"][1] for n in nodes] + [0]) - 5,
+                                                max([n["bbox"][3] for n in nodes] + [1]) + 5)
+        pages[page] = {"nodes": nodes, "edges": edges, "counts": counts,
+                       "view": [0, round(top, 1), round(w, 1), round(bottom - top + 5, 1)]}
+    data = {"pages": pages, "links": sorted(links)}
     total_nodes = sum(len(p["nodes"]) for p in pages.values())
     total_edges = sum(len(p["edges"]) for p in pages.values())
     legend = ('<div class="legend"><span><i style="border-color:var(--agreed)"></i>arrow found by both extractors</span>'

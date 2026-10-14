@@ -54,15 +54,17 @@ def red_flags(g):
         flags.append("no_edges")
     if g["n_unattached"]:
         flags.append(f"unattached_arrows:{g['n_unattached']}")
-    # Orphans in the top band are section headers; "Footnotes on X-nA" lines are notes.
-    orphans = [n["id"] for n in boxes if n.get("role") == "orphan" and n["bbox"][1] > 110
+    w, h = g.get("page_size") or (792, 612)  # graphs extracted before page_size was stored
+    top = g.get("content_band", (0.139 * h, 0))[0]
+    # Orphans just under the header are section titles; "Footnotes on X-nA" lines are notes.
+    orphans = [n["id"] for n in boxes if n.get("role") == "orphan" and n["bbox"][1] > top + 0.04 * h
                and not n["text"].startswith("Footnote")]
     if orphans:
         flags.append(f"orphans:{len(orphans)}")
     if g["n_connectors"] and len(g["edges"]) < 0.6 * g["n_connectors"]:
         flags.append("few_edges_per_arrow")
-    # A leaf in the middle of the page with no page link usually means a missed arrow.
-    dead = [n["id"] for n in boxes if n.get("role") == "leaf" and not n.get("links") and n["bbox"][2] < 500]
+    # A leaf away from the right side of the page with no page link usually means a missed arrow.
+    dead = [n["id"] for n in boxes if n.get("role") == "leaf" and not n.get("links") and n["bbox"][2] < 0.63 * w]
     if dead:
         flags.append(f"dead_ends:{len(dead)}")
     if len(boxes) > 35:

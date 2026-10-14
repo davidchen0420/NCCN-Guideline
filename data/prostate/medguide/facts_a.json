@@ -1,83 +1,415 @@
-{"M0": {"psadt_months": 11, "progression": true, "m1": false},
-"M1": {"psadt_months": 12, "progression": true, "m1": false},
-"M2": {"psadt_months": 12, "progression": false, "m1": false},
-"M3": {"psadt_months": 8, "progression": true, "m1": false},
-"M4": {"psadt_months": 7, "progression": true, "m1": false},
-"M5": {"psadt_months": 8, "progression": false, "m1": false},
-"M6": {"psadt_months": 12, "progression": true, "m1": false},
-"M7": {"psadt_months": 12, "progression": false, "m1": false},
-"M8": {"psadt_months": 8, "progression": true, "m1": false},
-"M9": {"psadt_months": 8, "progression": true, "m1": false},
-"M10": {"psadt_months": 8, "progression": false, "m1": false},
-"M11": {"psadt_months": 12, "progression": true, "m1": false},
-"M12": {"psadt_months": 12, "progression": false, "m1": false},
-"M13": {"psadt_months": 9, "progression": true, "m1": false},
-"M14": {"psadt_months": 9, "progression": true, "m1": true},
-"M15": {"psadt_months": 8, "progression": false, "m1": false},
-"M16": {"psadt_months": 12, "progression": true, "m1": false},
-"M17": {"psadt_months": 12, "progression": true},
-"M18": {"psadt_months": 12, "progression": false, "m1": false},
-"M19": {"psadt_months": 8, "progression": true, "m1": false},
-"M20": {"psadt_months": 8, "progression": true, "m1": false},
-"M21": {"psadt_months": 8, "progression": false, "m1": false},
-"M22": {"psadt_months": 12, "progression": true, "m1": false},
-"M23": {"psadt_months": 12, "progression": true, "m1": true},
-"M24": {"psadt_months": 12, "progression": false, "m1": false},
-"M25": {"psadt_months": 9, "progression": true, "m1": false},
-"M26": {"psadt_months": 8, "progression": true, "m1": true},
-"M27": {"psadt_months": 9, "progression": false, "m1": false},
-"M28": {"psadt_months": 12, "progression": true, "m1": false},
-"M29": {"psadt_months": 12, "progression": true, "m1": true},
-"M30": {"psadt_months": 12, "progression": false, "m1": false},
-"M31": {"psadt_months": 8, "progression": true, "m1": false},
-"M32": {"psadt_months": 8, "progression": true, "m1": true},
-"M33": {"psadt_months": 8, "progression": false, "m1": false},
-"M34": {"psadt_months": 12, "progression": true, "m1": false},
-"M35": {"psadt_months": 12, "progression": true, "m1": true},
-"M36": {"psadt_months": 13, "progression": false, "m1": false},
-"M37": {"psadt_months": 8, "progression": true, "m1": false},
-"M38": {"psadt_months": 8, "progression": true, "m1": true},
-"M39": {"psadt_months": 9, "progression": false, "m1": false},
-"M40": {"psadt_months": 12, "progression": true, "m1": false},
-"M41": {"psadt_months": 12, "progression": true, "m1": true},
-"M42": {"psadt_months": 12, "progression": false, "m1": false},
-"M43": {"psadt_months": 9, "progression": true, "m1": false},
-"M44": {"psadt_months": 9, "progression": true, "m1": true},
-"M45": {"psadt_months": 9, "progression": false, "m1": false},
-"M46": {"psadt_months": 12, "progression": true, "m1": false},
-"M47": {"psadt_months": 12, "progression": true, "m1": true},
-"M48": {"psadt_months": 13, "progression": false, "m1": false},
-"M49": {"psadt_months": 8, "progression": true, "m1": false},
-"M50": {"psadt_months": 8, "progression": true, "m1": true},
-"M51": {"psadt_months": 9, "progression": false, "m1": false},
-"M52": {"psadt_months": 12, "progression": true, "m1": false},
-"M53": {"psadt_months": 15, "progression": true, "m1": true},
-"M54": {"psadt_months": 14, "progression": false, "m1": false},
-"M55": {"psadt_months": 8, "progression": true, "m1": false},
-"M56": {"psadt_months": 8, "progression": true, "m1": true},
-"M57": {"psadt_months": 7, "progression": false, "m1": false},
-"M58": {"psadt_months": 14, "progression": true, "m1": false},
-"M59": {"psadt_months": 13, "progression": true, "m1": true},
-"M60": {"psadt_months": 15, "progression": false, "m1": false},
-"M61": {"psadt_months": 8, "progression": true, "m1": false},
-"M62": {"psadt_months": 7, "progression": true, "m1": true},
-"M63": {"psadt_months": 9, "progression": false, "m1": false},
-"M64": {"psadt_months": 11, "progression": true, "m1": false},
-"M65": {"psadt_months": 12, "progression": true, "m1": true},
-"M66": {"psadt_months": 13, "progression": false, "m1": false},
-"M67": {"psadt_months": 8, "progression": true, "m1": false},
-"M68": {"psadt_months": 8, "progression": true, "m1": true},
-"M69": {"psadt_months": 8, "progression": false, "m1": false},
-"M70": {"psadt_months": 12, "progression": true, "m1": false},
-"M71": {"psadt_months": 14, "progression": false, "m1": false},
-"M72": {"psadt_months": 12, "progression": true, "m1": false},
-"M73": {"psadt_months": 8, "progression": true, "m1": false},
-"M74": {"psadt_months": 8, "progression": true, "m1": false},
-"M75": {"psadt_months": 9, "progression": true, "m1": false},
-"M76": {"psadt_months": 12, "progression": true},
-"M77": {"psadt_months": 14, "progression": true, "m1": false},
-"M78": {"psadt_months": 12, "progression": false, "m1": false},
-"M79": {"psadt_months": 9.5, "progression": true, "m1": false},
-"M80": {"psadt_months": 9, "progression": true, "m1": false},
-"M81": {"psadt_months": 9, "progression": false, "m1": false},
-"M82": {"psadt_months": 12, "progression": true, "m1": false}}
+{
+ "prostate_14:0": {
+  "psadt_months": 11,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:1": {
+  "psadt_months": 12,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:2": {
+  "psadt_months": 12,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:3": {
+  "psadt_months": 8,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:4": {
+  "psadt_months": 7,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:5": {
+  "psadt_months": 8,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:6": {
+  "psadt_months": 12,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:7": {
+  "psadt_months": 12,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:8": {
+  "psadt_months": 8,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:9": {
+  "psadt_months": 8,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:10": {
+  "psadt_months": 8,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:11": {
+  "psadt_months": 12,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:12": {
+  "psadt_months": 12,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:13": {
+  "psadt_months": 9,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:14": {
+  "psadt_months": 9,
+  "progression": true,
+  "m1": true
+ },
+ "prostate_14:15": {
+  "psadt_months": 8,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:16": {
+  "psadt_months": 12,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:17": {
+  "psadt_months": 12,
+  "progression": true
+ },
+ "prostate_14:18": {
+  "psadt_months": 12,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:19": {
+  "psadt_months": 8,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:20": {
+  "psadt_months": 8,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:21": {
+  "psadt_months": 8,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:22": {
+  "psadt_months": 12,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:23": {
+  "psadt_months": 12,
+  "progression": true,
+  "m1": true
+ },
+ "prostate_14:24": {
+  "psadt_months": 12,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:25": {
+  "psadt_months": 9,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:26": {
+  "psadt_months": 8,
+  "progression": true,
+  "m1": true
+ },
+ "prostate_14:27": {
+  "psadt_months": 9,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:28": {
+  "psadt_months": 12,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:29": {
+  "psadt_months": 12,
+  "progression": true,
+  "m1": true
+ },
+ "prostate_14:30": {
+  "psadt_months": 12,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:31": {
+  "psadt_months": 8,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:32": {
+  "psadt_months": 8,
+  "progression": true,
+  "m1": true
+ },
+ "prostate_14:33": {
+  "psadt_months": 8,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:34": {
+  "psadt_months": 12,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:35": {
+  "psadt_months": 12,
+  "progression": true,
+  "m1": true
+ },
+ "prostate_14:36": {
+  "psadt_months": 13,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:37": {
+  "psadt_months": 8,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:38": {
+  "psadt_months": 8,
+  "progression": true,
+  "m1": true
+ },
+ "prostate_14:39": {
+  "psadt_months": 9,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:40": {
+  "psadt_months": 12,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:41": {
+  "psadt_months": 12,
+  "progression": true,
+  "m1": true
+ },
+ "prostate_14:42": {
+  "psadt_months": 12,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:43": {
+  "psadt_months": 9,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:44": {
+  "psadt_months": 9,
+  "progression": true,
+  "m1": true
+ },
+ "prostate_14:45": {
+  "psadt_months": 9,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:46": {
+  "psadt_months": 12,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:47": {
+  "psadt_months": 12,
+  "progression": true,
+  "m1": true
+ },
+ "prostate_14:48": {
+  "psadt_months": 13,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:49": {
+  "psadt_months": 8,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:50": {
+  "psadt_months": 8,
+  "progression": true,
+  "m1": true
+ },
+ "prostate_14:51": {
+  "psadt_months": 9,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:52": {
+  "psadt_months": 12,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:53": {
+  "psadt_months": 15,
+  "progression": true,
+  "m1": true
+ },
+ "prostate_14:54": {
+  "psadt_months": 14,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:55": {
+  "psadt_months": 8,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:56": {
+  "psadt_months": 8,
+  "progression": true,
+  "m1": true
+ },
+ "prostate_14:57": {
+  "psadt_months": 7,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:58": {
+  "psadt_months": 14,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:59": {
+  "psadt_months": 13,
+  "progression": true,
+  "m1": true
+ },
+ "prostate_14:60": {
+  "psadt_months": 15,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:61": {
+  "psadt_months": 8,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:62": {
+  "psadt_months": 7,
+  "progression": true,
+  "m1": true
+ },
+ "prostate_14:63": {
+  "psadt_months": 9,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:64": {
+  "psadt_months": 11,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:65": {
+  "psadt_months": 12,
+  "progression": true,
+  "m1": true
+ },
+ "prostate_14:66": {
+  "psadt_months": 13,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:67": {
+  "psadt_months": 8,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:68": {
+  "psadt_months": 8,
+  "progression": true,
+  "m1": true
+ },
+ "prostate_14:69": {
+  "psadt_months": 8,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:70": {
+  "psadt_months": 12,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:71": {
+  "psadt_months": 14,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:72": {
+  "psadt_months": 12,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:73": {
+  "psadt_months": 8,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:74": {
+  "psadt_months": 8,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:75": {
+  "psadt_months": 9,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:76": {
+  "psadt_months": 12,
+  "progression": true
+ },
+ "prostate_14:77": {
+  "psadt_months": 14,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:78": {
+  "psadt_months": 12,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:79": {
+  "psadt_months": 9.5,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:80": {
+  "psadt_months": 9,
+  "progression": true,
+  "m1": false
+ },
+ "prostate_14:81": {
+  "psadt_months": 9,
+  "progression": false,
+  "m1": false
+ },
+ "prostate_14:82": {
+  "psadt_months": 12,
+  "progression": true,
+  "m1": false
+ }
+}

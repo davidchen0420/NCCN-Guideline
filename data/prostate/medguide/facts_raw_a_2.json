@@ -1,5 +1,5 @@
 {
- "M84": {
+ "prostate_14:84": {
   "psa_ng_ml": {
    "value": 2.5,
    "unit": "ng/mL",
@@ -58,7 +58,7 @@
    "quote": "castration-resistant prostate cancer (CRPC) without metastatic disease"
   }
  },
- "M85": {
+ "prostate_14:85": {
   "psa_doubling_time_months": {
    "value": 9,
    "unit": "months",
@@ -102,7 +102,7 @@
    "quote": "castration-resistant prostate cancer (CRPC) with non-metastatic disease"
   }
  },
- "M86": {
+ "prostate_14:86": {
   "psa_ng_ml": {
    "value": 6.4,
    "unit": "ng/mL",
@@ -156,7 +156,7 @@
    "quote": "managing his castration-resistant prostate cancer"
   }
  },
- "M87": {
+ "prostate_14:87": {
   "psa_doubling_time_months": {
    "value": 9,
    "unit": "months",
@@ -205,7 +205,7 @@
    "quote": "confirming castration-resistant prostate cancer (CRPC) without metastatic spread"
   }
  },
- "M88": {
+ "prostate_14:88": {
   "psa_doubling_time_months": {
    "value": {
     "min": 10
@@ -244,7 +244,7 @@
    "quote": "diagnosed with castration-resistant prostate cancer (CRPC) three years ago"
   }
  },
- "M89": {
+ "prostate_14:89": {
   "psa_doubling_time_months": {
    "value": 12,
    "unit": "months",
@@ -298,7 +298,7 @@
    "quote": "castration-resistant prostate cancer (CRPC) without metastatic spread"
   }
  },
- "M90": {
+ "prostate_14:90": {
   "psa_doubling_time_months": {
    "value": 12,
    "unit": "months",
@@ -342,7 +342,7 @@
    "quote": "managing his castration-resistant prostate cancer"
   }
  },
- "M91": {
+ "prostate_14:91": {
   "testosterone_ng_dl": {
    "value": 42,
    "unit": "ng/dL",
@@ -384,7 +384,7 @@
    "quote": "manage his castration-resistant prostate cancer"
   }
  },
- "M92": {
+ "prostate_14:92": {
   "testosterone_ng_dl": {
    "value": {
     "max": 50
@@ -423,7 +423,7 @@
    "quote": "He has been on androgen deprivation therapy (ADT) since diagnosis"
   }
  },
- "M93": {
+ "prostate_14:93": {
   "psa_ng_ml": {
    "value": 4.2,
    "unit": "ng/mL",
@@ -482,7 +482,7 @@
    "quote": "ongoing castration-resistant prostate cancer (CRPC) without metastatic spread"
   }
  },
- "M94": {
+ "prostate_14:94": {
   "psa_ng_ml": {
    "value": 1.9,
    "unit": "ng/mL",
@@ -538,7 +538,7 @@
    "quote": "non-metastatic castration-resistant prostate cancer (CRPC)"
   }
  },
- "M95": {
+ "prostate_14:95": {
   "psa_ng_ml": {
    "value": 7.3,
    "unit": "ng/mL",
@@ -605,7 +605,7 @@
    "quote": "confirming castration-resistant prostate cancer (CRPC)"
   }
  },
- "M96": {
+ "prostate_14:96": {
   "psa_ng_ml": {
    "value": 2.2,
    "unit": "ng/mL",
@@ -662,7 +662,7 @@
    "quote": "indicating castration-resistant prostate cancer (CRPC)"
   }
  },
- "M97": {
+ "prostate_14:97": {
   "psa_ng_ml": {
    "value": 4.6,
    "unit": "ng/mL",
@@ -729,7 +729,7 @@
    "quote": "consistent with non-metastatic castration-resistant prostate cancer (nmCRPC)"
   }
  },
- "M98": {
+ "prostate_14:98": {
   "psa_ng_ml": {
    "value": 4.8,
    "unit": "ng/mL",
@@ -787,7 +787,7 @@
    "quote": "confirming non-metastatic castration-resistant prostate cancer (nmCRPC)"
   }
  },
- "M99": {
+ "prostate_14:99": {
   "psa_ng_ml": {
    "value": 3.2,
    "unit": "ng/mL",
@@ -850,7 +850,7 @@
    "quote": "indicating castration-resistant prostate cancer (CRPC)"
   }
  },
- "M100": {
+ "prostate_14:100": {
   "psa_ng_ml": {
    "value": 1.45,
    "unit": "ng/mL",
@@ -906,7 +906,7 @@
    "quote": "patient's non-metastatic castration-resistant prostate cancer"
   }
  },
- "M101": {
+ "prostate_14:101": {
   "psa_ng_ml": {
    "value": 4.8,
    "unit": "ng/dL",
@@ -982,7 +982,7 @@
    "quote": "progression to castration-resistant prostate cancer (CRPC)"
   }
  },
- "M102": {
+ "prostate_14:102": {
   "psa_ng_ml": {
    "value": 0.6,
    "unit": "ng/mL",
@@ -1036,7 +1036,7 @@
    "quote": "indicating castration-resistant prostate cancer (CRPC)"
   }
  },
- "M103": {
+ "prostate_14:103": {
   "psa_ng_ml": {
    "value": 1.5,
    "unit": "ng/mL",
@@ -1099,7 +1099,7 @@
    "quote": "consistent with castration-resistant prostate cancer (CRPC)"
   }
  },
- "M104": {
+ "prostate_14:104": {
   "psa_ng_ml": {
    "value": 3.2,
    "unit": "ng/mL",
@@ -1174,7 +1174,7 @@
    "quote": "consistent with non-metastatic castration-resistant prostate cancer (nmCRPC)"
   }
  },
- "M105": {
+ "prostate_14:105": {
   "psa_ng_ml": {
    "value": 4.3,
    "unit": "ng/mL",
@@ -1232,7 +1232,7 @@
    "quote": "consistent with non-metastatic castration-resistant prostate cancer (CRPC)"
   }
  },
- "M106": {
+ "prostate_14:106": {
   "psa_ng_ml": {
    "value": 3.5,
    "unit": "ng/mL",
@@ -1293,7 +1293,7 @@
    "quote": "confirming non-metastatic castration-resistant prostate cancer (CRPC)"
   }
  },
- "M107": {
+ "prostate_14:107": {
   "psa_ng_ml": {
    "value": 3.2,
    "unit": "ng/mL",
@@ -1360,7 +1360,7 @@
    "quote": "confirming castration-resistant prostate cancer (CRPC)"
   }
  },
- "M108": {
+ "prostate_14:108": {
   "psa_ng_ml": {
    "value": 3.2,
    "unit": "ng/dL",
@@ -1417,7 +1417,7 @@
    "quote": "indicating castration-resistant prostate cancer (CRPC)"
   }
  },
- "M109": {
+ "prostate_14:109": {
   "psa_ng_ml": {
    "value": 4.8,
    "unit": "ng/mL",
@@ -1473,7 +1473,7 @@
    "quote": "non-metastatic castration-resistant prostate cancer (CRPC)"
   }
  },
- "M110": {
+ "prostate_14:110": {
   "psa_ng_ml": {
    "value": 9.8,
    "unit": "ng/mL",
@@ -1549,7 +1549,7 @@
    "quote": "indicating castration-resistant prostate cancer (CRPC)"
   }
  },
- "M111": {
+ "prostate_14:111": {
   "psa_ng_ml": {
    "value": 0.8,
    "unit": "ng/mL",
@@ -1614,7 +1614,7 @@
    "quote": "indicating castration-resistant prostate cancer (CRPC)"
   }
  },
- "M112": {
+ "prostate_14:112": {
   "psa_ng_ml": {
    "value": 4.1,
    "unit": "ng/mL",
@@ -1677,7 +1677,7 @@
    "quote": "confirming castration-resistant prostate cancer (CRPC)"
   }
  },
- "M113": {
+ "prostate_14:113": {
   "psa_ng_ml": {
    "value": 4.5,
    "unit": "ng/mL",
@@ -1749,7 +1749,7 @@
    "quote": "confirming castration-resistant prostate cancer (CRPC)"
   }
  },
- "M114": {
+ "prostate_14:114": {
   "psa_ng_ml": {
    "value": 1.5,
    "unit": "ng/mL",
@@ -1810,7 +1810,7 @@
    "quote": "indicating castration-resistant prostate cancer (CRPC)"
   }
  },
- "M115": {
+ "prostate_14:115": {
   "psa_ng_ml": {
    "value": 3.1,
    "unit": "ng/mL",
@@ -1871,7 +1871,7 @@
    "quote": "clinically diagnosed with non-metastatic castration-resistant prostate cancer (CRPC)"
   }
  },
- "M116": {
+ "prostate_14:116": {
   "psa_doubling_time_months": {
    "value": 6,
    "unit": "months",
@@ -1941,7 +1941,7 @@
    "quote": "consistent with castration-resistant prostate cancer (CRPC)"
   }
  },
- "M117": {
+ "prostate_14:117": {
   "psa_ng_ml": {
    "value": 0.9,
    "unit": "ng/mL",
@@ -1997,7 +1997,7 @@
    "quote": "diagnosed him with non-metastatic castration-resistant prostate cancer (CRPC)"
   }
  },
- "M118": {
+ "prostate_14:118": {
   "psa_ng_ml": {
    "value": 8.2,
    "unit": "ng/mL",
@@ -2060,7 +2060,7 @@
    "quote": "consistent with non-metastatic castration-resistant prostate cancer (CRPC)"
   }
  },
- "M119": {
+ "prostate_14:119": {
   "testosterone_ng_dl": {
    "value": {
     "max": 50
@@ -2118,7 +2118,7 @@
    "quote": "presents with castration-resistant prostate cancer (CRPC)"
   }
  },
- "M120": {
+ "prostate_14:120": {
   "testosterone_ng_dl": {
    "value": {
     "max": 50
@@ -2172,7 +2172,7 @@
    "quote": "subsequently developed castration-resistant prostate cancer (CRPC)"
   }
  },
- "M121": {
+ "prostate_14:121": {
   "psa_ng_ml": {
    "value": 3.1,
    "unit": "ng/mL",
@@ -2240,7 +2240,7 @@
    "quote": "confirming non-metastatic castration-resistant prostate cancer (CRPC)"
   }
  },
- "M122": {
+ "prostate_14:122": {
   "psa_ng_ml": {
    "value": 6.5,
    "unit": "ng/mL",
@@ -2313,7 +2313,7 @@
    "quote": "confirming non-metastatic castration-resistant prostate cancer (CRPC)"
   }
  },
- "M123": {
+ "prostate_14:123": {
   "psa_ng_ml": {
    "value": 1.5,
    "unit": "ng/mL",
@@ -2376,7 +2376,7 @@
    "quote": "a castrate-resistant state"
   }
  },
- "M124": {
+ "prostate_14:124": {
   "psa_doubling_time_months": {
    "value": 12,
    "unit": "months",
@@ -2425,7 +2425,7 @@
    "quote": "consistent with castration-resistant prostate cancer (CRPC)"
   }
  },
- "M125": {
+ "prostate_14:125": {
   "psa_ng_ml": {
    "value": 4.8,
    "unit": "ng/mL",

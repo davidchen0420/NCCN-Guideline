@@ -9,14 +9,15 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+from .fulltext import reading_order_text
 from .guideline import Spec
 from .textlayer import _discussion_label, _is_reference_list
 
 WORD = re.compile(r"[A-Za-z0-9]{3,}")
-BOILERPLATE = {"nccn", "guidelines", "version", "prostate", "cancer", "national", "comprehensive",
-               "network", "index", "table", "contents", "discussion", "please", "note", "rights", "lung",
-               "small", "cell", "colon", "rectal", "non",
-               "reserved", "content", "may", "not", "the", "and", "for"}
+# Running header/footer words are cut by the page bands; these are what remains generic.
+BOILERPLATE = {"nccn", "guidelines", "version", "national", "comprehensive", "network", "index", "table",
+               "contents", "discussion", "please", "note", "rights", "reserved", "content", "may", "not",
+               "the", "and", "for"}
 
 
 def words(text):
@@ -59,7 +60,7 @@ def main(private):
             code = (_discussion_label(page) if spec.kind(i) == "discussion" else None) or f"p{i + 1}"
         if _is_reference_list(page) or i < 2:
             continue  # reference lists and cover/panel pages are intentionally not indexed
-        src = words(" ".join(page.get_text().split()[30:]))  # drop the header block
+        src = words(reading_order_text(page))  # content band only: no running header/footer
         if not src:
             continue
         got = words(encoded.get(code, "") + " " + encoded.get(re.sub(r"\s.*", "", code), ""))

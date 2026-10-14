@@ -1,599 +1,2713 @@
 {
-"M84": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "underwent radical prostatectomy followed by adjuvant radiation therapy"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "he experienced biochemical recurrence with rising PSA levels"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "prompting initiation of androgen deprivation therapy (ADT)"},
-  "testosterone_ng_dl": {"value": {"max": 50}, "unit": "ng/dL", "quote": "His most recent testosterone levels are consistently below 50 ng/dL"},
-  "m_category": {"value": "M0", "unit": null, "quote": "show no evidence of distant metastatic spread"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastatic spread"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastatic spread"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "show no evidence of distant metastatic spread"},
-  "psa_doubling_time_months": {"value": 12, "unit": "months", "quote": "His PSA doubling time is calculated at 12 months"},
-  "psa_ng_ml": {"value": 2.5, "unit": "ng/mL", "quote": "Laboratory results confirm stable PSA levels around 2.5 ng/mL"},
-  "psa_trend": {"value": "stable", "unit": null, "quote": "Laboratory results confirm stable PSA levels around 2.5 ng/mL"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "castration-resistant prostate cancer (CRPC) without metastatic disease"},
-  "symptomatic_progression": {"value": false, "unit": null, "quote": "Physical examination reveals no new symptoms"}
-},
-"M85": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "underwent radical prostatectomy followed by adjuvant androgen deprivation therapy (ADT)"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "his PSA began to rise, indicating biochemical recurrence"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "He was started on continuous ADT with leuprolide"},
-  "psa_doubling_time_months": {"value": 9, "unit": "months", "quote": "PSA doubling time (PSADT) is 9 months"},
-  "testosterone_ng_dl": {"value": {"max": 50}, "unit": "ng/dL", "quote": "his testosterone levels consistently remain below 50 ng/dL"},
-  "m_category": {"value": "M0", "unit": null, "quote": "did not reveal distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "did not reveal distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "did not reveal distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "did not reveal distant metastases"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "noting progressive biochemical recurrence without radiographic metastatic spread"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "castration-resistant prostate cancer (CRPC) with non-metastatic disease"}
-},
-"M86": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "underwent radical prostatectomy followed by adjuvant radiation therapy"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "he experienced biochemical recurrence with rising PSA levels"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "prompting initiation of androgen deprivation therapy (ADT)"},
-  "testosterone_ng_dl": {"value": {"max": 50}, "unit": "ng/dL", "quote": "His recent testosterone levels were consistently below 50 ng/dL"},
-  "m_category": {"value": "M0", "unit": null, "quote": "a recent bone scan and CT scan showed no distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "a recent bone scan and CT scan showed no distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "a recent bone scan and CT scan showed no distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "a recent bone scan and CT scan showed no distant metastases"},
-  "psa_doubling_time_months": {"value": 9, "unit": "months", "quote": "His PSA doubling time (PSADT) was calculated at 9 months"},
-  "psa_ng_ml": {"value": 6.4, "unit": "ng/mL", "quote": "Laboratory results show a PSA of 6.4 ng/mL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "which has been steadily increasing over the past 6 months"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "managing his castration-resistant prostate cancer"}
-},
-"M87": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "initially underwent radical prostatectomy followed by adjuvant radiation therapy"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "he experienced biochemical recurrence with rising PSA levels"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "He was started on androgen deprivation therapy (ADT) with leuprolide"},
-  "testosterone_ng_dl": {"value": {"max": 50}, "unit": "ng/dL", "quote": "his testosterone remained consistently below 50 ng/dL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "Recent PSA testing showed continued elevation despite ADT"},
-  "m_category": {"value": "M0", "unit": null, "quote": "CT and bone scans revealed no distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "CT and bone scans revealed no distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "CT and bone scans revealed no distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "CT and bone scans revealed no distant metastases"},
-  "psa_doubling_time_months": {"value": 9, "unit": "months", "quote": "His PSA doubling time was calculated at 9 months"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "confirming castration-resistant prostate cancer (CRPC) without metastatic spread"}
-},
-"M88": {
-  "crpc_stated": {"value": true, "unit": null, "quote": "diagnosed with castration-resistant prostate cancer (CRPC) three years ago"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "currently undergoing androgen deprivation therapy with abiraterone and ADT"},
-  "prior_arpi_treatment": {"value": true, "unit": null, "quote": "currently undergoing androgen deprivation therapy with abiraterone and ADT"},
-  "psa_ng_ml": {"value": 45, "unit": "ng/mL", "quote": "His initial prostate-specific antigen (PSA) of 45 ng/mL"},
-  "psa_trend": {"value": "other", "unit": null, "quote": "has gradually declined with treatment"},
-  "psa_doubling_time_months": {"value": {"min": 10}, "unit": "months", "quote": "his PSA doubling time has been consistently greater than 10 months"},
-  "testosterone_ng_dl": {"value": 42, "unit": "ng/dL", "quote": "His most recent testosterone level is 42 ng/dL"},
-  "m_category": {"value": "M0", "unit": null, "quote": "recent imaging studies showed no distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "recent imaging studies showed no distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "recent imaging studies showed no distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "recent imaging studies showed no distant metastases"}
-},
-"M89": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "underwent radical prostatectomy five years ago followed by adjuvant radiation therapy"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "since his initial biochemical recurrence two years post-surgery"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "He has been on androgen deprivation therapy (ADT)"},
-  "testosterone_ng_dl": {"value": {"max": 50}, "unit": "ng/dL", "quote": "His most recent testosterone levels remain consistently below 50 ng/dL"},
-  "psa_doubling_time_months": {"value": 12, "unit": "months", "quote": "his PSA doubling time calculated at approximately 12 months"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "Serial PSA measurements over the past year show a gradual rise"},
-  "m_category": {"value": "M0", "unit": null, "quote": "reveal no evidence of distant metastatic disease"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "reveal no evidence of distant metastatic disease"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "reveal no evidence of distant metastatic disease"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "reveal no evidence of distant metastatic disease"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "castration-resistant prostate cancer (CRPC) without metastatic spread"},
-  "symptomatic_progression": {"value": false, "unit": null, "quote": "he remains asymptomatic"}
-},
-"M90": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "underwent radical prostatectomy followed by adjuvant androgen deprivation therapy"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "he has been on continuous ADT with leuprolide"},
-  "testosterone_ng_dl": {"value": {"max": 50}, "unit": "ng/dL", "quote": "maintaining castrate testosterone levels below 50 ng/dL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "with gradual rises noted over the past year"},
-  "psa_doubling_time_months": {"value": 12, "unit": "months", "quote": "calculated at 12 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "show no evidence of distant metastatic spread"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastatic spread"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastatic spread"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "show no evidence of distant metastatic spread"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "indicating a slower progression of castration-resistant prostate cancer (CRPC)"},
-  "symptomatic_progression": {"value": false, "unit": null, "quote": "John remains asymptomatic"}
-},
-"M91": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "underwent radical prostatectomy followed by adjuvant radiation therapy"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "he experienced biochemical recurrence with rising PSA levels"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "prompting initiation of androgen deprivation therapy (ADT)"},
-  "testosterone_ng_dl": {"value": 42, "unit": "ng/dL", "quote": "His most recent testosterone level was 42 ng/dL"},
-  "psa_doubling_time_months": {"value": 8.5, "unit": "months", "quote": "his PSA doubling time was calculated at 8.5 months"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "suggesting relatively rapid progression"},
-  "m_category": {"value": "M0", "unit": null, "quote": "showed no evidence of distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "showed no evidence of distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "showed no evidence of distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "showed no evidence of distant metastases"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "to manage his castration-resistant prostate cancer"}
-},
-"M92": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "underwent radical prostatectomy followed by external beam radiation"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "his biochemical recurrence suggests potential progression"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "He has been on androgen deprivation therapy (ADT) since diagnosis"},
-  "testosterone_ng_dl": {"value": {"max": 50}, "unit": "ng/dL", "quote": "which have consistently remained below 50 ng/dL"},
-  "psa_doubling_time_months": {"value": 8, "unit": "months", "quote": "with a PSA doubling time of 8 months"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "His PSA levels have been gradually rising over the past 18 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "showed no evidence of distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "showed no evidence of distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "showed no evidence of distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "showed no evidence of distant metastases"},
-  "crpc_stated": {"value": false, "unit": null, "quote": "he remains castration-sensitive"}
-},
-"M93": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "initially underwent radical prostatectomy followed by salvage radiation therapy"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "he experienced biochemical recurrence with rising PSA levels"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "prompting initiation of androgen deprivation therapy (ADT)"},
-  "psa_doubling_time_months": {"value": 9, "unit": "months", "quote": "His PSA doubling time is calculated at 9 months"},
-  "testosterone_ng_dl": {"value": {"max": 50}, "unit": "ng/dL", "quote": "testosterone levels remain below 50 ng/dL with ongoing ADT"},
-  "psa_ng_ml": {"value": 4.2, "unit": "ng/mL", "quote": "Laboratory results reveal a PSA of 4.2 ng/mL"},
-  "psa_trend": {"value": "stable", "unit": null, "quote": "stable from his previous measurement three months ago"},
-  "m_category": {"value": "M0", "unit": null, "quote": "show no evidence of distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "show no evidence of distant metastases"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "ongoing castration-resistant prostate cancer (CRPC) without metastatic spread"},
-  "symptomatic_progression": {"value": false, "unit": null, "quote": "no significant symptomatic progression or new clinical complications"}
-},
-"M94": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "initially treated with radical prostatectomy 5 years ago"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "presented with biochemical recurrence 2 years post-surgery"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "He was started on androgen deprivation therapy (ADT) with leuprolide injections"},
-  "psa_ng_ml": {"value": 1.9, "unit": "ng/mL", "quote": "his PSA has further increased to 1.9 ng/mL"},
-  "psa_doubling_time_months": {"value": 12.4, "unit": "months", "quote": "a calculated PSA doubling time of 12.4 months"},
-  "testosterone_ng_dl": {"value": 18, "unit": "ng/dL", "quote": "His most recent testosterone level is 18 ng/dL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "his PSA has gradually increased over the past 9 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "show no evidence of distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "show no evidence of distant metastases"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "consistent with non-metastatic castration-resistant prostate cancer (CRPC)"}
-},
-"M95": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "treated with radical prostatectomy 8 years ago followed by salvage radiation therapy"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "presented with biochemical recurrence 2 years ago"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "androgen deprivation therapy (ADT) with leuprolide injections every 3 months"},
-  "testosterone_ng_dl": {"value": {"max": 20}, "unit": "ng/dL", "quote": "His testosterone level has been consistently maintained below 20 ng/dL"},
-  "psa_ng_ml": {"value": 7.3, "unit": "ng/mL", "quote": "his PSA has increased to 7.3 ng/mL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "his PSA began to rise slowly over the past year"},
-  "psa_doubling_time_months": {"value": 12, "unit": "months", "quote": "showed a value of 12 months"},
-  "m_category": {"value": "M1", "unit": null, "quote": "consistent with metastatic disease"},
-  "metastasis_timing": {"value": "metachronous", "unit": null, "quote": "new lesions in the lumbar spine and right iliac bone"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "new lesions in the lumbar spine and right iliac bone"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "confirming castration-resistant prostate cancer (CRPC)"}
-},
-"M96": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "initially treated with radical prostatectomy 7 years ago"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "salvage radiation therapy after biochemical recurrence"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "continuous androgen deprivation therapy (ADT) with leuprolide for the past 3 years"},
-  "testosterone_ng_dl": {"value": 18, "unit": "ng/dL", "quote": "His testosterone level is consistently suppressed at 18 ng/dL"},
-  "psa_ng_ml": {"value": 2.2, "unit": "ng/mL", "quote": "During today's visit, his PSA is 2.2 ng/mL"},
-  "psa_trend": {"value": "stable", "unit": null, "quote": "essentially unchanged from 3 months ago"},
-  "psa_doubling_time_months": {"value": 12.5, "unit": "months", "quote": "reveals a value of 12.5 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "show no evidence of distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "show no evidence of distant metastases"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "non-metastatic castration-resistant prostate cancer with a PSADT"},
-  "symptomatic_progression": {"value": false, "unit": null, "quote": "no urinary symptoms, bone pain, or other concerning symptoms"}
-},
-"M97": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "He underwent radical prostatectomy with final pathology"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "after which it began to rise"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "he started androgen deprivation therapy (ADT) with leuprolide injections"},
-  "testosterone_ng_dl": {"value": {"max": 20}, "unit": "ng/dL", "quote": "His testosterone has been consistently suppressed below 20 ng/dL on therapy"},
-  "psa_ng_ml": {"value": 4.6, "unit": "ng/mL", "quote": "his PSA has increased to 4.6 ng/mL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "Despite ongoing ADT, his PSA has been rising over the past 9 months"},
-  "psa_doubling_time_months": {"value": 6, "unit": "months", "quote": "indicating a PSA doubling time of approximately 6 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "show no evidence of distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "show no evidence of distant metastases"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "consistent with non-metastatic castration-resistant prostate cancer (nmCRPC)"},
-  "prior_arpi_treatment": {"value": true, "unit": null, "quote": "he was started on enzalutamide 160 mg daily 6 months ago"}
-},
-"M98": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "was treated with radical prostatectomy followed by salvage radiation therapy"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "when his PSA began to rise 18 months post-surgery"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "continuous androgen deprivation therapy (ADT) with leuprolide"},
-  "testosterone_ng_dl": {"value": {"max": 20}, "unit": "ng/dL", "quote": "maintaining castrate testosterone levels consistently below 20 ng/dL"},
-  "psa_ng_ml": {"value": 4.8, "unit": "ng/mL", "quote": "his PSA has increased to 4.8 ng/mL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "his PSA has begun rising again over the last 6 months"},
-  "psa_doubling_time_months": {"value": 8, "unit": "months", "quote": "indicating a PSA doubling time of approximately 8 months"},
-  "m_category": {"value": "M1", "unit": null, "quote": "multiple new bone lesions in the spine and pelvis"},
-  "metastasis_timing": {"value": "metachronous", "unit": null, "quote": "that were not present on previous scans"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "multiple new bone lesions in the spine and pelvis"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "confirming non-metastatic castration-resistant prostate cancer (nmCRPC)"},
-  "prior_arpi_treatment": {"value": true, "unit": null, "quote": "he was started on enzalutamide in addition to continuing his ADT"}
-},
-"M99": {
-  "histology": {"value": "adenocarcinoma", "unit": null, "quote": "localized prostate adenocarcinoma"},
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "treated with radical prostatectomy 5 years ago followed by salvage radiation therapy"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "salvage radiation therapy for biochemical recurrence 3 years ago"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "androgen deprivation therapy (ADT) with leuprolide injections for the past 18 months"},
-  "testosterone_ng_dl": {"value": {"max": 20}, "unit": "ng/dL", "quote": "consistently below 20 ng/dL"},
-  "psa_ng_ml": {"value": 3.2, "unit": "ng/mL", "quote": "his PSA has been steadily increasing from 0.5 ng/mL to 3.2 ng/mL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "his PSA has been steadily increasing"},
-  "psa_doubling_time_months": {"value": 8, "unit": "months", "quote": "His PSA doubling time has been calculated at 8 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "show no evidence of distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "show no evidence of distant metastases"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "indicating castration-resistant prostate cancer (CRPC)"}
-},
-"M100": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "initially treated with radical prostatectomy 7 years ago followed by salvage radiation therapy 5 years ago"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "a gradually rising PSA over the past 18 months"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "continuous androgen deprivation therapy (ADT) with leuprolide injections every 3 months"},
-  "testosterone_ng_dl": {"value": 18, "unit": "ng/dL", "quote": "His testosterone level remains suppressed at 18 ng/dL"},
-  "psa_ng_ml": {"value": 1.45, "unit": "ng/mL", "quote": "his PSA has further increased to 1.45 ng/mL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "a gradually rising PSA over the past 18 months"},
-  "psa_doubling_time_months": {"value": 12.3, "unit": "months", "quote": "calculated to be 12.3 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "showed no evidence of distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "showed no evidence of distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "showed no evidence of distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "showed no evidence of distant metastases"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "non-metastatic castration-resistant prostate cancer"},
-  "symptomatic_progression": {"value": false, "unit": null, "quote": "remains relatively asymptomatic"}
-},
-"M101": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "initially treated 4 years ago with radical prostatectomy"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "salvage radiation therapy due to biochemical recurrence"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "He has been on androgen deprivation therapy (ADT) with leuprolide for the past 18 months"},
-  "testosterone_ng_dl": {"value": {"max": 20}, "unit": "ng/dL", "quote": "maintaining serum testosterone levels consistently below 20 ng/dL"},
-  "psa_ng_ml": {"value": 4.8, "unit": "ng/dL", "quote": "his most recent PSA shows an increase to 4.8 ng/dL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "his PSA has been slowly increasing from 0.8 ng/dL to 2.1 ng/dL over the past 12 months"},
-  "psa_doubling_time_months": {"value": 12.5, "unit": "months", "quote": "His calculated PSA doubling time (PSADT) is 12.5 months"},
-  "m_category": {"value": "M1", "unit": null, "quote": "consistent with metastatic disease"},
-  "metastasis_timing": {"value": "metachronous", "unit": null, "quote": "new osteoblastic lesions in the lumbar spine and right proximal femur"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": {"min": 1}, "unit": "count", "quote": "new osteoblastic lesions in the lumbar spine and right proximal femur"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "indicating progression to castration-resistant prostate cancer (CRPC)"}
-},
-"M102": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "initially treated with radical prostatectomy 6 years ago"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "salvage radiation therapy for biochemical recurrence 4 years ago"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "he was started on androgen deprivation therapy (ADT) with leuprolide injections every 3 months"},
-  "testosterone_ng_dl": {"value": {"max": 20}, "unit": "ng/dL", "quote": "His testosterone levels have consistently remained below 20 ng/dL"},
-  "psa_ng_ml": {"value": 0.6, "unit": "ng/mL", "quote": "have remained stable at 0.6 ng/mL"},
-  "psa_trend": {"value": "stable", "unit": null, "quote": "have remained stable at 0.6 ng/mL"},
-  "psa_doubling_time_months": {"value": 14, "unit": "months", "quote": "reveals a value of 14 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "show no evidence of metastatic disease"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "indicating castration-resistant prostate cancer (CRPC)"},
-  "symptomatic_progression": {"value": false, "unit": null, "quote": "no bone pain, urinary symptoms, or weight loss"}
-},
-"M103": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "He initially underwent radical prostatectomy followed by salvage radiation therapy"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "when his PSA began to rise 18 months after surgery"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "he was started on enzalutamide in addition to continuing his ADT"},
-  "testosterone_ng_dl": {"value": {"max": 20}, "unit": "ng/dL", "quote": "His testosterone levels have consistently remained below 20 ng/dL"},
-  "psa_ng_ml": {"value": 1.5, "unit": "ng/mL", "quote": "his PSA has increased from 0.3 ng/mL (nadir on enzalutamide) to 1.5 ng/mL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "his PSA has increased from 0.3 ng/mL (nadir on enzalutamide) to 1.5 ng/mL"},
-  "psa_doubling_time_months": {"value": 6, "unit": "months", "quote": "calculating to a PSA doubling time of approximately 6 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "showed no evidence of distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "showed no evidence of distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "showed no evidence of distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "showed no evidence of distant metastases"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "consistent with castration-resistant prostate cancer (CRPC)"},
-  "prior_arpi_treatment": {"value": true, "unit": null, "quote": "he was started on enzalutamide in addition to continuing his ADT"}
-},
-"M104": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "treated 4 years ago with radical prostatectomy followed by salvage radiation therapy"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "continuous androgen deprivation therapy (ADT) with leuprolide injections every 3 months"},
-  "psa_ng_ml": {"value": 3.2, "unit": "ng/mL", "quote": "at 9 months, his PSA increased to 3.2 ng/mL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "his PSA has risen from 0.2 ng/mL to 1.8 ng/mL over the past 7 months"},
-  "testosterone_ng_dl": {"value": 18, "unit": "ng/dL", "quote": "Laboratory results confirm castrate testosterone levels at 18 ng/dL"},
-  "psa_doubling_time_months": {"value": 6.2, "unit": "months", "quote": "His PSA doubling time (PSADT) is calculated at 6.2 months"},
-  "m_category": {"value": "M1", "unit": null, "quote": "progression to metastatic castration-resistant prostate cancer"},
-  "bone_metastases_count": {"value": 2, "unit": "count", "quote": "reveals two new lesions in the thoracic spine"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "reveals two new lesions in the thoracic spine"},
-  "metastasis_timing": {"value": "metachronous", "unit": null, "quote": "reveals two new lesions in the thoracic spine"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "consistent with non-metastatic castration-resistant prostate cancer (nmCRPC)"},
-  "prior_arpi_treatment": {"value": true, "unit": null, "quote": "The patient was started on apalutamide 240 mg daily in addition to continuing ADT"}
-},
-"M105": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "treated with radical prostatectomy followed by salvage radiation therapy 3 years ago"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "salvage radiation therapy 3 years ago due to biochemical recurrence"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "He was started on androgen deprivation therapy (ADT) with leuprolide injections 18 months ago"},
-  "testosterone_ng_dl": {"value": {"max": 20}, "unit": "ng/dL", "quote": "His testosterone level has been consistently maintained below 20 ng/dL"},
-  "psa_ng_ml": {"value": 4.3, "unit": "ng/mL", "quote": "his PSA has remained stable at 4.3 ng/mL"},
-  "psa_trend": {"value": "stable", "unit": null, "quote": "his PSA has remained stable at 4.3 ng/mL"},
-  "psa_doubling_time_months": {"value": 6, "unit": "months", "quote": "indicating a PSA doubling time of approximately 6 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "show no evidence of distant metastatic disease"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastatic disease"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastatic disease"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "show no evidence of distant metastatic disease"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "consistent with non-metastatic castration-resistant prostate cancer (CRPC)"}
-},
-"M106": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "initially treated with radical prostatectomy four years ago"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "salvage radiation therapy for biochemical recurrence two years ago"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "has been on androgen deprivation therapy (ADT) with leuprolide for the past 18 months"},
-  "testosterone_ng_dl": {"value": 18, "unit": "ng/dL", "quote": "testosterone level of 18 ng/dL, confirming adequate castration"},
-  "psa_ng_ml": {"value": 3.5, "unit": "ng/mL", "quote": "his PSA has further increased to 3.5 ng/mL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "his PSA has further increased to 3.5 ng/mL"},
-  "psa_doubling_time_months": {"value": 12, "unit": "months", "quote": "representing a PSA doubling time (PSADT) of approximately 12 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "show no evidence of distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "show no evidence of distant metastases"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "confirming non-metastatic castration-resistant prostate cancer (CRPC)"},
-  "symptomatic_progression": {"value": false, "unit": null, "quote": "The patient reports feeling well with no new symptoms"}
-},
-"M107": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "treated with radical prostatectomy followed by salvage radiation therapy 3 years ago"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "salvage radiation therapy 3 years ago when his PSA began to rise"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "Despite continuous androgen deprivation therapy (ADT) with leuprolide injections"},
-  "testosterone_ng_dl": {"value": {"max": 20}, "unit": "ng/dL", "quote": "maintaining his testosterone at consistent levels below 20 ng/dL"},
-  "psa_ng_ml": {"value": 3.2, "unit": "ng/mL", "quote": "At today's visit, his PSA has jumped to 3.2 ng/mL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "his PSA has jumped to 3.2 ng/mL"},
-  "psa_doubling_time_months": {"value": 12.5, "unit": "months", "quote": "His PSA doubling time (PSADT) was calculated at 12.5 months"},
-  "m_category": {"value": "M1", "unit": null, "quote": "lesions in the liver consistent with metastatic disease"},
-  "visceral_metastases_present": {"value": true, "unit": null, "quote": "two new 1.5 cm hypodense lesions in the liver"},
-  "metastasis_timing": {"value": "metachronous", "unit": null, "quote": "two new 1.5 cm hypodense lesions in the liver"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "confirming castration-resistant prostate cancer (CRPC)"},
-  "symptomatic_progression": {"value": false, "unit": null, "quote": "has remained relatively asymptomatic"}
-},
-"M108": {
-  "clinical_t_category": {"value": "other", "unit": null, "quote": "Gleason score 7, T2N0M0"},
-  "n_category": {"value": "N0", "unit": null, "quote": "Gleason score 7, T2N0M0"},
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "initially underwent radical prostatectomy followed by salvage radiation therapy"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "when his PSA began to rise 2 years after surgery"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "started on androgen deprivation therapy (ADT) with leuprolide injections 18 months ago"},
-  "testosterone_ng_dl": {"value": 28, "unit": "ng/dL", "quote": "maintaining his testosterone level at 28 ng/dL"},
-  "psa_ng_ml": {"value": 3.2, "unit": "ng/dL", "quote": "his PSA level remains at 3.2 ng/dL"},
-  "psa_trend": {"value": "stable", "unit": null, "quote": "unchanged from his previous visit 2 months ago"},
-  "psa_doubling_time_months": {"value": 12.4, "unit": "months", "quote": "has been calculated at 12.4 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "showed no evidence of distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "showed no evidence of distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "showed no evidence of distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "showed no evidence of distant metastases"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "indicating castration-resistant prostate cancer (CRPC)"},
-  "symptomatic_progression": {"value": false, "unit": null, "quote": "he reports feeling well overall with no new symptoms"}
-},
-"M109": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "treated 5 years ago with radical prostatectomy followed by salvage radiation therapy"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "continuous androgen deprivation therapy (ADT) with leuprolide for the past 2 years"},
-  "testosterone_ng_dl": {"value": 18, "unit": "ng/dL", "quote": "His testosterone level is consistently suppressed at 18 ng/dL"},
-  "psa_ng_ml": {"value": 4.8, "unit": "ng/mL", "quote": "his PSA has increased to 4.8 ng/mL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "his PSA has been rising from 0.5 ng/mL to 3.2 ng/mL over the last 8 months"},
-  "psa_doubling_time_months": {"value": 6, "unit": "months", "quote": "indicating a PSA doubling time of approximately 6 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "were negative for distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "were negative for distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "were negative for distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "were negative for distant metastases"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "classifying him as having non-metastatic castration-resistant prostate cancer (CRPC)"},
-  "prior_arpi_treatment": {"value": true, "unit": null, "quote": "darolutamide was added to his ADT regimen"}
-},
-"M110": {
-  "clinical_t_category": {"value": "T2b", "unit": null, "quote": "Gleason 4+4=8, cT2bN0M0"},
-  "n_category": {"value": "N0", "unit": null, "quote": "Gleason 4+4=8, cT2bN0M0"},
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "underwent radical prostatectomy followed by salvage radiation therapy when his PSA rose to 0.5 ng/mL"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "when his PSA rose to 0.5 ng/mL one year after surgery"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "He has been on continuous androgen deprivation therapy (ADT) with leuprolide"},
-  "testosterone_ng_dl": {"value": {"max": 20}, "unit": "ng/dL", "quote": "castrate testosterone levels consistently below 20 ng/dL"},
-  "psa_ng_ml": {"value": 9.8, "unit": "ng/mL", "quote": "PSA further increased to 9.8 ng/mL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "his PSA has been steadily increasing over the past year"},
-  "psa_doubling_time_months": {"value": 7.5, "unit": "months", "quote": "Calculated PSA doubling time is 7.5 months"},
-  "m_category": {"value": "M1", "unit": null, "quote": "new bone lesions in the ribs, thoracic spine, and left iliac bone"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": {"min": 1}, "unit": "count", "quote": "new bone lesions in the ribs, thoracic spine, and left iliac bone"},
-  "metastasis_timing": {"value": "metachronous", "unit": null, "quote": "new bone lesions in the ribs, thoracic spine, and left iliac bone"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "indicating castration-resistant prostate cancer (CRPC)"}
-},
-"M111": {
-  "n_category": {"value": "N0", "unit": null, "quote": "Gleason 4+4=8, pT2cN0M0"},
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "initially treated with radical prostatectomy 6 years ago"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "developed biochemical recurrence 3 years post-surgery"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "started on androgen deprivation therapy (ADT) with leuprolide injections every 3 months"},
-  "testosterone_ng_dl": {"value": 18, "unit": "ng/dL", "quote": "despite maintaining castrate testosterone levels of 18 ng/dL"},
-  "psa_ng_ml": {"value": 0.8, "unit": "ng/mL", "quote": "his latest PSA is 0.8 ng/mL (decreased from previous values)"},
-  "psa_trend": {"value": "other", "unit": null, "quote": "(decreased from previous values)"},
-  "psa_doubling_time_months": {"value": 6.2, "unit": "months", "quote": "His PSA doubling time is calculated at 6.2 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "show no evidence of distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "show no evidence of distant metastases"},
-  "prior_arpi_treatment": {"value": true, "unit": null, "quote": "he was started on apalutamide in addition to continuing his ADT regimen"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "indicating castration-resistant prostate cancer (CRPC)"}
-},
-"M112": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "initially treated with radical prostatectomy 8 years ago"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "salvage radiation therapy for biochemical recurrence 5 years ago"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "was started on androgen deprivation therapy (ADT) with leuprolide injections every 3 months"},
-  "testosterone_ng_dl": {"value": {"max": 20}, "unit": "ng/dL", "quote": "His testosterone level has been consistently maintained below 20 ng/dL"},
-  "psa_ng_ml": {"value": 4.1, "unit": "ng/mL", "quote": "his PSA has increased further to 4.1 ng/mL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "his PSA has been slowly rising over the past 18 months"},
-  "psa_doubling_time_months": {"value": 13.5, "unit": "months", "quote": "reveals a PSADT of 13.5 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "show no evidence of distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "show no evidence of distant metastases"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "confirming castration-resistant prostate cancer (CRPC)"},
-  "symptomatic_progression": {"value": false, "unit": null, "quote": "no bone pain, and no urinary symptoms"}
-},
-"M113": {
-  "n_category": {"value": "N0", "unit": null, "quote": "Gleason 4+4=8, pT3aN0"},
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "initially treated 5 years ago with radical prostatectomy"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "salvage external beam radiation therapy for biochemical recurrence"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "continuous androgen deprivation therapy (ADT) with leuprolide for the past 3 years"},
-  "testosterone_ng_dl": {"value": {"max": 20}, "unit": "ng/dL", "quote": "consistently <20 ng/dL"},
-  "psa_ng_ml": {"value": 4.5, "unit": "ng/mL", "quote": "his PSA has increased to 4.5 ng/mL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "his PSA has been slowly rising over the past 18 months"},
-  "psa_doubling_time_months": {"value": 12, "unit": "months", "quote": "shows a value of 12 months"},
-  "m_category": {"value": "M1", "unit": null, "quote": "two new 1.5 cm lesions in the lumbar vertebrae and a 2 cm lesion in the right iliac bone"},
-  "bone_metastases_count": {"value": 3, "unit": "count", "quote": "two new 1.5 cm lesions in the lumbar vertebrae and a 2 cm lesion in the right iliac bone"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "two new 1.5 cm lesions in the lumbar vertebrae and a 2 cm lesion in the right iliac bone"},
-  "metastasis_timing": {"value": "metachronous", "unit": null, "quote": "two new 1.5 cm lesions in the lumbar vertebrae and a 2 cm lesion in the right iliac bone"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "confirming castration-resistant prostate cancer (CRPC)"}
-},
-"M114": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "initially treated with radical prostatectomy five years ago"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "salvage external beam radiation therapy for biochemical recurrence two years ago"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "He began androgen deprivation therapy (ADT) with leuprolide 14 months ago"},
-  "testosterone_ng_dl": {"value": 28, "unit": "ng/dL", "quote": "castrate testosterone levels at 28 ng/dL"},
-  "psa_ng_ml": {"value": 1.5, "unit": "ng/mL", "quote": "his PSA has slowly risen from 0.8 ng/mL to 1.5 ng/mL over the past 12 months"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "his PSA has slowly risen from 0.8 ng/mL to 1.5 ng/mL over the past 12 months"},
-  "psa_doubling_time_months": {"value": 12.5, "unit": "months", "quote": "has been calculated at 12.5 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "show no evidence of distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "show no evidence of distant metastases"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "indicating castration-resistant prostate cancer (CRPC)"},
-  "symptomatic_progression": {"value": false, "unit": null, "quote": "no urinary symptoms, bone pain, or constitutional symptoms"}
-},
-"M115": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "initially treated with radical prostatectomy 5 years ago"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "salvage radiation therapy for biochemical recurrence 3 years ago"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "was started on androgen deprivation therapy (ADT) with leuprolide injections"},
-  "testosterone_ng_dl": {"value": 18, "unit": "ng/dL", "quote": "currently 18 ng/dL"},
-  "psa_ng_ml": {"value": 3.1, "unit": "ng/mL", "quote": "his most recent PSA shows an increase to 3.1 ng/mL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "his PSA has been rising over the past 8 months"},
-  "psa_doubling_time_months": {"value": 7.5, "unit": "months", "quote": "with a calculated PSA doubling time of 7.5 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "show no evidence of distant metastatic disease"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastatic disease"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastatic disease"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "show no evidence of distant metastatic disease"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "clinically diagnosed with non-metastatic castration-resistant prostate cancer (CRPC)"},
-  "prior_arpi_treatment": {"value": true, "unit": null, "quote": "he was started on enzalutamide in addition to continuing ADT"}
-},
-"M116": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "initially treated with radical prostatectomy 5 years ago"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "salvage radiation therapy 3 years ago when his PSA began to rise"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "he was started on androgen deprivation therapy (ADT) with leuprolide injections 18 months ago"},
-  "testosterone_ng_dl": {"value": {"max": 20}, "unit": "ng/dL", "quote": "His testosterone levels have been consistently maintained below 20 ng/dL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "has now begun rising again after 6 months of treatment"},
-  "psa_doubling_time_months": {"value": 6, "unit": "months", "quote": "indicating a PSA doubling time of approximately 6 months"},
-  "m_category": {"value": "M1", "unit": null, "quote": "new uptake in the right iliac bone and L3 vertebra, consistent with metastatic disease"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "new uptake in the right iliac bone and L3 vertebra, consistent with metastatic disease"},
-  "metastasis_timing": {"value": "metachronous", "unit": null, "quote": "new uptake in the right iliac bone and L3 vertebra, consistent with metastatic disease"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "consistent with castration-resistant prostate cancer (CRPC)"},
-  "prior_arpi_treatment": {"value": true, "unit": null, "quote": "After starting apalutamide in addition to continued ADT"}
-},
-"M117": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "treated with radical prostatectomy 6 years ago followed by salvage radiation therapy 4 years ago"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "his PSA has been rising over the past year"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "maintained on androgen deprivation therapy (ADT) with leuprolide injections every 3 months"},
-  "testosterone_ng_dl": {"value": 18, "unit": "ng/dL", "quote": "His most recent testosterone level is 18 ng/dL"},
-  "psa_ng_ml": {"value": 0.9, "unit": "ng/mL", "quote": "Today's laboratory results show his PSA has decreased to 0.9 ng/mL"},
-  "psa_trend": {"value": "other", "unit": null, "quote": "his PSA has decreased to 0.9 ng/mL"},
-  "psa_doubling_time_months": {"value": 8, "unit": "months", "quote": "indicating a PSA doubling time of approximately 8 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "show no evidence of distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "show no evidence of distant metastases"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "diagnosed him with non-metastatic castration-resistant prostate cancer (CRPC)"},
-  "prior_arpi_treatment": {"value": true, "unit": null, "quote": "he was started on enzalutamide in addition to continuing his ADT"}
-},
-"M118": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "treated initially with radical prostatectomy and adjuvant radiation therapy"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "bicalutamide upon biochemical recurrence"},
-  "current_treatment_phase": {"value": "on_observation", "unit": null, "quote": "his current management has been periodic monitoring"},
-  "psa_ng_ml": {"value": 8.2, "unit": "ng/mL", "quote": "current PSA 8.2 ng/mL"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "his PSA has gradually increased from 5.1 to 8.2 ng/mL"},
-  "testosterone_ng_dl": {"value": {"max": 20}, "unit": "ng/dL", "quote": "castrate serum testosterone (<20 ng/dL)"},
-  "psa_doubling_time_months": {"value": 14, "unit": "months", "quote": "his PSA doubling time (PSADT) is 14 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "showed no evidence of distant metastases (M0)"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "showed no evidence of distant metastases (M0)"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "showed no evidence of distant metastases (M0)"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "showed no evidence of distant metastases (M0)"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "consistent with non-metastatic castration-resistant prostate cancer (CRPC)"},
-  "symptomatic_progression": {"value": false, "unit": null, "quote": "He remains asymptomatic"}
-},
-"M119": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "treated initially with radical prostatectomy 8 years ago"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "continuous androgen deprivation therapy (ADT) due to rising PSA"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "continuous androgen deprivation therapy (ADT) due to rising PSA"},
-  "testosterone_ng_dl": {"value": {"max": 50}, "unit": "ng/dL", "quote": "remains at castrate levels (<50 ng/dL)"},
-  "psa_doubling_time_months": {"value": 14, "unit": "months", "quote": "his PSA doubling time (PSADT) is 14 months"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "now his PSA is progressively increasing"},
-  "m_category": {"value": "M1", "unit": null, "quote": "new osseous metastases in the lumbar spine"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "new osseous metastases in the lumbar spine"},
-  "metastasis_timing": {"value": "metachronous", "unit": null, "quote": "new osseous metastases in the lumbar spine"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "now presents with castration-resistant prostate cancer (CRPC)"},
-  "symptomatic_progression": {"value": false, "unit": null, "quote": "he has been on close monitoring with stable symptoms"}
-},
-"M120": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "treated initially with radical prostatectomy 8 years ago"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "salvage radiation therapy 5 years ago due to biochemical recurrence"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "maintained on androgen deprivation therapy (ADT) with leuprolide and bicalutamide"},
-  "testosterone_ng_dl": {"value": {"max": 50}, "unit": "ng/dL", "quote": "castrate serum testosterone levels (<50 ng/dL)"},
-  "psa_doubling_time_months": {"value": 14, "unit": "months", "quote": "his PSA doubling time (PSADT) is 14 months"},
-  "psa_trend": {"value": "stable", "unit": null, "quote": "stable PSA trends over the past 6 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "show no evidence of distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "show no evidence of distant metastases"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "subsequently developed castration-resistant prostate cancer (CRPC)"},
-  "symptomatic_progression": {"value": false, "unit": null, "quote": "no clinical symptoms or signs of progression"}
-},
-"M121": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "treated initially with radical prostatectomy 5 years ago"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "due to biochemical recurrence (PSA 1.2 ng/mL)"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "continuous androgen deprivation therapy (ADT) with leuprolide"},
-  "testosterone_ng_dl": {"value": {"max": 20}, "unit": "ng/dL", "quote": "castrate serum testosterone (<20 ng/dL)"},
-  "psa_ng_ml": {"value": 3.1, "unit": "ng/mL", "quote": "PSA 3.1 ng/mL after 9 months"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "but now a gradual rise"},
-  "psa_doubling_time_months": {"value": 8, "unit": "months", "quote": "PSADT 8 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "show no evidence of distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "show no evidence of distant metastases"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "confirming non-metastatic castration-resistant prostate cancer (CRPC)"},
-  "symptomatic_progression": {"value": false, "unit": null, "quote": "He remains asymptomatic"},
-  "prior_arpi_treatment": {"value": true, "unit": null, "quote": "he was started on enzalutamide"}
-},
-"M122": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "treated initially with radical prostatectomy 5 years ago"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "due to biochemical recurrence (PSA 1.2 ng/mL)"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "continuous androgen deprivation therapy (ADT) due to biochemical recurrence"},
-  "testosterone_ng_dl": {"value": {"max": 20}, "unit": "ng/dL", "quote": "castrate serum testosterone (<20 ng/dL)"},
-  "psa_ng_ml": {"value": 6.5, "unit": "ng/mL", "quote": "has since risen to 6.5 ng/mL over 3 months"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "has since risen to 6.5 ng/mL over 3 months"},
-  "psa_doubling_time_months": {"value": 8, "unit": "months", "quote": "PSADT 8 months"},
-  "m_category": {"value": "M1", "unit": null, "quote": "a repeat bone scan now reveals two new sclerotic lesions in the lumbar spine"},
-  "bone_metastases_count": {"value": 2, "unit": "count", "quote": "a repeat bone scan now reveals two new sclerotic lesions in the lumbar spine"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "a repeat bone scan now reveals two new sclerotic lesions in the lumbar spine"},
-  "metastasis_timing": {"value": "metachronous", "unit": null, "quote": "a repeat bone scan now reveals two new sclerotic lesions in the lumbar spine"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "confirming non-metastatic castration-resistant prostate cancer (CRPC)"},
-  "prior_arpi_treatment": {"value": true, "unit": null, "quote": "After initiating apalutamide"}
-},
-"M123": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "initially treated with radical prostatectomy and adjuvant radiation therapy 5 years ago"},
-  "psa_status": {"value": "recurrence", "unit": null, "quote": "now presents with biochemical recurrence"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "on continuous ADT with leuprolide"},
-  "testosterone_ng_dl": {"value": {"max": 50}, "unit": "ng/dL", "quote": "serum testosterone <50 ng/dL"},
-  "psa_ng_ml": {"value": 1.5, "unit": "ng/mL", "quote": "his PSA remains stable at 1.5 ng/mL"},
-  "psa_trend": {"value": "stable", "unit": null, "quote": "his PSA remains stable at 1.5 ng/mL"},
-  "psa_doubling_time_months": {"value": 8, "unit": "months", "quote": "His PSA doubling time (PSADT) is calculated at 8 months"},
-  "m_category": {"value": "M0", "unit": null, "quote": "show no evidence of distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "show no evidence of distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "show no evidence of distant metastases"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "a castrate-resistant state"},
-  "prior_arpi_treatment": {"value": true, "unit": null, "quote": "After discussion, he was started on enzalutamide"}
-},
-"M124": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "treated initially with radical prostatectomy and adjuvant radiation therapy"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "androgen deprivation therapy (ADT) with leuprolide and bicalutamide"},
-  "testosterone_ng_dl": {"value": {"max": 50}, "unit": "ng/dL", "quote": "remains at castrate levels (<50 ng/dL)"},
-  "psa_doubling_time_months": {"value": 12, "unit": "months", "quote": "His PSA doubling time (PSADT) is calculated at 12 months"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "his PSA continues to rise"},
-  "m_category": {"value": "M0", "unit": null, "quote": "shows no evidence of distant metastases"},
-  "bone_metastases_count": {"value": 0, "unit": "count", "quote": "shows no evidence of distant metastases"},
-  "bone_metastases_beyond_vertebrae_pelvis_count": {"value": 0, "unit": "count", "quote": "shows no evidence of distant metastases"},
-  "visceral_metastases_present": {"value": false, "unit": null, "quote": "shows no evidence of distant metastases"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "consistent with castration-resistant prostate cancer (CRPC)"},
-  "symptomatic_progression": {"value": false, "unit": null, "quote": "he has no new symptoms or findings on physical exam"}
-},
-"M125": {
-  "definitive_treatment_received": {"value": "radical_prostatectomy", "unit": null, "quote": "treated with radical prostatectomy 8 years ago"},
-  "current_treatment_phase": {"value": "on_adt", "unit": null, "quote": "ongoing androgen deprivation therapy (ADT) with leuprolide and bicalutamide"},
-  "testosterone_ng_dl": {"value": 35, "unit": "ng/dL", "quote": "his castrate serum testosterone level is 35 ng/dL"},
-  "psa_ng_ml": {"value": 4.8, "unit": "ng/mL", "quote": "surveillance reveals a rising PSA (4.8 ng/mL)"},
-  "psa_trend": {"value": "increasing", "unit": null, "quote": "surveillance reveals a rising PSA (4.8 ng/mL)"},
-  "psa_doubling_time_months": {"value": 14, "unit": "months", "quote": "his PSA doubling time (PSADT) has been 14 months"},
-  "m_category": {"value": "M1", "unit": null, "quote": "which confirms multiple osseous metastases"},
-  "metastasis_timing": {"value": "metachronous", "unit": null, "quote": "which confirms multiple osseous metastases"},
-  "crpc_stated": {"value": true, "unit": null, "quote": "confirming castration-resistant prostate cancer (CRPC)"},
-  "symptomatic_progression": {"value": false, "unit": null, "quote": "he remains asymptomatic"}
-}
+ "prostate_14:84": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "underwent radical prostatectomy followed by adjuvant radiation therapy"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "he experienced biochemical recurrence with rising PSA levels"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "prompting initiation of androgen deprivation therapy (ADT)"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 50
+   },
+   "unit": "ng/dL",
+   "quote": "His most recent testosterone levels are consistently below 50 ng/dL"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "show no evidence of distant metastatic spread"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastatic spread"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastatic spread"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "show no evidence of distant metastatic spread"
+  },
+  "psa_doubling_time_months": {
+   "value": 12,
+   "unit": "months",
+   "quote": "His PSA doubling time is calculated at 12 months"
+  },
+  "psa_ng_ml": {
+   "value": 2.5,
+   "unit": "ng/mL",
+   "quote": "Laboratory results confirm stable PSA levels around 2.5 ng/mL"
+  },
+  "psa_trend": {
+   "value": "stable",
+   "unit": null,
+   "quote": "Laboratory results confirm stable PSA levels around 2.5 ng/mL"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "castration-resistant prostate cancer (CRPC) without metastatic disease"
+  },
+  "symptomatic_progression": {
+   "value": false,
+   "unit": null,
+   "quote": "Physical examination reveals no new symptoms"
+  }
+ },
+ "prostate_14:85": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "underwent radical prostatectomy followed by adjuvant androgen deprivation therapy (ADT)"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "his PSA began to rise, indicating biochemical recurrence"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "He was started on continuous ADT with leuprolide"
+  },
+  "psa_doubling_time_months": {
+   "value": 9,
+   "unit": "months",
+   "quote": "PSA doubling time (PSADT) is 9 months"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 50
+   },
+   "unit": "ng/dL",
+   "quote": "his testosterone levels consistently remain below 50 ng/dL"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "did not reveal distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "did not reveal distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "did not reveal distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "did not reveal distant metastases"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "noting progressive biochemical recurrence without radiographic metastatic spread"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "castration-resistant prostate cancer (CRPC) with non-metastatic disease"
+  }
+ },
+ "prostate_14:86": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "underwent radical prostatectomy followed by adjuvant radiation therapy"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "he experienced biochemical recurrence with rising PSA levels"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "prompting initiation of androgen deprivation therapy (ADT)"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 50
+   },
+   "unit": "ng/dL",
+   "quote": "His recent testosterone levels were consistently below 50 ng/dL"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "a recent bone scan and CT scan showed no distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "a recent bone scan and CT scan showed no distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "a recent bone scan and CT scan showed no distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "a recent bone scan and CT scan showed no distant metastases"
+  },
+  "psa_doubling_time_months": {
+   "value": 9,
+   "unit": "months",
+   "quote": "His PSA doubling time (PSADT) was calculated at 9 months"
+  },
+  "psa_ng_ml": {
+   "value": 6.4,
+   "unit": "ng/mL",
+   "quote": "Laboratory results show a PSA of 6.4 ng/mL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "which has been steadily increasing over the past 6 months"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "managing his castration-resistant prostate cancer"
+  }
+ },
+ "prostate_14:87": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "initially underwent radical prostatectomy followed by adjuvant radiation therapy"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "he experienced biochemical recurrence with rising PSA levels"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "He was started on androgen deprivation therapy (ADT) with leuprolide"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 50
+   },
+   "unit": "ng/dL",
+   "quote": "his testosterone remained consistently below 50 ng/dL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "Recent PSA testing showed continued elevation despite ADT"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "CT and bone scans revealed no distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "CT and bone scans revealed no distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "CT and bone scans revealed no distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "CT and bone scans revealed no distant metastases"
+  },
+  "psa_doubling_time_months": {
+   "value": 9,
+   "unit": "months",
+   "quote": "His PSA doubling time was calculated at 9 months"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "confirming castration-resistant prostate cancer (CRPC) without metastatic spread"
+  }
+ },
+ "prostate_14:88": {
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "diagnosed with castration-resistant prostate cancer (CRPC) three years ago"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "currently undergoing androgen deprivation therapy with abiraterone and ADT"
+  },
+  "prior_arpi_treatment": {
+   "value": true,
+   "unit": null,
+   "quote": "currently undergoing androgen deprivation therapy with abiraterone and ADT"
+  },
+  "psa_ng_ml": {
+   "value": 45,
+   "unit": "ng/mL",
+   "quote": "His initial prostate-specific antigen (PSA) of 45 ng/mL"
+  },
+  "psa_trend": {
+   "value": "other",
+   "unit": null,
+   "quote": "has gradually declined with treatment"
+  },
+  "psa_doubling_time_months": {
+   "value": {
+    "min": 10
+   },
+   "unit": "months",
+   "quote": "his PSA doubling time has been consistently greater than 10 months"
+  },
+  "testosterone_ng_dl": {
+   "value": 42,
+   "unit": "ng/dL",
+   "quote": "His most recent testosterone level is 42 ng/dL"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "recent imaging studies showed no distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "recent imaging studies showed no distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "recent imaging studies showed no distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "recent imaging studies showed no distant metastases"
+  }
+ },
+ "prostate_14:89": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "underwent radical prostatectomy five years ago followed by adjuvant radiation therapy"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "since his initial biochemical recurrence two years post-surgery"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "He has been on androgen deprivation therapy (ADT)"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 50
+   },
+   "unit": "ng/dL",
+   "quote": "His most recent testosterone levels remain consistently below 50 ng/dL"
+  },
+  "psa_doubling_time_months": {
+   "value": 12,
+   "unit": "months",
+   "quote": "his PSA doubling time calculated at approximately 12 months"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "Serial PSA measurements over the past year show a gradual rise"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "reveal no evidence of distant metastatic disease"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "reveal no evidence of distant metastatic disease"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "reveal no evidence of distant metastatic disease"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "reveal no evidence of distant metastatic disease"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "castration-resistant prostate cancer (CRPC) without metastatic spread"
+  },
+  "symptomatic_progression": {
+   "value": false,
+   "unit": null,
+   "quote": "he remains asymptomatic"
+  }
+ },
+ "prostate_14:90": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "underwent radical prostatectomy followed by adjuvant androgen deprivation therapy"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "he has been on continuous ADT with leuprolide"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 50
+   },
+   "unit": "ng/dL",
+   "quote": "maintaining castrate testosterone levels below 50 ng/dL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "with gradual rises noted over the past year"
+  },
+  "psa_doubling_time_months": {
+   "value": 12,
+   "unit": "months",
+   "quote": "calculated at 12 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "show no evidence of distant metastatic spread"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastatic spread"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastatic spread"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "show no evidence of distant metastatic spread"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "indicating a slower progression of castration-resistant prostate cancer (CRPC)"
+  },
+  "symptomatic_progression": {
+   "value": false,
+   "unit": null,
+   "quote": "John remains asymptomatic"
+  }
+ },
+ "prostate_14:91": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "underwent radical prostatectomy followed by adjuvant radiation therapy"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "he experienced biochemical recurrence with rising PSA levels"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "prompting initiation of androgen deprivation therapy (ADT)"
+  },
+  "testosterone_ng_dl": {
+   "value": 42,
+   "unit": "ng/dL",
+   "quote": "His most recent testosterone level was 42 ng/dL"
+  },
+  "psa_doubling_time_months": {
+   "value": 8.5,
+   "unit": "months",
+   "quote": "his PSA doubling time was calculated at 8.5 months"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "suggesting relatively rapid progression"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "showed no evidence of distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "showed no evidence of distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "showed no evidence of distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "showed no evidence of distant metastases"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "to manage his castration-resistant prostate cancer"
+  }
+ },
+ "prostate_14:92": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "underwent radical prostatectomy followed by external beam radiation"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "his biochemical recurrence suggests potential progression"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "He has been on androgen deprivation therapy (ADT) since diagnosis"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 50
+   },
+   "unit": "ng/dL",
+   "quote": "which have consistently remained below 50 ng/dL"
+  },
+  "psa_doubling_time_months": {
+   "value": 8,
+   "unit": "months",
+   "quote": "with a PSA doubling time of 8 months"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "His PSA levels have been gradually rising over the past 18 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "showed no evidence of distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "showed no evidence of distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "showed no evidence of distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "showed no evidence of distant metastases"
+  },
+  "crpc_stated": {
+   "value": false,
+   "unit": null,
+   "quote": "he remains castration-sensitive"
+  }
+ },
+ "prostate_14:93": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "initially underwent radical prostatectomy followed by salvage radiation therapy"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "he experienced biochemical recurrence with rising PSA levels"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "prompting initiation of androgen deprivation therapy (ADT)"
+  },
+  "psa_doubling_time_months": {
+   "value": 9,
+   "unit": "months",
+   "quote": "His PSA doubling time is calculated at 9 months"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 50
+   },
+   "unit": "ng/dL",
+   "quote": "testosterone levels remain below 50 ng/dL with ongoing ADT"
+  },
+  "psa_ng_ml": {
+   "value": 4.2,
+   "unit": "ng/mL",
+   "quote": "Laboratory results reveal a PSA of 4.2 ng/mL"
+  },
+  "psa_trend": {
+   "value": "stable",
+   "unit": null,
+   "quote": "stable from his previous measurement three months ago"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "ongoing castration-resistant prostate cancer (CRPC) without metastatic spread"
+  },
+  "symptomatic_progression": {
+   "value": false,
+   "unit": null,
+   "quote": "no significant symptomatic progression or new clinical complications"
+  }
+ },
+ "prostate_14:94": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "initially treated with radical prostatectomy 5 years ago"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "presented with biochemical recurrence 2 years post-surgery"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "He was started on androgen deprivation therapy (ADT) with leuprolide injections"
+  },
+  "psa_ng_ml": {
+   "value": 1.9,
+   "unit": "ng/mL",
+   "quote": "his PSA has further increased to 1.9 ng/mL"
+  },
+  "psa_doubling_time_months": {
+   "value": 12.4,
+   "unit": "months",
+   "quote": "a calculated PSA doubling time of 12.4 months"
+  },
+  "testosterone_ng_dl": {
+   "value": 18,
+   "unit": "ng/dL",
+   "quote": "His most recent testosterone level is 18 ng/dL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "his PSA has gradually increased over the past 9 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "consistent with non-metastatic castration-resistant prostate cancer (CRPC)"
+  }
+ },
+ "prostate_14:95": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "treated with radical prostatectomy 8 years ago followed by salvage radiation therapy"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "presented with biochemical recurrence 2 years ago"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "androgen deprivation therapy (ADT) with leuprolide injections every 3 months"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 20
+   },
+   "unit": "ng/dL",
+   "quote": "His testosterone level has been consistently maintained below 20 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 7.3,
+   "unit": "ng/mL",
+   "quote": "his PSA has increased to 7.3 ng/mL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "his PSA began to rise slowly over the past year"
+  },
+  "psa_doubling_time_months": {
+   "value": 12,
+   "unit": "months",
+   "quote": "showed a value of 12 months"
+  },
+  "m_category": {
+   "value": "M1",
+   "unit": null,
+   "quote": "consistent with metastatic disease"
+  },
+  "metastasis_timing": {
+   "value": "metachronous",
+   "unit": null,
+   "quote": "new lesions in the lumbar spine and right iliac bone"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "new lesions in the lumbar spine and right iliac bone"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "confirming castration-resistant prostate cancer (CRPC)"
+  }
+ },
+ "prostate_14:96": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "initially treated with radical prostatectomy 7 years ago"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "salvage radiation therapy after biochemical recurrence"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "continuous androgen deprivation therapy (ADT) with leuprolide for the past 3 years"
+  },
+  "testosterone_ng_dl": {
+   "value": 18,
+   "unit": "ng/dL",
+   "quote": "His testosterone level is consistently suppressed at 18 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 2.2,
+   "unit": "ng/mL",
+   "quote": "During today's visit, his PSA is 2.2 ng/mL"
+  },
+  "psa_trend": {
+   "value": "stable",
+   "unit": null,
+   "quote": "essentially unchanged from 3 months ago"
+  },
+  "psa_doubling_time_months": {
+   "value": 12.5,
+   "unit": "months",
+   "quote": "reveals a value of 12.5 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "non-metastatic castration-resistant prostate cancer with a PSADT"
+  },
+  "symptomatic_progression": {
+   "value": false,
+   "unit": null,
+   "quote": "no urinary symptoms, bone pain, or other concerning symptoms"
+  }
+ },
+ "prostate_14:97": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "He underwent radical prostatectomy with final pathology"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "after which it began to rise"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "he started androgen deprivation therapy (ADT) with leuprolide injections"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 20
+   },
+   "unit": "ng/dL",
+   "quote": "His testosterone has been consistently suppressed below 20 ng/dL on therapy"
+  },
+  "psa_ng_ml": {
+   "value": 4.6,
+   "unit": "ng/mL",
+   "quote": "his PSA has increased to 4.6 ng/mL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "Despite ongoing ADT, his PSA has been rising over the past 9 months"
+  },
+  "psa_doubling_time_months": {
+   "value": 6,
+   "unit": "months",
+   "quote": "indicating a PSA doubling time of approximately 6 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "consistent with non-metastatic castration-resistant prostate cancer (nmCRPC)"
+  },
+  "prior_arpi_treatment": {
+   "value": true,
+   "unit": null,
+   "quote": "he was started on enzalutamide 160 mg daily 6 months ago"
+  }
+ },
+ "prostate_14:98": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "was treated with radical prostatectomy followed by salvage radiation therapy"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "when his PSA began to rise 18 months post-surgery"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "continuous androgen deprivation therapy (ADT) with leuprolide"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 20
+   },
+   "unit": "ng/dL",
+   "quote": "maintaining castrate testosterone levels consistently below 20 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 4.8,
+   "unit": "ng/mL",
+   "quote": "his PSA has increased to 4.8 ng/mL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "his PSA has begun rising again over the last 6 months"
+  },
+  "psa_doubling_time_months": {
+   "value": 8,
+   "unit": "months",
+   "quote": "indicating a PSA doubling time of approximately 8 months"
+  },
+  "m_category": {
+   "value": "M1",
+   "unit": null,
+   "quote": "multiple new bone lesions in the spine and pelvis"
+  },
+  "metastasis_timing": {
+   "value": "metachronous",
+   "unit": null,
+   "quote": "that were not present on previous scans"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "multiple new bone lesions in the spine and pelvis"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "confirming non-metastatic castration-resistant prostate cancer (nmCRPC)"
+  },
+  "prior_arpi_treatment": {
+   "value": true,
+   "unit": null,
+   "quote": "he was started on enzalutamide in addition to continuing his ADT"
+  }
+ },
+ "prostate_14:99": {
+  "histology": {
+   "value": "adenocarcinoma",
+   "unit": null,
+   "quote": "localized prostate adenocarcinoma"
+  },
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "treated with radical prostatectomy 5 years ago followed by salvage radiation therapy"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "salvage radiation therapy for biochemical recurrence 3 years ago"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "androgen deprivation therapy (ADT) with leuprolide injections for the past 18 months"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 20
+   },
+   "unit": "ng/dL",
+   "quote": "consistently below 20 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 3.2,
+   "unit": "ng/mL",
+   "quote": "his PSA has been steadily increasing from 0.5 ng/mL to 3.2 ng/mL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "his PSA has been steadily increasing"
+  },
+  "psa_doubling_time_months": {
+   "value": 8,
+   "unit": "months",
+   "quote": "His PSA doubling time has been calculated at 8 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "indicating castration-resistant prostate cancer (CRPC)"
+  }
+ },
+ "prostate_14:100": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "initially treated with radical prostatectomy 7 years ago followed by salvage radiation therapy 5 years ago"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "a gradually rising PSA over the past 18 months"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "continuous androgen deprivation therapy (ADT) with leuprolide injections every 3 months"
+  },
+  "testosterone_ng_dl": {
+   "value": 18,
+   "unit": "ng/dL",
+   "quote": "His testosterone level remains suppressed at 18 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 1.45,
+   "unit": "ng/mL",
+   "quote": "his PSA has further increased to 1.45 ng/mL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "a gradually rising PSA over the past 18 months"
+  },
+  "psa_doubling_time_months": {
+   "value": 12.3,
+   "unit": "months",
+   "quote": "calculated to be 12.3 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "showed no evidence of distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "showed no evidence of distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "showed no evidence of distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "showed no evidence of distant metastases"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "non-metastatic castration-resistant prostate cancer"
+  },
+  "symptomatic_progression": {
+   "value": false,
+   "unit": null,
+   "quote": "remains relatively asymptomatic"
+  }
+ },
+ "prostate_14:101": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "initially treated 4 years ago with radical prostatectomy"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "salvage radiation therapy due to biochemical recurrence"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "He has been on androgen deprivation therapy (ADT) with leuprolide for the past 18 months"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 20
+   },
+   "unit": "ng/dL",
+   "quote": "maintaining serum testosterone levels consistently below 20 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 4.8,
+   "unit": "ng/dL",
+   "quote": "his most recent PSA shows an increase to 4.8 ng/dL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "his PSA has been slowly increasing from 0.8 ng/dL to 2.1 ng/dL over the past 12 months"
+  },
+  "psa_doubling_time_months": {
+   "value": 12.5,
+   "unit": "months",
+   "quote": "His calculated PSA doubling time (PSADT) is 12.5 months"
+  },
+  "m_category": {
+   "value": "M1",
+   "unit": null,
+   "quote": "consistent with metastatic disease"
+  },
+  "metastasis_timing": {
+   "value": "metachronous",
+   "unit": null,
+   "quote": "new osteoblastic lesions in the lumbar spine and right proximal femur"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": {
+    "min": 1
+   },
+   "unit": "count",
+   "quote": "new osteoblastic lesions in the lumbar spine and right proximal femur"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "indicating progression to castration-resistant prostate cancer (CRPC)"
+  }
+ },
+ "prostate_14:102": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "initially treated with radical prostatectomy 6 years ago"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "salvage radiation therapy for biochemical recurrence 4 years ago"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "he was started on androgen deprivation therapy (ADT) with leuprolide injections every 3 months"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 20
+   },
+   "unit": "ng/dL",
+   "quote": "His testosterone levels have consistently remained below 20 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 0.6,
+   "unit": "ng/mL",
+   "quote": "have remained stable at 0.6 ng/mL"
+  },
+  "psa_trend": {
+   "value": "stable",
+   "unit": null,
+   "quote": "have remained stable at 0.6 ng/mL"
+  },
+  "psa_doubling_time_months": {
+   "value": 14,
+   "unit": "months",
+   "quote": "reveals a value of 14 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "show no evidence of metastatic disease"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "indicating castration-resistant prostate cancer (CRPC)"
+  },
+  "symptomatic_progression": {
+   "value": false,
+   "unit": null,
+   "quote": "no bone pain, urinary symptoms, or weight loss"
+  }
+ },
+ "prostate_14:103": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "He initially underwent radical prostatectomy followed by salvage radiation therapy"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "when his PSA began to rise 18 months after surgery"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "he was started on enzalutamide in addition to continuing his ADT"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 20
+   },
+   "unit": "ng/dL",
+   "quote": "His testosterone levels have consistently remained below 20 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 1.5,
+   "unit": "ng/mL",
+   "quote": "his PSA has increased from 0.3 ng/mL (nadir on enzalutamide) to 1.5 ng/mL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "his PSA has increased from 0.3 ng/mL (nadir on enzalutamide) to 1.5 ng/mL"
+  },
+  "psa_doubling_time_months": {
+   "value": 6,
+   "unit": "months",
+   "quote": "calculating to a PSA doubling time of approximately 6 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "showed no evidence of distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "showed no evidence of distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "showed no evidence of distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "showed no evidence of distant metastases"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "consistent with castration-resistant prostate cancer (CRPC)"
+  },
+  "prior_arpi_treatment": {
+   "value": true,
+   "unit": null,
+   "quote": "he was started on enzalutamide in addition to continuing his ADT"
+  }
+ },
+ "prostate_14:104": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "treated 4 years ago with radical prostatectomy followed by salvage radiation therapy"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "continuous androgen deprivation therapy (ADT) with leuprolide injections every 3 months"
+  },
+  "psa_ng_ml": {
+   "value": 3.2,
+   "unit": "ng/mL",
+   "quote": "at 9 months, his PSA increased to 3.2 ng/mL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "his PSA has risen from 0.2 ng/mL to 1.8 ng/mL over the past 7 months"
+  },
+  "testosterone_ng_dl": {
+   "value": 18,
+   "unit": "ng/dL",
+   "quote": "Laboratory results confirm castrate testosterone levels at 18 ng/dL"
+  },
+  "psa_doubling_time_months": {
+   "value": 6.2,
+   "unit": "months",
+   "quote": "His PSA doubling time (PSADT) is calculated at 6.2 months"
+  },
+  "m_category": {
+   "value": "M1",
+   "unit": null,
+   "quote": "progression to metastatic castration-resistant prostate cancer"
+  },
+  "bone_metastases_count": {
+   "value": 2,
+   "unit": "count",
+   "quote": "reveals two new lesions in the thoracic spine"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "reveals two new lesions in the thoracic spine"
+  },
+  "metastasis_timing": {
+   "value": "metachronous",
+   "unit": null,
+   "quote": "reveals two new lesions in the thoracic spine"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "consistent with non-metastatic castration-resistant prostate cancer (nmCRPC)"
+  },
+  "prior_arpi_treatment": {
+   "value": true,
+   "unit": null,
+   "quote": "The patient was started on apalutamide 240 mg daily in addition to continuing ADT"
+  }
+ },
+ "prostate_14:105": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "treated with radical prostatectomy followed by salvage radiation therapy 3 years ago"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "salvage radiation therapy 3 years ago due to biochemical recurrence"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "He was started on androgen deprivation therapy (ADT) with leuprolide injections 18 months ago"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 20
+   },
+   "unit": "ng/dL",
+   "quote": "His testosterone level has been consistently maintained below 20 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 4.3,
+   "unit": "ng/mL",
+   "quote": "his PSA has remained stable at 4.3 ng/mL"
+  },
+  "psa_trend": {
+   "value": "stable",
+   "unit": null,
+   "quote": "his PSA has remained stable at 4.3 ng/mL"
+  },
+  "psa_doubling_time_months": {
+   "value": 6,
+   "unit": "months",
+   "quote": "indicating a PSA doubling time of approximately 6 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "show no evidence of distant metastatic disease"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastatic disease"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastatic disease"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "show no evidence of distant metastatic disease"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "consistent with non-metastatic castration-resistant prostate cancer (CRPC)"
+  }
+ },
+ "prostate_14:106": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "initially treated with radical prostatectomy four years ago"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "salvage radiation therapy for biochemical recurrence two years ago"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "has been on androgen deprivation therapy (ADT) with leuprolide for the past 18 months"
+  },
+  "testosterone_ng_dl": {
+   "value": 18,
+   "unit": "ng/dL",
+   "quote": "testosterone level of 18 ng/dL, confirming adequate castration"
+  },
+  "psa_ng_ml": {
+   "value": 3.5,
+   "unit": "ng/mL",
+   "quote": "his PSA has further increased to 3.5 ng/mL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "his PSA has further increased to 3.5 ng/mL"
+  },
+  "psa_doubling_time_months": {
+   "value": 12,
+   "unit": "months",
+   "quote": "representing a PSA doubling time (PSADT) of approximately 12 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "confirming non-metastatic castration-resistant prostate cancer (CRPC)"
+  },
+  "symptomatic_progression": {
+   "value": false,
+   "unit": null,
+   "quote": "The patient reports feeling well with no new symptoms"
+  }
+ },
+ "prostate_14:107": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "treated with radical prostatectomy followed by salvage radiation therapy 3 years ago"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "salvage radiation therapy 3 years ago when his PSA began to rise"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "Despite continuous androgen deprivation therapy (ADT) with leuprolide injections"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 20
+   },
+   "unit": "ng/dL",
+   "quote": "maintaining his testosterone at consistent levels below 20 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 3.2,
+   "unit": "ng/mL",
+   "quote": "At today's visit, his PSA has jumped to 3.2 ng/mL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "his PSA has jumped to 3.2 ng/mL"
+  },
+  "psa_doubling_time_months": {
+   "value": 12.5,
+   "unit": "months",
+   "quote": "His PSA doubling time (PSADT) was calculated at 12.5 months"
+  },
+  "m_category": {
+   "value": "M1",
+   "unit": null,
+   "quote": "lesions in the liver consistent with metastatic disease"
+  },
+  "visceral_metastases_present": {
+   "value": true,
+   "unit": null,
+   "quote": "two new 1.5 cm hypodense lesions in the liver"
+  },
+  "metastasis_timing": {
+   "value": "metachronous",
+   "unit": null,
+   "quote": "two new 1.5 cm hypodense lesions in the liver"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "confirming castration-resistant prostate cancer (CRPC)"
+  },
+  "symptomatic_progression": {
+   "value": false,
+   "unit": null,
+   "quote": "has remained relatively asymptomatic"
+  }
+ },
+ "prostate_14:108": {
+  "clinical_t_category": {
+   "value": "other",
+   "unit": null,
+   "quote": "Gleason score 7, T2N0M0"
+  },
+  "n_category": {
+   "value": "N0",
+   "unit": null,
+   "quote": "Gleason score 7, T2N0M0"
+  },
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "initially underwent radical prostatectomy followed by salvage radiation therapy"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "when his PSA began to rise 2 years after surgery"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "started on androgen deprivation therapy (ADT) with leuprolide injections 18 months ago"
+  },
+  "testosterone_ng_dl": {
+   "value": 28,
+   "unit": "ng/dL",
+   "quote": "maintaining his testosterone level at 28 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 3.2,
+   "unit": "ng/dL",
+   "quote": "his PSA level remains at 3.2 ng/dL"
+  },
+  "psa_trend": {
+   "value": "stable",
+   "unit": null,
+   "quote": "unchanged from his previous visit 2 months ago"
+  },
+  "psa_doubling_time_months": {
+   "value": 12.4,
+   "unit": "months",
+   "quote": "has been calculated at 12.4 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "showed no evidence of distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "showed no evidence of distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "showed no evidence of distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "showed no evidence of distant metastases"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "indicating castration-resistant prostate cancer (CRPC)"
+  },
+  "symptomatic_progression": {
+   "value": false,
+   "unit": null,
+   "quote": "he reports feeling well overall with no new symptoms"
+  }
+ },
+ "prostate_14:109": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "treated 5 years ago with radical prostatectomy followed by salvage radiation therapy"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "continuous androgen deprivation therapy (ADT) with leuprolide for the past 2 years"
+  },
+  "testosterone_ng_dl": {
+   "value": 18,
+   "unit": "ng/dL",
+   "quote": "His testosterone level is consistently suppressed at 18 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 4.8,
+   "unit": "ng/mL",
+   "quote": "his PSA has increased to 4.8 ng/mL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "his PSA has been rising from 0.5 ng/mL to 3.2 ng/mL over the last 8 months"
+  },
+  "psa_doubling_time_months": {
+   "value": 6,
+   "unit": "months",
+   "quote": "indicating a PSA doubling time of approximately 6 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "were negative for distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "were negative for distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "were negative for distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "were negative for distant metastases"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "classifying him as having non-metastatic castration-resistant prostate cancer (CRPC)"
+  },
+  "prior_arpi_treatment": {
+   "value": true,
+   "unit": null,
+   "quote": "darolutamide was added to his ADT regimen"
+  }
+ },
+ "prostate_14:110": {
+  "clinical_t_category": {
+   "value": "T2b",
+   "unit": null,
+   "quote": "Gleason 4+4=8, cT2bN0M0"
+  },
+  "n_category": {
+   "value": "N0",
+   "unit": null,
+   "quote": "Gleason 4+4=8, cT2bN0M0"
+  },
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "underwent radical prostatectomy followed by salvage radiation therapy when his PSA rose to 0.5 ng/mL"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "when his PSA rose to 0.5 ng/mL one year after surgery"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "He has been on continuous androgen deprivation therapy (ADT) with leuprolide"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 20
+   },
+   "unit": "ng/dL",
+   "quote": "castrate testosterone levels consistently below 20 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 9.8,
+   "unit": "ng/mL",
+   "quote": "PSA further increased to 9.8 ng/mL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "his PSA has been steadily increasing over the past year"
+  },
+  "psa_doubling_time_months": {
+   "value": 7.5,
+   "unit": "months",
+   "quote": "Calculated PSA doubling time is 7.5 months"
+  },
+  "m_category": {
+   "value": "M1",
+   "unit": null,
+   "quote": "new bone lesions in the ribs, thoracic spine, and left iliac bone"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": {
+    "min": 1
+   },
+   "unit": "count",
+   "quote": "new bone lesions in the ribs, thoracic spine, and left iliac bone"
+  },
+  "metastasis_timing": {
+   "value": "metachronous",
+   "unit": null,
+   "quote": "new bone lesions in the ribs, thoracic spine, and left iliac bone"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "indicating castration-resistant prostate cancer (CRPC)"
+  }
+ },
+ "prostate_14:111": {
+  "n_category": {
+   "value": "N0",
+   "unit": null,
+   "quote": "Gleason 4+4=8, pT2cN0M0"
+  },
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "initially treated with radical prostatectomy 6 years ago"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "developed biochemical recurrence 3 years post-surgery"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "started on androgen deprivation therapy (ADT) with leuprolide injections every 3 months"
+  },
+  "testosterone_ng_dl": {
+   "value": 18,
+   "unit": "ng/dL",
+   "quote": "despite maintaining castrate testosterone levels of 18 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 0.8,
+   "unit": "ng/mL",
+   "quote": "his latest PSA is 0.8 ng/mL (decreased from previous values)"
+  },
+  "psa_trend": {
+   "value": "other",
+   "unit": null,
+   "quote": "(decreased from previous values)"
+  },
+  "psa_doubling_time_months": {
+   "value": 6.2,
+   "unit": "months",
+   "quote": "His PSA doubling time is calculated at 6.2 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "prior_arpi_treatment": {
+   "value": true,
+   "unit": null,
+   "quote": "he was started on apalutamide in addition to continuing his ADT regimen"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "indicating castration-resistant prostate cancer (CRPC)"
+  }
+ },
+ "prostate_14:112": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "initially treated with radical prostatectomy 8 years ago"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "salvage radiation therapy for biochemical recurrence 5 years ago"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "was started on androgen deprivation therapy (ADT) with leuprolide injections every 3 months"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 20
+   },
+   "unit": "ng/dL",
+   "quote": "His testosterone level has been consistently maintained below 20 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 4.1,
+   "unit": "ng/mL",
+   "quote": "his PSA has increased further to 4.1 ng/mL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "his PSA has been slowly rising over the past 18 months"
+  },
+  "psa_doubling_time_months": {
+   "value": 13.5,
+   "unit": "months",
+   "quote": "reveals a PSADT of 13.5 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "confirming castration-resistant prostate cancer (CRPC)"
+  },
+  "symptomatic_progression": {
+   "value": false,
+   "unit": null,
+   "quote": "no bone pain, and no urinary symptoms"
+  }
+ },
+ "prostate_14:113": {
+  "n_category": {
+   "value": "N0",
+   "unit": null,
+   "quote": "Gleason 4+4=8, pT3aN0"
+  },
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "initially treated 5 years ago with radical prostatectomy"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "salvage external beam radiation therapy for biochemical recurrence"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "continuous androgen deprivation therapy (ADT) with leuprolide for the past 3 years"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 20
+   },
+   "unit": "ng/dL",
+   "quote": "consistently <20 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 4.5,
+   "unit": "ng/mL",
+   "quote": "his PSA has increased to 4.5 ng/mL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "his PSA has been slowly rising over the past 18 months"
+  },
+  "psa_doubling_time_months": {
+   "value": 12,
+   "unit": "months",
+   "quote": "shows a value of 12 months"
+  },
+  "m_category": {
+   "value": "M1",
+   "unit": null,
+   "quote": "two new 1.5 cm lesions in the lumbar vertebrae and a 2 cm lesion in the right iliac bone"
+  },
+  "bone_metastases_count": {
+   "value": 3,
+   "unit": "count",
+   "quote": "two new 1.5 cm lesions in the lumbar vertebrae and a 2 cm lesion in the right iliac bone"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "two new 1.5 cm lesions in the lumbar vertebrae and a 2 cm lesion in the right iliac bone"
+  },
+  "metastasis_timing": {
+   "value": "metachronous",
+   "unit": null,
+   "quote": "two new 1.5 cm lesions in the lumbar vertebrae and a 2 cm lesion in the right iliac bone"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "confirming castration-resistant prostate cancer (CRPC)"
+  }
+ },
+ "prostate_14:114": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "initially treated with radical prostatectomy five years ago"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "salvage external beam radiation therapy for biochemical recurrence two years ago"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "He began androgen deprivation therapy (ADT) with leuprolide 14 months ago"
+  },
+  "testosterone_ng_dl": {
+   "value": 28,
+   "unit": "ng/dL",
+   "quote": "castrate testosterone levels at 28 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 1.5,
+   "unit": "ng/mL",
+   "quote": "his PSA has slowly risen from 0.8 ng/mL to 1.5 ng/mL over the past 12 months"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "his PSA has slowly risen from 0.8 ng/mL to 1.5 ng/mL over the past 12 months"
+  },
+  "psa_doubling_time_months": {
+   "value": 12.5,
+   "unit": "months",
+   "quote": "has been calculated at 12.5 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "indicating castration-resistant prostate cancer (CRPC)"
+  },
+  "symptomatic_progression": {
+   "value": false,
+   "unit": null,
+   "quote": "no urinary symptoms, bone pain, or constitutional symptoms"
+  }
+ },
+ "prostate_14:115": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "initially treated with radical prostatectomy 5 years ago"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "salvage radiation therapy for biochemical recurrence 3 years ago"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "was started on androgen deprivation therapy (ADT) with leuprolide injections"
+  },
+  "testosterone_ng_dl": {
+   "value": 18,
+   "unit": "ng/dL",
+   "quote": "currently 18 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 3.1,
+   "unit": "ng/mL",
+   "quote": "his most recent PSA shows an increase to 3.1 ng/mL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "his PSA has been rising over the past 8 months"
+  },
+  "psa_doubling_time_months": {
+   "value": 7.5,
+   "unit": "months",
+   "quote": "with a calculated PSA doubling time of 7.5 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "show no evidence of distant metastatic disease"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastatic disease"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastatic disease"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "show no evidence of distant metastatic disease"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "clinically diagnosed with non-metastatic castration-resistant prostate cancer (CRPC)"
+  },
+  "prior_arpi_treatment": {
+   "value": true,
+   "unit": null,
+   "quote": "he was started on enzalutamide in addition to continuing ADT"
+  }
+ },
+ "prostate_14:116": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "initially treated with radical prostatectomy 5 years ago"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "salvage radiation therapy 3 years ago when his PSA began to rise"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "he was started on androgen deprivation therapy (ADT) with leuprolide injections 18 months ago"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 20
+   },
+   "unit": "ng/dL",
+   "quote": "His testosterone levels have been consistently maintained below 20 ng/dL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "has now begun rising again after 6 months of treatment"
+  },
+  "psa_doubling_time_months": {
+   "value": 6,
+   "unit": "months",
+   "quote": "indicating a PSA doubling time of approximately 6 months"
+  },
+  "m_category": {
+   "value": "M1",
+   "unit": null,
+   "quote": "new uptake in the right iliac bone and L3 vertebra, consistent with metastatic disease"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "new uptake in the right iliac bone and L3 vertebra, consistent with metastatic disease"
+  },
+  "metastasis_timing": {
+   "value": "metachronous",
+   "unit": null,
+   "quote": "new uptake in the right iliac bone and L3 vertebra, consistent with metastatic disease"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "consistent with castration-resistant prostate cancer (CRPC)"
+  },
+  "prior_arpi_treatment": {
+   "value": true,
+   "unit": null,
+   "quote": "After starting apalutamide in addition to continued ADT"
+  }
+ },
+ "prostate_14:117": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "treated with radical prostatectomy 6 years ago followed by salvage radiation therapy 4 years ago"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "his PSA has been rising over the past year"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "maintained on androgen deprivation therapy (ADT) with leuprolide injections every 3 months"
+  },
+  "testosterone_ng_dl": {
+   "value": 18,
+   "unit": "ng/dL",
+   "quote": "His most recent testosterone level is 18 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 0.9,
+   "unit": "ng/mL",
+   "quote": "Today's laboratory results show his PSA has decreased to 0.9 ng/mL"
+  },
+  "psa_trend": {
+   "value": "other",
+   "unit": null,
+   "quote": "his PSA has decreased to 0.9 ng/mL"
+  },
+  "psa_doubling_time_months": {
+   "value": 8,
+   "unit": "months",
+   "quote": "indicating a PSA doubling time of approximately 8 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "diagnosed him with non-metastatic castration-resistant prostate cancer (CRPC)"
+  },
+  "prior_arpi_treatment": {
+   "value": true,
+   "unit": null,
+   "quote": "he was started on enzalutamide in addition to continuing his ADT"
+  }
+ },
+ "prostate_14:118": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "treated initially with radical prostatectomy and adjuvant radiation therapy"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "bicalutamide upon biochemical recurrence"
+  },
+  "current_treatment_phase": {
+   "value": "on_observation",
+   "unit": null,
+   "quote": "his current management has been periodic monitoring"
+  },
+  "psa_ng_ml": {
+   "value": 8.2,
+   "unit": "ng/mL",
+   "quote": "current PSA 8.2 ng/mL"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "his PSA has gradually increased from 5.1 to 8.2 ng/mL"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 20
+   },
+   "unit": "ng/dL",
+   "quote": "castrate serum testosterone (<20 ng/dL)"
+  },
+  "psa_doubling_time_months": {
+   "value": 14,
+   "unit": "months",
+   "quote": "his PSA doubling time (PSADT) is 14 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "showed no evidence of distant metastases (M0)"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "showed no evidence of distant metastases (M0)"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "showed no evidence of distant metastases (M0)"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "showed no evidence of distant metastases (M0)"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "consistent with non-metastatic castration-resistant prostate cancer (CRPC)"
+  },
+  "symptomatic_progression": {
+   "value": false,
+   "unit": null,
+   "quote": "He remains asymptomatic"
+  }
+ },
+ "prostate_14:119": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "treated initially with radical prostatectomy 8 years ago"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "continuous androgen deprivation therapy (ADT) due to rising PSA"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "continuous androgen deprivation therapy (ADT) due to rising PSA"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 50
+   },
+   "unit": "ng/dL",
+   "quote": "remains at castrate levels (<50 ng/dL)"
+  },
+  "psa_doubling_time_months": {
+   "value": 14,
+   "unit": "months",
+   "quote": "his PSA doubling time (PSADT) is 14 months"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "now his PSA is progressively increasing"
+  },
+  "m_category": {
+   "value": "M1",
+   "unit": null,
+   "quote": "new osseous metastases in the lumbar spine"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "new osseous metastases in the lumbar spine"
+  },
+  "metastasis_timing": {
+   "value": "metachronous",
+   "unit": null,
+   "quote": "new osseous metastases in the lumbar spine"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "now presents with castration-resistant prostate cancer (CRPC)"
+  },
+  "symptomatic_progression": {
+   "value": false,
+   "unit": null,
+   "quote": "he has been on close monitoring with stable symptoms"
+  }
+ },
+ "prostate_14:120": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "treated initially with radical prostatectomy 8 years ago"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "salvage radiation therapy 5 years ago due to biochemical recurrence"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "maintained on androgen deprivation therapy (ADT) with leuprolide and bicalutamide"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 50
+   },
+   "unit": "ng/dL",
+   "quote": "castrate serum testosterone levels (<50 ng/dL)"
+  },
+  "psa_doubling_time_months": {
+   "value": 14,
+   "unit": "months",
+   "quote": "his PSA doubling time (PSADT) is 14 months"
+  },
+  "psa_trend": {
+   "value": "stable",
+   "unit": null,
+   "quote": "stable PSA trends over the past 6 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "subsequently developed castration-resistant prostate cancer (CRPC)"
+  },
+  "symptomatic_progression": {
+   "value": false,
+   "unit": null,
+   "quote": "no clinical symptoms or signs of progression"
+  }
+ },
+ "prostate_14:121": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "treated initially with radical prostatectomy 5 years ago"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "due to biochemical recurrence (PSA 1.2 ng/mL)"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "continuous androgen deprivation therapy (ADT) with leuprolide"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 20
+   },
+   "unit": "ng/dL",
+   "quote": "castrate serum testosterone (<20 ng/dL)"
+  },
+  "psa_ng_ml": {
+   "value": 3.1,
+   "unit": "ng/mL",
+   "quote": "PSA 3.1 ng/mL after 9 months"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "but now a gradual rise"
+  },
+  "psa_doubling_time_months": {
+   "value": 8,
+   "unit": "months",
+   "quote": "PSADT 8 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "confirming non-metastatic castration-resistant prostate cancer (CRPC)"
+  },
+  "symptomatic_progression": {
+   "value": false,
+   "unit": null,
+   "quote": "He remains asymptomatic"
+  },
+  "prior_arpi_treatment": {
+   "value": true,
+   "unit": null,
+   "quote": "he was started on enzalutamide"
+  }
+ },
+ "prostate_14:122": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "treated initially with radical prostatectomy 5 years ago"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "due to biochemical recurrence (PSA 1.2 ng/mL)"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "continuous androgen deprivation therapy (ADT) due to biochemical recurrence"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 20
+   },
+   "unit": "ng/dL",
+   "quote": "castrate serum testosterone (<20 ng/dL)"
+  },
+  "psa_ng_ml": {
+   "value": 6.5,
+   "unit": "ng/mL",
+   "quote": "has since risen to 6.5 ng/mL over 3 months"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "has since risen to 6.5 ng/mL over 3 months"
+  },
+  "psa_doubling_time_months": {
+   "value": 8,
+   "unit": "months",
+   "quote": "PSADT 8 months"
+  },
+  "m_category": {
+   "value": "M1",
+   "unit": null,
+   "quote": "a repeat bone scan now reveals two new sclerotic lesions in the lumbar spine"
+  },
+  "bone_metastases_count": {
+   "value": 2,
+   "unit": "count",
+   "quote": "a repeat bone scan now reveals two new sclerotic lesions in the lumbar spine"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "a repeat bone scan now reveals two new sclerotic lesions in the lumbar spine"
+  },
+  "metastasis_timing": {
+   "value": "metachronous",
+   "unit": null,
+   "quote": "a repeat bone scan now reveals two new sclerotic lesions in the lumbar spine"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "confirming non-metastatic castration-resistant prostate cancer (CRPC)"
+  },
+  "prior_arpi_treatment": {
+   "value": true,
+   "unit": null,
+   "quote": "After initiating apalutamide"
+  }
+ },
+ "prostate_14:123": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "initially treated with radical prostatectomy and adjuvant radiation therapy 5 years ago"
+  },
+  "psa_status": {
+   "value": "recurrence",
+   "unit": null,
+   "quote": "now presents with biochemical recurrence"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "on continuous ADT with leuprolide"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 50
+   },
+   "unit": "ng/dL",
+   "quote": "serum testosterone <50 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 1.5,
+   "unit": "ng/mL",
+   "quote": "his PSA remains stable at 1.5 ng/mL"
+  },
+  "psa_trend": {
+   "value": "stable",
+   "unit": null,
+   "quote": "his PSA remains stable at 1.5 ng/mL"
+  },
+  "psa_doubling_time_months": {
+   "value": 8,
+   "unit": "months",
+   "quote": "His PSA doubling time (PSADT) is calculated at 8 months"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "show no evidence of distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "show no evidence of distant metastases"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "a castrate-resistant state"
+  },
+  "prior_arpi_treatment": {
+   "value": true,
+   "unit": null,
+   "quote": "After discussion, he was started on enzalutamide"
+  }
+ },
+ "prostate_14:124": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "treated initially with radical prostatectomy and adjuvant radiation therapy"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "androgen deprivation therapy (ADT) with leuprolide and bicalutamide"
+  },
+  "testosterone_ng_dl": {
+   "value": {
+    "max": 50
+   },
+   "unit": "ng/dL",
+   "quote": "remains at castrate levels (<50 ng/dL)"
+  },
+  "psa_doubling_time_months": {
+   "value": 12,
+   "unit": "months",
+   "quote": "His PSA doubling time (PSADT) is calculated at 12 months"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "his PSA continues to rise"
+  },
+  "m_category": {
+   "value": "M0",
+   "unit": null,
+   "quote": "shows no evidence of distant metastases"
+  },
+  "bone_metastases_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "shows no evidence of distant metastases"
+  },
+  "bone_metastases_beyond_vertebrae_pelvis_count": {
+   "value": 0,
+   "unit": "count",
+   "quote": "shows no evidence of distant metastases"
+  },
+  "visceral_metastases_present": {
+   "value": false,
+   "unit": null,
+   "quote": "shows no evidence of distant metastases"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "consistent with castration-resistant prostate cancer (CRPC)"
+  },
+  "symptomatic_progression": {
+   "value": false,
+   "unit": null,
+   "quote": "he has no new symptoms or findings on physical exam"
+  }
+ },
+ "prostate_14:125": {
+  "definitive_treatment_received": {
+   "value": "radical_prostatectomy",
+   "unit": null,
+   "quote": "treated with radical prostatectomy 8 years ago"
+  },
+  "current_treatment_phase": {
+   "value": "on_adt",
+   "unit": null,
+   "quote": "ongoing androgen deprivation therapy (ADT) with leuprolide and bicalutamide"
+  },
+  "testosterone_ng_dl": {
+   "value": 35,
+   "unit": "ng/dL",
+   "quote": "his castrate serum testosterone level is 35 ng/dL"
+  },
+  "psa_ng_ml": {
+   "value": 4.8,
+   "unit": "ng/mL",
+   "quote": "surveillance reveals a rising PSA (4.8 ng/mL)"
+  },
+  "psa_trend": {
+   "value": "increasing",
+   "unit": null,
+   "quote": "surveillance reveals a rising PSA (4.8 ng/mL)"
+  },
+  "psa_doubling_time_months": {
+   "value": 14,
+   "unit": "months",
+   "quote": "his PSA doubling time (PSADT) has been 14 months"
+  },
+  "m_category": {
+   "value": "M1",
+   "unit": null,
+   "quote": "which confirms multiple osseous metastases"
+  },
+  "metastasis_timing": {
+   "value": "metachronous",
+   "unit": null,
+   "quote": "which confirms multiple osseous metastases"
+  },
+  "crpc_stated": {
+   "value": true,
+   "unit": null,
+   "quote": "confirming castration-resistant prostate cancer (CRPC)"
+  },
+  "symptomatic_progression": {
+   "value": false,
+   "unit": null,
+   "quote": "he remains asymptomatic"
+  }
+ }
 }

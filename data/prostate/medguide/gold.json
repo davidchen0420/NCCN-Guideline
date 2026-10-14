@@ -1,1 +1,1828 @@
-[{"id": "M0", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M1", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M2", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M3", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M4", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M5", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M6", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M7", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M8", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M9", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M10", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M11", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M12", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M13", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M14", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M15", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M16", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M17", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M18", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M19", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M20", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M21", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M22", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M23", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M24", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M25", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M26", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M27", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M28", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M29", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M30", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M31", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M32", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M33", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M34", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M35", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M36", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M37", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M38", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M39", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M40", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M41", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M42", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M43", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M44", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M45", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M46", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M47", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M48", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M49", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M50", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M51", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M52", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M53", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M54", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M55", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M56", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M57", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M58", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M59", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M60", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M61", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M62", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M63", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M64", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M65", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M66", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M67", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M68", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M69", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M70", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M71", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M72", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M73", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M74", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M75", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M76", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M77", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M78", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M79", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M80", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M81", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M82", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M83", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M84", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M85", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M86", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M87", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M88", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M89", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M90", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M91", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M92", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M93", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M94", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M95", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M96", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M97", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M98", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M99", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M100", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M101", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M102", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M103", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M104", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M105", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M106", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M107", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M108", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M109", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M110", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M111", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M112", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M113", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M114", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M115", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M116", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M117", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M118", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M119", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M120", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M121", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M122", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M123", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M124", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M125", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M126", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M127", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M128", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M129", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M130", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M131", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M132", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M133", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M134", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M135", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M136", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M137", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M138", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M139", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M140", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M141", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M142", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M143", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M144", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M145", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M146", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M147", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M148", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M149", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M150", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M151", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M152", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M153", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M154", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M155", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M156", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M157", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M158", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M159", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}, {"id": "M160", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M161", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 8}, {"id": "M162", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 6}, {"id": "M163", "answer": "B", "answer_node": "PROS-16:n0", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M164", "answer": "C", "answer_node": "PROS-16:n7", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 9}, {"id": "M165", "answer": "A", "answer_node": "PROS-16:n14", "option_nodes": {"A": "PROS-16:n14", "B": "PROS-16:n0", "C": "PROS-16:n7"}, "path_len": 7}]
+[
+ {
+  "id": "prostate_14:0",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:1",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:2",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:3",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:4",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:5",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:6",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:7",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:8",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:9",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:10",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:11",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:12",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:13",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:14",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:15",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:16",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:17",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:18",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:19",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:20",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:21",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:22",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:23",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:24",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:25",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:26",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:27",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:28",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:29",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:30",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:31",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:32",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:33",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:34",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:35",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:36",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:37",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:38",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:39",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:40",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:41",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:42",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:43",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:44",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:45",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:46",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:47",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:48",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:49",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:50",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:51",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:52",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:53",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:54",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:55",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:56",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:57",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:58",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:59",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:60",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:61",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:62",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:63",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:64",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:65",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:66",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:67",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:68",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:69",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:70",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:71",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:72",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:73",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:74",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:75",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:76",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:77",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:78",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:79",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:80",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:81",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:82",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:83",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:84",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:85",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:86",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:87",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:88",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:89",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:90",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:91",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:92",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:93",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:94",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:95",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:96",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:97",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:98",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:99",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:100",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:101",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:102",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:103",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:104",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:105",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:106",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:107",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:108",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:109",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:110",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:111",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:112",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:113",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:114",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:115",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:116",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:117",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:118",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:119",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:120",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:121",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:122",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:123",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:124",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:125",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:126",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:127",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:128",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:129",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:130",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:131",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:132",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:133",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:134",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:135",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:136",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:137",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:138",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:139",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:140",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:141",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:142",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:143",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:144",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:145",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:146",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:147",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:148",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:149",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:150",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:151",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:152",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:153",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:154",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:155",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:156",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:157",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:158",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:159",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ },
+ {
+  "id": "prostate_14:160",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:161",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 8
+ },
+ {
+  "id": "prostate_14:162",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 6
+ },
+ {
+  "id": "prostate_14:163",
+  "answer": "B",
+  "answer_node": "PROS-16:n0",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:164",
+  "answer": "C",
+  "answer_node": "PROS-16:n7",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 9
+ },
+ {
+  "id": "prostate_14:165",
+  "answer": "A",
+  "answer_node": "PROS-16:n14",
+  "option_nodes": {
+   "A": "PROS-16:n14",
+   "B": "PROS-16:n0",
+   "C": "PROS-16:n7"
+  },
+  "path_len": 7
+ }
+]

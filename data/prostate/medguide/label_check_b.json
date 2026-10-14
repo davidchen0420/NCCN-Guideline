@@ -1,83 +1,334 @@
-{"M83": {"verdict": "contradicts", "note": "Profile: no radiographic metastatic spread; label says M1."},
-"M84": {"verdict": "consistent", "note": "Stable PSA near 2.5 for 6 months; no metastases on CT/bone scan."},
-"M85": {"verdict": "consistent", "note": "Progressive PSA rise; bone scan and CT show no metastases."},
-"M86": {"verdict": "contradicts", "note": "Bone scan and CT show no distant metastases; label says M1."},
-"M87": {"verdict": "contradicts", "note": "PSA continued rising on ADT; label says stable PSA."},
-"M88": {"verdict": "consistent", "note": "Recent imaging no distant metastases; profile wording says metastatic CRPC."},
-"M89": {"verdict": "contradicts", "note": "Bone scan and CT show no distant metastatic disease; label says M1."},
-"M90": {"verdict": "unclear", "note": "PSA described as relatively stable but with gradual rises."},
-"M91": {"verdict": "consistent", "note": "Bone scan and CT show no distant metastases; label M0."},
-"M92": {"verdict": "contradicts", "note": "Imaging shows no distant metastases; label says M1."},
-"M93": {"verdict": "consistent", "note": "PSA stable at 4.2; CT and bone scan show no metastases."},
-"M94": {"verdict": "consistent", "note": "Repeat imaging confirms no distant metastases; label M0."},
-"M95": {"verdict": "consistent", "note": "New lumbar and iliac lesions consistent with metastatic disease."},
-"M96": {"verdict": "consistent", "note": "PSA essentially unchanged; imaging negative for metastases."},
-"M97": {"verdict": "consistent", "note": "Repeat imaging shows no metastases; label M0 fits."},
-"M98": {"verdict": "consistent", "note": "New bone lesions on imaging; consistent with M1."},
-"M99": {"verdict": "contradicts", "note": "PSA steadily rising from 0.5 to 3.2; label says stable."},
-"M100": {"verdict": "consistent", "note": "Repeat imaging including PSMA PET shows no metastases."},
-"M101": {"verdict": "consistent", "note": "New osteoblastic lesions consistent with metastatic disease."},
-"M102": {"verdict": "consistent", "note": "PSA stable at 0.6 for three months; no metastases."},
-"M103": {"verdict": "consistent", "note": "Repeat bone scan and CT show no metastases."},
-"M104": {"verdict": "consistent", "note": "New thoracic spine lesions and para-aortic node; consistent with M1."},
-"M105": {"verdict": "consistent", "note": "PSA stable at 4.3 recently; imaging repeatedly negative for metastases."},
-"M106": {"verdict": "consistent", "note": "Repeat bone scan, CT and MRI show no metastases."},
-"M107": {"verdict": "consistent", "note": "New liver lesions consistent with metastatic disease."},
-"M108": {"verdict": "consistent", "note": "PSA unchanged at 3.2; imaging last week no metastases."},
-"M109": {"verdict": "consistent", "note": "Repeat imaging shows no metastases; label M0 fits."},
-"M110": {"verdict": "consistent", "note": "PSMA PET shows new bone lesions consistent with metastases."},
-"M111": {"verdict": "contradicts", "note": "PSA fell from 3.8 to 0.8; not stable as labelled."},
-"M112": {"verdict": "consistent", "note": "Repeat CT, bone scan and MRI show no metastases."},
-"M113": {"verdict": "consistent", "note": "New lumbar and iliac lesions consistent with metastatic disease."},
-"M114": {"verdict": "contradicts", "note": "PSA slowly rising over 12 months; label says stable."},
-"M115": {"verdict": "consistent", "note": "Repeat MRI and bone scan show no metastases; PSA rising."},
-"M116": {"verdict": "consistent", "note": "New iliac and L3 uptake consistent with metastatic disease."},
-"M117": {"verdict": "contradicts", "note": "PSA fell from 3.2 to 0.9; not stable as labelled."},
-"M118": {"verdict": "consistent", "note": "Bone scan and CT show no distant metastases."},
-"M119": {"verdict": "consistent", "note": "PSMA PET shows new lumbar metastases; profile has stray meta-text."},
-"M120": {"verdict": "consistent", "note": "Stable PSA over 6 months; imaging shows no metastases."},
-"M121": {"verdict": "consistent", "note": "Bone scan and CT show no metastases; PSA rising."},
-"M122": {"verdict": "consistent", "note": "Repeat bone scan shows new lumbar sclerotic lesions."},
-"M123": {"verdict": "consistent", "note": "PSA stable at 1.5 for 12 months; imaging negative."},
-"M124": {"verdict": "consistent", "note": "Repeat imaging negative for metastases; PSA rising."},
-"M125": {"verdict": "consistent", "note": "PSMA PET-CT confirms multiple osseous metastases."},
-"M126": {"verdict": "consistent", "note": "Stable PSA over the past year; no metastases on imaging."},
-"M127": {"verdict": "consistent", "note": "Imaging negative for metastases despite rising PSA."},
-"M128": {"verdict": "consistent", "note": "Bone scan reveals new osseous metastases."},
-"M129": {"verdict": "consistent", "note": "PSA stable and repeat imaging shows no metastases."},
-"M130": {"verdict": "consistent", "note": "Repeat imaging negative for metastases; PSA rising."},
-"M131": {"verdict": "consistent", "note": "Repeat bone scan shows lumbar lesions confirming metastases."},
-"M132": {"verdict": "consistent", "note": "PSA stable over 6 months; imaging shows no metastases."},
-"M133": {"verdict": "consistent", "note": "Repeat imaging remains negative for metastatic disease."},
-"M134": {"verdict": "consistent", "note": "New lumbar sclerotic lesions on bone scan; metastatic progression."},
-"M135": {"verdict": "consistent", "note": "PSA stable at 1.5; repeat imaging shows no progression."},
-"M136": {"verdict": "consistent", "note": "PSMA PET-CT shows no metastatic disease; PSA rising."},
-"M137": {"verdict": "consistent", "note": "New sclerotic bone lesions consistent with metastatic disease."},
-"M138": {"verdict": "consistent", "note": "PSA stable over 6 months; imaging shows no metastases."},
-"M139": {"verdict": "consistent", "note": "Repeat imaging shows no metastases; PSA rising."},
-"M140": {"verdict": "consistent", "note": "New lumbar sclerotic lesions consistent with metastatic disease."},
-"M141": {"verdict": "consistent", "note": "PSA stable over 12 months; repeat imaging negative."},
-"M142": {"verdict": "contradicts", "note": "Profile says bone metastases confirmed at diagnosis; label says M0."},
-"M143": {"verdict": "consistent", "note": "Repeat scans show new sclerotic lesions; metastatic disease."},
-"M144": {"verdict": "consistent", "note": "PSA stable at 2.5-2.8; imaging shows no metastases."},
-"M145": {"verdict": "consistent", "note": "PSA rising but CT and bone scan negative for metastases."},
-"M146": {"verdict": "consistent", "note": "Imaging shows new lytic lesions confirmed as metastases."},
-"M147": {"verdict": "consistent", "note": "PSA stable at 7.5 on enzalutamide; imaging negative."},
-"M148": {"verdict": "consistent", "note": "Latest scans negative for metastases; PSA rising."},
-"M149": {"verdict": "consistent", "note": "Scans show sclerotic thoracic lesion confirming skeletal metastases."},
-"M150": {"verdict": "consistent", "note": "PSA stable; surveillance imaging shows no new metastases."},
-"M151": {"verdict": "consistent", "note": "Repeat CT and bone scan show no metastases."},
-"M152": {"verdict": "consistent", "note": "New osseous metastases and retroperitoneal nodes on imaging."},
-"M153": {"verdict": "consistent", "note": "PSA 3.8 to 3.6 near-stable; repeat imaging negative."},
-"M154": {"verdict": "consistent", "note": "Repeat imaging negative for metastases; PSA rising."},
-"M155": {"verdict": "consistent", "note": "Bone scan shows osseous metastases; CT shows lung nodules."},
-"M156": {"verdict": "consistent", "note": "PSA stable at 1.2-1.3; imaging negative for metastases."},
-"M157": {"verdict": "consistent", "note": "Repeat bone scan and CT show no metastases."},
-"M158": {"verdict": "consistent", "note": "New spinal lesions and nodes confirm distant metastases."},
-"M159": {"verdict": "consistent", "note": "PSA stable at 0.3; scans show no new metastases."},
-"M160": {"verdict": "consistent", "note": "PSMA PET/CT shows no metastases; PSA rising."},
-"M161": {"verdict": "consistent", "note": "New spine and rib lesions consistent with metastases."},
-"M162": {"verdict": "consistent", "note": "PSA stable at 0.9; interval imaging shows no metastases."},
-"M163": {"verdict": "consistent", "note": "Repeat imaging shows no metastases; PSA rising."},
-"M164": {"verdict": "consistent", "note": "New rib lesions and retroperitoneal nodes confirm metastases."},
-"M165": {"verdict": "consistent", "note": "PSA stable at 1.5; imaging shows no metastases."}}
+{
+ "prostate_14:83": {
+  "verdict": "contradicts",
+  "note": "Profile: no radiographic metastatic spread; label says M1."
+ },
+ "prostate_14:84": {
+  "verdict": "consistent",
+  "note": "Stable PSA near 2.5 for 6 months; no metastases on CT/bone scan."
+ },
+ "prostate_14:85": {
+  "verdict": "consistent",
+  "note": "Progressive PSA rise; bone scan and CT show no metastases."
+ },
+ "prostate_14:86": {
+  "verdict": "contradicts",
+  "note": "Bone scan and CT show no distant metastases; label says M1."
+ },
+ "prostate_14:87": {
+  "verdict": "contradicts",
+  "note": "PSA continued rising on ADT; label says stable PSA."
+ },
+ "prostate_14:88": {
+  "verdict": "consistent",
+  "note": "Recent imaging no distant metastases; profile wording says metastatic CRPC."
+ },
+ "prostate_14:89": {
+  "verdict": "contradicts",
+  "note": "Bone scan and CT show no distant metastatic disease; label says M1."
+ },
+ "prostate_14:90": {
+  "verdict": "unclear",
+  "note": "PSA described as relatively stable but with gradual rises."
+ },
+ "prostate_14:91": {
+  "verdict": "consistent",
+  "note": "Bone scan and CT show no distant metastases; label M0."
+ },
+ "prostate_14:92": {
+  "verdict": "contradicts",
+  "note": "Imaging shows no distant metastases; label says M1."
+ },
+ "prostate_14:93": {
+  "verdict": "consistent",
+  "note": "PSA stable at 4.2; CT and bone scan show no metastases."
+ },
+ "prostate_14:94": {
+  "verdict": "consistent",
+  "note": "Repeat imaging confirms no distant metastases; label M0."
+ },
+ "prostate_14:95": {
+  "verdict": "consistent",
+  "note": "New lumbar and iliac lesions consistent with metastatic disease."
+ },
+ "prostate_14:96": {
+  "verdict": "consistent",
+  "note": "PSA essentially unchanged; imaging negative for metastases."
+ },
+ "prostate_14:97": {
+  "verdict": "consistent",
+  "note": "Repeat imaging shows no metastases; label M0 fits."
+ },
+ "prostate_14:98": {
+  "verdict": "consistent",
+  "note": "New bone lesions on imaging; consistent with M1."
+ },
+ "prostate_14:99": {
+  "verdict": "contradicts",
+  "note": "PSA steadily rising from 0.5 to 3.2; label says stable."
+ },
+ "prostate_14:100": {
+  "verdict": "consistent",
+  "note": "Repeat imaging including PSMA PET shows no metastases."
+ },
+ "prostate_14:101": {
+  "verdict": "consistent",
+  "note": "New osteoblastic lesions consistent with metastatic disease."
+ },
+ "prostate_14:102": {
+  "verdict": "consistent",
+  "note": "PSA stable at 0.6 for three months; no metastases."
+ },
+ "prostate_14:103": {
+  "verdict": "consistent",
+  "note": "Repeat bone scan and CT show no metastases."
+ },
+ "prostate_14:104": {
+  "verdict": "consistent",
+  "note": "New thoracic spine lesions and para-aortic node; consistent with M1."
+ },
+ "prostate_14:105": {
+  "verdict": "consistent",
+  "note": "PSA stable at 4.3 recently; imaging repeatedly negative for metastases."
+ },
+ "prostate_14:106": {
+  "verdict": "consistent",
+  "note": "Repeat bone scan, CT and MRI show no metastases."
+ },
+ "prostate_14:107": {
+  "verdict": "consistent",
+  "note": "New liver lesions consistent with metastatic disease."
+ },
+ "prostate_14:108": {
+  "verdict": "consistent",
+  "note": "PSA unchanged at 3.2; imaging last week no metastases."
+ },
+ "prostate_14:109": {
+  "verdict": "consistent",
+  "note": "Repeat imaging shows no metastases; label M0 fits."
+ },
+ "prostate_14:110": {
+  "verdict": "consistent",
+  "note": "PSMA PET shows new bone lesions consistent with metastases."
+ },
+ "prostate_14:111": {
+  "verdict": "contradicts",
+  "note": "PSA fell from 3.8 to 0.8; not stable as labelled."
+ },
+ "prostate_14:112": {
+  "verdict": "consistent",
+  "note": "Repeat CT, bone scan and MRI show no metastases."
+ },
+ "prostate_14:113": {
+  "verdict": "consistent",
+  "note": "New lumbar and iliac lesions consistent with metastatic disease."
+ },
+ "prostate_14:114": {
+  "verdict": "contradicts",
+  "note": "PSA slowly rising over 12 months; label says stable."
+ },
+ "prostate_14:115": {
+  "verdict": "consistent",
+  "note": "Repeat MRI and bone scan show no metastases; PSA rising."
+ },
+ "prostate_14:116": {
+  "verdict": "consistent",
+  "note": "New iliac and L3 uptake consistent with metastatic disease."
+ },
+ "prostate_14:117": {
+  "verdict": "contradicts",
+  "note": "PSA fell from 3.2 to 0.9; not stable as labelled."
+ },
+ "prostate_14:118": {
+  "verdict": "consistent",
+  "note": "Bone scan and CT show no distant metastases."
+ },
+ "prostate_14:119": {
+  "verdict": "consistent",
+  "note": "PSMA PET shows new lumbar metastases; profile has stray meta-text."
+ },
+ "prostate_14:120": {
+  "verdict": "consistent",
+  "note": "Stable PSA over 6 months; imaging shows no metastases."
+ },
+ "prostate_14:121": {
+  "verdict": "consistent",
+  "note": "Bone scan and CT show no metastases; PSA rising."
+ },
+ "prostate_14:122": {
+  "verdict": "consistent",
+  "note": "Repeat bone scan shows new lumbar sclerotic lesions."
+ },
+ "prostate_14:123": {
+  "verdict": "consistent",
+  "note": "PSA stable at 1.5 for 12 months; imaging negative."
+ },
+ "prostate_14:124": {
+  "verdict": "consistent",
+  "note": "Repeat imaging negative for metastases; PSA rising."
+ },
+ "prostate_14:125": {
+  "verdict": "consistent",
+  "note": "PSMA PET-CT confirms multiple osseous metastases."
+ },
+ "prostate_14:126": {
+  "verdict": "consistent",
+  "note": "Stable PSA over the past year; no metastases on imaging."
+ },
+ "prostate_14:127": {
+  "verdict": "consistent",
+  "note": "Imaging negative for metastases despite rising PSA."
+ },
+ "prostate_14:128": {
+  "verdict": "consistent",
+  "note": "Bone scan reveals new osseous metastases."
+ },
+ "prostate_14:129": {
+  "verdict": "consistent",
+  "note": "PSA stable and repeat imaging shows no metastases."
+ },
+ "prostate_14:130": {
+  "verdict": "consistent",
+  "note": "Repeat imaging negative for metastases; PSA rising."
+ },
+ "prostate_14:131": {
+  "verdict": "consistent",
+  "note": "Repeat bone scan shows lumbar lesions confirming metastases."
+ },
+ "prostate_14:132": {
+  "verdict": "consistent",
+  "note": "PSA stable over 6 months; imaging shows no metastases."
+ },
+ "prostate_14:133": {
+  "verdict": "consistent",
+  "note": "Repeat imaging remains negative for metastatic disease."
+ },
+ "prostate_14:134": {
+  "verdict": "consistent",
+  "note": "New lumbar sclerotic lesions on bone scan; metastatic progression."
+ },
+ "prostate_14:135": {
+  "verdict": "consistent",
+  "note": "PSA stable at 1.5; repeat imaging shows no progression."
+ },
+ "prostate_14:136": {
+  "verdict": "consistent",
+  "note": "PSMA PET-CT shows no metastatic disease; PSA rising."
+ },
+ "prostate_14:137": {
+  "verdict": "consistent",
+  "note": "New sclerotic bone lesions consistent with metastatic disease."
+ },
+ "prostate_14:138": {
+  "verdict": "consistent",
+  "note": "PSA stable over 6 months; imaging shows no metastases."
+ },
+ "prostate_14:139": {
+  "verdict": "consistent",
+  "note": "Repeat imaging shows no metastases; PSA rising."
+ },
+ "prostate_14:140": {
+  "verdict": "consistent",
+  "note": "New lumbar sclerotic lesions consistent with metastatic disease."
+ },
+ "prostate_14:141": {
+  "verdict": "consistent",
+  "note": "PSA stable over 12 months; repeat imaging negative."
+ },
+ "prostate_14:142": {
+  "verdict": "contradicts",
+  "note": "Profile says bone metastases confirmed at diagnosis; label says M0."
+ },
+ "prostate_14:143": {
+  "verdict": "consistent",
+  "note": "Repeat scans show new sclerotic lesions; metastatic disease."
+ },
+ "prostate_14:144": {
+  "verdict": "consistent",
+  "note": "PSA stable at 2.5-2.8; imaging shows no metastases."
+ },
+ "prostate_14:145": {
+  "verdict": "consistent",
+  "note": "PSA rising but CT and bone scan negative for metastases."
+ },
+ "prostate_14:146": {
+  "verdict": "consistent",
+  "note": "Imaging shows new lytic lesions confirmed as metastases."
+ },
+ "prostate_14:147": {
+  "verdict": "consistent",
+  "note": "PSA stable at 7.5 on enzalutamide; imaging negative."
+ },
+ "prostate_14:148": {
+  "verdict": "consistent",
+  "note": "Latest scans negative for metastases; PSA rising."
+ },
+ "prostate_14:149": {
+  "verdict": "consistent",
+  "note": "Scans show sclerotic thoracic lesion confirming skeletal metastases."
+ },
+ "prostate_14:150": {
+  "verdict": "consistent",
+  "note": "PSA stable; surveillance imaging shows no new metastases."
+ },
+ "prostate_14:151": {
+  "verdict": "consistent",
+  "note": "Repeat CT and bone scan show no metastases."
+ },
+ "prostate_14:152": {
+  "verdict": "consistent",
+  "note": "New osseous metastases and retroperitoneal nodes on imaging."
+ },
+ "prostate_14:153": {
+  "verdict": "consistent",
+  "note": "PSA 3.8 to 3.6 near-stable; repeat imaging negative."
+ },
+ "prostate_14:154": {
+  "verdict": "consistent",
+  "note": "Repeat imaging negative for metastases; PSA rising."
+ },
+ "prostate_14:155": {
+  "verdict": "consistent",
+  "note": "Bone scan shows osseous metastases; CT shows lung nodules."
+ },
+ "prostate_14:156": {
+  "verdict": "consistent",
+  "note": "PSA stable at 1.2-1.3; imaging negative for metastases."
+ },
+ "prostate_14:157": {
+  "verdict": "consistent",
+  "note": "Repeat bone scan and CT show no metastases."
+ },
+ "prostate_14:158": {
+  "verdict": "consistent",
+  "note": "New spinal lesions and nodes confirm distant metastases."
+ },
+ "prostate_14:159": {
+  "verdict": "consistent",
+  "note": "PSA stable at 0.3; scans show no new metastases."
+ },
+ "prostate_14:160": {
+  "verdict": "consistent",
+  "note": "PSMA PET/CT shows no metastases; PSA rising."
+ },
+ "prostate_14:161": {
+  "verdict": "consistent",
+  "note": "New spine and rib lesions consistent with metastases."
+ },
+ "prostate_14:162": {
+  "verdict": "consistent",
+  "note": "PSA stable at 0.9; interval imaging shows no metastases."
+ },
+ "prostate_14:163": {
+  "verdict": "consistent",
+  "note": "Repeat imaging shows no metastases; PSA rising."
+ },
+ "prostate_14:164": {
+  "verdict": "consistent",
+  "note": "New rib lesions and retroperitoneal nodes confirm metastases."
+ },
+ "prostate_14:165": {
+  "verdict": "consistent",
+  "note": "PSA stable at 1.5; imaging shows no metastases."
+ }
+}

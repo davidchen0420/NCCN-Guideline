@@ -9,10 +9,10 @@ import re
 
 import pymupdf
 
+from .layout import page_bands
+
 # Page references printed in boxes; `configure(spec)` narrows them to the guideline's prefixes.
 LINK_RE = re.compile(r"\(([A-Z]{2,6}-[A-Z0-9]+(?: \d+ of \d+)?)\)")
-# Header and footer bands on a 792x612 landscape page.
-TOP, BOTTOM = 85, 555
 
 
 def configure(spec):
@@ -21,7 +21,8 @@ def configure(spec):
     LINK_RE = spec.link_re
 
 
-def _text_lines(page):
+def _text_lines(page, bands=None):
+    top, bottom = bands or page_bands(page)
     lines = []
     for b in page.get_text("dict")["blocks"]:
         for line in b.get("lines", []):
@@ -39,7 +40,7 @@ def _text_lines(page):
                 s["text"] for s in line["spans"] if not (s in spans[1:] and s["size"] <= body * 0.85)
             ).strip()
             x0, y0, x1, y1 = line["bbox"]
-            if text and TOP < y0 and y1 < BOTTOM:
+            if text and top < y0 and y1 < bottom:
                 # A leading superscript (smaller font) marks the start of a footnote.
                 marker = None
                 if len(spans) > 1 and spans[0]["size"] <= spans[1]["size"] * 0.85:
@@ -148,6 +149,9 @@ def _parse_footnotes(lines, page_width):
     """Footnotes run in two columns; each starts with a superscript letter marker."""
     notes, current = {}, None
     for line in sorted(lines, key=lambda l: (l["bbox"][0] > page_width / 2, l["bbox"][1])):
+        if re.match(r"(Footnotes?|References|Continued)\b", line["text"]):
+            current = None  # navigation lines ("Footnotes on AE-7A", "Continued") end a note
+            continue
         tabbed = re.match(r"([a-z]{1,3})\t", line["text"])
         marker = line["marker"] if line["marker"] and re.fullmatch(r"[a-z]{1,3}", line["marker"]) else None
         marker = marker or (tabbed.group(1) if tabbed else None)
@@ -181,9 +185,11 @@ def _dist_point_box(pt, bbox, pad=0):
 def extract_page_graph(doc, index):
     page = doc[index]
     segments, heads, brackets = [], [], []
-    for g in page.get_drawings():
+    drawings = page.get_drawings()
+    top, bottom = bands = page_bands(page, drawings)
+    for g in drawings:
         r = g["rect"]
-        if r.y0 < TOP or r.y1 > BOTTOM:
+        if r.y0 < top or r.y1 > bottom:
             continue
         if g["type"] == "f" and r.width < 10 and r.height < 10:
             heads.append(((r.x0 + r.x1) / 2, (r.y0 + r.y1) / 2))
@@ -261,16 +267,18 @@ def extract_page_graph(doc, index):
 
     brackets = _merge_collinear(brackets)
     # Everything below the lowest connector or bracket is the footnote block.
-    flow_bottom = max([max(t[1], h[1]) for t, h in connectors] + [b["y1"] for b in brackets] + [TOP]) + 25
-    lines = _text_lines(page)
+    flow_bottom = max([max(t[1], h[1]) for t, h in connectors] + [b["y1"] for b in brackets] + [top]) + 25
+    lines = _text_lines(page, bands)
     # Footnote lines: below the flow, or starting with a superscript letter marker at the left
     # margin (footnote blocks can sit beside the lower part of a flow).
-    def is_note(l):
-        marked = l["marker"] and re.fullmatch(r"[a-z]{1,3}", l["marker"]) and l["bbox"][0] < 40
-        return l["bbox"][1] > flow_bottom or marked or (re.match(r"[a-z]{1,3}\t", l["text"]) and l["bbox"][0] < 40)
+    margin = 0.05 * page.rect.width  # footnotes start at the left page margin
 
-    note_top = min([l["bbox"][1] for l in lines if is_note(l)] + [BOTTOM])
-    note_lines = [l for l in lines if is_note(l) or (l["bbox"][1] >= note_top and l["bbox"][0] < 40)]
+    def is_note(l):
+        marked = l["marker"] and re.fullmatch(r"[a-z]{1,3}", l["marker"]) and l["bbox"][0] < margin
+        return l["bbox"][1] > flow_bottom or marked or (re.match(r"[a-z]{1,3}\t", l["text"]) and l["bbox"][0] < margin)
+
+    note_top = min([l["bbox"][1] for l in lines if is_note(l)] + [bottom])
+    note_lines = [l for l in lines if is_note(l) or (l["bbox"][1] >= note_top and l["bbox"][0] < margin)]
     flow_lines = [l for l in lines if l not in note_lines]
     footnotes = _parse_footnotes(note_lines, page.rect.width)
     # A bar that arrows start from on its right is a fan-out stem, not an opening bracket: the
@@ -279,7 +287,7 @@ def extract_page_graph(doc, index):
         br["stem"] = sum(br["x"] - 2 <= t[0] <= br["x"] + 10 and br["y0"] - 3 <= t[1] <= br["y1"] + 3
                          and h[0] > t[0] for t, h in connectors) >= 2
     boxes = _group_boxes(flow_lines, brackets)
-    flow_top = min([min(t[1], h[1]) for t, h in connectors] + [b["y0"] for b in brackets] + [BOTTOM])
+    flow_top = min([min(t[1], h[1]) for t, h in connectors] + [b["y0"] for b in brackets] + [bottom])
     for box in boxes:
         if box["kind"] == "header" and box["bbox"][3] > flow_top:
             box["kind"] = "box"  # all-caps text inside the flow (e.g. "PSADT >10 mo") is a node
@@ -377,6 +385,8 @@ def extract_page_graph(doc, index):
 
     return {
         "page_index": index,
+        "page_size": [page.rect.width, page.rect.height],
+        "content_band": [round(top, 1), round(bottom, 1)],
         "nodes": boxes,
         "edges": [{"src": s, "dst": t} for s, t in sorted(edges)],
         "footnotes": footnotes,

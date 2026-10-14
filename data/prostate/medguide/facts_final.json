@@ -1,2612 +1,2612 @@
 {
-"M0": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-},
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true
-},
-"M1": {
-"psa_trend": "increasing",
-"m_category": "M0",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-}
-},
-"M10": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "stable",
-"m_category": "M0",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": 8
-},
-"M100": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12.3,
-"testosterone_ng_dl": 18,
-"psa_ng_ml": 1.45
-},
-"M101": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12.5,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 0.048
-},
-"M102": {
-"m_category": "M0",
-"psa_trend": "stable",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 14,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 0.6
-},
-"M103": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 6,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence",
-"psa_ng_ml": 1.5
-},
-"M104": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 6.2,
-"testosterone_ng_dl": 18,
-"prior_arpi_treatment": true,
-"psa_ng_ml": 3.2,
-"bone_metastases_count": 2
-},
-"M105": {
-"m_category": "M0",
-"psa_trend": "stable",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 6,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 4.3
-},
-"M106": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12,
-"testosterone_ng_dl": 18,
-"psa_status": "recurrence",
-"psa_ng_ml": 3.5
-},
-"M107": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12.5,
-"visceral_metastases_present": true,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 3.2
-},
-"M108": {
-"m_category": "M0",
-"psa_trend": "stable",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12.4,
-"testosterone_ng_dl": 28,
-"psa_status": "recurrence",
-"psa_ng_ml": 0.032,
-"symptomatic_progression": false
-},
-"M109": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 6,
-"testosterone_ng_dl": 18,
-"prior_arpi_treatment": true,
-"psa_ng_ml": 4.8
-},
-"M11": {
-"castration_resistant": true,
-"m_category": "M0",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"symptomatic_progression": false
-},
-"M110": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 7.5,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 9.8
-},
-"M111": {
-"m_category": "M0",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 6.2,
-"testosterone_ng_dl": 18,
-"prior_arpi_treatment": true,
-"psa_status": "recurrence",
-"psa_ng_ml": 0.8
-},
-"M112": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 13.5,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 4.1,
-"symptomatic_progression": false
-},
-"M113": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 4.5
-},
-"M114": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12.5,
-"testosterone_ng_dl": 28,
-"psa_status": "recurrence",
-"psa_ng_ml": 1.5,
-"symptomatic_progression": false
-},
-"M115": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 7.5,
-"testosterone_ng_dl": 18,
-"prior_arpi_treatment": true,
-"psa_status": "recurrence",
-"psa_ng_ml": 3.1
-},
-"M116": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 6,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence"
-},
-"M117": {
-"m_category": "M0",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": 18,
-"prior_arpi_treatment": true,
-"psa_ng_ml": 0.9
-},
-"M118": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 14,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 8.2,
-"symptomatic_progression": false
-},
-"M119": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 14,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence"
-},
-"M12": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"m_category": "M0",
-"psa_trend": "stable",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-},
-"symptomatic_progression": false
-},
-"M120": {
-"m_category": "M0",
-"psa_trend": "stable",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 14,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"symptomatic_progression": false
-},
-"M121": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence",
-"psa_ng_ml": 3.1,
-"symptomatic_progression": false
-},
-"M122": {
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence",
-"psa_ng_ml": 6.5,
-"bone_metastases_count": 2,
-"symptomatic_progression": false
-},
-"M123": {
-"m_category": "M0",
-"psa_trend": "stable",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence",
-"psa_ng_ml": 1.5
-},
-"M124": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"symptomatic_progression": false
-},
-"M125": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 14,
-"testosterone_ng_dl": 35,
-"psa_ng_ml": 4.8,
-"symptomatic_progression": false
-},
-"M126": {
-"m_category": "M0",
-"psa_trend": "stable",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 14,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"symptomatic_progression": false
-},
-"M127": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 6,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 12.5,
-"symptomatic_progression": false
-},
-"M128": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"metastasis_timing": "metachronous",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"symptomatic_progression": false
-},
-"M129": {
-"m_category": "M0",
-"psa_trend": "stable",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": 30,
-"prior_arpi_treatment": true,
-"psa_status": "recurrence"
-},
-"M13": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"m_category": "M0",
-"psa_trend": "increasing",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": 9
-},
-"M130": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"psa_ng_ml": 3.5
-},
-"M131": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 14,
-"metastasis_timing": "metachronous",
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"psa_ng_ml": 8.5,
-"symptomatic_progression": false
-},
-"M132": {
-"m_category": "M0",
-"psa_trend": "stable",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 14,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 3.2,
-"symptomatic_progression": false
-},
-"M133": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": 30,
-"prior_arpi_treatment": true,
-"psa_ng_ml": 12.5,
-"symptomatic_progression": false
-},
-"M134": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"metastasis_timing": "metachronous",
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence"
-},
-"M135": {
-"m_category": "M0",
-"psa_trend": "stable",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_ng_ml": 1.5
-},
-"M136": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_ng_ml": 5.8,
-"symptomatic_progression": false
-},
-"M137": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"crpc_stated": true,
-"psa_doubling_time_months": 14,
-"metastasis_timing": "metachronous",
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 8.1
-},
-"M138": {
-"m_category": "M0",
-"psa_trend": "stable",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 14,
-"testosterone_ng_dl": 25,
-"psa_status": "recurrence",
-"psa_ng_ml": 0.042,
-"symptomatic_progression": false
-},
-"M139": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_ng_ml": 12.5
-},
-"M14": {
-"castration_resistant": true,
-"m_category": "M1",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 9,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence"
-},
-"M140": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"metastasis_timing": "metachronous",
-"testosterone_ng_dl": 30,
-"prior_arpi_treatment": true
-},
-"M141": {
-"m_category": "M0",
-"psa_trend": "stable",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence"
-},
-"M142": {
-"m_category": "M0",
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "increasing",
-"psa_ng_ml": 12.1,
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 14,
-"metastasis_timing": "synchronous"
-},
-"M143": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"m_category": "M1",
-"psa_trend": "increasing",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 14,
-"metastasis_timing": "metachronous"
-},
-"M144": {
-"m_category": "M0",
-"psa_trend": "stable",
-"crpc_stated": true,
-"psa_doubling_time_months": 18,
-"testosterone_ng_dl": {
-"min": null,
-"max": 30,
-"min_open": false,
-"max_open": false
-}
-},
-"M145": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radiation_therapy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 4.5,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence",
-"psa_ng_ml": 0.038
-},
-"M146": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radiation_plus_adt",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 7,
-"metastasis_timing": "metachronous",
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence",
-"psa_ng_ml": 10.2
-},
-"M147": {
-"m_category": "M0",
-"psa_trend": "stable",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 7,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence",
-"psa_ng_ml": 7.5
-},
-"M148": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"m_category": "M0",
-"psa_trend": "increasing",
-"crpc_stated": true,
-"psa_doubling_time_months": 14
-},
-"M149": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"crpc_stated": true,
-"psa_doubling_time_months": 26,
-"metastasis_timing": "metachronous",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 0.035
-},
-"M15": {
-"castration_resistant": true,
-"m_category": "M0",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "stable",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8
-},
-"M150": {
-"m_category": "M0",
-"psa_trend": "stable",
-"definitive_treatment_received": "other",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence"
-},
-"M151": {
-"m_category": "M0",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_trend": "increasing",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8
-},
-"M152": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 3,
-"metastasis_timing": "metachronous",
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence",
-"psa_ng_ml": 10.5
-},
-"M153": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": {
-"min": null,
-"max": 10,
-"min_open": false,
-"max_open": false
-},
-"testosterone_ng_dl": {
-"min": null,
-"max": 25,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_ng_ml": 3.6
-},
-"M154": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"crpc_stated": true,
-"psa_doubling_time_months": 15,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_ng_ml": 5.8,
-"symptomatic_progression": false
-},
-"M155": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 14,
-"metastasis_timing": "metachronous",
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 0.18,
-"symptomatic_progression": false
-},
-"M156": {
-"m_category": "M0",
-"psa_trend": "stable",
-"definitive_treatment_received": "radiation_plus_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 14,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-}
-},
-"M157": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radiation_therapy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence"
-},
-"M158": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 7,
-"metastasis_timing": "metachronous",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_ng_ml": 0.128
-},
-"M159": {
-"m_category": "M0",
-"psa_trend": "stable",
-"definitive_treatment_received": "radiation_therapy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 6,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_ng_ml": 0.3
-},
-"M16": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "increasing",
-"m_category": "M0",
-"psa_status": "recurrence",
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-},
-"symptomatic_progression": false
-},
-"M160": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"crpc_stated": true,
-"psa_doubling_time_months": 14,
-"testosterone_ng_dl": {
-"min": null,
-"max": 30,
-"min_open": false,
-"max_open": false
-},
-"psa_ng_ml": 0.065,
-"symptomatic_progression": false
-},
-"M161": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"crpc_stated": true,
-"psa_doubling_time_months": 14,
-"metastasis_timing": "metachronous",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 3.5
-},
-"M162": {
-"m_category": "M0",
-"psa_trend": "stable",
-"definitive_treatment_received": "radical_prostatectomy",
-"crpc_stated": true,
-"psa_doubling_time_months": 15,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"psa_ng_ml": 0.9,
-"symptomatic_progression": false
-},
-"M163": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"m_category": "M0",
-"psa_trend": "increasing",
-"prior_arpi_treatment": true,
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8
-},
-"M164": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 6,
-"metastasis_timing": "metachronous",
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence",
-"psa_ng_ml": 0.025
-},
-"M165": {
-"m_category": "M0",
-"psa_trend": "stable",
-"definitive_treatment_received": "radiation_therapy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence",
-"psa_ng_ml": 0.015
-},
-"M17": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"m_category": "M0",
-"psa_trend": "increasing",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"psa_ng_ml": 3.5,
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-}
-},
-"M18": {
-"m_category": "M0",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "stable",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-},
-"symptomatic_progression": false
-},
-"M19": {
-"m_category": "M0",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"psa_ng_ml": 0.7,
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": 8
-},
-"M2": {
-"castration_resistant": true,
-"m_category": "M0",
-"psa_trend": "stable",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-}
-},
-"M20": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"m_category": "M0",
-"psa_trend": "increasing",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": {
-"min": null,
-"max": 10,
-"min_open": false,
-"max_open": false
-}
-},
-"M21": {
-"castration_resistant": true,
-"m_category": "M0",
-"psa_trend": "stable",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": {
-"min": null,
-"max": 10,
-"min_open": false,
-"max_open": false
-},
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"symptomatic_progression": false
-},
-"M22": {
-"castration_resistant": true,
-"m_category": "M0",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-}
-},
-"M23": {
-"m_category": "M1",
-"castration_resistant": true,
-"psa_trend": "increasing",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-}
-},
-"M24": {
-"m_category": "M0",
-"psa_trend": "stable",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-},
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"symptomatic_progression": false
-},
-"M25": {
-"psa_trend": "increasing",
-"m_category": "M0",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 9,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence"
-},
-"M26": {
-"castration_resistant": true,
-"psa_trend": "increasing",
-"m_category": "M1",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true
-},
-"M27": {
-"castration_resistant": true,
-"m_category": "M0",
-"psa_trend": "stable",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 9,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true
-},
-"M28": {
-"castration_resistant": true,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "increasing",
-"m_category": "M0",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-}
-},
-"M29": {
-"castration_resistant": true,
-"m_category": "M1",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-}
-},
-"M3": {
-"castration_resistant": true,
-"prior_arpi_treatment": true,
-"testosterone_ng_dl": 30,
-"m_category": "M0",
-"psa_trend": "increasing",
-"crpc_stated": true,
-"psa_doubling_time_months": 8
-},
-"M30": {
-"psa_trend": "stable",
-"m_category": "M0",
-"adverse_pathologic_features": true,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"psa_ng_ml": 0.5,
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-}
-},
-"M31": {
-"castration_resistant": true,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_trend": "increasing",
-"m_category": "M0",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8
-},
-"M32": {
-"castration_resistant": true,
-"m_category": "M1",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true
-},
-"M33": {
-"castration_resistant": true,
-"m_category": "M0",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": {
-"min": null,
-"max": 10,
-"min_open": false,
-"max_open": false
-},
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence"
-},
-"M34": {
-"psa_trend": "increasing",
-"m_category": "M0",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-}
-},
-"M35": {
-"m_category": "M1",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "increasing",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-},
-"symptomatic_progression": false
-},
-"M36": {
-"castration_resistant": true,
-"m_category": "M0",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "stable",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": {
-"min": 12,
-"max": null,
-"min_open": false,
-"max_open": false
-}
-},
-"M37": {
-"castration_resistant": true,
-"m_category": "M0",
-"adverse_pathologic_features": true,
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true
-},
-"M38": {
-"castration_resistant": true,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_trend": "increasing",
-"m_category": "M1",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8
-},
-"M39": {
-"m_category": "M0",
-"psa_trend": "stable",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": 9,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence"
-},
-"M4": {
-"psa_trend": "increasing",
-"testosterone_ng_dl": 30,
-"m_category": "M0",
-"definitive_treatment_received": "radical_prostatectomy",
-"psa_ng_ml": 5.2,
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": 7
-},
-"M40": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"m_category": "M0",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-}
-},
-"M41": {
-"castration_resistant": true,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "increasing",
-"m_category": "M1",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-}
-},
-"M42": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "stable",
-"m_category": "M0",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-}
-},
-"M43": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "increasing",
-"m_category": "M0",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": 9
-},
-"M44": {
-"psa_trend": "increasing",
-"m_category": "M1",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": 9,
-"metastasis_timing": "metachronous",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence"
-},
-"M45": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_trend": "stable",
-"m_category": "M0",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": 9
-},
-"M46": {
-"psa_trend": "increasing",
-"m_category": "M0",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-},
-"symptomatic_progression": false
-},
-"M47": {
-"psa_trend": "increasing",
-"histology": "adenocarcinoma",
-"m_category": "M1",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12,
-"metastasis_timing": "metachronous",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence"
-},
-"M48": {
-"psa_trend": "stable",
-"m_category": "M0",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 13,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": false,
-"psa_status": "recurrence",
-"symptomatic_progression": false
-},
-"M49": {
-"psa_trend": "increasing",
-"prior_arpi_treatment": true,
-"adverse_pathologic_features": true,
-"m_category": "M0",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8
-},
-"M5": {
-"testosterone_ng_dl": 30,
-"psa_trend": "stable",
-"m_category": "M0",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": 8
-},
-"M50": {
-"psa_trend": "increasing",
-"histology": "adenocarcinoma",
-"m_category": "M1",
-"definitive_treatment_received": "radiation_plus_adt",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"metastasis_timing": "metachronous",
-"prior_arpi_treatment": true
-},
-"M51": {
-"psa_trend": "stable",
-"histology": "adenocarcinoma",
-"m_category": "M0",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 9,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence",
-"symptomatic_progression": false
-},
-"M52": {
-"psa_trend": "increasing",
-"m_category": "M0",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radiation_therapy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-},
-"symptomatic_progression": false
-},
-"M53": {
-"psa_trend": "increasing",
-"histology": "adenocarcinoma",
-"m_category": "M1",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": {
-"min": 14,
-"max": null,
-"min_open": false,
-"max_open": false
-},
-"metastasis_timing": "metachronous",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence"
-},
-"M54": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"histology": "adenocarcinoma",
-"psa_trend": "stable",
-"m_category": "M0",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 14
-},
-"M55": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"histology": "adenocarcinoma",
-"prior_arpi_treatment": true,
-"psa_trend": "increasing",
-"psa_status": "recurrence",
-"m_category": "M0",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": 8
-},
-"M56": {
-"psa_trend": "increasing",
-"m_category": "M1",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"metastasis_timing": "metachronous",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true
-},
-"M57": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_trend": "stable",
-"m_category": "M0",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 7
-},
-"M58": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "increasing",
-"prior_arpi_treatment": false,
-"m_category": "M0",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radiation_therapy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": 14,
-"symptomatic_progression": false
-},
-"M59": {
-"psa_trend": "increasing",
-"histology": "adenocarcinoma",
-"m_category": "M1",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 13,
-"metastasis_timing": "metachronous",
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence"
-},
-"M6": {
-"castration_resistant": true,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"m_category": "M0",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-}
-},
-"M60": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "stable",
-"m_category": "M0",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 15,
-"symptomatic_progression": false
-},
-"M61": {
-"psa_trend": "increasing",
-"histology": "adenocarcinoma",
-"m_category": "M0",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"prior_arpi_treatment": true,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence"
-},
-"M62": {
-"psa_trend": "increasing",
-"histology": "adenocarcinoma",
-"m_category": "M1",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 7,
-"metastasis_timing": "metachronous",
-"prior_arpi_treatment": true
-},
-"M63": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_trend": "stable",
-"m_category": "M0",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radiation_therapy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 9
-},
-"M64": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"histology": "adenocarcinoma",
-"psa_trend": "increasing",
-"m_category": "M0",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12
-},
-"M65": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "increasing",
-"m_category": "M1",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-},
-"metastasis_timing": "metachronous"
-},
-"M66": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "stable",
-"m_category": "M0",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 13,
-"symptomatic_progression": false
-},
-"M67": {
-"psa_trend": "increasing",
-"m_category": "M0",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"symptomatic_progression": false
-},
-"M68": {
-"psa_trend": "increasing",
-"m_category": "M1",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"metastasis_timing": "metachronous",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence"
-},
-"M69": {
-"psa_trend": "stable",
-"histology": "adenocarcinoma",
-"m_category": "M0",
-"definitive_treatment_received": "radiation_therapy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence",
-"symptomatic_progression": false
-},
-"M7": {
-"castration_resistant": true,
-"m_category": "M0",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "stable",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-}
-},
-"M70": {
-"psa_trend": "increasing",
-"m_category": "M0",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12,
-"symptomatic_progression": false
-},
-"M71": {
-"testosterone_ng_dl": 42,
-"m_category": "M0",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 14,
-"symptomatic_progression": false
-},
-"M72": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"testosterone_ng_dl": 42,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12
-},
-"M73": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"m_category": "M0",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"symptomatic_progression": false
-},
-"M74": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "increasing",
-"m_category": "M0",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8
-},
-"M75": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"m_category": "M0",
-"psa_trend": "increasing",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 9,
-"symptomatic_progression": false
-},
-"M76": {
-"psa_trend": "increasing",
-"m_category": "M0",
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-}
-},
-"M77": {
-"psa_trend": "increasing",
-"testosterone_ng_dl": 35,
-"m_category": "M0",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 14
-},
-"M78": {
-"psa_trend": "stable",
-"m_category": "M0",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"symptomatic_progression": false
-},
-"M79": {
-"testosterone_ng_dl": 42,
-"m_category": "M0",
-"psa_trend": "increasing",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 9.5
-},
-"M8": {
-"castration_resistant": true,
-"m_category": "M0",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": 40
-},
-"M80": {
-"testosterone_ng_dl": 45,
-"m_category": "M0",
-"psa_trend": "increasing",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"psa_ng_ml": 2.3,
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": 9
-},
-"M81": {
-"m_category": "M0",
-"psa_trend": "stable",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 9,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 4.2,
-"symptomatic_progression": false
-},
-"M82": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"m_category": "M0",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-},
-"symptomatic_progression": false
-},
-"M83": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_trend": "increasing",
-"m_category": "M0",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 14,
-"symptomatic_progression": false
-},
-"M84": {
-"m_category": "M0",
-"psa_trend": "stable",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 2.5,
-"symptomatic_progression": false
-},
-"M85": {
-"m_category": "M0",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 9,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence"
-},
-"M86": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 9,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 6.4
-},
-"M87": {
-"m_category": "M0",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 9,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence"
-},
-"M88": {
-"m_category": "M0",
-"castration_resistant": true,
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": {
-"min": 10,
-"max": null,
-"min_open": false,
-"max_open": false
-},
-"testosterone_ng_dl": 42,
-"prior_arpi_treatment": true
-},
-"M89": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"symptomatic_progression": false
-},
-"M9": {
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"m_category": "M0",
-"psa_trend": "increasing",
-"psa_ng_ml": 3.1,
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": {
-"min": null,
-"max": 10,
-"min_open": false,
-"max_open": false
-}
-},
-"M90": {
-"m_category": "M0",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"symptomatic_progression": false
-},
-"M91": {
-"testosterone_ng_dl": 42,
-"m_category": "M0",
-"psa_status": "recurrence",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8.5
-},
-"M92": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence"
-},
-"M93": {
-"m_category": "M0",
-"psa_trend": "stable",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 9,
-"testosterone_ng_dl": {
-"min": null,
-"max": 50,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 4.2,
-"symptomatic_progression": false
-},
-"M94": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"crpc_stated": true,
-"psa_doubling_time_months": 12.4,
-"testosterone_ng_dl": 18,
-"psa_status": "recurrence",
-"psa_ng_ml": 1.9
-},
-"M95": {
-"m_category": "M1",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 7.3
-},
-"M96": {
-"m_category": "M0",
-"psa_trend": "stable",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 12.5,
-"testosterone_ng_dl": 18,
-"psa_status": "recurrence",
-"psa_ng_ml": 2.2,
-"symptomatic_progression": false
-},
-"M97": {
-"m_category": "M0",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 6,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence",
-"psa_ng_ml": 4.6
-},
-"M98": {
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"prior_arpi_treatment": true,
-"psa_status": "recurrence",
-"psa_ng_ml": 4.8
-},
-"M99": {
-"m_category": "M0",
-"histology": "adenocarcinoma",
-"psa_trend": "increasing",
-"castration_resistant": true,
-"definitive_treatment_received": "radical_prostatectomy",
-"current_treatment_phase": "on_adt",
-"crpc_stated": true,
-"psa_doubling_time_months": 8,
-"testosterone_ng_dl": {
-"min": null,
-"max": 20,
-"min_open": false,
-"max_open": false
-},
-"psa_status": "recurrence",
-"psa_ng_ml": 3.2
-}
+ "prostate_14:0": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  },
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true
+ },
+ "prostate_14:1": {
+  "psa_trend": "increasing",
+  "m_category": "M0",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:10": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "stable",
+  "m_category": "M0",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": 8
+ },
+ "prostate_14:100": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12.3,
+  "testosterone_ng_dl": 18,
+  "psa_ng_ml": 1.45
+ },
+ "prostate_14:101": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12.5,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 0.048
+ },
+ "prostate_14:102": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 0.6
+ },
+ "prostate_14:103": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 6,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 1.5
+ },
+ "prostate_14:104": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 6.2,
+  "testosterone_ng_dl": 18,
+  "prior_arpi_treatment": true,
+  "psa_ng_ml": 3.2,
+  "bone_metastases_count": 2
+ },
+ "prostate_14:105": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 6,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 4.3
+ },
+ "prostate_14:106": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12,
+  "testosterone_ng_dl": 18,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 3.5
+ },
+ "prostate_14:107": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12.5,
+  "visceral_metastases_present": true,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 3.2
+ },
+ "prostate_14:108": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12.4,
+  "testosterone_ng_dl": 28,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 0.032,
+  "symptomatic_progression": false
+ },
+ "prostate_14:109": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 6,
+  "testosterone_ng_dl": 18,
+  "prior_arpi_treatment": true,
+  "psa_ng_ml": 4.8
+ },
+ "prostate_14:11": {
+  "castration_resistant": true,
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "symptomatic_progression": false
+ },
+ "prostate_14:110": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 7.5,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 9.8
+ },
+ "prostate_14:111": {
+  "m_category": "M0",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 6.2,
+  "testosterone_ng_dl": 18,
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 0.8
+ },
+ "prostate_14:112": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 13.5,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 4.1,
+  "symptomatic_progression": false
+ },
+ "prostate_14:113": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 4.5
+ },
+ "prostate_14:114": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12.5,
+  "testosterone_ng_dl": 28,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 1.5,
+  "symptomatic_progression": false
+ },
+ "prostate_14:115": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 7.5,
+  "testosterone_ng_dl": 18,
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 3.1
+ },
+ "prostate_14:116": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 6,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence"
+ },
+ "prostate_14:117": {
+  "m_category": "M0",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": 18,
+  "prior_arpi_treatment": true,
+  "psa_ng_ml": 0.9
+ },
+ "prostate_14:118": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 8.2,
+  "symptomatic_progression": false
+ },
+ "prostate_14:119": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence"
+ },
+ "prostate_14:12": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  },
+  "symptomatic_progression": false
+ },
+ "prostate_14:120": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "symptomatic_progression": false
+ },
+ "prostate_14:121": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 3.1,
+  "symptomatic_progression": false
+ },
+ "prostate_14:122": {
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 6.5,
+  "bone_metastases_count": 2,
+  "symptomatic_progression": false
+ },
+ "prostate_14:123": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 1.5
+ },
+ "prostate_14:124": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "symptomatic_progression": false
+ },
+ "prostate_14:125": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14,
+  "testosterone_ng_dl": 35,
+  "psa_ng_ml": 4.8,
+  "symptomatic_progression": false
+ },
+ "prostate_14:126": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "symptomatic_progression": false
+ },
+ "prostate_14:127": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 6,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 12.5,
+  "symptomatic_progression": false
+ },
+ "prostate_14:128": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "metastasis_timing": "metachronous",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "symptomatic_progression": false
+ },
+ "prostate_14:129": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": 30,
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence"
+ },
+ "prostate_14:13": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": 9
+ },
+ "prostate_14:130": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_ng_ml": 3.5
+ },
+ "prostate_14:131": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14,
+  "metastasis_timing": "metachronous",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_ng_ml": 8.5,
+  "symptomatic_progression": false
+ },
+ "prostate_14:132": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 3.2,
+  "symptomatic_progression": false
+ },
+ "prostate_14:133": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": 30,
+  "prior_arpi_treatment": true,
+  "psa_ng_ml": 12.5,
+  "symptomatic_progression": false
+ },
+ "prostate_14:134": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "metastasis_timing": "metachronous",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence"
+ },
+ "prostate_14:135": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_ng_ml": 1.5
+ },
+ "prostate_14:136": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_ng_ml": 5.8,
+  "symptomatic_progression": false
+ },
+ "prostate_14:137": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14,
+  "metastasis_timing": "metachronous",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 8.1
+ },
+ "prostate_14:138": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14,
+  "testosterone_ng_dl": 25,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 0.042,
+  "symptomatic_progression": false
+ },
+ "prostate_14:139": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_ng_ml": 12.5
+ },
+ "prostate_14:14": {
+  "castration_resistant": true,
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 9,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence"
+ },
+ "prostate_14:140": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "metastasis_timing": "metachronous",
+  "testosterone_ng_dl": 30,
+  "prior_arpi_treatment": true
+ },
+ "prostate_14:141": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence"
+ },
+ "prostate_14:142": {
+  "m_category": "M0",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "increasing",
+  "psa_ng_ml": 12.1,
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14,
+  "metastasis_timing": "synchronous"
+ },
+ "prostate_14:143": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14,
+  "metastasis_timing": "metachronous"
+ },
+ "prostate_14:144": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 18,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 30,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:145": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radiation_therapy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 4.5,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 0.038
+ },
+ "prostate_14:146": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radiation_plus_adt",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 7,
+  "metastasis_timing": "metachronous",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 10.2
+ },
+ "prostate_14:147": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 7,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 7.5
+ },
+ "prostate_14:148": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14
+ },
+ "prostate_14:149": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 26,
+  "metastasis_timing": "metachronous",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 0.035
+ },
+ "prostate_14:15": {
+  "castration_resistant": true,
+  "m_category": "M0",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "stable",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8
+ },
+ "prostate_14:150": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "definitive_treatment_received": "other",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence"
+ },
+ "prostate_14:151": {
+  "m_category": "M0",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_trend": "increasing",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8
+ },
+ "prostate_14:152": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 3,
+  "metastasis_timing": "metachronous",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 10.5
+ },
+ "prostate_14:153": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": {
+   "min": null,
+   "max": 10,
+   "min_open": false,
+   "max_open": false
+  },
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 25,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_ng_ml": 3.6
+ },
+ "prostate_14:154": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 15,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_ng_ml": 5.8,
+  "symptomatic_progression": false
+ },
+ "prostate_14:155": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14,
+  "metastasis_timing": "metachronous",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 0.18,
+  "symptomatic_progression": false
+ },
+ "prostate_14:156": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "definitive_treatment_received": "radiation_plus_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:157": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radiation_therapy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence"
+ },
+ "prostate_14:158": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 7,
+  "metastasis_timing": "metachronous",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_ng_ml": 0.128
+ },
+ "prostate_14:159": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "definitive_treatment_received": "radiation_therapy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 6,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_ng_ml": 0.3
+ },
+ "prostate_14:16": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "increasing",
+  "m_category": "M0",
+  "psa_status": "recurrence",
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  },
+  "symptomatic_progression": false
+ },
+ "prostate_14:160": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 30,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_ng_ml": 0.065,
+  "symptomatic_progression": false
+ },
+ "prostate_14:161": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14,
+  "metastasis_timing": "metachronous",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 3.5
+ },
+ "prostate_14:162": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 15,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_ng_ml": 0.9,
+  "symptomatic_progression": false
+ },
+ "prostate_14:163": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "prior_arpi_treatment": true,
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8
+ },
+ "prostate_14:164": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 6,
+  "metastasis_timing": "metachronous",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 0.025
+ },
+ "prostate_14:165": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "definitive_treatment_received": "radiation_therapy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 0.015
+ },
+ "prostate_14:17": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "psa_ng_ml": 3.5,
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:18": {
+  "m_category": "M0",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "stable",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  },
+  "symptomatic_progression": false
+ },
+ "prostate_14:19": {
+  "m_category": "M0",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "psa_ng_ml": 0.7,
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": 8
+ },
+ "prostate_14:2": {
+  "castration_resistant": true,
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:20": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": {
+   "min": null,
+   "max": 10,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:21": {
+  "castration_resistant": true,
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": {
+   "min": null,
+   "max": 10,
+   "min_open": false,
+   "max_open": false
+  },
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "symptomatic_progression": false
+ },
+ "prostate_14:22": {
+  "castration_resistant": true,
+  "m_category": "M0",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:23": {
+  "m_category": "M1",
+  "castration_resistant": true,
+  "psa_trend": "increasing",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:24": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  },
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "symptomatic_progression": false
+ },
+ "prostate_14:25": {
+  "psa_trend": "increasing",
+  "m_category": "M0",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 9,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence"
+ },
+ "prostate_14:26": {
+  "castration_resistant": true,
+  "psa_trend": "increasing",
+  "m_category": "M1",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true
+ },
+ "prostate_14:27": {
+  "castration_resistant": true,
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 9,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true
+ },
+ "prostate_14:28": {
+  "castration_resistant": true,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "increasing",
+  "m_category": "M0",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:29": {
+  "castration_resistant": true,
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:3": {
+  "castration_resistant": true,
+  "prior_arpi_treatment": true,
+  "testosterone_ng_dl": 30,
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8
+ },
+ "prostate_14:30": {
+  "psa_trend": "stable",
+  "m_category": "M0",
+  "adverse_pathologic_features": true,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "psa_ng_ml": 0.5,
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:31": {
+  "castration_resistant": true,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_trend": "increasing",
+  "m_category": "M0",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8
+ },
+ "prostate_14:32": {
+  "castration_resistant": true,
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true
+ },
+ "prostate_14:33": {
+  "castration_resistant": true,
+  "m_category": "M0",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": {
+   "min": null,
+   "max": 10,
+   "min_open": false,
+   "max_open": false
+  },
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence"
+ },
+ "prostate_14:34": {
+  "psa_trend": "increasing",
+  "m_category": "M0",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:35": {
+  "m_category": "M1",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "increasing",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  },
+  "symptomatic_progression": false
+ },
+ "prostate_14:36": {
+  "castration_resistant": true,
+  "m_category": "M0",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "stable",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": {
+   "min": 12,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:37": {
+  "castration_resistant": true,
+  "m_category": "M0",
+  "adverse_pathologic_features": true,
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true
+ },
+ "prostate_14:38": {
+  "castration_resistant": true,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_trend": "increasing",
+  "m_category": "M1",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8
+ },
+ "prostate_14:39": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": 9,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence"
+ },
+ "prostate_14:4": {
+  "psa_trend": "increasing",
+  "testosterone_ng_dl": 30,
+  "m_category": "M0",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "psa_ng_ml": 5.2,
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": 7
+ },
+ "prostate_14:40": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:41": {
+  "castration_resistant": true,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "increasing",
+  "m_category": "M1",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:42": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "stable",
+  "m_category": "M0",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:43": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "increasing",
+  "m_category": "M0",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": 9
+ },
+ "prostate_14:44": {
+  "psa_trend": "increasing",
+  "m_category": "M1",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": 9,
+  "metastasis_timing": "metachronous",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence"
+ },
+ "prostate_14:45": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_trend": "stable",
+  "m_category": "M0",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": 9
+ },
+ "prostate_14:46": {
+  "psa_trend": "increasing",
+  "m_category": "M0",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  },
+  "symptomatic_progression": false
+ },
+ "prostate_14:47": {
+  "psa_trend": "increasing",
+  "histology": "adenocarcinoma",
+  "m_category": "M1",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12,
+  "metastasis_timing": "metachronous",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence"
+ },
+ "prostate_14:48": {
+  "psa_trend": "stable",
+  "m_category": "M0",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 13,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": false,
+  "psa_status": "recurrence",
+  "symptomatic_progression": false
+ },
+ "prostate_14:49": {
+  "psa_trend": "increasing",
+  "prior_arpi_treatment": true,
+  "adverse_pathologic_features": true,
+  "m_category": "M0",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8
+ },
+ "prostate_14:5": {
+  "testosterone_ng_dl": 30,
+  "psa_trend": "stable",
+  "m_category": "M0",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": 8
+ },
+ "prostate_14:50": {
+  "psa_trend": "increasing",
+  "histology": "adenocarcinoma",
+  "m_category": "M1",
+  "definitive_treatment_received": "radiation_plus_adt",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "metastasis_timing": "metachronous",
+  "prior_arpi_treatment": true
+ },
+ "prostate_14:51": {
+  "psa_trend": "stable",
+  "histology": "adenocarcinoma",
+  "m_category": "M0",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 9,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence",
+  "symptomatic_progression": false
+ },
+ "prostate_14:52": {
+  "psa_trend": "increasing",
+  "m_category": "M0",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radiation_therapy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  },
+  "symptomatic_progression": false
+ },
+ "prostate_14:53": {
+  "psa_trend": "increasing",
+  "histology": "adenocarcinoma",
+  "m_category": "M1",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": {
+   "min": 14,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  },
+  "metastasis_timing": "metachronous",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence"
+ },
+ "prostate_14:54": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "histology": "adenocarcinoma",
+  "psa_trend": "stable",
+  "m_category": "M0",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14
+ },
+ "prostate_14:55": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "histology": "adenocarcinoma",
+  "prior_arpi_treatment": true,
+  "psa_trend": "increasing",
+  "psa_status": "recurrence",
+  "m_category": "M0",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": 8
+ },
+ "prostate_14:56": {
+  "psa_trend": "increasing",
+  "m_category": "M1",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "metastasis_timing": "metachronous",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true
+ },
+ "prostate_14:57": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_trend": "stable",
+  "m_category": "M0",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 7
+ },
+ "prostate_14:58": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "increasing",
+  "prior_arpi_treatment": false,
+  "m_category": "M0",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radiation_therapy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": 14,
+  "symptomatic_progression": false
+ },
+ "prostate_14:59": {
+  "psa_trend": "increasing",
+  "histology": "adenocarcinoma",
+  "m_category": "M1",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 13,
+  "metastasis_timing": "metachronous",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence"
+ },
+ "prostate_14:6": {
+  "castration_resistant": true,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:60": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "stable",
+  "m_category": "M0",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 15,
+  "symptomatic_progression": false
+ },
+ "prostate_14:61": {
+  "psa_trend": "increasing",
+  "histology": "adenocarcinoma",
+  "m_category": "M0",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "prior_arpi_treatment": true,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence"
+ },
+ "prostate_14:62": {
+  "psa_trend": "increasing",
+  "histology": "adenocarcinoma",
+  "m_category": "M1",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 7,
+  "metastasis_timing": "metachronous",
+  "prior_arpi_treatment": true
+ },
+ "prostate_14:63": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_trend": "stable",
+  "m_category": "M0",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radiation_therapy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 9
+ },
+ "prostate_14:64": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "histology": "adenocarcinoma",
+  "psa_trend": "increasing",
+  "m_category": "M0",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12
+ },
+ "prostate_14:65": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "increasing",
+  "m_category": "M1",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  },
+  "metastasis_timing": "metachronous"
+ },
+ "prostate_14:66": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "stable",
+  "m_category": "M0",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 13,
+  "symptomatic_progression": false
+ },
+ "prostate_14:67": {
+  "psa_trend": "increasing",
+  "m_category": "M0",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "symptomatic_progression": false
+ },
+ "prostate_14:68": {
+  "psa_trend": "increasing",
+  "m_category": "M1",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "metastasis_timing": "metachronous",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence"
+ },
+ "prostate_14:69": {
+  "psa_trend": "stable",
+  "histology": "adenocarcinoma",
+  "m_category": "M0",
+  "definitive_treatment_received": "radiation_therapy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence",
+  "symptomatic_progression": false
+ },
+ "prostate_14:7": {
+  "castration_resistant": true,
+  "m_category": "M0",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "stable",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:70": {
+  "psa_trend": "increasing",
+  "m_category": "M0",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12,
+  "symptomatic_progression": false
+ },
+ "prostate_14:71": {
+  "testosterone_ng_dl": 42,
+  "m_category": "M0",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14,
+  "symptomatic_progression": false
+ },
+ "prostate_14:72": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "testosterone_ng_dl": 42,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12
+ },
+ "prostate_14:73": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "symptomatic_progression": false
+ },
+ "prostate_14:74": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "increasing",
+  "m_category": "M0",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8
+ },
+ "prostate_14:75": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 9,
+  "symptomatic_progression": false
+ },
+ "prostate_14:76": {
+  "psa_trend": "increasing",
+  "m_category": "M0",
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:77": {
+  "psa_trend": "increasing",
+  "testosterone_ng_dl": 35,
+  "m_category": "M0",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14
+ },
+ "prostate_14:78": {
+  "psa_trend": "stable",
+  "m_category": "M0",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "symptomatic_progression": false
+ },
+ "prostate_14:79": {
+  "testosterone_ng_dl": 42,
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 9.5
+ },
+ "prostate_14:8": {
+  "castration_resistant": true,
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": 40
+ },
+ "prostate_14:80": {
+  "testosterone_ng_dl": 45,
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "psa_ng_ml": 2.3,
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": 9
+ },
+ "prostate_14:81": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 9,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 4.2,
+  "symptomatic_progression": false
+ },
+ "prostate_14:82": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  },
+  "symptomatic_progression": false
+ },
+ "prostate_14:83": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_trend": "increasing",
+  "m_category": "M0",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 14,
+  "symptomatic_progression": false
+ },
+ "prostate_14:84": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 2.5,
+  "symptomatic_progression": false
+ },
+ "prostate_14:85": {
+  "m_category": "M0",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 9,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence"
+ },
+ "prostate_14:86": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 9,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 6.4
+ },
+ "prostate_14:87": {
+  "m_category": "M0",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 9,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence"
+ },
+ "prostate_14:88": {
+  "m_category": "M0",
+  "castration_resistant": true,
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": {
+   "min": 10,
+   "max": null,
+   "min_open": false,
+   "max_open": false
+  },
+  "testosterone_ng_dl": 42,
+  "prior_arpi_treatment": true
+ },
+ "prostate_14:89": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "symptomatic_progression": false
+ },
+ "prostate_14:9": {
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "psa_ng_ml": 3.1,
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": {
+   "min": null,
+   "max": 10,
+   "min_open": false,
+   "max_open": false
+  }
+ },
+ "prostate_14:90": {
+  "m_category": "M0",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "symptomatic_progression": false
+ },
+ "prostate_14:91": {
+  "testosterone_ng_dl": 42,
+  "m_category": "M0",
+  "psa_status": "recurrence",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8.5
+ },
+ "prostate_14:92": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence"
+ },
+ "prostate_14:93": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 9,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 50,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 4.2,
+  "symptomatic_progression": false
+ },
+ "prostate_14:94": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12.4,
+  "testosterone_ng_dl": 18,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 1.9
+ },
+ "prostate_14:95": {
+  "m_category": "M1",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 7.3
+ },
+ "prostate_14:96": {
+  "m_category": "M0",
+  "psa_trend": "stable",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 12.5,
+  "testosterone_ng_dl": 18,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 2.2,
+  "symptomatic_progression": false
+ },
+ "prostate_14:97": {
+  "m_category": "M0",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 6,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 4.6
+ },
+ "prostate_14:98": {
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "prior_arpi_treatment": true,
+  "psa_status": "recurrence",
+  "psa_ng_ml": 4.8
+ },
+ "prostate_14:99": {
+  "m_category": "M0",
+  "histology": "adenocarcinoma",
+  "psa_trend": "increasing",
+  "castration_resistant": true,
+  "definitive_treatment_received": "radical_prostatectomy",
+  "current_treatment_phase": "on_adt",
+  "crpc_stated": true,
+  "psa_doubling_time_months": 8,
+  "testosterone_ng_dl": {
+   "min": null,
+   "max": 20,
+   "min_open": false,
+   "max_open": false
+  },
+  "psa_status": "recurrence",
+  "psa_ng_ml": 3.2
+ }
 }

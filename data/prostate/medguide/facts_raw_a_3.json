@@ -1,5 +1,5 @@
 {
- "M126": {
+ "prostate_14:126": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "treated initially with radical prostatectomy 8 years ago"
@@ -59,7 +59,7 @@
    "quote": "he has been maintained on androgen deprivation therapy (ADT) with leuprolide and bicalutamide"
   }
  },
- "M127": {
+ "prostate_14:127": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "treated initially with radical prostatectomy and salvage radiation therapy"
@@ -124,7 +124,7 @@
    "quote": "He has been maintained on ADT with leuprolide"
   }
  },
- "M128": {
+ "prostate_14:128": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "treated initially with radical prostatectomy and adjuvant radiation therapy"
@@ -174,7 +174,7 @@
    "quote": "He has been maintained on ADT with leuprolide"
   }
  },
- "M129": {
+ "prostate_14:129": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "treated initially with radical prostatectomy and salvage radiotherapy"
@@ -232,7 +232,7 @@
    "quote": "he has been maintained on androgen deprivation therapy (ADT)"
   }
  },
- "M130": {
+ "prostate_14:130": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "treated with radical prostatectomy 8 years ago"
@@ -293,7 +293,7 @@
    "quote": "despite ongoing androgen deprivation therapy (ADT) with leuprolide and bicalutamide"
   }
  },
- "M131": {
+ "prostate_14:131": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "treated initially with radical prostatectomy and salvage radiotherapy"
@@ -356,7 +356,7 @@
    "quote": "his ADT (leuprolide) is continued to maintain castrate levels"
   }
  },
- "M132": {
+ "prostate_14:132": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "treated initially with radical prostatectomy 8 years ago"
@@ -421,7 +421,7 @@
    "quote": "over the past 6 months of continued ADT"
   }
  },
- "M133": {
+ "prostate_14:133": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "treated initially with radical prostatectomy and adjuvant radiation therapy"
@@ -488,7 +488,7 @@
    "quote": "while continuing ADT"
   }
  },
- "M134": {
+ "prostate_14:134": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "initially treated with radical prostatectomy and adjuvant radiation"
@@ -542,7 +542,7 @@
    "quote": "prompting initiation of androgen deprivation therapy (ADT) with leuprolide"
   }
  },
- "M135": {
+ "prostate_14:135": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "treated initially with radical prostatectomy and salvage radiotherapy"
@@ -607,7 +607,7 @@
    "quote": "despite ongoing androgen deprivation therapy (ADT) with leuprolide"
   }
  },
- "M136": {
+ "prostate_14:136": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "treated initially with radical prostatectomy and adjuvant radiation therapy"
@@ -672,7 +672,7 @@
    "quote": "followed by androgen deprivation therapy (ADT) with leuprolide and bicalutamide"
   }
  },
- "M137": {
+ "prostate_14:137": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "treated initially with radical prostatectomy 8 years ago"
@@ -735,7 +735,7 @@
    "quote": "salvage radiation and androgen deprivation therapy (ADT) with leuprolide"
   }
  },
- "M138": {
+ "prostate_14:138": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "treated initially with radical prostatectomy 8 years ago"
@@ -798,7 +798,7 @@
    "quote": "on continued ADT (leuprolide every 3 months)"
   }
  },
- "M139": {
+ "prostate_14:139": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "treated initially with radical prostatectomy and salvage radiation therapy"
@@ -863,7 +863,7 @@
    "quote": "despite ongoing androgen deprivation therapy (ADT) with leuprolide"
   }
  },
- "M140": {
+ "prostate_14:140": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "treated initially with radical prostatectomy 5 years ago"
@@ -930,7 +930,7 @@
    "quote": "salvage radiation therapy and androgen deprivation therapy (ADT) with leuprolide"
   }
  },
- "M141": {
+ "prostate_14:141": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "treated initially with radical prostatectomy and adjuvant radiation therapy 5 years ago"
@@ -990,7 +990,7 @@
    "quote": "has been on continuous androgen deprivation therapy (ADT) with leuprolide"
   }
  },
- "M142": {
+ "prostate_14:142": {
   "metastasis_timing": {
    "value": "synchronous",
    "quote": "diagnosed with metastatic castration-sensitive prostate cancer four years ago"
@@ -1041,7 +1041,7 @@
    "quote": "He continues on his monthly leuprolide injection"
   }
  },
- "M143": {
+ "prostate_14:143": {
   "crpc_stated": {
    "value": true,
    "quote": "was diagnosed with castration-resistant prostate cancer (CRPC)"
@@ -1083,7 +1083,7 @@
    "quote": "He was continued on his ADT (leuprolide)"
   }
  },
- "M144": {
+ "prostate_14:144": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "after prior radical prostatectomy"
@@ -1139,7 +1139,7 @@
    "quote": "He has remained on ADT"
   }
  },
- "M145": {
+ "prostate_14:145": {
   "definitive_treatment_received": {
    "value": "radiation_therapy",
    "quote": "initially treated with external beam radiation therapy"
@@ -1208,7 +1208,7 @@
    "quote": "maintaining castrate testosterone levels"
   }
  },
- "M146": {
+ "prostate_14:146": {
   "definitive_treatment_received": {
    "value": "radiation_plus_adt",
    "quote": "previously treated for high-risk localized prostate cancer with radiation and ADT"
@@ -1271,7 +1271,7 @@
    "quote": "continues on an LHRH agonist"
   }
  },
- "M147": {
+ "prostate_14:147": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "treated with radical prostatectomy, followed by salvage radiation"
@@ -1340,7 +1340,7 @@
    "quote": "in addition to continuing his leuprolide"
   }
  },
- "M148": {
+ "prostate_14:148": {
   "crpc_stated": {
    "value": true,
    "quote": "diagnosed with CRPC 18 months ago"
@@ -1388,7 +1388,7 @@
    "quote": "He had been on continuous ADT (leuprolide)"
   }
  },
- "M149": {
+ "prostate_14:149": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "initially treated with radical prostatectomy followed by salvage radiation therapy"
@@ -1461,7 +1461,7 @@
    "quote": "continued the current ADT to maintain castrate serum levels"
   }
  },
- "M150": {
+ "prostate_14:150": {
   "definitive_treatment_received": {
    "value": "other",
    "quote": "underwent definitive local therapy"
@@ -1517,7 +1517,7 @@
    "quote": "was started on continuous androgen deprivation therapy (ADT)"
   }
  },
- "M151": {
+ "prostate_14:151": {
   "crpc_stated": {
    "value": true,
    "quote": "progressed to castration-resistant disease approximately two years ago"
@@ -1555,7 +1555,7 @@
    "quote": "in combination with continued ADT"
   }
  },
- "M152": {
+ "prostate_14:152": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "previously treated with radical prostatectomy and subsequent salvage radiation therapy"
@@ -1618,7 +1618,7 @@
    "quote": "he was started on apalutamide while continuing leuprolide"
   }
  },
- "M153": {
+ "prostate_14:153": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "high-risk prostate cancer treated with radical prostatectomy and adjuvant radiation therapy"
@@ -1685,7 +1685,7 @@
    "quote": "in addition to continuing his goserelin injections"
   }
  },
- "M154": {
+ "prostate_14:154": {
   "crpc_stated": {
    "value": true,
    "quote": "was diagnosed with Castration-Resistant Prostate Cancer (CRPC)"
@@ -1746,7 +1746,7 @@
    "quote": "He has remained on leuprolide"
   }
  },
- "M155": {
+ "prostate_14:155": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "initially treated with radical prostatectomy and adjuvant radiation therapy"
@@ -1813,7 +1813,7 @@
    "quote": "continuing his established ADT"
   }
  },
- "M156": {
+ "prostate_14:156": {
   "definitive_treatment_received": {
    "value": "radiation_plus_adt",
    "quote": "treated with external beam radiation therapy combined with androgen deprivation therapy (ADT)"
@@ -1869,7 +1869,7 @@
    "quote": "He continued on leuprolide maintenance"
   }
  },
- "M157": {
+ "prostate_14:157": {
   "definitive_treatment_received": {
    "value": "radiation_therapy",
    "quote": "treated with definitive radiation therapy"
@@ -1929,7 +1929,7 @@
    "quote": "while continuing his ADT"
   }
  },
- "M158": {
+ "prostate_14:158": {
   "crpc_stated": {
    "value": true,
    "quote": "diagnosed with castrate-resistant prostate cancer (CRPC)"
@@ -1984,7 +1984,7 @@
    "quote": "He has remained on continuous androgen deprivation therapy (ADT) with leuprolide"
   }
  },
- "M159": {
+ "prostate_14:159": {
   "definitive_treatment_received": {
    "value": "radiation_therapy",
    "quote": "treated previously with external beam radiation therapy"
@@ -2049,7 +2049,7 @@
    "quote": "while continuing his leuprolide injections"
   }
  },
- "M160": {
+ "prostate_14:160": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "treated for localized prostate cancer with radical prostatectomy followed by salvage radiation therapy"
@@ -2114,7 +2114,7 @@
    "quote": "the decision was made to continue ADT"
   }
  },
- "M161": {
+ "prostate_14:161": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "initially treated with radical prostatectomy"
@@ -2175,7 +2175,7 @@
    "quote": "to maintain castrate serum levels of testosterone (<50 ng/dL)"
   }
  },
- "M162": {
+ "prostate_14:162": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "underwent radical prostatectomy followed by salvage radiation therapy"
@@ -2240,7 +2240,7 @@
    "quote": "His oncologist recommended continuing the goserelin"
   }
  },
- "M163": {
+ "prostate_14:163": {
   "crpc_stated": {
    "value": true,
    "quote": "diagnosed with castration-resistant prostate cancer (CRPC) approximately 18 months ago"
@@ -2292,7 +2292,7 @@
    "quote": "He continued on leuprolide therapy to maintain castrate serum testosterone"
   }
  },
- "M164": {
+ "prostate_14:164": {
   "definitive_treatment_received": {
    "value": "radical_prostatectomy",
    "quote": "treated with radical prostatectomy followed by salvage radiation"
@@ -2365,7 +2365,7 @@
    "quote": "continuing his leuprolide injections"
   }
  },
- "M165": {
+ "prostate_14:165": {
   "definitive_treatment_received": {
    "value": "radiation_therapy",
    "quote": "treated with external beam radiation therapy 8 years ago"

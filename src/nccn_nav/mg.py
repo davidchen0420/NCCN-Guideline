@@ -45,8 +45,7 @@ def prepare(root, trees=None, seed=0):
     for disease in trees:
         rows = df[df.disease == disease].reset_index(drop=True)
         for i, r in rows.iterrows():
-            # Prostate keeps the ids used by earlier runs (M<n> in file order).
-            iid = f"M{i}" if root.name == "prostate" else f"{disease}:{i}"
+            iid = f"{disease}:{i}"
             items.append({"id": iid, "disease": disease, "profile": r.profile, "options": list(r.options),
                           "answer": r.answer, "answer_text": r.answer_text, "path": list(r.path)})
     rng = random.Random(seed)

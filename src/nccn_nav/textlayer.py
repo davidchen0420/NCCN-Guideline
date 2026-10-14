@@ -1,4 +1,4 @@
-"""Layer B: chunk the Principles pages (e.g. PROS-A..N) and the Discussion (MS-*) and index them
+"""Layer B: chunk the Principles pages (<PREFIX>-A, -B, ...) and the Discussion (MS-*) and index them
 with BM25 so each graph node can pull its supporting text."""
 import re
 
@@ -24,36 +24,6 @@ def _is_reference_list(page):
     numbered = sum(bool(re.match(r"\s*\d{1,4}\.\s", l)) for l in lines)
     links = page.get_text().count("http")
     return links >= 5 or numbered > 0.3 * len(lines)
-
-
-def build_chunks(spec, max_words=220):
-    """Paragraph-level chunks of principles and discussion pages, tagged with their page code.
-    (Superseded by fulltext.chunk_pages, which covers every page kind.)"""
-    chunks = []
-    for i, page in enumerate(spec.doc):
-        code = spec.ids.get(i)
-        if spec.kind(i) == "principles":
-            source = "principles"
-        elif spec.kind(i) == "discussion":
-            code, source = _discussion_label(page) or f"MS-p{i + 1}", "discussion"
-            if _is_reference_list(page):
-                continue
-        else:
-            continue
-        buf = []
-        for block in page.get_text("blocks"):
-            y0, text = block[1], block[4].strip()
-            if y0 < 85 or y0 > 560 or not text or text.count("et al.") >= 2:
-                continue  # skip headers/footers and reference lists
-            buf.append(re.sub(r"\s+", " ", text))
-            if sum(len(b.split()) for b in buf) >= max_words:
-                chunks.append({"source": source, "page": code, "text": " ".join(buf)})
-                buf = []
-        if buf:
-            chunks.append({"source": source, "page": code, "text": " ".join(buf)})
-    for n, chunk in enumerate(chunks):
-        chunk["id"] = f"c{n}"
-    return chunks
 
 
 class Retriever:
