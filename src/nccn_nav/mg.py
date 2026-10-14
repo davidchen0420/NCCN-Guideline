@@ -172,10 +172,11 @@ def build_facts(root):
           f"schema variables never extracted {len(set(schema['variables']) - set(stats))}/{len(schema['variables'])}")
 
 
-def engine_answer(gl, facts, option_nodes):
-    """Answer from deterministic walks: the last option box on the walked path; if the walk
-    stopped before any option, the single option still reachable from where it stopped.
-    Abstain (None) when walks disagree or nothing is decided."""
+def engine_answer(gl, facts, option_nodes, n_options=None):
+    """Answer from deterministic walks: the last option box the walk actually passes through.
+    Abstain (None) when walks disagree or no option box is reached. (An earlier rule that took
+    "the only option still reachable" leaked the label: distractors often sit on branches the
+    walk can never reach, so it scored the same with shuffled facts.)"""
     inverse = {}
     for letter, node in option_nodes.items():
         inverse.setdefault(node, []).append(letter)
@@ -184,11 +185,6 @@ def engine_answer(gl, facts, option_nodes):
         hit = [n for n in w["path"] if n in inverse]
         if hit:
             answers.update(inverse[hit[-1]])
-            continue
-        reach = _descendants(gl, w["final"])
-        letters = {l for n in reach if n in inverse for l in inverse[n]}
-        if len(letters) == 1:
-            answers.update(letters)
     return answers.pop() if len(answers) == 1 else None
 
 
@@ -212,9 +208,27 @@ def score(root, split_name="test"):
     a0 = _load(root, *sorted(f.name for f in (root / "medguide").glob("A0_*.json")))
     ids = [i for i in items if split[i] == split_name and mapping[i]["valid"]
            and checks.get(i, {}).get("verdict", "consistent") == "consistent"]
-    a5 = {i: engine_answer(gl, facts.get(i, {}), mapping[i]["option_nodes"]) for i in ids} if facts else {}
-    rows = [("A0 no context", a0), ("A5 engine (abstains)", a5),
-            ("A5 + A0 fallback", {i: a5.get(i) or a0.get(i) for i in ids})]
+    a5 = {i: engine_answer(gl, facts.get(i, {}), mapping[i]["option_nodes"], len(items[i]["options"]))
+          for i in ids} if facts else {}
+    # Controls. (1) Majority box: always pick the option at the answer box most common among
+    # dev items, which shows how much a tree's items share one answer. (2) The engine run on
+    # facts shuffled between items, which shows how much the case's own facts matter.
+    from collections import Counter
+
+    dev_boxes = Counter(mapping[i]["option_nodes"].get(items[i]["answer"]) for i in items
+                        if split[i] == "dev" and mapping[i]["valid"])
+    rank = {box: r for r, (box, _) in enumerate(dev_boxes.most_common())}
+    majority = {}
+    for i in ids:
+        opts = [(rank[n], l) for l, n in mapping[i]["option_nodes"].items() if n in rank]
+        majority[i] = min(opts)[1] if opts else None
+    import random as _random
+
+    shuffled_ids = ids[:]
+    _random.Random(0).shuffle(shuffled_ids)
+    shuffled = {i: engine_answer(gl, facts.get(j, {}), mapping[i]["option_nodes"]) for i, j in zip(ids, shuffled_ids)} if facts else {}
+    rows = [("B majority box (dev)", majority), ("A0 no context", a0), ("A5 engine (abstains)", a5),
+            ("A5 shuffled facts", shuffled), ("A5 + A0 fallback", {i: a5.get(i) or a0.get(i) for i in ids})]
     print(f"{root.name} [{split_name}] scored items: {len(ids)} "
           f"(valid on graph {sum(mapping[i]['valid'] for i in items if split[i] == split_name)}"
           f"/{sum(split[i] == split_name for i in items)}; LLM label check excluded "
