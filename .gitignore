@@ -5,3 +5,4 @@
 research_notes/Prostate benchmark planning/prostate_pdf_profile.md
 private/
 __pycache__/
+.claude/settings.local.json
