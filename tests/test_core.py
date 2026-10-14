@@ -202,3 +202,16 @@ def test_page_bands_and_prose_page():
     # No arrows on the page: its lines are content, not footnotes; header/footer are excluded.
     assert "First statement" in text and "Second statement" in text
     assert "Running header" not in text and "Note: All" not in text
+
+
+def test_plain_letter_footnote_markers():
+    def line(x, y, text):
+        return {"text": text, "bbox": [x, y, x + 300, y + 8], "marker": None, "refs": []}
+
+    notes = pdfvec._parse_footnotes([
+        line(24, 400, "e Advanced disease refers to"), line(30, 409, "may be considered in this setting."),
+        line(24, 418, "g Principles of therapy."), line(24, 427, "a Plain line that breaks the order"),
+        line(446, 400, "k Avoid glucocorticoids."), line(446, 409, "ll Doubled letters continue."),
+    ], 792)
+    assert set(notes) == {"e", "g", "k", "ll"}
+    assert notes["e"].endswith("may be considered in this setting.")

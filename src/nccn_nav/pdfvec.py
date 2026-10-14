@@ -11,6 +11,9 @@ import pymupdf
 
 from .layout import norm_hyphens, page_bands
 
+# Footnote letters: a..z, then aa, bb, ... (some guidelines run on to aaaa).
+MARK = r"[a-z]{1,4}"
+MARK_RE = re.compile(MARK)
 # Page references printed in boxes; `configure(spec)` narrows them to the guideline's prefixes.
 LINK_RE = re.compile(r"\(([A-Z][A-Z0-9_/]{1,11}-[A-Z0-9]+(?: \d+ of \d+)?)\)")
 
@@ -34,7 +37,7 @@ def _text_lines(page, bands=None):
                 for s in spans[1:]
                 if s["size"] <= body * 0.85
                 for r in re.split(r"[,\s]+", s["text"].strip())
-                if re.fullmatch(r"[a-z]{1,3}", r)
+                if re.fullmatch(MARK_RE, r)
             ]
             text = norm_hyphens("".join(
                 s["text"] for s in line["spans"] if not (s in spans[1:] and s["size"] <= body * 0.85)
@@ -145,16 +148,31 @@ def _group_boxes(lines, brackets):
     return sorted(boxes, key=lambda b: (b["bbox"][1], b["bbox"][0]))
 
 
+def _letter_key(m):
+    return (len(m), m)  # footnote letters run a..z, then aa, bb, ...
+
+
 def _parse_footnotes(lines, page_width):
-    """Footnotes run in two columns; each starts with a superscript letter marker."""
+    """Footnotes run in two columns; each starts with a letter marker: a superscript, a letter
+    and a tab, or (in some guidelines) a plain letter and a space at a hanging indent."""
     notes, current = {}, None
-    for line in sorted(lines, key=lambda l: (l["bbox"][0] > page_width / 2, l["bbox"][1])):
+    ordered = sorted(lines, key=lambda l: (l["bbox"][0] > page_width / 2, l["bbox"][1]))
+    for k, line in enumerate(ordered):
         if re.match(r"(Footnotes?|References|Continued)\b", line["text"]):
             current = None  # navigation lines ("Footnotes on AE-7A", "Continued") end a note
             continue
-        tabbed = re.match(r"([a-z]{1,3})\t", line["text"])
-        marker = line["marker"] if line["marker"] and re.fullmatch(r"[a-z]{1,3}", line["marker"]) else None
+        tabbed = re.match(r"(" + MARK + r")\t", line["text"])
+        marker = line["marker"] if line["marker"] and re.fullmatch(MARK_RE, line["marker"]) else None
         marker = marker or (tabbed.group(1) if tabbed else None)
+        plain = re.match(r"(([a-z])\2{0,3}) +(?=\S)", line["text"])  # a..z, aa, bb, ...
+        if not marker and plain:
+            # A plain letter counts only if it continues the sequence and the next line of the
+            # column is indented past it (hanging indent) or starts another note.
+            nxt = next((l for l in ordered[k + 1:]
+                        if (l["bbox"][0] > page_width / 2) == (line["bbox"][0] > page_width / 2)), None)
+            hanging = nxt is None or nxt["bbox"][0] > line["bbox"][0] + 2 or re.match(r"([a-z])\1{0,3} ", nxt["text"])
+            if hanging and (current is None or _letter_key(plain.group(1)) > _letter_key(current)):
+                marker = plain.group(1)
         if marker:
             current = marker
             notes[current] = line["text"][len(current):].strip()
@@ -277,8 +295,8 @@ def extract_page_graph(doc, index):
     margin = 0.05 * page.rect.width  # footnotes start at the left page margin
 
     def is_note(l):
-        marked = l["marker"] and re.fullmatch(r"[a-z]{1,3}", l["marker"]) and l["bbox"][0] < margin
-        return l["bbox"][1] > flow_bottom or marked or (re.match(r"[a-z]{1,3}\t", l["text"]) and l["bbox"][0] < margin)
+        marked = l["marker"] and re.fullmatch(MARK_RE, l["marker"]) and l["bbox"][0] < margin
+        return l["bbox"][1] > flow_bottom or marked or (re.match(MARK + r"\t", l["text"]) and l["bbox"][0] < margin)
 
     note_top = min([l["bbox"][1] for l in lines if is_note(l)] + [bottom])
     note_lines = [l for l in lines if is_note(l) or (l["bbox"][1] >= note_top and l["bbox"][0] < margin)]
