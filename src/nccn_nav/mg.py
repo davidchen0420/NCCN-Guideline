@@ -13,6 +13,7 @@ contradicts the case text. Prints numbers only.
 """
 import json
 import random
+import re
 import sys
 from difflib import SequenceMatcher
 from pathlib import Path
@@ -54,7 +55,14 @@ def prepare(root, seed=0):
           f"test {sum(v == 'test' for v in split.values())}")
 
 
+REF_RE = re.compile(r"\b([A-Z]{2,6}-[0-9]+[A-Z]?)\b")
+
+
 def _sim(a, b):
+    # Page references are what tell look-alike boxes apart ("pMMR/MSS (COL-10)" vs "(COL-11)").
+    ra, rb = set(REF_RE.findall(a)), set(REF_RE.findall(b))
+    if ra and rb and not ra & rb:
+        return 0.0
     a, b = norm(a), norm(b)
     if not a or not b:
         return 0.0
@@ -82,9 +90,10 @@ def map_item(gl, item, thr=0.6):
     for step in item["path"][1:]:
         nxt = []
         for chain in chains:
-            # Allow one unlabelled intermediate box (e.g. a box our graph splits in two).
+            # MedGUIDE paths skip workup/link boxes: allow up to two intermediate boxes.
             near = set(gl.children.get(chain[-1], []))
-            near |= {g for c in near for g in gl.children.get(c, [])}
+            for _ in range(2):
+                near |= {g for c in near for g in gl.children.get(c, [])}
             scored = sorted(((_sim(step, nodes[c]["text"]), c) for c in near), reverse=True)
             if scored and scored[0][0] >= thr:
                 nxt.append(chain + [scored[0][1]])
@@ -121,6 +130,46 @@ def map_all(root):
     n_valid = sum(r["valid"] for r in out.values())
     print(f"{len(out)} items: path maps onto graph {n_chain}, valid (answer = mapped path end) {n_valid}")
     return out
+
+
+def build_facts(root):
+    """Validate both extraction runs against the schema and the case text, keep only facts the
+    two runs agree on, and report per-variable extraction statistics."""
+    from .facts import agreement, validate
+
+    root = Path(root)
+    schema = json.loads((root / "fact_schema.json").read_text())
+    items = {x["id"]: x for x in json.loads((root / "medguide" / "items.json").read_text())}
+    runs = {}
+    for run in ("a", "b"):
+        raw = {}
+        for f in sorted((root / "medguide").glob(f"facts_raw_{run}_*.json")):
+            raw.update(json.loads(f.read_text()))
+        runs[run] = raw
+    final, stats, rejected = {}, {}, 0
+    ids = sorted(set(runs["a"]) | set(runs["b"]))
+    for i in ids:
+        va, ra = validate(runs["a"].get(i, {}), schema, items[i]["profile"])
+        vb, rb = validate(runs["b"].get(i, {}), schema, items[i]["profile"])
+        rejected += len(ra) + len(rb)
+        if not runs["b"]:
+            keep, disagree = va, []  # single run: no agreement filter
+        else:
+            keep, disagree = agreement(va, vb)
+        final[i] = keep
+        for name in set(va) | set(vb):
+            st = stats.setdefault(name, {"extracted": 0, "agreed": 0, "disagreed": 0})
+            st["extracted"] += 1
+            st["agreed"] += name in keep
+            st["disagreed"] += name in disagree
+    (root / "medguide" / "facts_final.json").write_text(json.dumps(final, indent=0))
+    (root / "medguide" / "facts_stats.json").write_text(json.dumps(stats, indent=1))
+    n = len(ids)
+    tot_ext = sum(v["extracted"] for v in stats.values())
+    tot_agree = sum(v["agreed"] for v in stats.values())
+    print(f"{n} cases; facts per case kept {sum(len(v) for v in final.values()) / max(n, 1):.1f}; "
+          f"run agreement {tot_agree / max(tot_ext, 1):.2f}; values rejected by validation {rejected}; "
+          f"schema variables never extracted {len(set(schema['variables']) - set(stats))}/{len(schema['variables'])}")
 
 
 def engine_answer(gl, facts, option_nodes):
@@ -160,7 +209,7 @@ def score(root, split_name="test"):
     mapping = json.loads((root / "medguide" / "mapping.json").read_text())
     checks = _load(root, "label_check.json")
     facts = _load(root, "facts_final.json")
-    a0 = _load(root, "A0.json", "A0_a.json", "A0_b.json")
+    a0 = _load(root, *sorted(f.name for f in (root / "medguide").glob("A0_*.json")))
     ids = [i for i in items if split[i] == split_name and mapping[i]["valid"]
            and checks.get(i, {}).get("verdict", "consistent") == "consistent"]
     a5 = {i: engine_answer(gl, facts.get(i, {}), mapping[i]["option_nodes"]) for i in ids} if facts else {}
@@ -185,4 +234,4 @@ def score(root, split_name="test"):
 
 if __name__ == "__main__":
     cmd, root = sys.argv[1], sys.argv[2]
-    {"prepare": prepare, "map": map_all, "score": score}[cmd](root, *sys.argv[3:])
+    {"prepare": prepare, "map": map_all, "score": score, "facts": build_facts}[cmd](root, *sys.argv[3:])

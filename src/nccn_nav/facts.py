@@ -100,7 +100,8 @@ def validate(extracted, schema, case_text):
     text = _norm(case_text)
     variables = schema["variables"]
     for name, item in (extracted or {}).items():
-        if name not in variables:
+        derived = schema.get("derived", {})
+        if name not in variables and name not in derived:
             rejected.append((name, "not in schema"))
             continue
         if not isinstance(item, dict):
@@ -110,6 +111,15 @@ def validate(extracted, schema, case_text):
             continue
         if not quote or _norm(quote) not in text:
             rejected.append((name, "quote not found in case text"))
+            continue
+        if name in derived:
+            # A classification the case states outright ("high-risk", "stage IIIA"); otherwise
+            # derived values are computed by code from the raw facts.
+            allowed = {r["then"] for r in derived[name]["rules"]} | {derived[name].get("else")}
+            if value in allowed:
+                facts[name] = value
+            else:
+                rejected.append((name, "stated classification outside rule values"))
             continue
         var = variables[name]
         if var["type"] == "number":

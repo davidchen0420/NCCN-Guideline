@@ -103,8 +103,14 @@ def export_review(root, per_file=60):
     root = Path(root)
     gl = Guideline(root)
     preds = json.loads((root / "predicates.json").read_text())
-    rows = [json.dumps({"id": nid, "box": _short(gl.nodes[nid]["text"], 600), "predicate": p}, ensure_ascii=False)
-            for nid, p in preds.items() if p is not None and nid in gl.nodes]
+    need = decision_nodes(gl)
+    rows = []
+    for nid, p in preds.items():
+        if p is None or nid not in gl.nodes:
+            continue
+        parent = need.get(nid, {}).get("parent")
+        rows.append(json.dumps({"id": nid, "parent": _short(gl.nodes[parent]["text"], 200) if parent else "(entry box)",
+                                "box": _short(gl.nodes[nid]["text"], 600), "predicate": p}, ensure_ascii=False))
     for k in range(0, len(rows), int(per_file)):
         (root / "llm" / f"review_input_{k // int(per_file)}.jsonl").write_text("\n".join(rows[k:k + int(per_file)]))
     print(f"{len(rows)} predicates to review in {(len(rows) + int(per_file) - 1) // int(per_file)} files")

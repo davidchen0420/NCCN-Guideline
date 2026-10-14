@@ -61,6 +61,10 @@ def red_flags(g):
         flags.append(f"orphans:{len(orphans)}")
     if g["n_connectors"] and len(g["edges"]) < 0.6 * g["n_connectors"]:
         flags.append("few_edges_per_arrow")
+    # A leaf in the middle of the page with no page link usually means a missed arrow.
+    dead = [n["id"] for n in boxes if n.get("role") == "leaf" and not n.get("links") and n["bbox"][2] < 500]
+    if dead:
+        flags.append(f"dead_ends:{len(dead)}")
     if len(boxes) > 35:
         flags.append("dense_page")
     return flags
