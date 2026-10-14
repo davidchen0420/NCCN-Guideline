@@ -67,7 +67,7 @@ def _bracket_of(line, brackets):
     closing = [
         (br["x"] - x1, i)
         for i, br in enumerate(brackets)
-        if br["x"] - 40 <= x1 <= br["x"] + 1 and br["y0"] - 3 <= mid <= br["y1"] + 3
+        if br["x"] - 40 <= x1 <= br["x"] + 4 and br["y0"] - 3 <= mid <= br["y1"] + 3  # line boxes can overhang the bar
     ]
     return ("close", min(closing)[1]) if closing else None
 
@@ -92,7 +92,8 @@ def _group_boxes(lines, brackets):
             elif (
                 bracket is None
                 and group["bracket"] is None
-                and abs(gx0 - x0) < 4
+                # Left-aligned, or a hanging indent / nested bullet just right of the box's edge.
+                and -4 < x0 - gx0 < 16
                 and -6 < y0 - gy1 < 6
                 # A box that ends in a page reference such as "(PROS-x)" is complete.
                 and not re.search(LINK_RE.pattern + r"$", group["lines"][-1]["text"])
@@ -110,11 +111,18 @@ def _group_boxes(lines, brackets):
     for group in [g for g in groups if g["bracket"] is not None]:
         side, idx = group["bracket"]
         br = brackets[idx]
-        for other in [g for g in groups if g["bracket"] is None]:
+        for other in sorted([g for g in groups if g["bracket"] is None],  # nearest first, so
+                            key=lambda g: abs(bbox(g)[1] - bbox(group)[1])):  # absorbed lines chain
             ox0, oy0, ox1, oy1 = bbox(other)
             gx0 = bbox(group)[0]
             in_span = br["y0"] - 3 <= (oy0 + oy1) / 2 <= br["y1"] + 3
             in_column = gx0 - 2 <= ox0 <= gx0 + 15 and (side == "open" or ox1 <= br["x"] + 1)
+            if side == "close" and not in_column:
+                # Short lines of a closing-bracket block end far from the bar: they belong to it
+                # when they share its column and touch its lines vertically.
+                gx1 = bbox(group)[2]
+                near = any(abs(oy0 - l["bbox"][3]) < 6 or abs(l["bbox"][1] - oy1) < 6 for l in group["lines"])
+                in_column = ox0 < gx1 and ox1 > gx0 - 2 and ox1 <= br["x"] + 1 and near
             if in_span and in_column:
                 group["lines"] += other["lines"]
                 groups.remove(other)
@@ -144,7 +152,8 @@ def _group_boxes(lines, brackets):
         kind = "header" if len(letters) > 3 and letters[:-2].isupper() else "box"
         refs = sorted({r for l in group["lines"] for r in l["refs"]}, key=lambda r: (len(r), r))
         boxes.append({"text": text, "bbox": bbox(group), "kind": kind, "footnote_refs": refs,
-                      "line_bboxes": [l["bbox"] for l in group["lines"]]})
+                      "line_bboxes": [l["bbox"] for l in group["lines"]],
+                      "line_texts": [l["text"] for l in group["lines"]]})
     return sorted(boxes, key=lambda b: (b["bbox"][1], b["bbox"][0]))
 
 
@@ -189,6 +198,89 @@ def _parse_footnotes(lines, page_width):
         elif current:
             notes[current] += " " + line["text"]
     return notes
+
+
+def _split_alternatives(boxes, connectors, brackets):
+    """Split a box whose "or"-separated alternatives each start their own arrow (a bracket of
+    options leading to different next steps) into one box per alternative. A segment without
+    its own arrow stays with the next segment that has one ("A or B -> X" keeps A with B).
+    Returns (boxes, groups of ids that came from one box)."""
+    out, groups = [], []
+    for box in boxes:
+        lines = sorted(zip(box.get("line_bboxes", []), box.get("line_texts", [])), key=lambda l: l[0][1])
+        segs, cur = [], []
+        for bb, text in lines:
+            if text.strip().lower() == "or":
+                if cur:
+                    segs.append(cur)
+                cur = []
+            else:
+                cur.append((bb, text))
+        if cur:
+            segs.append(cur)
+        if len(segs) < 2:
+            out.append(box)
+            continue
+
+        spans = [(min(b[1] for b, _ in sg), max(b[3] for b, _ in sg)) for sg in segs]
+        x1s = [max(b[2] for b, _ in sg) for sg in segs]
+
+        def reach(k):
+            # How far right of alternative k an arrow may start and still be its own.
+            y0, y1 = spans[k]
+            blockers = [o["bbox"][0] for o in boxes if o is not box and o["bbox"][0] > x1s[k] - 5
+                        and o["bbox"][1] < y1 and o["bbox"][3] > y0]
+            return x1s[k] - 15, min([x1s[k] + 80] + blockers)
+
+        def owners(t):
+            """Alternatives an arrow tail belongs to: all those a nearby bracket bar under the
+            tail spans, else the one beside it."""
+            for br in brackets:
+                if abs(t[0] - br["x"]) < 10 and br["y0"] - 3 <= t[1] <= br["y1"] + 3:
+                    covered = {k for k, (y0, y1) in enumerate(spans) if br["y0"] - 3 <= (y0 + y1) / 2 <= br["y1"] + 3
+                               and reach(k)[0] <= br["x"] <= reach(k)[1]}
+                    if covered:
+                        return covered
+            for k, (y0, y1) in enumerate(spans):
+                lo, hi = reach(k)
+                if lo <= t[0] <= hi and y0 - 4 <= t[1] <= y1 + 4:
+                    return {k}
+            return set()
+
+        clusters = []
+        for t, h in connectors:
+            own = owners(t) if h[0] > t[0] else set()
+            if not own:
+                continue
+            for c in [c for c in clusters if c & own]:
+                own |= c
+                clusters.remove(c)
+            clusters.append(own)
+        if len(clusters) < 2:
+            out.append(box)
+            continue
+        # Alternatives without an arrow of their own join the next arrow's group ("A or B -> X");
+        # trailing ones stand alone (e.g. "or Clinical trials" with no next step).
+        label = {k: i for i, c in enumerate(sorted(clusters, key=min)) for k in c}
+        merged, pending = {}, []
+        for k in range(len(segs)):
+            if k in label:
+                merged.setdefault(label[k], []).extend(pending + segs[k])
+                pending = []
+            else:
+                pending += segs[k]
+        merged = [merged[i] for i in sorted(merged)] + ([pending] if pending else [])
+        ids = []
+        for seg in merged:
+            bbs = [b for b, _ in seg]
+            bbox = [min(b[0] for b in bbs), min(b[1] for b in bbs), max(b[2] for b in bbs), max(b[3] for b in bbs)]
+            text = " ".join(t for _, t in seg)
+            part = {**box, "text": text, "bbox": bbox, "line_bboxes": bbs, "line_texts": [t for _, t in seg],
+                    "id": f"n{round(bbox[1])}_{round(bbox[0])}", "links": LINK_RE.findall(text)}
+            out.append(part)
+            ids.append(part["id"])
+        groups.append(set(ids))
+    return out, groups
 
 
 def _merge_collinear(brackets):
@@ -327,6 +419,7 @@ def extract_page_graph(doc, index):
         # review verdicts and predicates keyed by id survive re-extraction.
         box["id"] = f"n{round(box['bbox'][1])}_{round(box['bbox'][0])}"
         box["links"] = LINK_RE.findall(box["text"])
+    boxes, split_groups = _split_alternatives(boxes, connectors, brackets)
 
     def nearest(pt, side):
         # Tail attaches to a box on its left; head attaches to a box (or bracket) on its right.
@@ -413,6 +506,12 @@ def extract_page_graph(doc, index):
             for t in dsts:
                 if s and t and s != t:
                     edges.add((s, t))
+
+    # An arrow into a bracket of alternatives reaches every alternative.
+    for group in split_groups:
+        for s_, t_ in list(edges):
+            if t_ in group and s_ not in group:
+                edges |= {(s_, g) for g in group}
 
     return {
         "page_index": index,
