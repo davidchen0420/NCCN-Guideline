@@ -70,6 +70,44 @@ class Guideline:
         # Multi-disease guidelines: entry boxes also require the page's section (sections.py).
         linked = {l for n in self.nodes.values() for l in n.get("links", []) if l != n["page"]}
         self.predicates = entry_predicates(self.predicates, self.roots, load_sections(self.private), linked)
+        self.own_predicates = dict(self.predicates)
+        self.link_conditions = {}
+        self.inherited = self._inherit_link_conditions()
+
+    def _inherit_link_conditions(self):
+        """An entry box on a page that other pages link to applies only to patients who reached
+        it. Its link condition is the condition of the linking boxes (the nearest box with a
+        predicate on the path to each link; several links are alternatives), kept apart from the
+        box's own predicate in self.link_conditions, for display (guideline.json). walk() does not
+        use it: on MedGUIDE colon, excluding entries whose link condition was false lowered
+        accuracy (cases often start on a later page with earlier facts no longer true). Returns {entry: [linking boxes]}."""
+        parents = {}
+        for nid, kids in self.children.items():
+            for k in kids:
+                parents.setdefault(k, []).append(nid)
+
+        def nearest(nid, seen):
+            if nid in seen:
+                return None
+            seen.add(nid)
+            if self.predicates.get(nid) is not None:
+                return self.predicates[nid]
+            ups = [nearest(p, seen) for p in parents.get(nid, []) if self.nodes[p]["page"] == self.nodes[nid]["page"]]
+            ups = [u for u in ups if u is not None]
+            return ups[0] if len(ups) == 1 else ({"any": ups} if ups else None)
+
+        sources = {}
+        for _ in range(2):  # a second pass lets chains of linked pages pass conditions along
+            for roots in self.roots.values():
+                for r in roots:
+                    srcs = [p for p in parents.get(r, []) if self.nodes[p]["page"] != self.nodes[r]["page"]]
+                    conds = [c for c in (nearest(s, set()) for s in srcs) if c is not None]
+                    if not srcs or not conds:
+                        continue
+                    sources[r] = srcs
+                    link = conds[0] if len(conds) == 1 else {"any": conds}
+                    self.link_conditions[r] = link
+        return sources
 
     def context(self, nid, k=2):
         node = self.nodes[nid]

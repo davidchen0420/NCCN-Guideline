@@ -305,34 +305,15 @@ class Bundler:
                               "support": e.get("support")})
 
         node_ids = {n["id"] for n in nodes}
-        # Entry boxes without a condition that other pages link to inherit the condition of the
-        # linking boxes: the nearest box with a predicate on the path to each link.
-        parents = defaultdict(list)
-        for nid, kids in gl.children.items():
-            for k in kids:
-                parents[k].append(nid)
-
-        def nearest_condition(nid, seen):
-            if nid in seen:
-                return None
-            seen.add(nid)
-            if effective.get(nid) is not None:
-                return effective[nid]
-            ups = [nearest_condition(p, seen) for p in parents.get(nid, []) if gl.nodes[p]["page"] == gl.nodes[nid]["page"]]
-            ups = [u for u in ups if u is not None]
-            return ups[0] if len(ups) == 1 else ({"any": ups} if ups else None)
-
         by_id = {n["id"]: n for n in nodes}
-        for rec in nodes:
-            if rec.get("role") != "entry" or rec.get("predicate") is not None:
+        for r, srcs in gl.inherited.items():  # entry conditions include the linking boxes' (navigator)
+            rec = by_id.get(r)
+            if rec is None:
                 continue
-            srcs = [p for p in parents.get(rec["id"], []) if gl.nodes[p]["page"] != gl.nodes[rec["id"]]["page"]]
-            if not srcs:
-                continue
-            conds = [c for c in (nearest_condition(s, set()) for s in srcs) if c is not None]
             rec["reached_from"] = srcs
-            if conds:
-                rec["predicate"] = conds[0] if len(conds) == 1 else {"any": conds}
+            rec["link_condition"] = gl.link_conditions.get(r)
+            if rec.get("predicate") is None and rec["link_condition"] is not None:
+                rec["predicate"] = rec["link_condition"]
                 rec["predicate_status"] = "inherited_from_link"
                 rec.setdefault("decision_type", "condition")
         continuations = []
