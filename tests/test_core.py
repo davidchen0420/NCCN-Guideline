@@ -238,3 +238,23 @@ def test_table_rows_must_come_from_the_page():
     pairs = {(e["src"], e["dst"]) for e in edges}
     assert ("t_root", "t0_c") in pairs and ("t0_c", "t0_r") in pairs and ("t_root", "t1_c") in pairs
     assert next(n for n in nodes if n["id"] == "t0_c")["bbox"][1] == 100
+
+
+def test_sections_constrain_entry_boxes():
+    from nccn_nav import sections
+
+    titles = {"Colon Cancer", "pMMR/MSS Colon Cancer", "dMMR/MSI-H Colon Cancer", ""}
+    assert sections.specific(titles, "Colon Cancer") == ["dMMR/MSI-H Colon Cancer", "pMMR/MSS Colon Cancer"]
+    assert sections.clean("Breast Cancer Breast Cancer During Pregnancy") == "Breast Cancer During Pregnancy"
+    sec = {"variable": "guideline_section", "values": ["Ewing Sarcoma", "Osteosarcoma"],
+           "pages": {"EW-1": "Ewing Sarcoma", "EW-2": "Ewing Sarcoma", "OSTEO-1": "Osteosarcoma", "BONE-1": None}}
+    roots = {"EW-1": ["EW-1:n0"], "EW-2": ["EW-2:n0"], "OSTEO-1": ["OSTEO-1:n0", "OSTEO-1:n1"], "BONE-1": ["BONE-1:n0"]}
+    preds = {"OSTEO-1:n0": {"fact": "stage", "op": "==", "value": "I"}}
+    out = sections.entry_predicates(preds, roots, sec, linked_pages={"EW-2"})
+    assert evaluate(out["EW-1:n0"], {"guideline_section": "Ewing Sarcoma"}) is True
+    assert evaluate(out["EW-1:n0"], {"guideline_section": "Osteosarcoma"}) is False
+    assert "EW-2:n0" not in out  # continuation page: entered through its link, not directly
+    assert "OSTEO-1:n1" not in out  # one of several entries with no condition: stays without one
+    assert evaluate(out["OSTEO-1:n0"], {"guideline_section": "Osteosarcoma", "stage": "I"}) is True
+    assert evaluate(out["OSTEO-1:n0"], {"guideline_section": "Ewing Sarcoma", "stage": "I"}) is False
+    assert "BONE-1:n0" not in out and preds == {"OSTEO-1:n0": {"fact": "stage", "op": "==", "value": "I"}}

@@ -43,6 +43,26 @@ def footer_top(page):
     return (min(tops) - PAD - 1) if tops else BOTTOM_FRACTION * h
 
 
+TITLE_SKIP_RE = re.compile(r"NCCN Guidelines|Version \d|Index|Table of Contents|^Discussion$|PLEASE NOTE|Printed by|"
+                           r"^(National|Comprehensive|Cancer|Network.?|NCCN)$")
+
+
+def page_title(page):
+    """The running-header title of a page (the guideline section, e.g. "Ewing Sarcoma" or
+    "Thyroid Carcinoma – Papillary Carcinoma"): header text above the rule, minus the
+    logo, version line and navigation links."""
+    hb = header_bottom(page)
+    w, h = page.rect.width, page.rect.height
+    parts = []
+    for b in page.get_text("dict")["blocks"]:
+        for line in b.get("lines", []):
+            t = norm_hyphens("".join(s["text"] for s in line["spans"])).strip()
+            x0, y0, _, y1 = line["bbox"]
+            if t and y1 < hb - 4 and y0 > 0.05 * h and x0 > 0.2 * w and not TITLE_SKIP_RE.search(t):
+                parts.append(t)
+    return " ".join(parts)
+
+
 def page_bands(page, drawings=None):
     """(top, bottom): the content band of a page."""
     return header_bottom(page, drawings), footer_top(page)

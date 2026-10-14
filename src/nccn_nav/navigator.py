@@ -21,6 +21,7 @@ from .guideline import Spec
 from .pdfvec import configure, footnote_text
 from .facts import derive
 from .predicates import evaluate
+from .sections import entry_predicates, load as load_sections
 from .textlayer import Retriever
 
 
@@ -65,6 +66,9 @@ class Guideline:
                     in_scope = not allowed or link in allowed.split(",")
                     if self.spec.flow_re.fullmatch(link) and link != node["page"] and in_scope:
                         self.children[nid] += self.roots.get(link, [])
+        # Multi-disease guidelines: entry boxes also require the page's section (sections.py).
+        linked = {l for n in self.nodes.values() for l in n.get("links", []) if l != n["page"]}
+        self.predicates = entry_predicates(self.predicates, self.roots, load_sections(self.private), linked)
 
     def context(self, nid, k=2):
         node = self.nodes[nid]
