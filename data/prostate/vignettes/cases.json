@@ -1,0 +1,161 @@
+[
+ {
+  "id": "V1",
+  "start": "PROS-3",
+  "text": "64-year-old man with low-risk prostate cancer (cT1c, Grade Group 1, PSA 5 ng/mL), healthy, estimated life expectancy about 18 years. He chose radical prostatectomy. PSA 8 weeks after surgery is undetectable. Pathology: organ-confined, negative margins, no adverse features, 0/12 lymph nodes positive. What is the next step?",
+  "gold_path": [
+   "PROS-3:n7",
+   "PROS-3:n14",
+   "PROS-3:n11",
+   "PROS-3:n10",
+   "PROS-3:n9"
+  ],
+  "acceptable_final": [
+   "PROS-3:n9"
+  ],
+  "gold_facts": {
+   "life_expectancy_years": 18,
+   "initial_therapy": "radical_prostatectomy",
+   "post_rp_psa_undetectable": true,
+   "adverse_features": false,
+   "lymph_node_metastases": false
+  }
+ },
+ {
+  "id": "V2",
+  "start": "PROS-3",
+  "text": "82-year-old man with low-risk prostate cancer (Grade Group 1, PSA 6), with heart failure and COPD; estimated life expectancy about 6 years. Asymptomatic. How should he be managed?",
+  "gold_path": [
+   "PROS-3:n17",
+   "PROS-3:n18",
+   "PROS-3:n19"
+  ],
+  "acceptable_final": [
+   "PROS-3:n18",
+   "PROS-3:n19"
+  ],
+  "gold_facts": {
+   "life_expectancy_years": 6,
+   "initial_therapy": "observation"
+  }
+ },
+ {
+  "id": "V3",
+  "start": "PROS-3",
+  "text": "58-year-old man treated with external beam radiation therapy 4 years ago for low-risk prostate cancer; life expectancy >20 years. PSA nadir was 0.4; PSA is now 3.1 ng/mL on two measurements (above nadir + 2). What pathway applies now?",
+  "gold_path": [
+   "PROS-3:n7",
+   "PROS-3:n6",
+   "PROS-3:n5",
+   "PROS-3:n4"
+  ],
+  "acceptable_final": [
+   "PROS-3:n4"
+  ],
+  "gold_facts": {
+   "life_expectancy_years": 20,
+   "initial_therapy": "radiation_therapy",
+   "biochemical_recurrence_after_rt": true
+  }
+ },
+ {
+  "id": "V4",
+  "start": "PROS-3",
+  "text": "66-year-old man with low-risk prostate cancer, life expectancy about 15 years, underwent radical prostatectomy. PSA at 8 weeks is 0.3 ng/mL (never became undetectable). PSMA PET shows no distant metastases. What treatment is recommended?",
+  "gold_path": [
+   "PROS-3:n7",
+   "PROS-3:n14",
+   "PROS-3:n16",
+   "PROS-3:n15",
+   "PROS-9:n12",
+   "PROS-9:n7",
+   "PROS-9:n5",
+   "PROS-9:n2"
+  ],
+  "acceptable_final": [
+   "PROS-9:n2"
+  ],
+  "gold_facts": {
+   "life_expectancy_years": 15,
+   "initial_therapy": "radical_prostatectomy",
+   "post_rp_psa_undetectable": false,
+   "m1": false
+  }
+ },
+ {
+  "id": "V5",
+  "start": "PROS-9",
+  "text": "79-year-old man who had radical prostatectomy 6 years ago; PSA had been undetectable and is now 0.4 and rising (PSA recurrence). He has severe heart failure with estimated life expectancy about 3 years, and no symptoms. What is recommended?",
+  "gold_path": [
+   "PROS-9:n12",
+   "PROS-9:n15",
+   "PROS-9:n17"
+  ],
+  "acceptable_final": [
+   "PROS-9:n17"
+  ],
+  "gold_facts": {
+   "life_expectancy_years": 3,
+   "progression": false
+  }
+ },
+ {
+  "id": "V6",
+  "start": "PROS-9",
+  "text": "70-year-old man with PSA recurrence 3 years after radical prostatectomy; life expectancy about 12 years. PSMA PET shows two small bone lesions in the pelvis and no visceral disease. What is the next pathway?",
+  "gold_path": [
+   "PROS-9:n12",
+   "PROS-9:n7",
+   "PROS-9:n11",
+   "PROS-9:n9",
+   "PROS-9:n8"
+  ],
+  "acceptable_final": [
+   "PROS-9:n8"
+  ],
+  "gold_facts": {
+   "life_expectancy_years": 12,
+   "m1": true,
+   "metastatic_pattern": "oligometastatic"
+  }
+ },
+ {
+  "id": "V7",
+  "start": "PROS-9",
+  "text": "68-year-old man with PSA recurrence 2 years after radical prostatectomy; life expectancy about 10 years. Imaging shows 9 bone metastases (spine, pelvis, ribs, femur) and two liver lesions. Castrate status not applicable (no prior ADT). What is the next pathway?",
+  "gold_path": [
+   "PROS-9:n12",
+   "PROS-9:n7",
+   "PROS-9:n11",
+   "PROS-9:n13",
+   "PROS-9:n14"
+  ],
+  "acceptable_final": [
+   "PROS-9:n14"
+  ],
+  "gold_facts": {
+   "life_expectancy_years": 10,
+   "m1": true,
+   "metastatic_pattern": "polymetastatic",
+   "high_volume": true
+  }
+ },
+ {
+  "id": "V8",
+  "start": "PROS-3",
+  "text": "61-year-old man with low-risk prostate cancer, life expectancy about 25 years, chose active surveillance. Confirmatory biopsy 1 year later shows Grade Group 3 disease. What pathway applies now?",
+  "gold_path": [
+   "PROS-3:n7",
+   "PROS-3:n3",
+   "PROS-3:n2"
+  ],
+  "acceptable_final": [
+   "PROS-3:n2"
+  ],
+  "gold_facts": {
+   "life_expectancy_years": 25,
+   "initial_therapy": "active_surveillance",
+   "progression": true
+  }
+ }
+]

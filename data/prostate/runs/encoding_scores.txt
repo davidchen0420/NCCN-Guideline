@@ -1,0 +1,16 @@
+page     strategy         node P node R edge P edge R edge F1
+PROS-13  E1 vector          1.00   1.00   1.00   1.00    1.00
+PROS-13  E2 VLM (Haiku)     1.00   1.00   1.00   1.00    1.00
+PROS-13  E4 consensus       1.00   1.00   1.00   1.00    1.00
+PROS-3   E1 vector          1.00   1.00   1.00   1.00    1.00
+PROS-3   E2 VLM (Haiku)     1.00   1.00   1.00   1.00    1.00
+PROS-3   E4 consensus       1.00   1.00   1.00   1.00    1.00
+PROS-7   E1 vector          1.00   0.96   0.95   0.91    0.93
+PROS-7   E2 VLM (Haiku)     1.00   1.00   1.00   1.00    1.00
+PROS-7   E4 consensus       1.00   0.96   1.00   0.91    0.95
+PROS-9   E1 vector          1.00   1.00   1.00   1.00    1.00
+PROS-9   E2 VLM (Haiku)     1.00   1.00   1.00   1.00    1.00
+PROS-9   E4 consensus       1.00   1.00   1.00   1.00    1.00
+mean edge F1  E1 vector        0.98  (pages=4)
+mean edge F1  E2 VLM (Haiku)   1.00  (pages=4)
+mean edge F1  E4 consensus     0.99  (pages=4)

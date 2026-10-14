@@ -1,0 +1,10 @@
+validated items: 144/166 (excluded: label contradicts or is unclear)
+arm (validated items only)    correct/answered  coverage  accuracy
+A0 no context                     102/144           1.00     0.708  (n=144)
+A5 engine (abstains)              142/143           0.99     0.986  (n=144)
+A5 + A0 fallback                  142/144           1.00     0.986  (n=144)
+A0 [30-subset]                     19/25            1.00     0.760  (n=25)
+A2 BM25 [30-subset]                19/25            1.00     0.760  (n=25)
+A2 hybrid [30-subset]              18/25            1.00     0.720  (n=25)
+A5 + A0 [30-subset]                25/25            1.00     1.000  (n=25)
+chance = 0.333; best published MedGUIDE overall (all cancers, GPT-4.1) = 0.644

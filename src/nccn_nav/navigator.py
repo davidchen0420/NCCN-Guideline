@@ -17,6 +17,9 @@ import re
 import sys
 from pathlib import Path
 
+from .guideline import Spec
+from .pdfvec import configure, footnote_text
+from .facts import derive
 from .predicates import evaluate
 from .textlayer import Retriever
 
@@ -24,6 +27,8 @@ from .textlayer import Retriever
 class Guideline:
     def __init__(self, private):
         self.private = Path(private)
+        self.spec = Spec(private)
+        configure(self.spec)
         merged = self.private / "merged_graphs.json"  # E1+E2 merge (consensus.merge_all), if built
         pages = json.loads((merged if merged.exists() else self.private / "e1_graphs.json").read_text())
         self.footnotes = json.loads((self.private / "footnotes.json").read_text())
@@ -33,6 +38,8 @@ class Guideline:
         self.retriever = Retriever(json.loads(chunk_file.read_text()), dense_cache=dense)
         pred_path = self.private / "predicates.json"
         self.predicates = json.loads(pred_path.read_text()) if pred_path.exists() else {}
+        schema_path = self.private / "fact_schema.json"
+        self.schema = json.loads(schema_path.read_text()) if schema_path.exists() else {"variables": {}}
         self.nodes, self.children, self.roots = {}, {}, {}
         for page, g in pages.items():
             has_parent = {e["dst"] for e in g["edges"]}
@@ -56,16 +63,18 @@ class Guideline:
                 for link in node.get("links", []):
                     allowed = os.environ.get("NAV_PAGES")
                     in_scope = not allowed or link in allowed.split(",")
-                    if re.fullmatch(r"PROS-\d+", link) and link != node["page"] and in_scope:
+                    if self.spec.flow_re.fullmatch(link) and link != node["page"] and in_scope:
                         self.children[nid] += self.roots.get(link, [])
 
     def context(self, nid, k=2):
         node = self.nodes[nid]
         if nid.endswith(":START"):
             return {}, []
-        notes = {r: self.footnotes[r] for r in node.get("footnote_refs", []) if r in self.footnotes}
+        notes = {r: footnote_text(self.footnotes, node["page"], r) for r in node.get("footnote_refs", [])}
+        notes = {r: t for r, t in notes.items() if t}
         # Principles pages cited in the node or its footnotes scope the retrieval.
-        cited = set(re.findall(r"PROS-[A-N]\b", node["text"] + " " + " ".join(notes.values())))
+        cited = {m.group(0) for m in re.finditer(self.spec.principles_re.pattern + r"\b",
+                                                 node["text"] + " " + " ".join(notes.values()))}
         query = node["text"] + " " + " ".join(self.nodes[c]["text"] for c in self.children[nid])
         hits = self.retriever.search(query, k=k, pages=sorted(cited) or None)
         return notes, hits
@@ -111,8 +120,8 @@ def _auto_step(gl, state):
     """A5: follow children whose predicates decide the branch from structured facts."""
     while True:
         kids = gl.children[state["at"]]
-        if not kids or not state.get("facts"):
-            return
+        if not kids or not state.get("facts") or len(state["path"]) > 80:
+            return  # leaf, no facts, or a cycle through page links
         here = gl.nodes[state["at"]]
         passthrough = (
             state["at"] in gl.predicates
@@ -139,6 +148,22 @@ def _auto_step(gl, state):
             state["at"] = merge
             continue
         return
+
+
+def walk(gl, facts, max_entries=4):
+    """A5 without an LLM: choose the entry box(es) whose entry condition the facts satisfy, then
+    follow predicates. Returns one walk per matching entry: {"entry", "path", "final"}.
+    Facts are raw values; derived variables (risk group, stage group, ...) are computed first."""
+    facts = derive(facts, gl.schema)
+    entries = sorted({r for roots in gl.roots.values() for r in roots})
+    verdicts = {r: evaluate(gl.predicates.get(r), facts) for r in entries}
+    chosen = [r for r, v in verdicts.items() if v is True][:max_entries]
+    out = []
+    for root in chosen:
+        state = {"at": root, "path": [{"node": root, "by": "entry"}], "facts": facts}
+        _auto_step(gl, state)
+        out.append({"entry": root, "path": [p["node"] for p in state["path"]], "final": state["at"]})
+    return out
 
 
 def render(gl, state):

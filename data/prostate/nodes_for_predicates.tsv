@@ -1,0 +1,35 @@
+PROS-3:n2	Progressive disease Initial Risk Stratification and Staging Workup for Clinically Localized Disease (PROS-2)
+PROS-3:n3	Active surveillance (preferred for most patients) Active Surveillance Program (PROS-F 2 of 5)
+PROS-3:n4	Radiation Therapy Recurrence (PROS-10)
+PROS-3:n5	Biochemical recurrence
+PROS-3:n6	Radiation therapy (RT)
+PROS-3:n7	≥10 y
+PROS-3:n8	No biochemical recurrence
+PROS-3:n9	Monitoring for Initial Definitive Therapy (PROS-8)
+PROS-3:n10	No adverse features and no lymph node metastases
+PROS-3:n11	Undetectable PSA
+PROS-3:n12	Monitoring (category 1, preferred for adverse features) (PROS-8) OR Consider treatment (PROS-9)
+PROS-3:n13	Adverse feature(s) or lymph node metastases
+PROS-3:n14	Radical prostatectomy (RP)
+PROS-3:n15	Radical Prostatectomy PSA Persistence/Recurrence (PROS-9)
+PROS-3:n16	PSA persistence
+PROS-3:n17	<10 y
+PROS-3:n18	Observation
+PROS-3:n19	Monitoring (PROS-8)
+PROS-9:n2	EBRT (preferred) ± ADT (± abiraterone for N1 [category 2B]) or Monitoring
+PROS-9:n3	Workup for Second Biochemical Recurrence (PROS-11)
+PROS-9:n4	Second biochemical recurrence (BCR)
+PROS-9:n5	No evidence of M1
+PROS-9:n6	Monitoring
+PROS-9:n7	Life expectancy >5 y: • Risk stratification Consider: • Bone and soft tissue imaging • Prostate bed biopsy
+PROS-9:n8	Workup and Treatment of Metachronous Oligometastatic CSPC (PROS-13)
+PROS-9:n9	Oligometastatic
+PROS-9:n10	Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC (PROS-14)
+PROS-9:n11	M1
+PROS-9:n12	PSA persistence/ recurrence
+PROS-9:n13	Polymetastatic
+PROS-9:n14	Workup and Treatment of High- Volume M1 CSPC (PROS-15)
+PROS-9:n15	Life expectancy ≤5 y
+PROS-9:n16	Palliative therapy/ Best supportive care
+PROS-9:n17	Observation
+PROS-9:n18	Progression

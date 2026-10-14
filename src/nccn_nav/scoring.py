@@ -4,7 +4,7 @@ from difflib import SequenceMatcher
 
 
 def norm(text):
-    text = re.sub(r"\(PROS-[^)]*\)", " ", text)
+    text = re.sub(r"\([A-Z]{2,6}-[A-Z0-9]+[^)]*\)", " ", text)  # page references
     return re.sub(r"[^a-z0-9≥≤<>]+", " ", text.lower()).strip()
 
 
@@ -12,6 +12,16 @@ def _prf(tp, n_pred, n_gold):
     p = tp / n_pred if n_pred else 0.0
     r = tp / n_gold if n_gold else 0.0
     return {"precision": p, "recall": r, "f1": 2 * p * r / (p + r) if p + r else 0.0}
+
+
+def text_sim(a, b):
+    a, b = norm(a), norm(b)
+    if not a or not b:
+        return 0.0
+    score = 1.0 if a == b else SequenceMatcher(None, a, b).ratio()
+    if b in a or a in b:
+        score = max(score, 0.9)
+    return score
 
 
 def match_nodes(pred_nodes, gold_nodes, threshold=0.6):
@@ -39,8 +49,8 @@ def graph_prf(pred, gold, mapping=None):
     return {
         "nodes": _prf(len(mapping), len(pred["nodes"]), len(gold["nodes"])),
         "edges": _prf(len(pred_edges & gold_edges), len(pred["edges"]), len(gold_edges)),
-        "missed_edges": sorted(gold_edges - pred_edges),
-        "spurious_edges": sorted(e for e in pred_edges - gold_edges),
+        "missed_edges": sorted(gold_edges - pred_edges, key=str),
+        "spurious_edges": sorted((e for e in pred_edges - gold_edges), key=str),
     }
 
 

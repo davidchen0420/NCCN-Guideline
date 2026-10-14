@@ -1,0 +1,123 @@
+{
+ "nodes": [
+  {
+   "text": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatich CSPC (PROS-14)",
+   "bbox": [
+    619.2372436523438,
+    126.11599731445312,
+    743.9331665039062,
+    213.86900329589844
+   ],
+   "kind": "box",
+   "id": "n1",
+   "links": [
+    "PROS-14"
+   ]
+  },
+  {
+   "text": "\u2022 Perform physical exam \u2022 Perform imaging for stagingg \u2022 Perform and/or collect PSA and calculate PSADT \u2022 Estimate life expectancy (Principles of Life Expectancy Estimation [PROS-A]) \u2022 Perform germline and somatic genetic testinge (if not previously done) \u2022 Obtain family historye \u2022 Assess quality-of-life measuresf",
+   "bbox": [
+    24.401899337768555,
+    167.98220825195312,
+    176.38560485839844,
+    351.7351989746094
+   ],
+   "kind": "box",
+   "id": "n2",
+   "links": []
+  },
+  {
+   "text": "\u2022 Physical examination + PSA every 3\u20136 mo \u2022 Imaging for symptomsg \u2022 Consider periodic imaging to monitor treatment response",
+   "bbox": [
+    346.3752136230469,
+    215.98220825195312,
+    468.222412109375,
+    303.7362060546875
+   ],
+   "kind": "box",
+   "id": "n3",
+   "links": []
+  },
+  {
+   "text": "MDTyy \u00b1 ADTaa or For M1 only, treat as metachronous low-volume M1 (see PROS-14)",
+   "bbox": [
+    217.2740936279297,
+    220.09420776367188,
+    311.21624755859375,
+    297.7392272949219
+   ],
+   "kind": "box",
+   "id": "n4",
+   "links": []
+  },
+  {
+   "text": "Workup and Treatment of High-Volume M1 CSPC (PROS-15)",
+   "bbox": [
+    619.6614990234375,
+    239.69610595703125,
+    755.1276245117188,
+    279.4501037597656
+   ],
+   "kind": "box",
+   "id": "n5",
+   "links": [
+    "PROS-15"
+   ]
+  },
+  {
+   "text": "Progressionff",
+   "bbox": [
+    510.9599914550781,
+    248.68218994140625,
+    580.922607421875,
+    266.3221740722656
+   ],
+   "kind": "box",
+   "id": "n6",
+   "links": []
+  },
+  {
+   "text": "Workup and Treatment of M1 CRPC (PROS-17)",
+   "bbox": [
+    618.8494262695312,
+    305.2760925292969,
+    754.3233642578125,
+    333.0290832519531
+   ],
+   "kind": "box",
+   "id": "n7",
+   "links": [
+    "PROS-17"
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "src": "n2",
+   "dst": "n4"
+  },
+  {
+   "src": "n3",
+   "dst": "n6"
+  },
+  {
+   "src": "n4",
+   "dst": "n3"
+  },
+  {
+   "src": "n6",
+   "dst": "n1"
+  },
+  {
+   "src": "n6",
+   "dst": "n5"
+  },
+  {
+   "src": "n6",
+   "dst": "n7"
+  }
+ ],
+ "review_edges": [],
+ "unmatched_vlm_nodes": [],
+ "agreement": 1.0
+}

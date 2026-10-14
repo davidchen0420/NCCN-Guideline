@@ -1,0 +1,138 @@
+{
+ "nodes": [
+  {
+   "id": "a",
+   "text": "PSA persistence/recurrence"
+  },
+  {
+   "id": "b",
+   "text": "Life expectancy >5 y: Risk stratification Consider: Bone and soft tissue imaging Prostate bed biopsy"
+  },
+  {
+   "id": "c",
+   "text": "Life expectancy \u22645 y"
+  },
+  {
+   "id": "d",
+   "text": "No evidence of M1"
+  },
+  {
+   "id": "e",
+   "text": "M1"
+  },
+  {
+   "id": "f",
+   "text": "EBRT (preferred) \u00b1 ADT (\u00b1 abiraterone for N1 [category 2B]) or Monitoring"
+  },
+  {
+   "id": "g",
+   "text": "Monitoring"
+  },
+  {
+   "id": "h",
+   "text": "Second biochemical recurrence (BCR)"
+  },
+  {
+   "id": "i",
+   "text": "Workup for Second Biochemical Recurrence"
+  },
+  {
+   "id": "j",
+   "text": "Oligometastatic"
+  },
+  {
+   "id": "k",
+   "text": "Polymetastatic"
+  },
+  {
+   "id": "l",
+   "text": "Workup and Treatment of Metachronous Oligometastatic CSPC"
+  },
+  {
+   "id": "m",
+   "text": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic CSPC"
+  },
+  {
+   "id": "n",
+   "text": "Workup and Treatment of High-Volume M1 CSPC"
+  },
+  {
+   "id": "o",
+   "text": "Observation"
+  },
+  {
+   "id": "p",
+   "text": "Progression"
+  },
+  {
+   "id": "q",
+   "text": "Palliative therapy/ Best supportive care"
+  }
+ ],
+ "edges": [
+  {
+   "src": "a",
+   "dst": "b"
+  },
+  {
+   "src": "a",
+   "dst": "c"
+  },
+  {
+   "src": "b",
+   "dst": "d"
+  },
+  {
+   "src": "b",
+   "dst": "e"
+  },
+  {
+   "src": "d",
+   "dst": "f"
+  },
+  {
+   "src": "f",
+   "dst": "g"
+  },
+  {
+   "src": "g",
+   "dst": "h"
+  },
+  {
+   "src": "h",
+   "dst": "i"
+  },
+  {
+   "src": "e",
+   "dst": "j"
+  },
+  {
+   "src": "e",
+   "dst": "k"
+  },
+  {
+   "src": "j",
+   "dst": "l"
+  },
+  {
+   "src": "k",
+   "dst": "m"
+  },
+  {
+   "src": "k",
+   "dst": "n"
+  },
+  {
+   "src": "c",
+   "dst": "o"
+  },
+  {
+   "src": "o",
+   "dst": "p"
+  },
+  {
+   "src": "p",
+   "dst": "q"
+  }
+ ]
+}

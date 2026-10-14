@@ -8,18 +8,16 @@ import os
 import sys
 from pathlib import Path
 
-import pymupdf
-
-from .pdfvec import page_ids
+from .guideline import Spec
 from .textlayer import Retriever
 
 
 def flow_page_chunks(private):
-    doc = pymupdf.open(Path(private) / "pdf" / "prostate.pdf")
+    spec = Spec(private)
     out = []
-    for i, code in page_ids(doc).items():
-        if code.startswith("PROS-") and code[5:].rstrip("A").isdigit():
-            text = " ".join(doc[i].get_text().split())
+    for i, code in spec.ids.items():
+        if spec.kind(i) in ("algorithm", "footnotes"):
+            text = " ".join(spec.doc[i].get_text().split())
             out.append({"source": "algorithm", "page": code, "text": text})
     return out
 

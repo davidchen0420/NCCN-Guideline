@@ -1,0 +1,138 @@
+{
+ "PROS-2:n255_32->n195_100": {
+  "verdict": "yes",
+  "note": "Intermediate row criteria cell, same row"
+ },
+ "PROS-2:n255_32->n214_207": {
+  "verdict": "yes",
+  "note": "Favorable intermediate sub-row, same row"
+ },
+ "PROS-2:n255_32->n219_705": {
+  "verdict": "yes",
+  "note": "Favorable sub-row initial therapy is PROS-4"
+ },
+ "PROS-2:n255_32->n257_391": {
+  "verdict": "yes",
+  "note": "Unfavorable sub-row additional evaluation, same row"
+ },
+ "PROS-2:n255_32->n260_278": {
+  "verdict": "yes",
+  "note": "Unfavorable intermediate criteria cell, same row"
+ },
+ "PROS-2:n255_32->n285_207": {
+  "verdict": "yes",
+  "note": "Unfavorable intermediate sub-row, same row"
+ },
+ "PROS-2:n255_32->n290_705": {
+  "verdict": "yes",
+  "note": "Unfavorable sub-row initial therapy is PROS-5"
+ },
+ "PROS-2:n255_32->n159_391": {
+  "verdict": "yes",
+  "note": "Favorable sub-row confirmatory testing note, same row"
+ },
+ "PROS-2:n255_32->n194_278": {
+  "verdict": "yes",
+  "note": "Favorable intermediate criteria cell, same row"
+ },
+ "PROS-2:n366_50->n333_391": {
+  "verdict": "yes",
+  "note": "High row additional evaluation, same row"
+ },
+ "PROS-2:n366_50->n348_100": {
+  "verdict": "yes",
+  "note": "High row criteria cell, same row"
+ },
+ "PROS-2:n366_50->n366_705": {
+  "verdict": "yes",
+  "note": "High row initial therapy PROS-6, same row"
+ },
+ "PROS-2:n442_40->n409_391": {
+  "verdict": "yes",
+  "note": "Very high row additional evaluation, same row"
+ },
+ "PROS-2:n442_40->n427_100": {
+  "verdict": "yes",
+  "note": "Very high row criteria cell, same row"
+ },
+ "PROS-2:n442_40->n442_705": {
+  "verdict": "yes",
+  "note": "Very high row initial therapy PROS-6, same row"
+ },
+ "PROS-2:n163_50->n214_391": {
+  "verdict": "yes",
+  "note": "Low row confirmatory testing note, same row"
+ },
+ "PROS-2:n163_50->n150_100": {
+  "verdict": "yes",
+  "note": "Low row criteria cell, same row"
+ },
+ "PROS-2:n163_50->n164_705": {
+  "verdict": "yes",
+  "note": "Low row initial therapy PROS-3, same row"
+ },
+ "PROS-4:n392_176->n386_598": {
+  "verdict": "yes",
+  "note": "Arrow from No biochemical recurrence to PROS-8"
+ },
+ "PROS-4:n392_176->n186_598": {
+  "verdict": "yes",
+  "note": "Same arrow as n17->n16, duplicate target"
+ },
+ "PROS-4:n184_370->n386_598": {
+  "verdict": "yes",
+  "note": "Arrow from no adverse features to PROS-8"
+ },
+ "PROS-4:n184_370->n186_598": {
+  "verdict": "yes",
+  "note": "Same arrow as n4->n16, duplicate target"
+ },
+ "PROS-5:n369_211->n361_596": {
+  "verdict": "yes",
+  "note": "Arrow from No biochemical recurrence to PROS-8"
+ },
+ "PROS-5:n369_211->n138_596": {
+  "verdict": "yes",
+  "note": "Same arrow as n15->n14, duplicate target"
+ },
+ "PROS-5:n136_366->n361_596": {
+  "verdict": "yes",
+  "note": "Arrow from no adverse features to PROS-8"
+ },
+ "PROS-5:n136_366->n138_596": {
+  "verdict": "yes",
+  "note": "Same arrow as n2->n14, duplicate target"
+ },
+ "PROS-7:n465_136->n472_292": {
+  "verdict": "yes",
+  "note": "Observation/RT and ADT arrows both reach symptomatic progression"
+ },
+ "PROS-10:n136_356->n248_187": {
+  "verdict": "yes",
+  "note": "Arrow from Monitoring loops up to risk stratification"
+ },
+ "PROS-10:n162_291->n136_356": {
+  "verdict": "yes",
+  "note": "Arrow from No evidence to Monitoring"
+ },
+ "PROS-10:n162_291->n184_358": {
+  "verdict": "yes",
+  "note": "Arrow from No evidence to local secondary therapy"
+ },
+ "PROS-10:n184_358->n214_545": {
+  "verdict": "yes",
+  "note": "Arrow from local secondary therapy to Monitoring"
+ },
+ "PROS-10:n186_291->n136_356": {
+  "verdict": "yes",
+  "note": "'of M1' is fragment of No evidence of M1 node"
+ },
+ "PROS-10:n186_291->n184_358": {
+  "verdict": "yes",
+  "note": "'of M1' is fragment of No evidence of M1 node"
+ },
+ "PROS-10:n214_545->n204_628": {
+  "verdict": "yes",
+  "note": "Arrow from Monitoring to second biochemical recurrence"
+ }
+}

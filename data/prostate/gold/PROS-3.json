@@ -1,0 +1,146 @@
+{
+ "nodes": [
+  {
+   "id": "a",
+   "text": "\u226510 y"
+  },
+  {
+   "id": "b",
+   "text": "<10 y"
+  },
+  {
+   "id": "c",
+   "text": "Active surveillance (preferred for most patients)"
+  },
+  {
+   "id": "d",
+   "text": "Radiation therapy (RT)"
+  },
+  {
+   "id": "e",
+   "text": "Radical prostatectomy (RP)"
+  },
+  {
+   "id": "f",
+   "text": "Observation"
+  },
+  {
+   "id": "g",
+   "text": "Progressive disease Initial Risk Stratification and Staging Workup for Clinically Localized Disease"
+  },
+  {
+   "id": "h",
+   "text": "Biochemical recurrence"
+  },
+  {
+   "id": "i",
+   "text": "No biochemical recurrence"
+  },
+  {
+   "id": "j",
+   "text": "Radiation Therapy Recurrence"
+  },
+  {
+   "id": "k",
+   "text": "Monitoring for Initial Definitive Therapy"
+  },
+  {
+   "id": "l",
+   "text": "Undetectable PSA"
+  },
+  {
+   "id": "m",
+   "text": "PSA persistence"
+  },
+  {
+   "id": "n",
+   "text": "No adverse features and no lymph node metastases"
+  },
+  {
+   "id": "o",
+   "text": "Adverse feature(s) or lymph node metastases"
+  },
+  {
+   "id": "p",
+   "text": "Monitoring (category 1, preferred for adverse features) OR Consider treatment"
+  },
+  {
+   "id": "q",
+   "text": "Radical Prostatectomy PSA Persistence/Recurrence"
+  },
+  {
+   "id": "r",
+   "text": "Monitoring"
+  }
+ ],
+ "edges": [
+  {
+   "src": "a",
+   "dst": "c"
+  },
+  {
+   "src": "a",
+   "dst": "d"
+  },
+  {
+   "src": "a",
+   "dst": "e"
+  },
+  {
+   "src": "b",
+   "dst": "f"
+  },
+  {
+   "src": "c",
+   "dst": "g"
+  },
+  {
+   "src": "d",
+   "dst": "h"
+  },
+  {
+   "src": "d",
+   "dst": "i"
+  },
+  {
+   "src": "h",
+   "dst": "j"
+  },
+  {
+   "src": "i",
+   "dst": "k"
+  },
+  {
+   "src": "e",
+   "dst": "l"
+  },
+  {
+   "src": "e",
+   "dst": "m"
+  },
+  {
+   "src": "l",
+   "dst": "n"
+  },
+  {
+   "src": "l",
+   "dst": "o"
+  },
+  {
+   "src": "n",
+   "dst": "k"
+  },
+  {
+   "src": "o",
+   "dst": "p"
+  },
+  {
+   "src": "m",
+   "dst": "q"
+  },
+  {
+   "src": "f",
+   "dst": "r"
+  }
+ ]
+}

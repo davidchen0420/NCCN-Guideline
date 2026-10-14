@@ -1,0 +1,52 @@
+{
+  "V1": {
+    "life_expectancy_years": 18,
+    "initial_therapy": "radical_prostatectomy",
+    "post_rp_psa_undetectable": true,
+    "adverse_features": false,
+    "lymph_node_metastases": false
+  },
+  "V2": {
+    "life_expectancy_years": 6
+  },
+  "V3": {
+    "initial_therapy": "radiation_therapy",
+    "biochemical_recurrence_after_rt": true,
+    "progression": true
+  },
+  "V4": {
+    "life_expectancy_years": 15,
+    "initial_therapy": "radical_prostatectomy",
+    "post_rp_psa_undetectable": false,
+    "m1": false
+  },
+  "V5": {
+    "life_expectancy_years": 3,
+    "initial_therapy": "radical_prostatectomy",
+    "post_rp_psa_undetectable": true,
+    "progression": true
+  },
+  "V6": {
+    "life_expectancy_years": 12,
+    "initial_therapy": "radical_prostatectomy",
+    "post_rp_psa_undetectable": true,
+    "m1": true,
+    "metastatic_pattern": "oligometastatic",
+    "high_volume": false,
+    "progression": true
+  },
+  "V7": {
+    "life_expectancy_years": 10,
+    "initial_therapy": "radical_prostatectomy",
+    "post_rp_psa_undetectable": true,
+    "m1": true,
+    "metastatic_pattern": "polymetastatic",
+    "high_volume": true,
+    "progression": true
+  },
+  "V8": {
+    "life_expectancy_years": 25,
+    "initial_therapy": "active_surveillance",
+    "progression": true
+  }
+}

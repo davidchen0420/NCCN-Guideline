@@ -1,0 +1,1712 @@
+{
+ "facts": {
+  "risk_group": "enum: \"low\"|\"intermediate\"|\"high\"|\"very_high\". NCCN risk group for clinically localized disease, derived from clinical/pathologic features",
+  "clinical_t_stage": "enum: \"T1\"|\"T2a\"|\"T2b\"|\"T2c\"|\"T3\"|\"T4\". Clinical T stage",
+  "grade_group": "number 1-5. ISUP/NCCN Grade Group",
+  "psa_ng_ml": "number. Serum PSA at diagnosis, ng/mL",
+  "biopsy_positive_core_percent": "number 0-100. Percent of biopsy cores positive",
+  "irf_count": "number 0-3. Count of intermediate risk factors present: cT2b-cT2c, Grade Group 2-3, PSA 10-20 ng/mL",
+  "high_risk_feature_count": "number 0-3. Count of high-risk features present: cT3-cT4, Grade Group 4-5, PSA >20 ng/mL",
+  "very_high_risk_feature_count": "number 0-3. Count of very-high-risk features present: cT3-cT4, Grade Group 4-5, PSA >40 ng/mL",
+  "symptomatic": "bool. Patient has symptoms attributable to prostate cancer or its progression",
+  "castration_resistant": "bool. Castration-resistant prostate cancer (CRPC); false = castration-sensitive (CSPC)",
+  "synchronous_m1": "bool. M1 disease present at initial diagnosis (true = synchronous, false = metachronous)",
+  "initial_adt_months": "number. Months of androgen deprivation therapy given with initial radiation therapy; 0 if none",
+  "initial_adt_only": "bool. Initial definitive treatment is ADT alone (no radical prostatectomy or radiation therapy)",
+  "currently_on_adt": "bool. Patient is currently receiving androgen deprivation therapy",
+  "second_bcr": "bool. Second biochemical recurrence (rising PSA after a prior biochemical recurrence)",
+  "prior_arpi": "bool. Prior androgen receptor pathway inhibitor (abiraterone, enzalutamide, apalutamide, darolutamide) for prostate cancer",
+  "prior_docetaxel": "bool. Prior docetaxel chemotherapy for prostate cancer",
+  "msi_h_dmmr": "bool. Tumor is MSI-High or mismatch repair deficient (dMMR)",
+  "histology": "enum: \"adenocarcinoma\"|\"small_cell_neuroendocrine\". Histologic subtype of metastatic prostate cancer"
+ },
+ "items": [
+  {
+   "id": "PROS-10:n11",
+   "box_text": "Oligometastatic",
+   "predicate": {
+    "fact": "metastatic_pattern",
+    "op": "==",
+    "value": "oligometastatic"
+   }
+  },
+  {
+   "id": "PROS-10:n12",
+   "box_text": "M1",
+   "predicate": {
+    "fact": "m1",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-10:n13",
+   "box_text": "PSA recurrence or Positive DRE",
+   "predicate": {
+    "fact": "biochemical_recurrence_after_rt",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-10:n15",
+   "box_text": "Polymetastatic",
+   "predicate": {
+    "fact": "metastatic_pattern",
+    "op": "==",
+    "value": "polymetastatic"
+   }
+  },
+  {
+   "id": "PROS-10:n17",
+   "box_text": "Life expectancy \u22645 y",
+   "predicate": {
+    "fact": "life_expectancy_years",
+    "op": "<=",
+    "value": 5
+   }
+  },
+  {
+   "id": "PROS-10:n2",
+   "box_text": "No evidence",
+   "predicate": {
+    "fact": "m1",
+    "op": "==",
+    "value": false
+   }
+  },
+  {
+   "id": "PROS-10:n20",
+   "box_text": "Progression",
+   "predicate": {
+    "fact": "progression",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-10:n4",
+   "box_text": "of M1",
+   "predicate": {
+    "fact": "m1",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-10:n6",
+   "box_text": "Second biochemical recurrence",
+   "predicate": {
+    "fact": "second_bcr",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-10:n9",
+   "box_text": "Life expectancy >5 y",
+   "predicate": {
+    "fact": "life_expectancy_years",
+    "op": ">",
+    "value": 5
+   }
+  },
+  {
+   "id": "PROS-11:n11",
+   "box_text": "Polymetastatic CSPC",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "metastatic_pattern",
+      "op": "==",
+      "value": "polymetastatic"
+     },
+     {
+      "fact": "castration_resistant",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-11:n12",
+   "box_text": "M1",
+   "predicate": {
+    "fact": "m1",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-11:n15",
+   "box_text": "M1 CRPC",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "castration_resistant",
+      "op": "==",
+      "value": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-11:n2",
+   "box_text": "N0M0 CSPC",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": false
+     },
+     {
+      "fact": "lymph_node_metastases",
+      "op": "==",
+      "value": false
+     },
+     {
+      "fact": "castration_resistant",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-11:n4",
+   "box_text": "M0 CRPC (N0 or N1)",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": false
+     },
+     {
+      "fact": "castration_resistant",
+      "op": "==",
+      "value": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-11:n5",
+   "box_text": "Second Biochemical Recurrence (BCR2)",
+   "predicate": {
+    "fact": "second_bcr",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-11:n9",
+   "box_text": "N1M0 CSPC",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": false
+     },
+     {
+      "fact": "lymph_node_metastases",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "castration_resistant",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-12:n1",
+   "box_text": "N0M0",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": false
+     },
+     {
+      "fact": "lymph_node_metastases",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-12:n10",
+   "box_text": "Progression",
+   "predicate": {
+    "fact": "progression",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-12:n13",
+   "box_text": "Polymetastatic",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "metastatic_pattern",
+      "op": "==",
+      "value": "polymetastatic"
+     },
+     {
+      "fact": "castration_resistant",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-12:n14",
+   "box_text": "CSPC",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "castration_resistant",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-12:n16",
+   "box_text": "M1 CRPC",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "castration_resistant",
+      "op": "==",
+      "value": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-12:n3",
+   "box_text": "Oligometastatic CSPC",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "metastatic_pattern",
+      "op": "==",
+      "value": "oligometastatic"
+     },
+     {
+      "fact": "castration_resistant",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-12:n6",
+   "box_text": "Second Biochemical Recurrence (M0)",
+   "predicate": {
+    "all": [
+     {
+      "fact": "second_bcr",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-13:n6",
+   "box_text": "Progression",
+   "predicate": {
+    "fact": "progression",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-14:n2",
+   "box_text": "Synchronous low-volume metastases or Synchronous oligometastatic disease",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "synchronous_m1",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "high_volume",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-14:n5",
+   "box_text": "Progression on ADT \u00b1 androgen receptor pathway inhibitor (ARPI)",
+   "predicate": {
+    "all": [
+     {
+      "fact": "progression",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "currently_on_adt",
+      "op": "==",
+      "value": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-14:n8",
+   "box_text": "Metachronous low-volume metastases",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "synchronous_m1",
+      "op": "==",
+      "value": false
+     },
+     {
+      "fact": "high_volume",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-15:n4",
+   "box_text": "Synchronous or metachronous high-volume metastases",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "high_volume",
+      "op": "==",
+      "value": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-15:n6",
+   "box_text": "Progression",
+   "predicate": {
+    "fact": "progression",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-17:n2",
+   "box_text": "Adenocarcinoma",
+   "predicate": {
+    "fact": "histology",
+    "op": "==",
+    "value": "adenocarcinoma"
+   }
+  },
+  {
+   "id": "PROS-17:n4",
+   "box_text": "CRPC, imaging studies positive for metastases",
+   "predicate": {
+    "all": [
+     {
+      "fact": "castration_resistant",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-17:n6",
+   "box_text": "Small cell/ neuroendocrine prostate cancer (NEPC)",
+   "predicate": {
+    "fact": "histology",
+    "op": "==",
+    "value": "small_cell_neuroendocrine"
+   }
+  },
+  {
+   "id": "PROS-18:n0",
+   "box_text": "Pre-ARPI",
+   "predicate": {
+    "fact": "prior_arpi",
+    "op": "==",
+    "value": false
+   }
+  },
+  {
+   "id": "PROS-18:n1",
+   "box_text": "Post-ARPI/Pre-Docetaxel",
+   "predicate": {
+    "all": [
+     {
+      "fact": "prior_arpi",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "prior_docetaxel",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-18:n10",
+   "box_text": "\u2022 Molecular Biomarker-Directed Therapy \u0017MSI-High (MSI-H)/dMMR",
+   "predicate": {
+    "fact": "msi_h_dmmr",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-18:n2",
+   "box_text": "Post-ARPI/Post-Docetaxel",
+   "predicate": {
+    "all": [
+     {
+      "fact": "prior_arpi",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "prior_docetaxel",
+      "op": "==",
+      "value": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-1:n10",
+   "box_text": "Workup and Treatment of High-Volume M1 CSPC (PROS-15)",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "high_volume",
+      "op": "==",
+      "value": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-1:n4",
+   "box_text": "Clinically localized prostate cancer (Any T, N0, M0 or Any T, NX, MX)",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": false
+     },
+     {
+      "fact": "lymph_node_metastases",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-1:n5",
+   "box_text": "Regional Prostate Cancer (PROS-7)",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": false
+     },
+     {
+      "fact": "lymph_node_metastases",
+      "op": "==",
+      "value": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-1:n7",
+   "box_text": "Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastatic Castration-Sensitive Prostate Cancer (CSPC) (PROS-14)",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "high_volume",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-1:n8",
+   "box_text": "Regional prostate cancer (Any T, N1, M0)",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": false
+     },
+     {
+      "fact": "lymph_node_metastases",
+      "op": "==",
+      "value": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-1:n9",
+   "box_text": "Metastatic prostate cancer (Any T, Any N, M1)",
+   "predicate": {
+    "fact": "m1",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-2:n10",
+   "box_text": "Has all of the following: \u2022 No high-risk group features \u2022 No very-high-risk group features \u2022 Has one or more intermediate risk factors (IRFs): \u0017cT2b\u2013cT2c \u0017Grade Group 2 or 3 \u0017PSA 10\u201320 ng/mL",
+   "predicate": {
+    "all": [
+     {
+      "fact": "high_risk_feature_count",
+      "op": "==",
+      "value": 0
+     },
+     {
+      "fact": "irf_count",
+      "op": ">=",
+      "value": 1
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-2:n11",
+   "box_text": "Favorable intermediate",
+   "predicate": {
+    "all": [
+     {
+      "fact": "high_risk_feature_count",
+      "op": "==",
+      "value": 0
+     },
+     {
+      "fact": "irf_count",
+      "op": "==",
+      "value": 1
+     },
+     {
+      "fact": "grade_group",
+      "op": "in",
+      "value": [
+       1,
+       2
+      ]
+     },
+     {
+      "fact": "biopsy_positive_core_percent",
+      "op": "<",
+      "value": 50
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-2:n14",
+   "box_text": "Intermediate",
+   "predicate": {
+    "fact": "risk_group",
+    "op": "==",
+    "value": "intermediate"
+   }
+  },
+  {
+   "id": "PROS-2:n16",
+   "box_text": "Has one or more of the following: \u2022 2 or 3 IRFs \u2022 Grade Group 3 \u2022 \u226550% biopsy cores positive (eg, \u22656 of 12 cores)",
+   "predicate": {
+    "all": [
+     {
+      "fact": "high_risk_feature_count",
+      "op": "==",
+      "value": 0
+     },
+     {
+      "fact": "irf_count",
+      "op": ">=",
+      "value": 1
+     },
+     {
+      "any": [
+       {
+        "fact": "irf_count",
+        "op": ">=",
+        "value": 2
+       },
+       {
+        "fact": "grade_group",
+        "op": "==",
+        "value": 3
+       },
+       {
+        "fact": "biopsy_positive_core_percent",
+        "op": ">=",
+        "value": 50
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-2:n17",
+   "box_text": "Unfavorable intermediate",
+   "predicate": {
+    "all": [
+     {
+      "fact": "high_risk_feature_count",
+      "op": "==",
+      "value": 0
+     },
+     {
+      "fact": "irf_count",
+      "op": ">=",
+      "value": 1
+     },
+     {
+      "any": [
+       {
+        "fact": "irf_count",
+        "op": ">=",
+        "value": 2
+       },
+       {
+        "fact": "grade_group",
+        "op": "==",
+        "value": 3
+       },
+       {
+        "fact": "biopsy_positive_core_percent",
+        "op": ">=",
+        "value": 50
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-2:n20",
+   "box_text": "Has one or more high-risk features, but does not meet criteria for very high risk: \u2022 cT3\u2013cT4 \u2022 Grade Group 4 or Grade Group 5 \u2022 PSA >20 ng/mL",
+   "predicate": {
+    "all": [
+     {
+      "fact": "high_risk_feature_count",
+      "op": ">=",
+      "value": 1
+     },
+     {
+      "fact": "very_high_risk_feature_count",
+      "op": "<=",
+      "value": 1
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-2:n22",
+   "box_text": "High",
+   "predicate": {
+    "fact": "risk_group",
+    "op": "==",
+    "value": "high"
+   }
+  },
+  {
+   "id": "PROS-2:n24",
+   "box_text": "Has at least two of the following: \u2022 cT3\u2013cT4 \u2022 Grade Group 4 or 5 \u2022 PSA >40 ng/mL",
+   "predicate": {
+    "fact": "very_high_risk_feature_count",
+    "op": ">=",
+    "value": 2
+   }
+  },
+  {
+   "id": "PROS-2:n26",
+   "box_text": "Very high",
+   "predicate": {
+    "fact": "risk_group",
+    "op": "==",
+    "value": "very_high"
+   }
+  },
+  {
+   "id": "PROS-2:n5",
+   "box_text": "Has all of the following: \u2022 cT1\u2013cT2a \u2022 Grade Group 1 \u2022 PSA <10 ng/mL",
+   "predicate": {
+    "all": [
+     {
+      "fact": "clinical_t_stage",
+      "op": "in",
+      "value": [
+       "T1",
+       "T2a"
+      ]
+     },
+     {
+      "fact": "grade_group",
+      "op": "==",
+      "value": 1
+     },
+     {
+      "fact": "psa_ng_ml",
+      "op": "<",
+      "value": 10
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-2:n7",
+   "box_text": "Low",
+   "predicate": {
+    "fact": "risk_group",
+    "op": "==",
+    "value": "low"
+   }
+  },
+  {
+   "id": "PROS-2:n9",
+   "box_text": "Has all of the following: \u2022 1 IRF \u2022 Grade Group 1 or 2 \u2022 <50% biopsy cores positive (eg, <6 of 12 cores)",
+   "predicate": {
+    "all": [
+     {
+      "fact": "high_risk_feature_count",
+      "op": "==",
+      "value": 0
+     },
+     {
+      "fact": "irf_count",
+      "op": "==",
+      "value": 1
+     },
+     {
+      "fact": "grade_group",
+      "op": "in",
+      "value": [
+       1,
+       2
+      ]
+     },
+     {
+      "fact": "biopsy_positive_core_percent",
+      "op": "<",
+      "value": 50
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-4:n10",
+   "box_text": ">10 y",
+   "predicate": {
+    "fact": "life_expectancy_years",
+    "op": ">",
+    "value": 10
+   }
+  },
+  {
+   "id": "PROS-4:n12",
+   "box_text": "PSA persistence",
+   "predicate": {
+    "fact": "post_rp_psa_undetectable",
+    "op": "==",
+    "value": false
+   }
+  },
+  {
+   "id": "PROS-4:n14",
+   "box_text": "Biochemical recurrence",
+   "predicate": {
+    "fact": "biochemical_recurrence_after_rt",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-4:n15",
+   "box_text": "RT",
+   "predicate": {
+    "fact": "initial_therapy",
+    "op": "==",
+    "value": "radiation_therapy"
+   }
+  },
+  {
+   "id": "PROS-4:n17",
+   "box_text": "No biochemical recurrence",
+   "predicate": {
+    "fact": "biochemical_recurrence_after_rt",
+    "op": "==",
+    "value": false
+   }
+  },
+  {
+   "id": "PROS-4:n18",
+   "box_text": "5\u201310 y",
+   "predicate": {
+    "all": [
+     {
+      "fact": "life_expectancy_years",
+      "op": ">",
+      "value": 5
+     },
+     {
+      "fact": "life_expectancy_years",
+      "op": "<=",
+      "value": 10
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-4:n19",
+   "box_text": "Observation (preferred)",
+   "predicate": {
+    "fact": "initial_therapy",
+    "op": "==",
+    "value": "observation"
+   }
+  },
+  {
+   "id": "PROS-4:n2",
+   "box_text": "Progressive disease Initial Risk Stratification and Staging Workup for Clinically Localized Disease (PROS-2)",
+   "predicate": {
+    "fact": "progression",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-4:n3",
+   "box_text": "Active surveillance Active Surveillance Program (PROS-F 2 of 5)",
+   "predicate": {
+    "fact": "initial_therapy",
+    "op": "==",
+    "value": "active_surveillance"
+   }
+  },
+  {
+   "id": "PROS-4:n4",
+   "box_text": "No adverse features and no lymph node metastases",
+   "predicate": {
+    "all": [
+     {
+      "fact": "adverse_features",
+      "op": "==",
+      "value": false
+     },
+     {
+      "fact": "lymph_node_metastases",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-4:n6",
+   "box_text": "Undetectable PSA",
+   "predicate": {
+    "fact": "post_rp_psa_undetectable",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-4:n8",
+   "box_text": "Adverse feature(s) or lymph node metastases",
+   "predicate": {
+    "any": [
+     {
+      "fact": "adverse_features",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "lymph_node_metastases",
+      "op": "==",
+      "value": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-4:n9",
+   "box_text": "RP",
+   "predicate": {
+    "fact": "initial_therapy",
+    "op": "==",
+    "value": "radical_prostatectomy"
+   }
+  },
+  {
+   "id": "PROS-5:n10",
+   "box_text": ">10 y",
+   "predicate": {
+    "fact": "life_expectancy_years",
+    "op": ">",
+    "value": 10
+   }
+  },
+  {
+   "id": "PROS-5:n12",
+   "box_text": "Biochemical recurrence",
+   "predicate": {
+    "fact": "biochemical_recurrence_after_rt",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-5:n13",
+   "box_text": "RT+ ADT (4\u20136 mo)",
+   "predicate": {
+    "all": [
+     {
+      "fact": "initial_therapy",
+      "op": "==",
+      "value": "radiation_therapy"
+     },
+     {
+      "fact": "initial_adt_months",
+      "op": ">=",
+      "value": 4
+     },
+     {
+      "fact": "initial_adt_months",
+      "op": "<=",
+      "value": 6
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-5:n15",
+   "box_text": "No biochemical recurrence",
+   "predicate": {
+    "fact": "biochemical_recurrence_after_rt",
+    "op": "==",
+    "value": false
+   }
+  },
+  {
+   "id": "PROS-5:n16",
+   "box_text": "5\u201310 y",
+   "predicate": {
+    "all": [
+     {
+      "fact": "life_expectancy_years",
+      "op": ">",
+      "value": 5
+     },
+     {
+      "fact": "life_expectancy_years",
+      "op": "<=",
+      "value": 10
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-5:n17",
+   "box_text": "Observation",
+   "predicate": {
+    "fact": "initial_therapy",
+    "op": "==",
+    "value": "observation"
+   }
+  },
+  {
+   "id": "PROS-5:n2",
+   "box_text": "No adverse features and no lymph node metastases",
+   "predicate": {
+    "all": [
+     {
+      "fact": "adverse_features",
+      "op": "==",
+      "value": false
+     },
+     {
+      "fact": "lymph_node_metastases",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-5:n4",
+   "box_text": "Undetectable PSA",
+   "predicate": {
+    "fact": "post_rp_psa_undetectable",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-5:n6",
+   "box_text": "Adverse feature(s) or lymph node metastases",
+   "predicate": {
+    "any": [
+     {
+      "fact": "adverse_features",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "lymph_node_metastases",
+      "op": "==",
+      "value": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-5:n7",
+   "box_text": "RP",
+   "predicate": {
+    "fact": "initial_therapy",
+    "op": "==",
+    "value": "radical_prostatectomy"
+   }
+  },
+  {
+   "id": "PROS-5:n9",
+   "box_text": "PSA persistence",
+   "predicate": {
+    "fact": "post_rp_psa_undetectable",
+    "op": "==",
+    "value": false
+   }
+  },
+  {
+   "id": "PROS-6:n11",
+   "box_text": "Adverse feature(s) or lymph node metastases",
+   "predicate": {
+    "any": [
+     {
+      "fact": "adverse_features",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "lymph_node_metastases",
+      "op": "==",
+      "value": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-6:n12",
+   "box_text": "RP",
+   "predicate": {
+    "fact": "initial_therapy",
+    "op": "==",
+    "value": "radical_prostatectomy"
+   }
+  },
+  {
+   "id": "PROS-6:n14",
+   "box_text": "PSA persistence",
+   "predicate": {
+    "fact": "post_rp_psa_undetectable",
+    "op": "==",
+    "value": false
+   }
+  },
+  {
+   "id": "PROS-6:n18",
+   "box_text": "\u22645 y and asymptomatic",
+   "predicate": {
+    "all": [
+     {
+      "fact": "life_expectancy_years",
+      "op": "<=",
+      "value": 5
+     },
+     {
+      "fact": "symptomatic",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-6:n19",
+   "box_text": "Symptomatic progression",
+   "predicate": {
+    "all": [
+     {
+      "fact": "progression",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "symptomatic",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "castration_resistant",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-6:n2",
+   "box_text": "RT + androgen deprivation therapy (ADT) (12\u201336 mo) (category 1) or RT+ ADT (24 mo) + abiraterone (for very-high-risk only)",
+   "predicate": {
+    "all": [
+     {
+      "fact": "initial_therapy",
+      "op": "==",
+      "value": "radiation_therapy"
+     },
+     {
+      "fact": "initial_adt_months",
+      "op": ">=",
+      "value": 12
+     },
+     {
+      "fact": "initial_adt_months",
+      "op": "<=",
+      "value": 36
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-6:n4",
+   "box_text": "Biochemical recurrence",
+   "predicate": {
+    "fact": "biochemical_recurrence_after_rt",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-6:n5",
+   "box_text": "No biochemical recurrence",
+   "predicate": {
+    "fact": "biochemical_recurrence_after_rt",
+    "op": "==",
+    "value": false
+   }
+  },
+  {
+   "id": "PROS-6:n7",
+   "box_text": "No adverse features and no lymph node metastases",
+   "predicate": {
+    "all": [
+     {
+      "fact": "adverse_features",
+      "op": "==",
+      "value": false
+     },
+     {
+      "fact": "lymph_node_metastases",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-6:n8",
+   "box_text": ">5 y or symptomatic",
+   "predicate": {
+    "any": [
+     {
+      "fact": "life_expectancy_years",
+      "op": ">",
+      "value": 5
+     },
+     {
+      "fact": "symptomatic",
+      "op": "==",
+      "value": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-6:n9",
+   "box_text": "Undetectable PSA",
+   "predicate": {
+    "fact": "post_rp_psa_undetectable",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-7:n10",
+   "box_text": "Undetectable PSA",
+   "predicate": {
+    "fact": "post_rp_psa_undetectable",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-7:n11",
+   "box_text": "Adverse feature(s) or lymph node metastases",
+   "predicate": {
+    "any": [
+     {
+      "fact": "adverse_features",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "lymph_node_metastases",
+      "op": "==",
+      "value": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-7:n13",
+   "box_text": "RPin select patients",
+   "predicate": {
+    "fact": "initial_therapy",
+    "op": "==",
+    "value": "radical_prostatectomy"
+   }
+  },
+  {
+   "id": "PROS-7:n15",
+   "box_text": "PSA persistence",
+   "predicate": {
+    "fact": "post_rp_psa_undetectable",
+    "op": "==",
+    "value": false
+   }
+  },
+  {
+   "id": "PROS-7:n19",
+   "box_text": "Symptomatic progression",
+   "predicate": {
+    "all": [
+     {
+      "fact": "progression",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "symptomatic",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "castration_resistant",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-7:n20",
+   "box_text": "\u22645 y and asymptomatic",
+   "predicate": {
+    "all": [
+     {
+      "fact": "life_expectancy_years",
+      "op": "<=",
+      "value": 5
+     },
+     {
+      "fact": "symptomatic",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-7:n22",
+   "box_text": "Symptomatic progression",
+   "predicate": {
+    "all": [
+     {
+      "fact": "progression",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "symptomatic",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "castration_resistant",
+      "op": "==",
+      "value": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-7:n3",
+   "box_text": "Biochemical recurrence",
+   "predicate": {
+    "fact": "biochemical_recurrence_after_rt",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-7:n4",
+   "box_text": "RT + ADT (24 mo) + abiraterone (preferred) or RT + ADT(24\u201336 mo)",
+   "predicate": {
+    "all": [
+     {
+      "fact": "initial_therapy",
+      "op": "==",
+      "value": "radiation_therapy"
+     },
+     {
+      "fact": "initial_adt_months",
+      "op": ">=",
+      "value": 24
+     },
+     {
+      "fact": "initial_adt_months",
+      "op": "<=",
+      "value": 36
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-7:n5",
+   "box_text": "No biochemical recurrence",
+   "predicate": {
+    "fact": "biochemical_recurrence_after_rt",
+    "op": "==",
+    "value": false
+   }
+  },
+  {
+   "id": "PROS-7:n7",
+   "box_text": "ADT \u00b1 abiraterone",
+   "predicate": {
+    "fact": "initial_adt_only",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-7:n8",
+   "box_text": ">5 y or symptomatic",
+   "predicate": {
+    "any": [
+     {
+      "fact": "life_expectancy_years",
+      "op": ">",
+      "value": 5
+     },
+     {
+      "fact": "symptomatic",
+      "op": "==",
+      "value": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-7:n9",
+   "box_text": "No adverse features and no lymph node metastases",
+   "predicate": {
+    "all": [
+     {
+      "fact": "adverse_features",
+      "op": "==",
+      "value": false
+     },
+     {
+      "fact": "lymph_node_metastases",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-8:n11",
+   "box_text": "Radiographic evidence of metastatic disease without PSA persistence/ recurrence",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": true
+     },
+     {
+      "any": [
+       {
+        "all": [
+         {
+          "fact": "initial_therapy",
+          "op": "==",
+          "value": "radical_prostatectomy"
+         },
+         {
+          "fact": "post_rp_psa_undetectable",
+          "op": "==",
+          "value": true
+         }
+        ]
+       },
+       {
+        "all": [
+         {
+          "fact": "initial_therapy",
+          "op": "==",
+          "value": "radiation_therapy"
+         },
+         {
+          "fact": "biochemical_recurrence_after_rt",
+          "op": "==",
+          "value": false
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-8:n16",
+   "box_text": "N1,M0",
+   "predicate": {
+    "all": [
+     {
+      "fact": "m1",
+      "op": "==",
+      "value": false
+     },
+     {
+      "fact": "lymph_node_metastases",
+      "op": "==",
+      "value": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-8:n18",
+   "box_text": "N1 on ADT or Localized on observation",
+   "predicate": {
+    "any": [
+     {
+      "all": [
+       {
+        "fact": "lymph_node_metastases",
+        "op": "==",
+        "value": true
+       },
+       {
+        "fact": "currently_on_adt",
+        "op": "==",
+        "value": true
+       }
+      ]
+     },
+     {
+      "all": [
+       {
+        "fact": "m1",
+        "op": "==",
+        "value": false
+       },
+       {
+        "fact": "lymph_node_metastases",
+        "op": "==",
+        "value": false
+       },
+       {
+        "fact": "initial_therapy",
+        "op": "==",
+        "value": "observation"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "PROS-8:n19",
+   "box_text": "Progression",
+   "predicate": {
+    "fact": "progression",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-8:n21",
+   "box_text": "M1",
+   "predicate": {
+    "fact": "m1",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-8:n3",
+   "box_text": "PSA persistence/recurrence",
+   "predicate": {
+    "fact": "post_rp_psa_undetectable",
+    "op": "==",
+    "value": false
+   }
+  },
+  {
+   "id": "PROS-8:n4",
+   "box_text": "Post-RP",
+   "predicate": {
+    "fact": "initial_therapy",
+    "op": "==",
+    "value": "radical_prostatectomy"
+   }
+  },
+  {
+   "id": "PROS-8:n6",
+   "box_text": "PSA recurrence or Positive DRE",
+   "predicate": {
+    "fact": "biochemical_recurrence_after_rt",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "id": "PROS-8:n8",
+   "box_text": "Post-RT",
+   "predicate": {
+    "fact": "initial_therapy",
+    "op": "==",
+    "value": "radiation_therapy"
+   }
+  }
+ ]
+}

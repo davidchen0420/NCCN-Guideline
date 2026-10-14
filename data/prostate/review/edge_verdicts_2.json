@@ -1,0 +1,70 @@
+{
+ "PROS-12:n151_552->n226_15": {
+  "verdict": "yes",
+  "note": "Loop arrow from N0M0 returns to Second BCR M0"
+ },
+ "PROS-12:n260_467->n313_571": {
+  "verdict": "yes",
+  "note": "Progression arrow fans out to Polymetastatic CSPC"
+ },
+ "PROS-12:n260_467->n325_571": {
+  "verdict": "no",
+  "note": "No CSPC box; Progression branches to named nodes only"
+ },
+ "PROS-12:n261_384->n260_467": {
+  "verdict": "yes",
+  "note": "Arrow from Monitoring to Progression"
+ },
+ "PROS-12:n313_571->n332_677": {
+  "verdict": "yes",
+  "note": "Polymetastatic arrow to High-Volume M1 CSPC PROS-15"
+ },
+ "PROS-12:n313_571->n227_676": {
+  "verdict": "yes",
+  "note": "Polymetastatic arrow to Low-Volume M1 PROS-14"
+ },
+ "PROS-12:n325_571->n332_677": {
+  "verdict": "no",
+  "note": "No CSPC node; High-Volume arrow starts at Polymetastatic"
+ },
+ "PROS-12:n325_571->n227_676": {
+  "verdict": "no",
+  "note": "No CSPC node; Low-Volume arrow starts at Polymetastatic"
+ },
+ "PROS-14:n116_272->n277_489": {
+  "verdict": "yes",
+  "note": "ADT options bar arrows to Physical examination box"
+ },
+ "PROS-14:n280_613->n297_699": {
+  "verdict": "yes",
+  "note": "Progression box arrow to M1 CRPC PROS-17"
+ },
+ "PROS-14:n416_272->n277_489": {
+  "verdict": "yes",
+  "note": "ADT options bar arrows to Physical examination box"
+ },
+ "PROS-17:n217_16->n145_127": {
+  "verdict": "yes",
+  "note": "Arrow from CRPC imaging box to biopsy box"
+ },
+ "PROS-18:n110_113->n110_323": {
+  "verdict": "unsure",
+  "note": "Adjacent columns only; no drawn connector between them"
+ },
+ "PROS-18:n110_113->n110_568": {
+  "verdict": "no",
+  "note": "Skips a column; no drawn relation to Post-Docetaxel"
+ },
+ "PROS-18:n492_54->n454_295": {
+  "verdict": "no",
+  "note": "mCRPC text is in a different cell than pembrolizumab"
+ },
+ "PROS-18:n129_28->n129_273": {
+  "verdict": "unsure",
+  "note": "Adjacent columns only; no drawn connector between cells"
+ },
+ "PROS-18:n129_28->n129_528": {
+  "verdict": "no",
+  "note": "Skips Pre-Docetaxel column; no drawn relation"
+ }
+}

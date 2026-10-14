@@ -1,0 +1,15 @@
+label check: 144/166 items consistent with their case text
+arm                         correct/answered  coverage  accuracy (all)
+A0 no context                   107/166           1.00           0.645
+A5 engine (abstains)            145/163           0.98           0.873
+A5 + A0 fallback                145/166           1.00           0.873
+A0 [clean labels]               102/144           1.00           0.708
+A5 + A0 [clean labels]          142/144           1.00           0.986
+A0 on 30-subset                  22/30            1.00           0.733
+A2 BM25 on 30-subset             22/30            1.00           0.733
+A2 hybrid on 30-subset           19/30            1.00           0.633
+A5+A0 on 30-subset               26/30            1.00           0.867
+A2 BM25 [clean 30]               19/25            1.00           0.760
+A2 hybrid [clean 30]             18/25            1.00           0.720
+A5+A0 [clean 30]                 25/25            1.00           1.000
+chance = 0.333; best published MedGUIDE overall (all cancers, GPT-4.1) = 0.644

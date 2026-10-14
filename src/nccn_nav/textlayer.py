@@ -1,4 +1,4 @@
-"""Layer B: chunk the Principles pages (PROS-A..N) and the Discussion (MS-*) and index them
+"""Layer B: chunk the Principles pages (e.g. PROS-A..N) and the Discussion (MS-*) and index them
 with BM25 so each graph node can pull its supporting text."""
 import re
 
@@ -26,14 +26,15 @@ def _is_reference_list(page):
     return links >= 5 or numbered > 0.3 * len(lines)
 
 
-def build_chunks(doc, ids, max_words=220):
-    """Paragraph-level chunks, each tagged with its source page code."""
+def build_chunks(spec, max_words=220):
+    """Paragraph-level chunks of principles and discussion pages, tagged with their page code.
+    (Superseded by fulltext.chunk_pages, which covers every page kind.)"""
     chunks = []
-    for i, page in enumerate(doc):
-        code = ids.get(i)
-        if code and re.fullmatch(r"PROS-[A-N]", code):
+    for i, page in enumerate(spec.doc):
+        code = spec.ids.get(i)
+        if spec.kind(i) == "principles":
             source = "principles"
-        elif i >= 100:  # Discussion section starts after the staging and abbreviation pages
+        elif spec.kind(i) == "discussion":
             code, source = _discussion_label(page) or f"MS-p{i + 1}", "discussion"
             if _is_reference_list(page):
                 continue
