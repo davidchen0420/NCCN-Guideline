@@ -35,11 +35,13 @@ def trees_for(root, override=None):
 PARQUET = Path(__file__).resolve().parents[2] / "private" / "medguide_all" / "data" / "train-00000-of-00001.parquet"
 
 
-def prepare(root, trees=None, seed=0):
+def prepare(root, trees=None, limit=None, seed=0):
+    """Items and a seeded 50/50 dev/test split per tree. With `limit`, keep only that many
+    test items (seeded sample) and no dev items: for guidelines evaluated without tuning."""
     import pandas as pd
 
     root = Path(root)
-    trees = trees_for(root, trees)
+    trees = trees_for(root, trees if trees not in ("", "-") else None)
     df = pd.read_parquet(PARQUET)
     items = []
     for disease in trees:
@@ -54,8 +56,13 @@ def prepare(root, trees=None, seed=0):
         ids = [x["id"] for x in items if x["disease"] == disease]
         rng.shuffle(ids)
         half = len(ids) // 2
-        split.update({i: "dev" for i in ids[:half]})
-        split.update({i: "test" for i in ids[half:]})
+        if limit:
+            split.update({i: "test" for i in ids[half:][:int(limit)]})
+        else:
+            split.update({i: "dev" for i in ids[:half]})
+            split.update({i: "test" for i in ids[half:]})
+    if limit:
+        items = [x for x in items if x["id"] in split]
     out = root / "medguide"
     out.mkdir(exist_ok=True)
     (out / "items.json").write_text(json.dumps(items))

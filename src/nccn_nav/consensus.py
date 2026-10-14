@@ -110,6 +110,12 @@ def merge_all(private):
         for v in edges.values():
             counts[v] = counts.get(v, 0) + 1
         stats[page] = counts
+    # Table and list pages: decision rows checked against the page text (tables.py).
+    from .tables import apply as apply_tables
+
+    for page, (kept, _) in apply_tables(private, merged).items():
+        if kept:
+            stats[page]["table"] = sum(e.get("support") == "table" for e in merged[page]["edges"])
     (private / "merged_graphs.json").write_text(json.dumps(merged, indent=1))
     return stats
 

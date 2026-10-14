@@ -215,3 +215,26 @@ def test_plain_letter_footnote_markers():
     ], 792)
     assert set(notes) == {"e", "g", "k", "ll"}
     assert notes["e"].endswith("may be considered in this setting.")
+
+
+def test_table_rows_must_come_from_the_page():
+    from nccn_nav import tables
+
+    def line(y, x, text):
+        return {"text": text, "bbox": [x, y, x + 200, y + 8], "marker": None, "refs": []}
+
+    lines = [line(100, 30, "High emetic risk"), line(100, 300, "NK1 RA + 5-HT3 RA +"),
+             line(110, 300, "dexamethasone + olanzapine"), line(130, 30, "Minimal emetic risk"),
+             line(130, 300, "No routine prophylaxis")]
+    rows = [{"header": "", "condition": "High emetic risk",
+             "recommendation": "NK1 RA + 5-HT3 RA + dexamethasone + olanzapine"},
+            {"header": "", "condition": "Minimal emetic risk", "recommendation": "No routine prophylaxis"},
+            {"header": "", "condition": "Moderate risk in older adults",
+             "recommendation": "Consider a reduced regimen"}]
+    kept, rejected = tables.validate(rows, lines)
+    assert [r["condition"] for r in kept] == ["High emetic risk", "Minimal emetic risk"]
+    assert len(rejected) == 1
+    nodes, edges = tables.to_graph(kept, lines, "Emesis (AE-1)")
+    pairs = {(e["src"], e["dst"]) for e in edges}
+    assert ("t_root", "t0_c") in pairs and ("t0_c", "t0_r") in pairs and ("t_root", "t1_c") in pairs
+    assert next(n for n in nodes if n["id"] == "t0_c")["bbox"][1] == 100

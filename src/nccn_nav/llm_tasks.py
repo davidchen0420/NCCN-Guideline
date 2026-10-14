@@ -61,7 +61,7 @@ def check_schema(root):
     return problems
 
 
-def export_preds(root, per_file=6):
+def export_preds(root, per_file=15):
     root = Path(root)
     gl = Guideline(root)
     need = decision_nodes(gl)
