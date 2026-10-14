@@ -1,0 +1,4948 @@
+{
+ "format": "nccn-guideline-index/1",
+ "guidelines": [
+  {
+   "slug": "acute_lymphoblastic_leukemia",
+   "title": "Acute Lymphoblastic Leukemia",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "July 24, 2026",
+   "pdf_sha256": "5d663657ebafe07240e7920df1c1206c390a924f082924e7f53d300e55b740d6",
+   "path": "acute_lymphoblastic_leukemia/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 170,
+    "algorithm_pages": 8,
+    "boxes": 69,
+    "boxes_text_found_in_pdf_at_bbox": "69/69",
+    "edges_by_evidence": {
+     "two_methods": 71,
+     "table_text_checked": 4,
+     "image_checked": 1
+    },
+    "decision_boxes": 35,
+    "predicate_status": {
+     "none": 5,
+     "model_reviewed": 29,
+     "inherited_from_link": 1
+    },
+    "decision_types": {
+     "other": 4,
+     "condition": 31
+    },
+    "entries": 8,
+    "entries_with_predicate": 5,
+    "entries_reached_by_link": 5,
+    "roles": {
+     "page_heading": 10,
+     "leaf": 12,
+     "entry": 7,
+     "table_root": 1,
+     "table_condition": 2,
+     "table_value": 2,
+     "step": 37,
+     "decision": 12,
+     "note": 1
+    },
+    "links": {
+     "page": 34,
+     "external_guideline": 2
+    },
+    "footnote_refs_by_resolution": {
+     "footnote_page": 45,
+     "own_page": 53
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "adolescent_and_young_adult_aya_oncology",
+   "title": "Adolescent and Young Adult (AYA) Oncology",
+   "category": "Specific Populations",
+   "version": "2.2026",
+   "version_date": "February 27, 2026",
+   "pdf_sha256": "76eafbe51ef2a66dfcb95e3828994516761b9449c4b84d830eb4db5a0ad8865f",
+   "path": "adolescent_and_young_adult_aya_oncology/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 113,
+    "algorithm_pages": 12,
+    "boxes": 36,
+    "boxes_text_found_in_pdf_at_bbox": "33/36",
+    "edges_by_evidence": {
+     "image_checked": 4,
+     "two_methods": 16,
+     "table_text_checked": 30
+    },
+    "decision_boxes": 27,
+    "predicate_status": {
+     "model_reviewed": 12,
+     "none": 12,
+     "inherited_from_link": 3
+    },
+    "decision_types": {
+     "condition": 16,
+     "other": 11
+    },
+    "entries": 13,
+    "entries_with_predicate": 4,
+    "entries_reached_by_link": 3,
+    "roles": {
+     "page_heading": 12,
+     "note": 7,
+     "step": 8,
+     "leaf": 10,
+     "decision": 1,
+     "entry": 9,
+     "table_root": 4,
+     "table_condition": 10,
+     "table_value": 3,
+     "column_header": 1,
+     "table_rec": 17
+    },
+    "links": {
+     "page": 25,
+     "external_guideline": 6
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 11
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "adult_pain",
+   "title": "Adult Cancer Pain",
+   "category": "Supportive Care",
+   "version": "2.2026",
+   "version_date": "July 13, 2026",
+   "pdf_sha256": "d52695c92aacf33d549c8e7405b615cc3c69e9d75623865d5976413cc441a2fc",
+   "path": "adult_pain/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 128,
+    "algorithm_pages": 7,
+    "boxes": 82,
+    "boxes_text_found_in_pdf_at_bbox": "82/82",
+    "edges_by_evidence": {
+     "two_methods": 44,
+     "image_checked": 21
+    },
+    "decision_boxes": 37,
+    "predicate_status": {
+     "model_reviewed": 31,
+     "inherited_from_link": 2,
+     "none": 4
+    },
+    "decision_types": {
+     "condition": 33,
+     "other": 2,
+     "option": 2
+    },
+    "entries": 12,
+    "entries_with_predicate": 11,
+    "entries_reached_by_link": 9,
+    "roles": {
+     "page_heading": 10,
+     "note": 14,
+     "step": 26,
+     "leaf": 21,
+     "decision": 9,
+     "entry": 12
+    },
+    "links": {
+     "page": 69,
+     "external_guideline": 5
+    },
+    "footnote_refs_by_resolution": {
+     "null": 6,
+     "own_page": 11
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "aml",
+   "title": "Acute Myeloid Leukemia",
+   "category": "Treatment",
+   "version": "5.2026",
+   "version_date": "July 15, 2026",
+   "pdf_sha256": "9e9ba2ced9183abd3a28cdf9f6abf9a697e48ef4c8565f3e51717e28844a24e4",
+   "path": "aml/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 213,
+    "algorithm_pages": 23,
+    "boxes": 208,
+    "boxes_text_found_in_pdf_at_bbox": "203/208",
+    "edges_by_evidence": {
+     "two_methods": 160,
+     "table_text_checked": 38,
+     "image_checked": 22
+    },
+    "decision_boxes": 120,
+    "predicate_status": {
+     "section_only": 1,
+     "model_reviewed": 71,
+     "inherited_from_link": 15,
+     "none": 32,
+     "rejected": 1
+    },
+    "decision_types": {
+     "other": 8,
+     "condition": 72,
+     "option": 37,
+     "null": 3
+    },
+    "entries": 33,
+    "entries_with_predicate": 32,
+    "entries_reached_by_link": 28,
+    "roles": {
+     "entry": 31,
+     "leaf": 41,
+     "note": 24,
+     "step": 90,
+     "page_heading": 14,
+     "decision": 21,
+     "table_root": 2,
+     "table_rec": 18,
+     "table_condition": 13,
+     "table_ref": 4,
+     "column_header": 1,
+     "table_title": 3
+    },
+    "links": {
+     "page": 98,
+     "external_guideline": 9
+    },
+    "footnote_refs_by_resolution": {
+     "nearest_same_prefix": 3,
+     "footnote_page": 4,
+     "own_page": 59,
+     "printed_pointer": 98
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "ampullary_adenocarcinoma",
+   "title": "Ampullary Adenocarcinoma",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "February 10, 2026",
+   "pdf_sha256": "8ab7128ca216825ec8f9d15bb386bf479eb685b65c934606c5e7ac1a235f1dfb",
+   "path": "ampullary_adenocarcinoma/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 81,
+    "algorithm_pages": 7,
+    "boxes": 65,
+    "boxes_text_found_in_pdf_at_bbox": "65/65",
+    "edges_by_evidence": {
+     "two_methods": 64
+    },
+    "decision_boxes": 33,
+    "predicate_status": {
+     "model_reviewed": 28,
+     "none": 5
+    },
+    "decision_types": {
+     "condition": 28,
+     "other": 1,
+     "option": 4
+    },
+    "entries": 7,
+    "entries_with_predicate": 6,
+    "entries_reached_by_link": 6,
+    "roles": {
+     "page_heading": 16,
+     "step": 35,
+     "leaf": 16,
+     "decision": 7,
+     "entry": 7
+    },
+    "links": {
+     "page": 10
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 66
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "anal_carcinoma",
+   "title": "Anal Carcinoma",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "April 7, 2026",
+   "pdf_sha256": "724bf53f9b18870221de4c9a54b339f54c2b3ed36b0cbbbc2e2a8621c6408d01",
+   "path": "anal_carcinoma/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 69,
+    "algorithm_pages": 4,
+    "boxes": 61,
+    "boxes_text_found_in_pdf_at_bbox": "61/61",
+    "edges_by_evidence": {
+     "two_methods": 50,
+     "image_checked": 2,
+     "single_source": 2
+    },
+    "decision_boxes": 23,
+    "predicate_status": {
+     "model_reviewed": 21,
+     "none": 2
+    },
+    "decision_types": {
+     "condition": 21,
+     "option": 2
+    },
+    "entries": 5,
+    "entries_with_predicate": 5,
+    "entries_reached_by_link": 3,
+    "roles": {
+     "page_heading": 5,
+     "decision": 7,
+     "step": 32,
+     "leaf": 12,
+     "entry": 5,
+     "note": 3,
+     "link": 1,
+     "column_header": 1
+    },
+    "links": {
+     "page": 13
+    },
+    "footnote_refs_by_resolution": {
+     "nearest_same_prefix": 2,
+     "own_page": 40
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "antiemesis",
+   "title": "Antiemesis",
+   "category": "Supportive Care",
+   "version": "2.2026",
+   "version_date": "June 24, 2026",
+   "pdf_sha256": "4fb565f0a8c79d4226f81c59c697e5df7532dc901625b9812bcc10ac0408ac75",
+   "path": "antiemesis/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 111,
+    "algorithm_pages": 31,
+    "boxes": 130,
+    "boxes_text_found_in_pdf_at_bbox": "127/130",
+    "edges_by_evidence": {
+     "table_text_checked": 93,
+     "two_methods": 57,
+     "image_checked": 10
+    },
+    "decision_boxes": 89,
+    "predicate_status": {
+     "model_reviewed": 74,
+     "rejected": 2,
+     "none": 13
+    },
+    "decision_types": {
+     "condition": 76,
+     "option": 10,
+     "other": 3
+    },
+    "entries": 33,
+    "entries_with_predicate": 33,
+    "entries_reached_by_link": 13,
+    "roles": {
+     "note": 55,
+     "page_heading": 45,
+     "table_root": 19,
+     "table_condition": 37,
+     "table_value": 21,
+     "table_rec": 29,
+     "step": 37,
+     "entry": 14,
+     "leaf": 18,
+     "table_title": 4,
+     "table_ref": 2,
+     "decision": 6
+    },
+    "links": {
+     "page": 76,
+     "external_guideline": 1
+    },
+    "footnote_refs_by_resolution": {
+     "printed_pointer": 12,
+     "own_page": 44
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "appendiceal_neoplasms_and",
+   "title": "Appendiceal Neoplasms and Cancers",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "April 10, 2026",
+   "pdf_sha256": "e00739055eacd122c5694f24d70e7944c1f885318213dfea36c40a56947361fa",
+   "path": "appendiceal_neoplasms_and/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 76,
+    "algorithm_pages": 9,
+    "boxes": 108,
+    "boxes_text_found_in_pdf_at_bbox": "108/108",
+    "edges_by_evidence": {
+     "two_methods": 89,
+     "image_checked": 12,
+     "single_source": 1
+    },
+    "decision_boxes": 53,
+    "predicate_status": {
+     "model_reviewed": 47,
+     "none": 5,
+     "inherited_from_link": 1
+    },
+    "decision_types": {
+     "condition": 47,
+     "option": 5,
+     "other": 1
+    },
+    "entries": 15,
+    "entries_with_predicate": 15,
+    "entries_reached_by_link": 13,
+    "roles": {
+     "page_heading": 5,
+     "step": 52,
+     "decision": 13,
+     "entry": 15,
+     "leaf": 25,
+     "note": 3
+    },
+    "links": {
+     "page": 32,
+     "external_guideline": 1
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 41,
+     "null": 2
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "associated_venous_thromboembolic_disease",
+   "title": "Cancer-Associated Venous Thromboembolic Disease",
+   "category": "Supportive Care",
+   "version": "1.2026",
+   "version_date": "May 5, 2026",
+   "pdf_sha256": "2a6b8edfed2a0a780ee5a9b9a24c40a51a78a4fc84ba2a279b7fd7363b0e5f9d",
+   "path": "associated_venous_thromboembolic_disease/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 147,
+    "algorithm_pages": 13,
+    "boxes": 130,
+    "boxes_text_found_in_pdf_at_bbox": "130/130",
+    "edges_by_evidence": {
+     "two_methods": 71,
+     "image_checked": 49,
+     "table_text_checked": 60
+    },
+    "decision_boxes": 100,
+    "predicate_status": {
+     "model_reviewed": 93,
+     "inherited_from_link": 3,
+     "none": 4
+    },
+    "decision_types": {
+     "condition": 97,
+     "other": 3
+    },
+    "entries": 21,
+    "entries_with_predicate": 21,
+    "entries_reached_by_link": 10,
+    "roles": {
+     "page_heading": 37,
+     "step": 52,
+     "entry": 18,
+     "leaf": 35,
+     "decision": 18,
+     "table_root": 3,
+     "table_title": 5,
+     "table_condition": 31,
+     "table_rec": 20,
+     "table_ref": 4,
+     "note": 7
+    },
+    "links": {
+     "page": 37,
+     "external_guideline": 1
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 80,
+     "nearest_same_prefix": 1,
+     "null": 5
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "b_cell_lymphomas",
+   "title": "B-Cell Lymphomas",
+   "category": "Treatment",
+   "version": "4.2026",
+   "version_date": "May 20, 2026",
+   "pdf_sha256": "b3666fc1679895395ed208abf1b8e655ad509e61d22dc83392f927830a4b1a82",
+   "path": "b_cell_lymphomas/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 369,
+    "algorithm_pages": 54,
+    "boxes": 638,
+    "boxes_text_found_in_pdf_at_bbox": "636/638",
+    "edges_by_evidence": {
+     "two_methods": 495,
+     "image_checked": 95,
+     "single_source": 5
+    },
+    "decision_boxes": 312,
+    "predicate_status": {
+     "model_reviewed": 257,
+     "none": 33,
+     "inherited_from_link": 11,
+     "rejected": 2,
+     "section_only": 9
+    },
+    "decision_types": {
+     "condition": 280,
+     "other": 8,
+     "null": 3,
+     "option": 21
+    },
+    "entries": 74,
+    "entries_with_predicate": 71,
+    "entries_reached_by_link": 39,
+    "roles": {
+     "page_heading": 76,
+     "leaf": 144,
+     "decision": 74,
+     "entry": 74,
+     "note": 36,
+     "step": 302,
+     "column_header": 8
+    },
+    "links": {
+     "page": 201,
+     "external_guideline": 13
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 445,
+     "nearest_same_prefix": 12,
+     "null": 10
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "basal_cell_skin",
+   "title": "Basal Cell Skin Cancer",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "March 11, 2026",
+   "pdf_sha256": "dd61e6ace28dfbc656003005621f8c3bb8aed132f10848f1c29760a481517714",
+   "path": "basal_cell_skin/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 59,
+    "algorithm_pages": 6,
+    "boxes": 49,
+    "boxes_text_found_in_pdf_at_bbox": "49/49",
+    "edges_by_evidence": {
+     "two_methods": 47,
+     "table_text_checked": 29,
+     "image_checked": 4
+    },
+    "decision_boxes": 56,
+    "predicate_status": {
+     "model_reviewed": 40,
+     "none": 14,
+     "rejected": 1,
+     "inherited_from_link": 1
+    },
+    "decision_types": {
+     "condition": 40,
+     "other": 12,
+     "option": 4
+    },
+    "entries": 6,
+    "entries_with_predicate": 6,
+    "entries_reached_by_link": 4,
+    "roles": {
+     "page_heading": 16,
+     "step": 28,
+     "leaf": 10,
+     "entry": 5,
+     "decision": 5,
+     "table_root": 1,
+     "table_condition": 11,
+     "table_value": 18,
+     "note": 1
+    },
+    "links": {
+     "page": 17
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 55,
+     "printed_pointer": 32
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "biliary_tract",
+   "title": "Biliary Tract Cancers",
+   "category": "Treatment",
+   "version": "1.2026",
+   "version_date": "March 10, 2026",
+   "pdf_sha256": "236904a1312c99d0b8216364047bf1b5f6d5e8d759943ac53d6e9c02279714fc",
+   "path": "biliary_tract/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 108,
+    "algorithm_pages": 8,
+    "boxes": 60,
+    "boxes_text_found_in_pdf_at_bbox": "45/60",
+    "edges_by_evidence": {
+     "two_methods": 55,
+     "image_checked": 3,
+     "table_text_checked": 37
+    },
+    "decision_boxes": 43,
+    "predicate_status": {
+     "model_reviewed": 40,
+     "inherited_from_link": 3
+    },
+    "decision_types": {
+     "condition": 41,
+     "other": 2
+    },
+    "entries": 8,
+    "entries_with_predicate": 8,
+    "entries_reached_by_link": 7,
+    "roles": {
+     "page_heading": 11,
+     "step": 29,
+     "leaf": 15,
+     "decision": 9,
+     "entry": 5,
+     "table_root": 3,
+     "table_condition": 15,
+     "table_rec": 17,
+     "table_ref": 5,
+     "note": 2
+    },
+    "links": {
+     "page": 14,
+     "external_guideline": 1
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 104
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "bladder",
+   "title": "Bladder Cancer",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "June 22, 2026",
+   "pdf_sha256": "5bdf22e4e1db37997fbb9ec0c7638ad12b271cfb0e104ff832838e7573feba1a",
+   "path": "bladder/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 142,
+    "algorithm_pages": 19,
+    "boxes": 229,
+    "boxes_text_found_in_pdf_at_bbox": "227/229",
+    "edges_by_evidence": {
+     "two_methods": 191,
+     "table_text_checked": 36,
+     "image_checked": 18,
+     "single_source": 1
+    },
+    "decision_boxes": 122,
+    "predicate_status": {
+     "model_reviewed": 84,
+     "none": 28,
+     "inherited_from_link": 5,
+     "section_only": 3,
+     "rejected": 2
+    },
+    "decision_types": {
+     "condition": 101,
+     "option": 20,
+     "other": 1
+    },
+    "entries": 24,
+    "entries_with_predicate": 23,
+    "entries_reached_by_link": 8,
+    "roles": {
+     "page_heading": 39,
+     "note": 16,
+     "step": 109,
+     "decision": 30,
+     "leaf": 46,
+     "entry": 22,
+     "column_header": 6,
+     "table_root": 2,
+     "table_condition": 16,
+     "table_value": 12,
+     "table_rec": 8
+    },
+    "links": {
+     "external_guideline": 3,
+     "page": 43
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 143,
+     "null": 8,
+     "nearest_same_prefix": 37
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "bone",
+   "title": "Bone Cancer",
+   "category": "Treatment",
+   "version": "1.2027",
+   "version_date": "July 21, 2026",
+   "pdf_sha256": "01f00f0004b356324646446fb3946457dd67abc69e70057b244c120864510846",
+   "path": "bone/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 129,
+    "algorithm_pages": 19,
+    "boxes": 203,
+    "boxes_text_found_in_pdf_at_bbox": "203/203",
+    "edges_by_evidence": {
+     "two_methods": 171,
+     "image_checked": 15
+    },
+    "decision_boxes": 105,
+    "predicate_status": {
+     "model_reviewed": 81,
+     "none": 17,
+     "section_only": 2,
+     "inherited_from_link": 5
+    },
+    "decision_types": {
+     "condition": 91,
+     "option": 14
+    },
+    "entries": 28,
+    "entries_with_predicate": 26,
+    "entries_reached_by_link": 12,
+    "roles": {
+     "note": 8,
+     "page_heading": 34,
+     "step": 85,
+     "leaf": 55,
+     "decision": 24,
+     "entry": 28,
+     "column_header": 3
+    },
+    "links": {
+     "page": 36,
+     "external_guideline": 1
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 156,
+     "null": 4
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "breast",
+   "title": "Breast Cancer",
+   "category": "Treatment",
+   "version": "6.2026",
+   "version_date": "July 29, 2026",
+   "pdf_sha256": "70d31870ba9fd52fd4db90595bcb5ccbc7e12fd4fb615c9e068f07b644a54cc3",
+   "path": "breast/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 278,
+    "algorithm_pages": 37,
+    "boxes": 382,
+    "boxes_text_found_in_pdf_at_bbox": "377/382",
+    "edges_by_evidence": {
+     "two_methods": 299,
+     "image_checked": 51,
+     "table_text_checked": 30
+    },
+    "decision_boxes": 200,
+    "predicate_status": {
+     "none": 26,
+     "model_reviewed": 162,
+     "inherited_from_link": 6,
+     "rejected": 1,
+     "section_only": 5
+    },
+    "decision_types": {
+     "option": 12,
+     "condition": 167,
+     "other": 21
+    },
+    "entries": 54,
+    "entries_with_predicate": 52,
+    "entries_reached_by_link": 27,
+    "roles": {
+     "page_heading": 49,
+     "step": 179,
+     "decision": 38,
+     "leaf": 81,
+     "entry": 52,
+     "note": 28,
+     "column_header": 4,
+     "table_root": 2,
+     "table_title": 8,
+     "table_condition": 11,
+     "table_value": 11
+    },
+    "links": {
+     "page": 164,
+     "external_guideline": 14
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 334,
+     "null": 2,
+     "nearest_same_prefix": 20
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "breast_risk_reduction",
+   "title": "Breast Cancer Risk Reduction",
+   "category": "Detection Prevention Risk Reduction",
+   "version": "1.2026",
+   "version_date": "August 29, 2025",
+   "pdf_sha256": "7a201504f1423a36d1e335ca2357b8942575982a249a3562a129ea3325519712",
+   "path": "breast_risk_reduction/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 63,
+    "algorithm_pages": 8,
+    "boxes": 66,
+    "boxes_text_found_in_pdf_at_bbox": "66/66",
+    "edges_by_evidence": {
+     "two_methods": 40,
+     "image_checked": 18
+    },
+    "decision_boxes": 38,
+    "predicate_status": {
+     "model_reviewed": 35,
+     "none": 3
+    },
+    "decision_types": {
+     "condition": 35,
+     "other": 3
+    },
+    "entries": 19,
+    "entries_with_predicate": 19,
+    "entries_reached_by_link": 2,
+    "roles": {
+     "note": 1,
+     "entry": 19,
+     "leaf": 21,
+     "step": 19,
+     "decision": 6,
+     "page_heading": 11
+    },
+    "links": {
+     "page": 18,
+     "external_guideline": 5
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 59
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "breast_screening_and_diagnosis",
+   "title": "Breast Cancer Screening and Diagnosis",
+   "category": "Detection Prevention Risk Reduction",
+   "version": "1.2026",
+   "version_date": "March 5, 2026",
+   "pdf_sha256": "a34bbf60f2e5871507f882b9c71228be908db9492c2772976627baa7813fcf78",
+   "path": "breast_screening_and_diagnosis/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 100,
+    "algorithm_pages": 18,
+    "boxes": 272,
+    "boxes_text_found_in_pdf_at_bbox": "272/272",
+    "edges_by_evidence": {
+     "two_methods": 232,
+     "image_checked": 30,
+     "table_text_checked": 2
+    },
+    "decision_boxes": 161,
+    "predicate_status": {
+     "model_reviewed": 152,
+     "inherited_from_link": 5,
+     "none": 3,
+     "rejected": 1
+    },
+    "decision_types": {
+     "condition": 153,
+     "other": 6,
+     "option": 2
+    },
+    "entries": 31,
+    "entries_with_predicate": 29,
+    "entries_reached_by_link": 12,
+    "roles": {
+     "page_heading": 26,
+     "leaf": 80,
+     "step": 110,
+     "decision": 41,
+     "entry": 30,
+     "note": 9,
+     "table_root": 1,
+     "table_rec": 1,
+     "table_condition": 1,
+     "column_header": 2
+    },
+    "links": {
+     "page": 59,
+     "external_guideline": 16
+    },
+    "footnote_refs_by_resolution": {
+     "printed_pointer": 69,
+     "own_page": 161,
+     "nearest_same_prefix": 2,
+     "null": 10
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "castleman_disease",
+   "title": "Castleman Disease",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "April 28, 2026",
+   "pdf_sha256": "f6f55d1d178e0703dc621e4f25281343157e17f1c1fa1b8262d96a890b491c96",
+   "path": "castleman_disease/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 35,
+    "algorithm_pages": 5,
+    "boxes": 48,
+    "boxes_text_found_in_pdf_at_bbox": "48/48",
+    "edges_by_evidence": {
+     "two_methods": 42,
+     "image_checked": 6
+    },
+    "decision_boxes": 22,
+    "predicate_status": {
+     "none": 2,
+     "model_reviewed": 20
+    },
+    "decision_types": {
+     "condition": 22
+    },
+    "entries": 4,
+    "entries_with_predicate": 2,
+    "entries_reached_by_link": 1,
+    "roles": {
+     "page_heading": 2,
+     "step": 28,
+     "entry": 4,
+     "leaf": 8,
+     "note": 1,
+     "decision": 7
+    },
+    "links": {
+     "page": 12
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 27,
+     "null": 1
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "central_nervous_system",
+   "title": "Central Nervous System Cancers",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "June 10, 2026",
+   "pdf_sha256": "5be240ed1d2e10708034e26470a381a57dbf99533fb55e04267c6f59cae6fbf8",
+   "path": "central_nervous_system/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 246,
+    "algorithm_pages": 45,
+    "boxes": 501,
+    "boxes_text_found_in_pdf_at_bbox": "492/501",
+    "edges_by_evidence": {
+     "two_methods": 441,
+     "image_checked": 28,
+     "single_source": 2
+    },
+    "decision_boxes": 240,
+    "predicate_status": {
+     "model_reviewed": 216,
+     "rejected": 1,
+     "inherited_from_link": 9,
+     "none": 12,
+     "section_only": 2
+    },
+    "decision_types": {
+     "condition": 228,
+     "other": 3,
+     "option": 9
+    },
+    "entries": 57,
+    "entries_with_predicate": 57,
+    "entries_reached_by_link": 27,
+    "roles": {
+     "note": 30,
+     "page_heading": 95,
+     "step": 264,
+     "decision": 52,
+     "leaf": 92,
+     "entry": 57,
+     "column_header": 6,
+     "link": 1
+    },
+    "links": {
+     "page": 80
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 342,
+     "printed_pointer": 105,
+     "nearest_same_prefix": 19,
+     "null": 12
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "cervical",
+   "title": "Cervical Cancer",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "November 10, 2025",
+   "pdf_sha256": "f252a40a50615458ad9c79750b43ccd6afe2d2ea60b1daadbead6eea040951ad",
+   "path": "cervical/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 138,
+    "algorithm_pages": 14,
+    "boxes": 205,
+    "boxes_text_found_in_pdf_at_bbox": "202/205",
+    "edges_by_evidence": {
+     "two_methods": 179,
+     "image_checked": 17
+    },
+    "decision_boxes": 109,
+    "predicate_status": {
+     "model_reviewed": 92,
+     "none": 15,
+     "inherited_from_link": 2
+    },
+    "decision_types": {
+     "condition": 92,
+     "other": 3,
+     "option": 14
+    },
+    "entries": 24,
+    "entries_with_predicate": 23,
+    "entries_reached_by_link": 21,
+    "roles": {
+     "leaf": 53,
+     "entry": 24,
+     "decision": 29,
+     "step": 96,
+     "note": 3,
+     "page_heading": 17
+    },
+    "links": {
+     "page": 49,
+     "external_guideline": 7
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 131,
+     "printed_pointer": 33,
+     "nearest_same_prefix": 2
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "chronic_lymphocytic_leukemia_small_lymphocytic_l",
+   "title": "Chronic Lymphocytic Leukemia_Small Lymphocytic Lymphoma",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "December 22, 2025",
+   "pdf_sha256": "f9a89b1fe8665d5108ce837eddd03d95dfcc4e7b91ccaf90f15460e9c2ea37b9",
+   "path": "chronic_lymphocytic_leukemia_small_lymphocytic_l/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 118,
+    "algorithm_pages": 9,
+    "boxes": 101,
+    "boxes_text_found_in_pdf_at_bbox": "101/101",
+    "edges_by_evidence": {
+     "two_methods": 71,
+     "image_checked": 12,
+     "single_source": 1
+    },
+    "decision_boxes": 45,
+    "predicate_status": {
+     "none": 9,
+     "model_reviewed": 31,
+     "inherited_from_link": 4,
+     "rejected": 1
+    },
+    "decision_types": {
+     "other": 4,
+     "condition": 35,
+     "option": 6
+    },
+    "entries": 15,
+    "entries_with_predicate": 11,
+    "entries_reached_by_link": 8,
+    "roles": {
+     "note": 15,
+     "entry": 15,
+     "leaf": 18,
+     "step": 43,
+     "decision": 8,
+     "page_heading": 9,
+     "column_header": 2
+    },
+    "links": {
+     "page": 26,
+     "external_guideline": 2
+    },
+    "footnote_refs_by_resolution": {
+     "printed_pointer": 53,
+     "own_page": 33,
+     "null": 3
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "chronic_myeloid_leukemia",
+   "title": "Chronic Myeloid Leukemia",
+   "category": "Treatment",
+   "version": "2.2027",
+   "version_date": "July 10, 2026",
+   "pdf_sha256": "51ca9b5e3944e8cece17c1c4483656918abdf938c4e86f1dc2637ae2a208bc5e",
+   "path": "chronic_myeloid_leukemia/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 118,
+    "algorithm_pages": 6,
+    "boxes": 45,
+    "boxes_text_found_in_pdf_at_bbox": "45/45",
+    "edges_by_evidence": {
+     "two_methods": 34,
+     "table_text_checked": 47,
+     "image_checked": 8,
+     "single_source": 1
+    },
+    "decision_boxes": 54,
+    "predicate_status": {
+     "model_reviewed": 39,
+     "none": 7,
+     "rejected": 5,
+     "inherited_from_link": 3
+    },
+    "decision_types": {
+     "condition": 45,
+     "other": 3,
+     "option": 6
+    },
+    "entries": 6,
+    "entries_with_predicate": 5,
+    "entries_reached_by_link": 3,
+    "roles": {
+     "page_heading": 7,
+     "step": 18,
+     "leaf": 12,
+     "entry": 4,
+     "decision": 9,
+     "table_root": 2,
+     "table_title": 1,
+     "table_condition": 19,
+     "table_value": 17,
+     "table_rec": 10,
+     "note": 2
+    },
+    "links": {
+     "page": 18,
+     "external_guideline": 4,
+     "discussion": 1
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 19,
+     "printed_pointer": 25
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "colon",
+   "title": "Colon Cancer",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "April 7, 2026",
+   "pdf_sha256": "81935e3ecbc356b41606dbd7c99648a345cc52c3471725aba008e78030885389",
+   "path": "colon/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 249,
+    "algorithm_pages": 16,
+    "boxes": 215,
+    "boxes_text_found_in_pdf_at_bbox": "215/215",
+    "edges_by_evidence": {
+     "two_methods": 181,
+     "single_source": 3,
+     "image_checked": 8
+    },
+    "decision_boxes": 108,
+    "predicate_status": {
+     "model_reviewed": 70,
+     "none": 32,
+     "inherited_from_link": 6
+    },
+    "decision_types": {
+     "condition": 70,
+     "option": 34,
+     "other": 1,
+     "null": 3
+    },
+    "entries": 34,
+    "entries_with_predicate": 34,
+    "entries_reached_by_link": 23,
+    "roles": {
+     "column_header": 5,
+     "leaf": 42,
+     "decision": 19,
+     "step": 94,
+     "entry": 34,
+     "page_heading": 16,
+     "note": 21
+    },
+    "links": {
+     "page": 56,
+     "external_guideline": 4
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 174,
+     "nearest_same_prefix": 7
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "colorectal_screening",
+   "title": "Colorectal Cancer Screening",
+   "category": "Detection Prevention Risk Reduction",
+   "version": "2.2026",
+   "version_date": "April 23, 2026",
+   "pdf_sha256": "65ea223af4f0beebe974c0530aa3350e951d06c801572af10d5beac5fd6d2294",
+   "path": "colorectal_screening/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 106,
+    "algorithm_pages": 17,
+    "boxes": 166,
+    "boxes_text_found_in_pdf_at_bbox": "165/166",
+    "edges_by_evidence": {
+     "two_methods": 122,
+     "image_checked": 18,
+     "single_source": 1
+    },
+    "decision_boxes": 93,
+    "predicate_status": {
+     "model_reviewed": 89,
+     "rejected": 2,
+     "none": 2
+    },
+    "decision_types": {
+     "condition": 90,
+     "null": 3
+    },
+    "entries": 28,
+    "entries_with_predicate": 28,
+    "entries_reached_by_link": 10,
+    "roles": {
+     "entry": 28,
+     "leaf": 52,
+     "note": 8,
+     "page_heading": 40,
+     "decision": 18,
+     "step": 58,
+     "column_header": 2
+    },
+    "links": {
+     "page": 27
+    },
+    "footnote_refs_by_resolution": {
+     "printed_pointer": 94,
+     "null": 4,
+     "own_page": 38,
+     "nearest_same_prefix": 1
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "cutaneous_lymphomas",
+   "title": "Cutaneous Lymphomas",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "February 13, 2026",
+   "pdf_sha256": "e5f159780f9bf4e0de316e5232e865723317a9323045fef0b49582fb453512b6",
+   "path": "cutaneous_lymphomas/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 148,
+    "algorithm_pages": 30,
+    "boxes": 271,
+    "boxes_text_found_in_pdf_at_bbox": "253/271",
+    "edges_by_evidence": {
+     "two_methods": 198,
+     "image_checked": 27,
+     "table_text_checked": 204,
+     "single_source": 1
+    },
+    "decision_boxes": 284,
+    "predicate_status": {
+     "section_only": 3,
+     "model_reviewed": 122,
+     "inherited_from_link": 2,
+     "none": 153,
+     "rejected": 4
+    },
+    "decision_types": {
+     "other": 43,
+     "condition": 232,
+     "option": 9
+    },
+    "entries": 23,
+    "entries_with_predicate": 21,
+    "entries_reached_by_link": 10,
+    "roles": {
+     "page_heading": 28,
+     "note": 56,
+     "entry": 20,
+     "decision": 42,
+     "leaf": 43,
+     "column_header": 4,
+     "step": 106,
+     "table_root": 3,
+     "table_title": 4,
+     "table_condition": 82,
+     "table_value": 108,
+     "table_ref": 10
+    },
+    "links": {
+     "page": 67,
+     "external_guideline": 12
+    },
+    "footnote_refs_by_resolution": {
+     "null": 7,
+     "own_page": 125
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "dermatofibrosarcoma_protuberans",
+   "title": "Dermatofibrosarcoma Protuberans",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "October 24, 2025",
+   "pdf_sha256": "54caf49a388291761a3e3e7dbee14491a39f900e1c3d189c686170e34241feb0",
+   "path": "dermatofibrosarcoma_protuberans/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 23,
+    "algorithm_pages": 3,
+    "boxes": 19,
+    "boxes_text_found_in_pdf_at_bbox": "19/19",
+    "edges_by_evidence": {
+     "two_methods": 17,
+     "image_checked": 1
+    },
+    "decision_boxes": 9,
+    "predicate_status": {
+     "none": 2,
+     "model_reviewed": 6,
+     "inherited_from_link": 1
+    },
+    "decision_types": {
+     "condition": 9
+    },
+    "entries": 3,
+    "entries_with_predicate": 1,
+    "entries_reached_by_link": 1,
+    "roles": {
+     "page_heading": 8,
+     "step": 11,
+     "leaf": 4,
+     "entry": 3,
+     "decision": 1
+    },
+    "links": {
+     "page": 2
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 15
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "distress_management",
+   "title": "Distress Management",
+   "category": "Supportive Care",
+   "version": "2.2026",
+   "version_date": "April 24, 2026",
+   "pdf_sha256": "a5ad958a09c86f1e90059d42195f225abeb1433078798f5e2a3875799e224104",
+   "path": "distress_management/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 85,
+    "algorithm_pages": 26,
+    "boxes": 247,
+    "boxes_text_found_in_pdf_at_bbox": "247/247",
+    "edges_by_evidence": {
+     "table_text_checked": 12,
+     "image_checked": 54,
+     "two_methods": 165,
+     "single_source": 1
+    },
+    "decision_boxes": 122,
+    "predicate_status": {
+     "none": 15,
+     "model_reviewed": 104,
+     "inherited_from_link": 2,
+     "rejected": 1
+    },
+    "decision_types": {
+     "other": 12,
+     "condition": 108,
+     "option": 1,
+     "null": 1
+    },
+    "entries": 30,
+    "entries_with_predicate": 25,
+    "entries_reached_by_link": 8,
+    "roles": {
+     "page_heading": 66,
+     "note": 22,
+     "table_root": 2,
+     "table_condition": 6,
+     "table_value": 6,
+     "column_header": 2,
+     "decision": 39,
+     "step": 101,
+     "leaf": 55,
+     "entry": 28
+    },
+    "links": {
+     "page": 59,
+     "external_guideline": 9
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 25
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "esophageal_and_esophagogastric_junction",
+   "title": "Esophageal and Esophagogastric Junction Cancers",
+   "category": "Treatment",
+   "version": "3.2026",
+   "version_date": "June 3, 2026",
+   "pdf_sha256": "ba9a5c6bf902928a57d4340769e621df6a19c1fb13aa61b541c3277c723e57e5",
+   "path": "esophageal_and_esophagogastric_junction/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 172,
+    "algorithm_pages": 21,
+    "boxes": 277,
+    "boxes_text_found_in_pdf_at_bbox": "276/277",
+    "edges_by_evidence": {
+     "two_methods": 223,
+     "image_checked": 24,
+     "single_source": 5
+    },
+    "decision_boxes": 133,
+    "predicate_status": {
+     "none": 25,
+     "model_reviewed": 101,
+     "inherited_from_link": 7
+    },
+    "decision_types": {
+     "condition": 105,
+     "option": 28
+    },
+    "entries": 37,
+    "entries_with_predicate": 36,
+    "entries_reached_by_link": 23,
+    "roles": {
+     "page_heading": 50,
+     "entry": 37,
+     "step": 131,
+     "leaf": 72,
+     "decision": 25,
+     "note": 12
+    },
+    "links": {
+     "page": 82
+    },
+    "footnote_refs_by_resolution": {
+     "printed_pointer": 110,
+     "own_page": 269,
+     "nearest_same_prefix": 26,
+     "null": 3
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "gastric",
+   "title": "Gastric Cancer",
+   "category": "Treatment",
+   "version": "3.2026",
+   "version_date": "June 3, 2026",
+   "pdf_sha256": "0fe0526db3255a623b9f750f93ac3fbb0adfbbb92f2fbe9f1fdac49da777b7fc",
+   "path": "gastric/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 140,
+    "algorithm_pages": 10,
+    "boxes": 122,
+    "boxes_text_found_in_pdf_at_bbox": "121/122",
+    "edges_by_evidence": {
+     "two_methods": 99,
+     "image_checked": 11
+    },
+    "decision_boxes": 60,
+    "predicate_status": {
+     "none": 8,
+     "model_reviewed": 49,
+     "inherited_from_link": 3
+    },
+    "decision_types": {
+     "other": 1,
+     "condition": 50,
+     "option": 9
+    },
+    "entries": 22,
+    "entries_with_predicate": 21,
+    "entries_reached_by_link": 17,
+    "roles": {
+     "page_heading": 18,
+     "entry": 22,
+     "step": 55,
+     "decision": 11,
+     "leaf": 28,
+     "note": 4,
+     "column_header": 2
+    },
+    "links": {
+     "page": 28
+    },
+    "footnote_refs_by_resolution": {
+     "printed_pointer": 77,
+     "null": 1,
+     "own_page": 58
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "gastrointestinal_stromal_tumors",
+   "title": "Gastrointestinal Stromal Tumors",
+   "category": "Treatment",
+   "version": "1.2026",
+   "version_date": "January 13, 2026",
+   "pdf_sha256": "7e6de8733865bb77b152993f1462a4c21e55999140aa10e2831057011e96fb0c",
+   "path": "gastrointestinal_stromal_tumors/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 54,
+    "algorithm_pages": 5,
+    "boxes": 61,
+    "boxes_text_found_in_pdf_at_bbox": "59/61",
+    "edges_by_evidence": {
+     "two_methods": 49,
+     "image_checked": 4,
+     "single_source": 1
+    },
+    "decision_boxes": 28,
+    "predicate_status": {
+     "model_reviewed": 26,
+     "none": 2
+    },
+    "decision_types": {
+     "condition": 26,
+     "other": 2
+    },
+    "entries": 10,
+    "entries_with_predicate": 10,
+    "entries_reached_by_link": 8,
+    "roles": {
+     "page_heading": 7,
+     "note": 4,
+     "leaf": 12,
+     "step": 29,
+     "entry": 10,
+     "column_header": 1,
+     "decision": 5
+    },
+    "links": {
+     "page": 17
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 67,
+     "nearest_same_prefix": 4
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "genetic_familial_high_risk_assessment_breast_ova",
+   "title": "Genetic_Familial High-Risk Assessment Breast, Ovarian, Pancreatic, and Prostate",
+   "category": "Detection Prevention Risk Reduction",
+   "version": "3.2026",
+   "version_date": "February 19, 2026",
+   "pdf_sha256": "dd838d37560b4218811cc87baf343c4c84f75699f6ac2dec9e689b909fdba0c4",
+   "path": "genetic_familial_high_risk_assessment_breast_ova/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 178,
+    "algorithm_pages": 16,
+    "boxes": 170,
+    "boxes_text_found_in_pdf_at_bbox": "170/170",
+    "edges_by_evidence": {
+     "table_text_checked": 99,
+     "two_methods": 27
+    },
+    "decision_boxes": 85,
+    "predicate_status": {
+     "model_reviewed": 66,
+     "none": 17,
+     "section_only": 1,
+     "inherited_from_link": 1
+    },
+    "decision_types": {
+     "condition": 71,
+     "other": 14
+    },
+    "entries": 10,
+    "entries_with_predicate": 8,
+    "entries_reached_by_link": 7,
+    "roles": {
+     "note": 114,
+     "table_root": 6,
+     "table_title": 14,
+     "table_rec": 10,
+     "table_condition": 54,
+     "table_ref": 21,
+     "step": 13,
+     "entry": 4,
+     "leaf": 11,
+     "page_heading": 19,
+     "decision": 3,
+     "column_header": 25
+    },
+    "links": {
+     "page": 45,
+     "external_guideline": 7
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 19,
+     "printed_pointer": 5
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "genetic_familial_high_risk_assessment_colorectal",
+   "title": "Genetic_Familial High-Risk Assessment Colorectal, Endometrial, Esophageal, and Gastric",
+   "category": "Detection Prevention Risk Reduction",
+   "version": "1.2026",
+   "version_date": "June 16, 2026",
+   "pdf_sha256": "dad3c09a5104a216353381042c0b9d697cca27ad364279ffded657107c3ab15a",
+   "path": "genetic_familial_high_risk_assessment_colorectal/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 213,
+    "algorithm_pages": 46,
+    "boxes": 148,
+    "boxes_text_found_in_pdf_at_bbox": "138/148",
+    "edges_by_evidence": {
+     "table_text_checked": 374,
+     "two_methods": 79,
+     "image_checked": 7
+    },
+    "decision_boxes": 335,
+    "predicate_status": {
+     "inherited_from_link": 6,
+     "none": 202,
+     "model_reviewed": 120,
+     "rejected": 4,
+     "section_only": 3
+    },
+    "decision_types": {
+     "condition": 191,
+     "other": 144
+    },
+    "entries": 45,
+    "entries_with_predicate": 37,
+    "entries_reached_by_link": 19,
+    "roles": {
+     "page_heading": 46,
+     "table_root": 31,
+     "table_title": 25,
+     "table_condition": 125,
+     "note": 51,
+     "table_rec": 69,
+     "step": 41,
+     "leaf": 32,
+     "entry": 14,
+     "decision": 10,
+     "table_ref": 4,
+     "table_value": 151
+    },
+    "links": {
+     "page": 145,
+     "external_guideline": 9
+    },
+    "footnote_refs_by_resolution": {
+     "printed_pointer": 2,
+     "own_page": 62
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "gestational_trophoblastic_neoplasia",
+   "title": "Gestational Trophoblastic Neoplasia",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "November 21, 2025",
+   "pdf_sha256": "e29ca26ab6a0c269e9abb825abd5bfc0c20cdb81ba9a4a69ce702c9b99abd51d",
+   "path": "gestational_trophoblastic_neoplasia/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 56,
+    "algorithm_pages": 7,
+    "boxes": 78,
+    "boxes_text_found_in_pdf_at_bbox": "73/78",
+    "edges_by_evidence": {
+     "two_methods": 60,
+     "image_checked": 10,
+     "single_source": 1
+    },
+    "decision_boxes": 39,
+    "predicate_status": {
+     "model_reviewed": 37,
+     "none": 1,
+     "inherited_from_link": 1
+    },
+    "decision_types": {
+     "condition": 39
+    },
+    "entries": 9,
+    "entries_with_predicate": 8,
+    "entries_reached_by_link": 8,
+    "roles": {
+     "note": 5,
+     "page_heading": 23,
+     "leaf": 20,
+     "entry": 9,
+     "decision": 12,
+     "step": 32
+    },
+    "links": {
+     "page": 14,
+     "external_guideline": 1
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 62,
+     "nearest_same_prefix": 1,
+     "null": 1
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "hairy_cell_leukemia",
+   "title": "Hairy Cell Leukemia",
+   "category": "Treatment",
+   "version": "1.2027",
+   "version_date": "July 24, 2026",
+   "pdf_sha256": "dadfaa34b0a451aef31f289203553027d9b5de4eebfded061209c8a82bce075e",
+   "path": "hairy_cell_leukemia/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 34,
+    "algorithm_pages": 2,
+    "boxes": 19,
+    "boxes_text_found_in_pdf_at_bbox": "19/19",
+    "edges_by_evidence": {
+     "two_methods": 16,
+     "image_checked": 1
+    },
+    "decision_boxes": 8,
+    "predicate_status": {
+     "none": 3,
+     "model_reviewed": 3,
+     "rejected": 2
+    },
+    "decision_types": {
+     "condition": 8
+    },
+    "entries": 2,
+    "entries_with_predicate": 1,
+    "entries_reached_by_link": 0,
+    "roles": {
+     "page_heading": 5,
+     "step": 9,
+     "entry": 2,
+     "leaf": 4,
+     "note": 1,
+     "decision": 3
+    },
+    "links": {
+     "page": 5
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 14,
+     "null": 1
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "head_and_neck",
+   "title": "Head and Neck Cancers",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "May 12, 2026",
+   "pdf_sha256": "cd5937df2a8ce8b24067d20879bba75558e46937a8f5905b3ab47c615c6e1c69",
+   "path": "head_and_neck/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 276,
+    "algorithm_pages": 57,
+    "boxes": 985,
+    "boxes_text_found_in_pdf_at_bbox": "983/985",
+    "edges_by_evidence": {
+     "two_methods": 832,
+     "image_checked": 162,
+     "single_source": 7
+    },
+    "decision_boxes": 519,
+    "predicate_status": {
+     "model_reviewed": 373,
+     "section_only": 4,
+     "none": 139,
+     "inherited_from_link": 2,
+     "rejected": 1
+    },
+    "decision_types": {
+     "condition": 374,
+     "other": 9,
+     "option": 133,
+     "null": 3
+    },
+    "entries": 74,
+    "entries_with_predicate": 73,
+    "entries_reached_by_link": 48,
+    "roles": {
+     "page_heading": 114,
+     "note": 50,
+     "step": 502,
+     "entry": 74,
+     "leaf": 225,
+     "decision": 126,
+     "column_header": 8
+    },
+    "links": {
+     "external_guideline": 7,
+     "page": 236
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 876,
+     "null": 26,
+     "nearest_same_prefix": 87
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "hematopoietic_cell_transplantation",
+   "title": "Hematopoietic Cell Transplantation",
+   "category": "Supportive Care",
+   "version": "3.2026",
+   "version_date": "July 30, 2026",
+   "pdf_sha256": "0cb42d280a71b7d297c1c05edf1a9923e8e0d1d9afbecf597ce8375f58dbdba6",
+   "path": "hematopoietic_cell_transplantation/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 114,
+    "algorithm_pages": 8,
+    "boxes": 55,
+    "boxes_text_found_in_pdf_at_bbox": "55/55",
+    "edges_by_evidence": {
+     "two_methods": 41,
+     "table_text_checked": 2,
+     "image_checked": 3,
+     "single_source": 1
+    },
+    "decision_boxes": 23,
+    "predicate_status": {
+     "none": 6,
+     "model_reviewed": 17
+    },
+    "decision_types": {
+     "other": 3,
+     "option": 3,
+     "condition": 17
+    },
+    "entries": 11,
+    "entries_with_predicate": 8,
+    "entries_reached_by_link": 4,
+    "roles": {
+     "entry": 10,
+     "leaf": 14,
+     "note": 3,
+     "page_heading": 14,
+     "table_root": 1,
+     "table_condition": 1,
+     "table_rec": 1,
+     "step": 24,
+     "decision": 4
+    },
+    "links": {
+     "page": 15,
+     "external_guideline": 1
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 59,
+     "null": 2
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "hematopoietic_growth_factors",
+   "title": "Hematopoietic Growth Factors",
+   "category": "Supportive Care",
+   "version": "3.2026",
+   "version_date": "December 5, 2025",
+   "pdf_sha256": "43733ec081bec5b5666c23d4e8938648cb298f10d1826cbb96094880a0604868",
+   "path": "hematopoietic_growth_factors/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 105,
+    "algorithm_pages": 15,
+    "boxes": 119,
+    "boxes_text_found_in_pdf_at_bbox": "119/119",
+    "edges_by_evidence": {
+     "two_methods": 84,
+     "image_checked": 3,
+     "single_source": 1
+    },
+    "decision_boxes": 54,
+    "predicate_status": {
+     "model_reviewed": 52,
+     "rejected": 1,
+     "inherited_from_link": 1
+    },
+    "decision_types": {
+     "condition": 53,
+     "other": 1
+    },
+    "entries": 20,
+    "entries_with_predicate": 19,
+    "entries_reached_by_link": 4,
+    "roles": {
+     "page_heading": 32,
+     "note": 15,
+     "step": 38,
+     "leaf": 35,
+     "entry": 20,
+     "decision": 11
+    },
+    "links": {
+     "page": 16,
+     "external_guideline": 1,
+     "discussion": 3
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 85,
+     "null": 2,
+     "nearest_same_prefix": 10
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "hepatocellular_carcinoma",
+   "title": "Hepatocellular Carcinoma",
+   "category": "Treatment",
+   "version": "1.2026",
+   "version_date": "March 10, 2026",
+   "pdf_sha256": "74766a1feb3702e8a132bc66557a1d8bf1a2a7d2c97215b27ea07c11f354c2fd",
+   "path": "hepatocellular_carcinoma/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 115,
+    "algorithm_pages": 6,
+    "boxes": 43,
+    "boxes_text_found_in_pdf_at_bbox": "42/43",
+    "edges_by_evidence": {
+     "two_methods": 38
+    },
+    "decision_boxes": 25,
+    "predicate_status": {
+     "model_reviewed": 20,
+     "none": 5
+    },
+    "decision_types": {
+     "condition": 20,
+     "option": 5
+    },
+    "entries": 7,
+    "entries_with_predicate": 7,
+    "entries_reached_by_link": 7,
+    "roles": {
+     "step": 15,
+     "leaf": 16,
+     "entry": 7,
+     "decision": 5,
+     "page_heading": 12
+    },
+    "links": {
+     "page": 12
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 69
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "histiocytic_neoplasms",
+   "title": "Histiocytic Neoplasms",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "July 15, 2026",
+   "pdf_sha256": "d9086985868c4d2fd6f5b76f4e9e17dc5245625f79ce9862e184b9d5df786f57",
+   "path": "histiocytic_neoplasms/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 95,
+    "algorithm_pages": 16,
+    "boxes": 114,
+    "boxes_text_found_in_pdf_at_bbox": "114/114",
+    "edges_by_evidence": {
+     "two_methods": 101,
+     "image_checked": 1
+    },
+    "decision_boxes": 58,
+    "predicate_status": {
+     "section_only": 3,
+     "model_reviewed": 49,
+     "inherited_from_link": 3,
+     "none": 2,
+     "rejected": 1
+    },
+    "decision_types": {
+     "other": 6,
+     "condition": 50,
+     "null": 2
+    },
+    "entries": 18,
+    "entries_with_predicate": 18,
+    "entries_reached_by_link": 7,
+    "roles": {
+     "entry": 18,
+     "step": 56,
+     "leaf": 24,
+     "page_heading": 17,
+     "decision": 7,
+     "note": 9
+    },
+    "links": {
+     "page": 41,
+     "external_guideline": 2
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 64
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "hodgkin_lymphoma",
+   "title": "Hodgkin Lymphoma",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "July 1, 2026",
+   "pdf_sha256": "08e6009f8c14d93c9678185dc98d6b6163c7a32d73dafb912907698c4501f012",
+   "path": "hodgkin_lymphoma/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 124,
+    "algorithm_pages": 17,
+    "boxes": 182,
+    "boxes_text_found_in_pdf_at_bbox": "178/182",
+    "edges_by_evidence": {
+     "two_methods": 134,
+     "table_text_checked": 79,
+     "image_checked": 12
+    },
+    "decision_boxes": 109,
+    "predicate_status": {
+     "model_reviewed": 61,
+     "none": 45,
+     "rejected": 1,
+     "inherited_from_link": 2
+    },
+    "decision_types": {
+     "condition": 84,
+     "other": 8,
+     "option": 17
+    },
+    "entries": 19,
+    "entries_with_predicate": 16,
+    "entries_reached_by_link": 7,
+    "roles": {
+     "page_heading": 23,
+     "decision": 20,
+     "step": 80,
+     "leaf": 23,
+     "entry": 14,
+     "note": 44,
+     "table_root": 5,
+     "table_condition": 46,
+     "table_ref": 5,
+     "table_title": 5,
+     "table_value": 18,
+     "table_rec": 5,
+     "link": 1
+    },
+    "links": {
+     "external_guideline": 4,
+     "page": 38
+    },
+    "footnote_refs_by_resolution": {
+     "footnote_page": 12,
+     "own_page": 162,
+     "null": 8,
+     "nearest_same_prefix": 7
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "in_people_with_hiv",
+   "title": "Cancer in People with HIV",
+   "category": "Specific Populations",
+   "version": "2.2026",
+   "version_date": "December 17, 2025",
+   "pdf_sha256": "55f29d0146a5f728d4b06105bbb77025e0f1887f063dbf635367a7267d47a608",
+   "path": "in_people_with_hiv/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 66,
+    "algorithm_pages": 5,
+    "boxes": 43,
+    "boxes_text_found_in_pdf_at_bbox": "37/43",
+    "edges_by_evidence": {
+     "image_checked": 4,
+     "two_methods": 2
+    },
+    "decision_boxes": 7,
+    "predicate_status": {
+     "model_reviewed": 7
+    },
+    "decision_types": {
+     "condition": 7
+    },
+    "entries": 2,
+    "entries_with_predicate": 2,
+    "entries_reached_by_link": 0,
+    "roles": {
+     "note": 35,
+     "entry": 2,
+     "leaf": 6
+    },
+    "links": {
+     "page": 9,
+     "external_guideline": 10
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 4,
+     "null": 2,
+     "nearest_same_prefix": 3
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "kaposi_sarcoma",
+   "title": "Kaposi Sarcoma",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "September 16, 2025",
+   "pdf_sha256": "232ecec1580e09351b4b498a9cc13db8b45758c8d271183a99eaa1c9f71008a0",
+   "path": "kaposi_sarcoma/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 52,
+    "algorithm_pages": 5,
+    "boxes": 49,
+    "boxes_text_found_in_pdf_at_bbox": "46/49",
+    "edges_by_evidence": {
+     "image_checked": 7,
+     "two_methods": 37,
+     "single_source": 1,
+     "table_text_checked": 8
+    },
+    "decision_boxes": 29,
+    "predicate_status": {
+     "none": 6,
+     "model_reviewed": 23
+    },
+    "decision_types": {
+     "other": 5,
+     "condition": 22,
+     "option": 2
+    },
+    "entries": 4,
+    "entries_with_predicate": 2,
+    "entries_reached_by_link": 2,
+    "roles": {
+     "entry": 3,
+     "decision": 9,
+     "step": 22,
+     "leaf": 10,
+     "note": 4,
+     "page_heading": 2,
+     "column_header": 1,
+     "table_root": 1,
+     "table_title": 2,
+     "table_rec": 4,
+     "table_condition": 2
+    },
+    "links": {
+     "external_guideline": 3,
+     "page": 11
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 42,
+     "nearest_same_prefix": 4,
+     "null": 1
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "kidney",
+   "title": "Kidney Cancer",
+   "category": "Treatment",
+   "version": "1.2027",
+   "version_date": "July 1, 2026",
+   "pdf_sha256": "b53176d230f99463f1fb98d43deb61271b78a73a99d9af5ce8827a3d5fabd881",
+   "path": "kidney/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 100,
+    "algorithm_pages": 5,
+    "boxes": 68,
+    "boxes_text_found_in_pdf_at_bbox": "67/68",
+    "edges_by_evidence": {
+     "image_checked": 7,
+     "two_methods": 56
+    },
+    "decision_boxes": 27,
+    "predicate_status": {
+     "model_reviewed": 27
+    },
+    "decision_types": {
+     "condition": 27
+    },
+    "entries": 7,
+    "entries_with_predicate": 7,
+    "entries_reached_by_link": 2,
+    "roles": {
+     "page_heading": 11,
+     "note": 3,
+     "step": 37,
+     "decision": 6,
+     "leaf": 15,
+     "entry": 7
+    },
+    "links": {
+     "page": 18
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 23
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "lung_screening",
+   "title": "Lung Cancer Screening",
+   "category": "Detection Prevention Risk Reduction",
+   "version": "1.2026",
+   "version_date": "September 16, 2025",
+   "pdf_sha256": "c5988e8e517dfa3e0dc81c9de346cfa0cf2bd83d2d619d2335980ca91a6221e5",
+   "path": "lung_screening/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 90,
+    "algorithm_pages": 11,
+    "boxes": 199,
+    "boxes_text_found_in_pdf_at_bbox": "196/199",
+    "edges_by_evidence": {
+     "two_methods": 191,
+     "image_checked": 25
+    },
+    "decision_boxes": 122,
+    "predicate_status": {
+     "inherited_from_link": 1,
+     "model_reviewed": 107,
+     "none": 14
+    },
+    "decision_types": {
+     "condition": 112,
+     "option": 8,
+     "other": 2
+    },
+    "entries": 13,
+    "entries_with_predicate": 13,
+    "entries_reached_by_link": 10,
+    "roles": {
+     "page_heading": 19,
+     "entry": 13,
+     "step": 92,
+     "leaf": 53,
+     "note": 3,
+     "decision": 38
+    },
+    "links": {
+     "external_guideline": 11,
+     "page": 40
+    },
+    "footnote_refs_by_resolution": {
+     "printed_pointer": 264,
+     "own_page": 36
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "management_of_car_t_cell_and_lymphocyte_engager",
+   "title": "Management of CAR T-Cell and Lymphocyte Engager-Related Toxicities",
+   "category": "Supportive Care",
+   "version": "2.2026",
+   "version_date": "November 11, 2025",
+   "pdf_sha256": "adc30be5dc67155f8d2da111d229375169d7bd12e17aba5729dbff268cd30d10",
+   "path": "management_of_car_t_cell_and_lymphocyte_engager/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 54,
+    "algorithm_pages": 17,
+    "boxes": 55,
+    "boxes_text_found_in_pdf_at_bbox": "55/55",
+    "edges_by_evidence": {
+     "table_text_checked": 125,
+     "two_methods": 32
+    },
+    "decision_boxes": 116,
+    "predicate_status": {
+     "section_only": 3,
+     "none": 69,
+     "model_reviewed": 44
+    },
+    "decision_types": {
+     "other": 32,
+     "condition": 68,
+     "option": 16
+    },
+    "entries": 17,
+    "entries_with_predicate": 15,
+    "entries_reached_by_link": 1,
+    "roles": {
+     "page_heading": 20,
+     "note": 16,
+     "table_root": 10,
+     "table_rec": 31,
+     "table_condition": 40,
+     "table_value": 49,
+     "leaf": 17,
+     "step": 13,
+     "entry": 7,
+     "table_title": 5,
+     "decision": 2
+    },
+    "links": {
+     "page": 22,
+     "external_guideline": 2
+    },
+    "footnote_refs_by_resolution": {
+     "printed_pointer": 26,
+     "own_page": 23
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "management_of_immune_checkpoint_inhibitor_relate",
+   "title": "Management of Immune Checkpoint Inhibitor-Related Toxicities",
+   "category": "Supportive Care",
+   "version": "1.2026",
+   "version_date": "October 23, 2025",
+   "pdf_sha256": "6e3aedbc358901aa577db2d45dbe5bce0058a23bc4bdafce98e277c0af10a557",
+   "path": "management_of_immune_checkpoint_inhibitor_relate/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 139,
+    "algorithm_pages": 46,
+    "boxes": 369,
+    "boxes_text_found_in_pdf_at_bbox": "369/369",
+    "edges_by_evidence": {
+     "table_text_checked": 109,
+     "two_methods": 251,
+     "image_checked": 39
+    },
+    "decision_boxes": 216,
+    "predicate_status": {
+     "none": 23,
+     "model_reviewed": 190,
+     "rejected": 3
+    },
+    "decision_types": {
+     "other": 22,
+     "condition": 194
+    },
+    "entries": 52,
+    "entries_with_predicate": 46,
+    "entries_reached_by_link": 6,
+    "roles": {
+     "page_heading": 74,
+     "table_root": 5,
+     "table_rec": 31,
+     "table_condition": 39,
+     "table_value": 39,
+     "note": 34,
+     "leaf": 120,
+     "step": 132,
+     "decision": 36,
+     "entry": 47
+    },
+    "links": {
+     "page": 58
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 206,
+     "printed_pointer": 266,
+     "nearest_same_prefix": 1
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "melanoma_cutaneous",
+   "title": "Melanoma Cutaneous",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "April 17, 2026",
+   "pdf_sha256": "b2d2d87f01bc8a320f6a000bc917bbf8c970cb96746e1b5237c27d17d1d61812",
+   "path": "melanoma_cutaneous/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 260,
+    "algorithm_pages": 17,
+    "boxes": 173,
+    "boxes_text_found_in_pdf_at_bbox": "173/173",
+    "edges_by_evidence": {
+     "two_methods": 156,
+     "image_checked": 5,
+     "table_text_checked": 36
+    },
+    "decision_boxes": 98,
+    "predicate_status": {
+     "model_reviewed": 74,
+     "none": 17,
+     "inherited_from_link": 6,
+     "rejected": 1
+    },
+    "decision_types": {
+     "condition": 81,
+     "other": 3,
+     "option": 14
+    },
+    "entries": 23,
+    "entries_with_predicate": 22,
+    "entries_reached_by_link": 17,
+    "roles": {
+     "page_heading": 45,
+     "leaf": 42,
+     "step": 80,
+     "entry": 21,
+     "decision": 22,
+     "note": 8,
+     "table_root": 2,
+     "table_condition": 14,
+     "table_rec": 19,
+     "table_ref": 3
+    },
+    "links": {
+     "page": 69,
+     "external_guideline": 2
+    },
+    "footnote_refs_by_resolution": {
+     "printed_pointer": 64,
+     "null": 5,
+     "footnote_page": 80,
+     "own_page": 62,
+     "nearest_same_prefix": 5
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "melanoma_uveal",
+   "title": "Melanoma Uveal",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "March 18, 2026",
+   "pdf_sha256": "cbd07f6fdf3b1817a3663f6f9c7dfdec2389dd2bd0e7b2bc90206100358176e5",
+   "path": "melanoma_uveal/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 96,
+    "algorithm_pages": 6,
+    "boxes": 47,
+    "boxes_text_found_in_pdf_at_bbox": "47/47",
+    "edges_by_evidence": {
+     "image_checked": 5,
+     "two_methods": 40,
+     "single_source": 1,
+     "table_text_checked": 10
+    },
+    "decision_boxes": 27,
+    "predicate_status": {
+     "model_reviewed": 23,
+     "none": 1,
+     "inherited_from_link": 3
+    },
+    "decision_types": {
+     "condition": 25,
+     "other": 2
+    },
+    "entries": 7,
+    "entries_with_predicate": 6,
+    "entries_reached_by_link": 5,
+    "roles": {
+     "note": 2,
+     "page_heading": 11,
+     "decision": 5,
+     "leaf": 10,
+     "step": 24,
+     "entry": 6,
+     "table_root": 1,
+     "table_rec": 4,
+     "table_condition": 3,
+     "table_ref": 3
+    },
+    "links": {
+     "page": 17,
+     "external_guideline": 2
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 23,
+     "footnote_page": 23,
+     "printed_pointer": 12
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "merkel_cell_carcinoma",
+   "title": "Merkel Cell Carcinoma",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "October 24, 2025",
+   "pdf_sha256": "d0bcf8e3a7c0c4d308c6b451337cd419e3f4b1871a25e5f4f130bdc28b2dbcb9",
+   "path": "merkel_cell_carcinoma/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 72,
+    "algorithm_pages": 6,
+    "boxes": 68,
+    "boxes_text_found_in_pdf_at_bbox": "67/68",
+    "edges_by_evidence": {
+     "two_methods": 63,
+     "image_checked": 8
+    },
+    "decision_boxes": 34,
+    "predicate_status": {
+     "model_reviewed": 29,
+     "none": 4,
+     "inherited_from_link": 1
+    },
+    "decision_types": {
+     "condition": 29,
+     "option": 3,
+     "other": 2
+    },
+    "entries": 6,
+    "entries_with_predicate": 6,
+    "entries_reached_by_link": 4,
+    "roles": {
+     "page_heading": 24,
+     "decision": 12,
+     "leaf": 13,
+     "step": 35,
+     "entry": 6,
+     "note": 2
+    },
+    "links": {
+     "page": 16,
+     "external_guideline": 2
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 36,
+     "printed_pointer": 37
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "mesothelioma_peritoneal",
+   "title": "Mesothelioma Peritoneal",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "October 3, 2025",
+   "pdf_sha256": "ea72ad3be2bde815634ec6ff3e588364ebe53f672a7a490e0e5636f25b73c239",
+   "path": "mesothelioma_peritoneal/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 42,
+    "algorithm_pages": 2,
+    "boxes": 22,
+    "boxes_text_found_in_pdf_at_bbox": "22/22",
+    "edges_by_evidence": {
+     "two_methods": 18,
+     "image_checked": 2
+    },
+    "decision_boxes": 7,
+    "predicate_status": {
+     "model_reviewed": 7
+    },
+    "decision_types": {
+     "condition": 7
+    },
+    "entries": 3,
+    "entries_with_predicate": 3,
+    "entries_reached_by_link": 2,
+    "roles": {
+     "page_heading": 4,
+     "step": 13,
+     "entry": 3,
+     "leaf": 3,
+     "decision": 2,
+     "note": 1
+    },
+    "links": {
+     "page": 1
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 20
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "mesothelioma_pleural",
+   "title": "Mesothelioma Pleural",
+   "category": "Treatment",
+   "version": "3.2026",
+   "version_date": "July 8, 2026",
+   "pdf_sha256": "d34c5841c81fc93a6d70d5cb009087518299ca4e2b90f7c616c03929443f37da",
+   "path": "mesothelioma_pleural/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 58,
+    "algorithm_pages": 3,
+    "boxes": 40,
+    "boxes_text_found_in_pdf_at_bbox": "39/40",
+    "edges_by_evidence": {
+     "two_methods": 37,
+     "image_checked": 1
+    },
+    "decision_boxes": 14,
+    "predicate_status": {
+     "model_reviewed": 8,
+     "none": 5,
+     "rejected": 1
+    },
+    "decision_types": {
+     "condition": 9,
+     "option": 5
+    },
+    "entries": 3,
+    "entries_with_predicate": 2,
+    "entries_reached_by_link": 1,
+    "roles": {
+     "step": 25,
+     "entry": 3,
+     "leaf": 8,
+     "page_heading": 5,
+     "decision": 4
+    },
+    "links": {
+     "page": 2
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 47
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "multiple_myeloma",
+   "title": "Multiple Myeloma",
+   "category": "Treatment",
+   "version": "5.2026",
+   "version_date": "January 9, 2026",
+   "pdf_sha256": "12bd37ee90a51b6595cb3d38a78a9a3a941f06d9c43a5e90719a60a379148847",
+   "path": "multiple_myeloma/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 141,
+    "algorithm_pages": 15,
+    "boxes": 85,
+    "boxes_text_found_in_pdf_at_bbox": "85/85",
+    "edges_by_evidence": {
+     "two_methods": 54,
+     "single_source": 5,
+     "image_checked": 6,
+     "table_text_checked": 62
+    },
+    "decision_boxes": 87,
+    "predicate_status": {
+     "model_reviewed": 27,
+     "none": 58,
+     "rejected": 1,
+     "inherited_from_link": 1
+    },
+    "decision_types": {
+     "condition": 57,
+     "other": 30
+    },
+    "entries": 19,
+    "entries_with_predicate": 11,
+    "entries_reached_by_link": 8,
+    "roles": {
+     "leaf": 22,
+     "entry": 17,
+     "note": 9,
+     "decision": 4,
+     "page_heading": 40,
+     "step": 33,
+     "table_root": 2,
+     "table_condition": 20,
+     "table_value": 42
+    },
+    "links": {
+     "page": 30,
+     "external_guideline": 9
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 80,
+     "null": 1
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "myelodysplastic_syndromes",
+   "title": "Myelodysplastic Syndromes",
+   "category": "Treatment",
+   "version": "3.2026",
+   "version_date": "January 12, 2026",
+   "pdf_sha256": "03473e87ad36865657ef37460c4d31e44b2e3df3af5292b412971ff581eda0cb",
+   "path": "myelodysplastic_syndromes/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 123,
+    "algorithm_pages": 8,
+    "boxes": 104,
+    "boxes_text_found_in_pdf_at_bbox": "96/104",
+    "edges_by_evidence": {
+     "two_methods": 69,
+     "table_text_checked": 36,
+     "image_checked": 43
+    },
+    "decision_boxes": 94,
+    "predicate_status": {
+     "model_reviewed": 58,
+     "none": 35,
+     "inherited_from_link": 1
+    },
+    "decision_types": {
+     "condition": 68,
+     "other": 8,
+     "option": 17,
+     "null": 1
+    },
+    "entries": 12,
+    "entries_with_predicate": 10,
+    "entries_reached_by_link": 3,
+    "roles": {
+     "page_heading": 13,
+     "decision": 17,
+     "step": 50,
+     "leaf": 25,
+     "entry": 10,
+     "note": 2,
+     "table_root": 2,
+     "table_condition": 10,
+     "table_value": 20,
+     "table_rec": 6
+    },
+    "links": {
+     "page": 13,
+     "external_guideline": 2
+    },
+    "footnote_refs_by_resolution": {
+     "printed_pointer": 87,
+     "own_page": 17,
+     "null": 1,
+     "footnote_page": 34
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "myeloid_lymphoid_neoplasms_with_eosinophilia_and",
+   "title": "Myeloid_Lymphoid Neoplasms with Eosinophilia and Tyrosine Kinase Gene Fusions",
+   "category": "Treatment",
+   "version": "1.2026",
+   "version_date": "October 3, 2025",
+   "pdf_sha256": "5694b8e162ed2f3d6b0941afac1b851255c665e7d932de174c8ae23be95df392",
+   "path": "myeloid_lymphoid_neoplasms_with_eosinophilia_and/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 51,
+    "algorithm_pages": 11,
+    "boxes": 116,
+    "boxes_text_found_in_pdf_at_bbox": "116/116",
+    "edges_by_evidence": {
+     "image_checked": 38,
+     "two_methods": 50,
+     "single_source": 1,
+     "table_text_checked": 6
+    },
+    "decision_boxes": 62,
+    "predicate_status": {
+     "none": 31,
+     "model_reviewed": 27,
+     "inherited_from_link": 4
+    },
+    "decision_types": {
+     "other": 23,
+     "condition": 28,
+     "null": 5,
+     "option": 6
+    },
+    "entries": 16,
+    "entries_with_predicate": 11,
+    "entries_reached_by_link": 8,
+    "roles": {
+     "note": 28,
+     "page_heading": 15,
+     "entry": 15,
+     "step": 41,
+     "decision": 10,
+     "leaf": 22,
+     "table_root": 1,
+     "table_condition": 3,
+     "table_rec": 3
+    },
+    "links": {
+     "page": 15,
+     "external_guideline": 10
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 35,
+     "null": 3
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "myeloproliferative_neoplasms",
+   "title": "Myeloproliferative Neoplasms",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "June 16, 2026",
+   "pdf_sha256": "bdd583464381fe533f9c9e6ee98825aaed5a330f54dbfac9694dbac1d4b7323d",
+   "path": "myeloproliferative_neoplasms/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 125,
+    "algorithm_pages": 9,
+    "boxes": 91,
+    "boxes_text_found_in_pdf_at_bbox": "90/91",
+    "edges_by_evidence": {
+     "two_methods": 66,
+     "image_checked": 19
+    },
+    "decision_boxes": 41,
+    "predicate_status": {
+     "model_reviewed": 33,
+     "none": 3,
+     "section_only": 3,
+     "rejected": 1,
+     "inherited_from_link": 1
+    },
+    "decision_types": {
+     "condition": 38,
+     "option": 2,
+     "other": 1
+    },
+    "entries": 11,
+    "entries_with_predicate": 10,
+    "entries_reached_by_link": 3,
+    "roles": {
+     "page_heading": 3,
+     "step": 43,
+     "entry": 11,
+     "leaf": 24,
+     "decision": 10,
+     "note": 3
+    },
+    "links": {
+     "page": 28,
+     "external_guideline": 1
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 77,
+     "nearest_same_prefix": 9,
+     "printed_pointer": 22
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "neuroblastoma",
+   "title": "Neuroblastoma",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "April 28, 2026",
+   "pdf_sha256": "bb0e90691fd74ac58f0d94a19404be8aee67f8095b9b6c494d9235e4db4d8741",
+   "path": "neuroblastoma/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 93,
+    "algorithm_pages": 12,
+    "boxes": 112,
+    "boxes_text_found_in_pdf_at_bbox": "111/112",
+    "edges_by_evidence": {
+     "image_checked": 5,
+     "two_methods": 93,
+     "table_text_checked": 74
+    },
+    "decision_boxes": 91,
+    "predicate_status": {
+     "none": 8,
+     "model_reviewed": 81,
+     "inherited_from_link": 2
+    },
+    "decision_types": {
+     "other": 5,
+     "condition": 84,
+     "null": 2
+    },
+    "entries": 13,
+    "entries_with_predicate": 10,
+    "entries_reached_by_link": 4,
+    "roles": {
+     "page_heading": 20,
+     "note": 7,
+     "step": 52,
+     "entry": 12,
+     "leaf": 29,
+     "table_root": 1,
+     "table_condition": 74,
+     "decision": 12
+    },
+    "links": {
+     "page": 42
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 108,
+     "nearest_same_prefix": 4
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "neuroendocrine_and_adrenal_tumors",
+   "title": "Neuroendocrine and Adrenal Tumors",
+   "category": "Treatment",
+   "version": "1.2026",
+   "version_date": "April 21, 2026",
+   "pdf_sha256": "23015d9d50d0f80149cd8b4cc79070b360454c06b9f402655d16a51ed969e04f",
+   "path": "neuroendocrine_and_adrenal_tumors/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 237,
+    "algorithm_pages": 35,
+    "boxes": 306,
+    "boxes_text_found_in_pdf_at_bbox": "304/306",
+    "edges_by_evidence": {
+     "table_text_checked": 49,
+     "two_methods": 243,
+     "image_checked": 36,
+     "single_source": 1
+    },
+    "decision_boxes": 193,
+    "predicate_status": {
+     "inherited_from_link": 3,
+     "model_reviewed": 172,
+     "rejected": 2,
+     "none": 13,
+     "section_only": 3
+    },
+    "decision_types": {
+     "other": 6,
+     "condition": 184,
+     "option": 3
+    },
+    "entries": 42,
+    "entries_with_predicate": 41,
+    "entries_reached_by_link": 14,
+    "roles": {
+     "table_root": 2,
+     "table_condition": 40,
+     "table_ref": 6,
+     "page_heading": 72,
+     "note": 13,
+     "step": 139,
+     "leaf": 77,
+     "decision": 36,
+     "entry": 40,
+     "table_title": 2,
+     "table_rec": 1,
+     "link": 1
+    },
+    "links": {
+     "page": 189,
+     "external_guideline": 4
+    },
+    "footnote_refs_by_resolution": {
+     "printed_pointer": 27,
+     "own_page": 200,
+     "nearest_same_prefix": 1,
+     "null": 4
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "nsclc",
+   "title": "Non-Small Cell Lung Cancer",
+   "category": "Treatment",
+   "version": "6.2026",
+   "version_date": "June 12, 2026",
+   "pdf_sha256": "72396f3528e61fcef5160a2c25c880b6bdc059c4c7b4a488a74e96de2b438b3a",
+   "path": "nsclc/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 302,
+    "algorithm_pages": 43,
+    "boxes": 671,
+    "boxes_text_found_in_pdf_at_bbox": "669/671",
+    "edges_by_evidence": {
+     "two_methods": 572,
+     "single_source": 19,
+     "image_checked": 49,
+     "table_text_checked": 28
+    },
+    "decision_boxes": 353,
+    "predicate_status": {
+     "model_reviewed": 290,
+     "inherited_from_link": 4,
+     "none": 54,
+     "rejected": 5
+    },
+    "decision_types": {
+     "condition": 297,
+     "other": 10,
+     "option": 38,
+     "null": 8
+    },
+    "entries": 59,
+    "entries_with_predicate": 59,
+    "entries_reached_by_link": 55,
+    "roles": {
+     "page_heading": 66,
+     "note": 20,
+     "decision": 90,
+     "leaf": 158,
+     "entry": 58,
+     "step": 344,
+     "table_root": 1,
+     "table_condition": 14,
+     "table_ref": 14,
+     "column_header": 1
+    },
+    "links": {
+     "external_guideline": 6,
+     "page": 202
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 357,
+     "nearest_same_prefix": 9,
+     "printed_pointer": 40
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "occult_primary",
+   "title": "Occult Primary",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "May 4, 2026",
+   "pdf_sha256": "06328a2e070178ee02dc648ad8cb105840136056654705a5dd8beacb34f06f53",
+   "path": "occult_primary/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 86,
+    "algorithm_pages": 15,
+    "boxes": 168,
+    "boxes_text_found_in_pdf_at_bbox": "167/168",
+    "edges_by_evidence": {
+     "two_methods": 159,
+     "image_checked": 7,
+     "table_text_checked": 7
+    },
+    "decision_boxes": 101,
+    "predicate_status": {
+     "model_reviewed": 99,
+     "none": 2
+    },
+    "decision_types": {
+     "condition": 99,
+     "other": 2
+    },
+    "entries": 19,
+    "entries_with_predicate": 18,
+    "entries_reached_by_link": 7,
+    "roles": {
+     "page_heading": 33,
+     "step": 83,
+     "leaf": 56,
+     "decision": 11,
+     "entry": 18,
+     "table_root": 1,
+     "table_condition": 3,
+     "table_rec": 3,
+     "table_ref": 1
+    },
+    "links": {
+     "page": 18,
+     "external_guideline": 16
+    },
+    "footnote_refs_by_resolution": {
+     "printed_pointer": 9,
+     "own_page": 50
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "older_adult_oncology",
+   "title": "Older Adult Oncology",
+   "category": "Specific Populations",
+   "version": "1.2026",
+   "version_date": "February 11, 2026",
+   "pdf_sha256": "0d9f1230cc6be0c79fe452bf8902ac02ab2759954d8340200b54e0be4dba7e75",
+   "path": "older_adult_oncology/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 109,
+    "algorithm_pages": 10,
+    "boxes": 50,
+    "boxes_text_found_in_pdf_at_bbox": "50/50",
+    "edges_by_evidence": {
+     "image_checked": 37,
+     "two_methods": 7,
+     "table_text_checked": 24
+    },
+    "decision_boxes": 46,
+    "predicate_status": {
+     "model_reviewed": 38,
+     "inherited_from_link": 2,
+     "none": 6
+    },
+    "decision_types": {
+     "condition": 38,
+     "option": 6,
+     "other": 2
+    },
+    "entries": 10,
+    "entries_with_predicate": 4,
+    "entries_reached_by_link": 3,
+    "roles": {
+     "page_heading": 3,
+     "note": 10,
+     "leaf": 13,
+     "step": 11,
+     "entry": 8,
+     "decision": 6,
+     "column_header": 2,
+     "table_root": 2,
+     "table_condition": 12,
+     "table_rec": 12
+    },
+    "links": {
+     "external_guideline": 12,
+     "page": 21
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 5,
+     "null": 3
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "ovarian_cancer_fallopian_tube_cancer_primary_per",
+   "title": "Ovarian Cancer_Fallopian Tube Cancer_Primary Peritoneal Cancer",
+   "category": "Treatment",
+   "version": "4.2026",
+   "version_date": "April 10, 2026",
+   "pdf_sha256": "c104daa0b6af67d2dd5b3f600e448b4ed9b89b42352ca2dfcdb9528130a851dc",
+   "path": "ovarian_cancer_fallopian_tube_cancer_primary_per/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 130,
+    "algorithm_pages": 23,
+    "boxes": 284,
+    "boxes_text_found_in_pdf_at_bbox": "283/284",
+    "edges_by_evidence": {
+     "image_checked": 34,
+     "two_methods": 249,
+     "single_source": 3
+    },
+    "decision_boxes": 138,
+    "predicate_status": {
+     "model_reviewed": 130,
+     "inherited_from_link": 2,
+     "none": 6
+    },
+    "decision_types": {
+     "condition": 131,
+     "other": 1,
+     "option": 6
+    },
+    "entries": 34,
+    "entries_with_predicate": 34,
+    "entries_reached_by_link": 21,
+    "roles": {
+     "page_heading": 41,
+     "decision": 33,
+     "step": 150,
+     "entry": 34,
+     "leaf": 59,
+     "note": 8
+    },
+    "links": {
+     "page": 103,
+     "external_guideline": 7
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 197,
+     "nearest_same_prefix": 3,
+     "null": 4
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "palliative_care",
+   "title": "Palliative Care",
+   "category": "Supportive Care",
+   "version": "3.2026",
+   "version_date": "July 9, 2026",
+   "pdf_sha256": "eab415d07faee19442e5eef7f81e2e0a9ad792da4aae75b432c8b2710012c5ea",
+   "path": "palliative_care/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 117,
+    "algorithm_pages": 34,
+    "boxes": 295,
+    "boxes_text_found_in_pdf_at_bbox": "293/295",
+    "edges_by_evidence": {
+     "two_methods": 152,
+     "image_checked": 89,
+     "single_source": 3,
+     "table_text_checked": 19
+    },
+    "decision_boxes": 154,
+    "predicate_status": {
+     "none": 26,
+     "inherited_from_link": 6,
+     "model_reviewed": 120,
+     "rejected": 2
+    },
+    "decision_types": {
+     "other": 26,
+     "condition": 128
+    },
+    "entries": 73,
+    "entries_with_predicate": 69,
+    "entries_reached_by_link": 60,
+    "roles": {
+     "note": 36,
+     "page_heading": 82,
+     "leaf": 68,
+     "decision": 26,
+     "entry": 70,
+     "step": 95,
+     "table_root": 3,
+     "table_rec": 15,
+     "table_ref": 3,
+     "table_condition": 1
+    },
+    "links": {
+     "page": 68,
+     "external_guideline": 25,
+     "discussion": 1
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 30,
+     "footnote_page": 4,
+     "null": 3,
+     "nearest_same_prefix": 2
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "pancreatic_adenocarcinoma",
+   "title": "Pancreatic Adenocarcinoma",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "April 22, 2026",
+   "pdf_sha256": "14836731d2f94e12d99a7f06882adc6bbb658838eca288668d67d3683d000b1d",
+   "path": "pancreatic_adenocarcinoma/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 171,
+    "algorithm_pages": 12,
+    "boxes": 142,
+    "boxes_text_found_in_pdf_at_bbox": "142/142",
+    "edges_by_evidence": {
+     "two_methods": 123,
+     "image_checked": 5,
+     "single_source": 1
+    },
+    "decision_boxes": 71,
+    "predicate_status": {
+     "model_reviewed": 63,
+     "none": 6,
+     "inherited_from_link": 2
+    },
+    "decision_types": {
+     "condition": 65,
+     "option": 6
+    },
+    "entries": 13,
+    "entries_with_predicate": 13,
+    "entries_reached_by_link": 12,
+    "roles": {
+     "page_heading": 21,
+     "leaf": 43,
+     "step": 58,
+     "decision": 23,
+     "entry": 13,
+     "note": 5
+    },
+    "links": {
+     "page": 36
+    },
+    "footnote_refs_by_resolution": {
+     "footnote_page": 138,
+     "own_page": 54,
+     "nearest_same_prefix": 1
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "pediatric_acute_lymphoblastic_leukemia",
+   "title": "Pediatric Acute Lymphoblastic Leukemia",
+   "category": "Treatment",
+   "version": "1.2026",
+   "version_date": "August 11, 2025",
+   "pdf_sha256": "6e5a774ba11e13fa63b676e0028051ffc366d031df236ed3cf760d62d915f738",
+   "path": "pediatric_acute_lymphoblastic_leukemia/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 172,
+    "algorithm_pages": 11,
+    "boxes": 139,
+    "boxes_text_found_in_pdf_at_bbox": "138/139",
+    "edges_by_evidence": {
+     "two_methods": 107,
+     "image_checked": 5
+    },
+    "decision_boxes": 49,
+    "predicate_status": {
+     "none": 3,
+     "model_reviewed": 44,
+     "rejected": 1,
+     "inherited_from_link": 1
+    },
+    "decision_types": {
+     "condition": 46,
+     "other": 2,
+     "option": 1
+    },
+    "entries": 11,
+    "entries_with_predicate": 9,
+    "entries_reached_by_link": 4,
+    "roles": {
+     "page_heading": 15,
+     "step": 65,
+     "entry": 11,
+     "leaf": 28,
+     "note": 12,
+     "decision": 15,
+     "column_header": 8
+    },
+    "links": {
+     "page": 42,
+     "external_guideline": 1
+    },
+    "footnote_refs_by_resolution": {
+     "printed_pointer": 78,
+     "own_page": 81,
+     "nearest_same_prefix": 1
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "pediatric_aggressive_mature_b_cell_lymphomas",
+   "title": "Pediatric Aggressive Mature B-Cell Lymphomas",
+   "category": "Treatment",
+   "version": "1.2026",
+   "version_date": "March 20, 2026",
+   "pdf_sha256": "527d9b1f8f3ce2c6322511b74260f305d7b955d23bd7fe84af00c5bf46d86121",
+   "path": "pediatric_aggressive_mature_b_cell_lymphomas/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 90,
+    "algorithm_pages": 17,
+    "boxes": 156,
+    "boxes_text_found_in_pdf_at_bbox": "155/156",
+    "edges_by_evidence": {
+     "image_checked": 25,
+     "single_source": 1,
+     "two_methods": 93,
+     "table_text_checked": 12
+    },
+    "decision_boxes": 75,
+    "predicate_status": {
+     "none": 12,
+     "model_reviewed": 59,
+     "inherited_from_link": 3,
+     "section_only": 1
+    },
+    "decision_types": {
+     "other": 11,
+     "condition": 61,
+     "option": 3
+    },
+    "entries": 28,
+    "entries_with_predicate": 20,
+    "entries_reached_by_link": 9,
+    "roles": {
+     "page_heading": 18,
+     "entry": 27,
+     "leaf": 42,
+     "step": 53,
+     "note": 19,
+     "table_root": 1,
+     "table_condition": 8,
+     "table_ref": 4,
+     "decision": 15
+    },
+    "links": {
+     "page": 42,
+     "external_guideline": 3
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 142,
+     "null": 10,
+     "nearest_same_prefix": 3
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "pediatric_central_nervous_system",
+   "title": "Pediatric Central Nervous System Cancers",
+   "category": "Treatment",
+   "version": "1.2026",
+   "version_date": "November 25, 2025",
+   "pdf_sha256": "c09be018ea98489b5b0479c7217343f31dadd88535a096835bb2783ff252637a",
+   "path": "pediatric_central_nervous_system/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 89,
+    "algorithm_pages": 8,
+    "boxes": 64,
+    "boxes_text_found_in_pdf_at_bbox": "64/64",
+    "edges_by_evidence": {
+     "two_methods": 59,
+     "image_checked": 2,
+     "table_text_checked": 7
+    },
+    "decision_boxes": 31,
+    "predicate_status": {
+     "model_reviewed": 30,
+     "inherited_from_link": 1
+    },
+    "decision_types": {
+     "condition": 30,
+     "other": 1
+    },
+    "entries": 9,
+    "entries_with_predicate": 9,
+    "entries_reached_by_link": 3,
+    "roles": {
+     "page_heading": 10,
+     "step": 37,
+     "leaf": 11,
+     "note": 2,
+     "decision": 5,
+     "entry": 8,
+     "link": 1,
+     "table_root": 1,
+     "table_title": 2,
+     "table_condition": 2,
+     "table_rec": 2,
+     "table_ref": 1
+    },
+    "links": {
+     "page": 8,
+     "external_guideline": 2
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 52
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "pediatric_hodgkin_lymphoma",
+   "title": "Pediatric Hodgkin Lymphoma",
+   "category": "Treatment",
+   "version": "1.2026",
+   "version_date": "May 13, 2026",
+   "pdf_sha256": "833052e09a03dc6510b19444d79e81f9ae6ce2fb59b67d23d3470afe498ecaad",
+   "path": "pediatric_hodgkin_lymphoma/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 86,
+    "algorithm_pages": 10,
+    "boxes": 153,
+    "boxes_text_found_in_pdf_at_bbox": "151/153",
+    "edges_by_evidence": {
+     "two_methods": 113,
+     "table_text_checked": 68,
+     "image_checked": 14,
+     "single_source": 2
+    },
+    "decision_boxes": 134,
+    "predicate_status": {
+     "none": 66,
+     "model_reviewed": 63,
+     "inherited_from_link": 4,
+     "rejected": 1
+    },
+    "decision_types": {
+     "condition": 97,
+     "other": 12,
+     "option": 25
+    },
+    "entries": 13,
+    "entries_with_predicate": 10,
+    "entries_reached_by_link": 8,
+    "roles": {
+     "page_heading": 25,
+     "note": 22,
+     "leaf": 27,
+     "entry": 12,
+     "step": 74,
+     "column_header": 2,
+     "table_root": 1,
+     "table_title": 2,
+     "table_condition": 11,
+     "table_value": 55,
+     "decision": 15,
+     "link": 1
+    },
+    "links": {
+     "external_guideline": 1,
+     "page": 34
+    },
+    "footnote_refs_by_resolution": {
+     "footnote_page": 9,
+     "nearest_same_prefix": 38,
+     "null": 27,
+     "own_page": 58
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "pediatric_soft_tissue_sarcoma",
+   "title": "Pediatric Soft Tissue Sarcoma",
+   "category": "Treatment",
+   "version": "1.2026",
+   "version_date": "February 17, 2026",
+   "pdf_sha256": "05dd33ebf10a76b8eeb4df66f1bdb0a500bccdfdf6fd83d59678f7fc550bdef2",
+   "path": "pediatric_soft_tissue_sarcoma/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 51,
+    "algorithm_pages": 15,
+    "boxes": 152,
+    "boxes_text_found_in_pdf_at_bbox": "152/152",
+    "edges_by_evidence": {
+     "two_methods": 135,
+     "image_checked": 10
+    },
+    "decision_boxes": 80,
+    "predicate_status": {
+     "model_reviewed": 77,
+     "none": 2,
+     "inherited_from_link": 1
+    },
+    "decision_types": {
+     "condition": 78,
+     "option": 2
+    },
+    "entries": 14,
+    "entries_with_predicate": 14,
+    "entries_reached_by_link": 3,
+    "roles": {
+     "step": 69,
+     "decision": 25,
+     "leaf": 34,
+     "entry": 14,
+     "page_heading": 17,
+     "note": 10
+    },
+    "links": {
+     "page": 92
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 61
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "penile",
+   "title": "Penile Cancer",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "June 5, 2026",
+   "pdf_sha256": "63b428fd220d57396ce28d3793ef6311464cf040b5cec94b987fdc5c517cb616",
+   "path": "penile/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 59,
+    "algorithm_pages": 10,
+    "boxes": 142,
+    "boxes_text_found_in_pdf_at_bbox": "141/142",
+    "edges_by_evidence": {
+     "two_methods": 106,
+     "image_checked": 29,
+     "single_source": 1
+    },
+    "decision_boxes": 75,
+    "predicate_status": {
+     "model_reviewed": 69,
+     "none": 4,
+     "inherited_from_link": 2
+    },
+    "decision_types": {
+     "condition": 71,
+     "option": 4
+    },
+    "entries": 15,
+    "entries_with_predicate": 15,
+    "entries_reached_by_link": 14,
+    "roles": {
+     "page_heading": 21,
+     "leaf": 33,
+     "decision": 25,
+     "step": 62,
+     "entry": 15,
+     "column_header": 4,
+     "note": 3
+    },
+    "links": {
+     "page": 30,
+     "external_guideline": 1
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 89
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "prevention_and_treatment_of_related_infections",
+   "title": "Prevention and Treatment of Cancer-Related Infections",
+   "category": "Supportive Care",
+   "version": "1.2026",
+   "version_date": "March 11, 2026",
+   "pdf_sha256": "5a727271ded59ad1ae07e3feb4113e15d6404e1be5e96147304e98e785ea7b2d",
+   "path": "prevention_and_treatment_of_related_infections/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 179,
+    "algorithm_pages": 26,
+    "boxes": 160,
+    "boxes_text_found_in_pdf_at_bbox": "160/160",
+    "edges_by_evidence": {
+     "table_text_checked": 130,
+     "two_methods": 110,
+     "image_checked": 9
+    },
+    "decision_boxes": 153,
+    "predicate_status": {
+     "inherited_from_link": 6,
+     "model_reviewed": 81,
+     "none": 65,
+     "rejected": 1
+    },
+    "decision_types": {
+     "other": 37,
+     "condition": 87,
+     "option": 29
+    },
+    "entries": 38,
+    "entries_with_predicate": 31,
+    "entries_reached_by_link": 27,
+    "roles": {
+     "page_heading": 37,
+     "note": 19,
+     "table_root": 10,
+     "table_condition": 56,
+     "table_rec": 30,
+     "step": 66,
+     "decision": 5,
+     "leaf": 40,
+     "entry": 28,
+     "column_header": 2,
+     "table_value": 42,
+     "table_title": 2
+    },
+    "links": {
+     "page": 53,
+     "external_guideline": 2
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 60,
+     "null": 2,
+     "nearest_same_prefix": 1
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "prostate",
+   "title": "Prostate Cancer",
+   "category": "Treatment",
+   "version": "6.2026",
+   "version_date": "July 28, 2026",
+   "pdf_sha256": "b7fe04662ed478881339473bfaa7594235f1d7f2030268b56deea63253a21dae",
+   "path": "prostate/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 222,
+    "algorithm_pages": 18,
+    "boxes": 244,
+    "boxes_text_found_in_pdf_at_bbox": "243/244",
+    "edges_by_evidence": {
+     "two_methods": 220,
+     "table_text_checked": 39,
+     "image_checked": 5
+    },
+    "decision_boxes": 160,
+    "predicate_status": {
+     "model_reviewed": 123,
+     "none": 30,
+     "rejected": 4,
+     "inherited_from_link": 3
+    },
+    "decision_types": {
+     "condition": 133,
+     "option": 19,
+     "other": 8
+    },
+    "entries": 25,
+    "entries_with_predicate": 24,
+    "entries_reached_by_link": 21,
+    "roles": {
+     "page_heading": 18,
+     "step": 98,
+     "leaf": 76,
+     "entry": 23,
+     "decision": 39,
+     "note": 8,
+     "table_root": 2,
+     "table_condition": 17,
+     "table_rec": 5,
+     "table_ref": 5,
+     "table_value": 11,
+     "table_title": 1
+    },
+    "links": {
+     "page": 103,
+     "external_guideline": 1
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 61,
+     "printed_pointer": 151
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "prostate_early_detection",
+   "title": "Prostate Cancer Early Detection",
+   "category": "Detection Prevention Risk Reduction",
+   "version": "2.2026",
+   "version_date": "February 18, 2026",
+   "pdf_sha256": "95dc5c7ee1f6a8515b9632666491d98f7910a2294588bfdc1cda1f67ea420410",
+   "path": "prostate_early_detection/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 81,
+    "algorithm_pages": 4,
+    "boxes": 36,
+    "boxes_text_found_in_pdf_at_bbox": "35/36",
+    "edges_by_evidence": {
+     "two_methods": 28
+    },
+    "decision_boxes": 18,
+    "predicate_status": {
+     "model_reviewed": 16,
+     "none": 1,
+     "inherited_from_link": 1
+    },
+    "decision_types": {
+     "condition": 16,
+     "other": 2
+    },
+    "entries": 7,
+    "entries_with_predicate": 6,
+    "entries_reached_by_link": 6,
+    "roles": {
+     "note": 4,
+     "page_heading": 5,
+     "leaf": 11,
+     "decision": 5,
+     "step": 9,
+     "entry": 7
+    },
+    "links": {
+     "external_guideline": 3,
+     "page": 8
+    },
+    "footnote_refs_by_resolution": {
+     "null": 13,
+     "footnote_page": 17,
+     "own_page": 21
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "rectal",
+   "title": "Rectal Cancer",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "April 7, 2026",
+   "pdf_sha256": "145ea592cbc1cff0b36cd3cf34ec63469ad7b78468cd8ba1bd527734b9201957",
+   "path": "rectal/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 166,
+    "algorithm_pages": 18,
+    "boxes": 235,
+    "boxes_text_found_in_pdf_at_bbox": "233/235",
+    "edges_by_evidence": {
+     "two_methods": 174,
+     "image_checked": 17,
+     "single_source": 8,
+     "table_text_checked": 27
+    },
+    "decision_boxes": 117,
+    "predicate_status": {
+     "none": 32,
+     "model_reviewed": 81,
+     "section_only": 1,
+     "rejected": 2,
+     "inherited_from_link": 1
+    },
+    "decision_types": {
+     "option": 29,
+     "condition": 83,
+     "other": 5
+    },
+    "entries": 36,
+    "entries_with_predicate": 35,
+    "entries_reached_by_link": 19,
+    "roles": {
+     "page_heading": 26,
+     "leaf": 54,
+     "step": 97,
+     "decision": 24,
+     "entry": 35,
+     "note": 21,
+     "table_root": 1,
+     "table_title": 2,
+     "table_condition": 7,
+     "table_rec": 18,
+     "column_header": 4
+    },
+    "links": {
+     "page": 77,
+     "external_guideline": 2
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 205,
+     "nearest_same_prefix": 3,
+     "null": 2
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "related_fatigue",
+   "title": "Cancer-Related Fatigue",
+   "category": "Supportive Care",
+   "version": "2.2026",
+   "version_date": "April 10, 2026",
+   "pdf_sha256": "61da4c6de439d00673b03196826a105213b1fe5159a4c76b3dbc7e1bbf234863",
+   "path": "related_fatigue/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 73,
+    "algorithm_pages": 8,
+    "boxes": 47,
+    "boxes_text_found_in_pdf_at_bbox": "47/47",
+    "edges_by_evidence": {
+     "two_methods": 23,
+     "image_checked": 2
+    },
+    "decision_boxes": 13,
+    "predicate_status": {
+     "model_reviewed": 6,
+     "inherited_from_link": 4,
+     "none": 3
+    },
+    "decision_types": {
+     "condition": 6,
+     "other": 4,
+     "option": 3
+    },
+    "entries": 7,
+    "entries_with_predicate": 4,
+    "entries_reached_by_link": 4,
+    "roles": {
+     "page_heading": 5,
+     "note": 18,
+     "step": 12,
+     "decision": 2,
+     "leaf": 8,
+     "entry": 7
+    },
+    "links": {
+     "page": 14,
+     "external_guideline": 3
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 32,
+     "null": 2,
+     "nearest_same_prefix": 1
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "sclc",
+   "title": "Small Cell Lung Cancer",
+   "category": "Treatment",
+   "version": "1.2027",
+   "version_date": "July 1, 2026",
+   "pdf_sha256": "9fe5f54bffb245a8a7d976927b3de231762d512e64058134f5154b5ca1802d06",
+   "path": "sclc/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 93,
+    "algorithm_pages": 8,
+    "boxes": 88,
+    "boxes_text_found_in_pdf_at_bbox": "88/88",
+    "edges_by_evidence": {
+     "two_methods": 82,
+     "single_source": 5,
+     "image_checked": 4
+    },
+    "decision_boxes": 52,
+    "predicate_status": {
+     "model_reviewed": 44,
+     "inherited_from_link": 2,
+     "none": 4,
+     "rejected": 2
+    },
+    "decision_types": {
+     "condition": 47,
+     "option": 5
+    },
+    "entries": 10,
+    "entries_with_predicate": 10,
+    "entries_reached_by_link": 9,
+    "roles": {
+     "page_heading": 12,
+     "decision": 16,
+     "step": 41,
+     "leaf": 21,
+     "entry": 10
+    },
+    "links": {
+     "page": 20,
+     "external_guideline": 5
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 72,
+     "footnote_page": 20
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "small_bowel_adenocarcinoma",
+   "title": "Small Bowel Adenocarcinoma",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "April 7, 2026",
+   "pdf_sha256": "a6cf8dbf04ee04e8cfcd4a47e685d1a06399838dcb7ca9968cbb8a24439677cb",
+   "path": "small_bowel_adenocarcinoma/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 68,
+    "algorithm_pages": 8,
+    "boxes": 84,
+    "boxes_text_found_in_pdf_at_bbox": "84/84",
+    "edges_by_evidence": {
+     "two_methods": 69,
+     "image_checked": 6
+    },
+    "decision_boxes": 39,
+    "predicate_status": {
+     "model_reviewed": 37,
+     "none": 2
+    },
+    "decision_types": {
+     "condition": 37,
+     "option": 2
+    },
+    "entries": 10,
+    "entries_with_predicate": 10,
+    "entries_reached_by_link": 4,
+    "roles": {
+     "page_heading": 18,
+     "leaf": 25,
+     "step": 42,
+     "decision": 5,
+     "entry": 10,
+     "note": 2
+    },
+    "links": {
+     "page": 21,
+     "external_guideline": 1
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 36,
+     "nearest_same_prefix": 4
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "smoking_cessation",
+   "title": "Smoking Cessation",
+   "category": "Supportive Care",
+   "version": "1.2026",
+   "version_date": "April 6, 2026",
+   "pdf_sha256": "ba0f5379380584a7d6887a8c880518e6372cd2574dc4f8c7ee72453fdcfb5387",
+   "path": "smoking_cessation/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 93,
+    "algorithm_pages": 6,
+    "boxes": 54,
+    "boxes_text_found_in_pdf_at_bbox": "54/54",
+    "edges_by_evidence": {
+     "two_methods": 30,
+     "image_checked": 19,
+     "single_source": 1
+    },
+    "decision_boxes": 25,
+    "predicate_status": {
+     "model_reviewed": 18,
+     "none": 4,
+     "inherited_from_link": 2,
+     "rejected": 1
+    },
+    "decision_types": {
+     "condition": 22,
+     "other": 2,
+     "option": 1
+    },
+    "entries": 5,
+    "entries_with_predicate": 4,
+    "entries_reached_by_link": 3,
+    "roles": {
+     "page_heading": 14,
+     "leaf": 11,
+     "step": 24,
+     "entry": 5,
+     "decision": 7,
+     "note": 7
+    },
+    "links": {
+     "page": 14,
+     "external_guideline": 1
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 64,
+     "null": 1,
+     "nearest_same_prefix": 1
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "soft_tissue_sarcoma",
+   "title": "Soft Tissue Sarcoma",
+   "category": "Treatment",
+   "version": "5.2026",
+   "version_date": "July 23, 2026",
+   "pdf_sha256": "b63dad509daa8acc225bce97b01913e070bac932dcc9898806a669c6c11ea76c",
+   "path": "soft_tissue_sarcoma/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 144,
+    "algorithm_pages": 23,
+    "boxes": 213,
+    "boxes_text_found_in_pdf_at_bbox": "203/213",
+    "edges_by_evidence": {
+     "two_methods": 182,
+     "image_checked": 22,
+     "single_source": 1
+    },
+    "decision_boxes": 120,
+    "predicate_status": {
+     "model_reviewed": 92,
+     "section_only": 3,
+     "rejected": 4,
+     "none": 21
+    },
+    "decision_types": {
+     "condition": 96,
+     "other": 8,
+     "option": 16
+    },
+    "entries": 28,
+    "entries_with_predicate": 26,
+    "entries_reached_by_link": 13,
+    "roles": {
+     "note": 4,
+     "decision": 24,
+     "leaf": 59,
+     "entry": 28,
+     "step": 98,
+     "page_heading": 35
+    },
+    "links": {
+     "external_guideline": 5,
+     "page": 54
+    },
+    "footnote_refs_by_resolution": {
+     "printed_pointer": 84,
+     "own_page": 150,
+     "nearest_same_prefix": 3,
+     "footnote_page": 18
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "squamous_cell_skin",
+   "title": "Squamous Cell Skin Cancer",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "March 17, 2026",
+   "pdf_sha256": "d2deaeeac066f27651ff9d1b1d377a46c6d378a4b088da636cf604c49435a9e9",
+   "path": "squamous_cell_skin/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 103,
+    "algorithm_pages": 11,
+    "boxes": 128,
+    "boxes_text_found_in_pdf_at_bbox": "125/128",
+    "edges_by_evidence": {
+     "two_methods": 93,
+     "single_source": 2,
+     "image_checked": 35,
+     "table_text_checked": 49
+    },
+    "decision_boxes": 116,
+    "predicate_status": {
+     "model_reviewed": 65,
+     "none": 50,
+     "inherited_from_link": 1
+    },
+    "decision_types": {
+     "condition": 90,
+     "other": 16,
+     "option": 10
+    },
+    "entries": 14,
+    "entries_with_predicate": 14,
+    "entries_reached_by_link": 9,
+    "roles": {
+     "column_header": 4,
+     "page_heading": 26,
+     "step": 56,
+     "leaf": 29,
+     "decision": 22,
+     "entry": 13,
+     "table_root": 1,
+     "table_condition": 16,
+     "table_value": 33,
+     "note": 4
+    },
+    "links": {
+     "page": 35
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 105,
+     "printed_pointer": 99,
+     "nearest_same_prefix": 2,
+     "null": 6
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "survivorship",
+   "title": "Survivorship",
+   "category": "Supportive Care",
+   "version": "3.2026",
+   "version_date": "July 22, 2026",
+   "pdf_sha256": "d36de0a15b7fb739d1111a312f9705b79333451aaeddc6534123fdc7b234a997",
+   "path": "survivorship/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 329,
+    "algorithm_pages": 74,
+    "boxes": 333,
+    "boxes_text_found_in_pdf_at_bbox": "319/333",
+    "edges_by_evidence": {
+     "table_text_checked": 50,
+     "two_methods": 157,
+     "image_checked": 29,
+     "single_source": 7
+    },
+    "decision_boxes": 148,
+    "predicate_status": {
+     "none": 48,
+     "section_only": 8,
+     "model_reviewed": 76,
+     "inherited_from_link": 16
+    },
+    "decision_types": {
+     "other": 41,
+     "condition": 99,
+     "option": 5,
+     "null": 3
+    },
+    "entries": 74,
+    "entries_with_predicate": 54,
+    "entries_reached_by_link": 40,
+    "roles": {
+     "page_heading": 88,
+     "note": 80,
+     "table_root": 9,
+     "table_rec": 20,
+     "step": 86,
+     "entry": 65,
+     "leaf": 78,
+     "decision": 10,
+     "table_title": 7,
+     "table_condition": 16,
+     "table_ref": 2,
+     "table_value": 5,
+     "column_header": 6,
+     "link": 8
+    },
+    "links": {
+     "page": 207,
+     "external_guideline": 47
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 153,
+     "footnote_page": 3,
+     "printed_pointer": 69,
+     "null": 3
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "systemic_light_chain_amyloidosis",
+   "title": "Systemic Light Chain Amyloidosis",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "March 16, 2026",
+   "pdf_sha256": "297280a5cd137a92cb11797b0d6034cad4bde5b6e7561bb671c2eee3be488fc4",
+   "path": "systemic_light_chain_amyloidosis/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 42,
+    "algorithm_pages": 4,
+    "boxes": 34,
+    "boxes_text_found_in_pdf_at_bbox": "34/34",
+    "edges_by_evidence": {
+     "table_text_checked": 8,
+     "two_methods": 30
+    },
+    "decision_boxes": 25,
+    "predicate_status": {
+     "model_reviewed": 22,
+     "inherited_from_link": 1,
+     "none": 2
+    },
+    "decision_types": {
+     "condition": 22,
+     "other": 3
+    },
+    "entries": 4,
+    "entries_with_predicate": 3,
+    "entries_reached_by_link": 3,
+    "roles": {
+     "note": 1,
+     "table_root": 1,
+     "table_rec": 3,
+     "table_ref": 3,
+     "table_condition": 2,
+     "page_heading": 7,
+     "entry": 3,
+     "step": 10,
+     "leaf": 12,
+     "decision": 8
+    },
+    "links": {
+     "external_guideline": 3,
+     "page": 11
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 18
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "systemic_mastocytosis",
+   "title": "Systemic Mastocytosis",
+   "category": "Treatment",
+   "version": "3.2026",
+   "version_date": "July 10, 2026",
+   "pdf_sha256": "9b539fe2d8e4af9f85b250519444a562d5ca5038939895d6f00e9247ab87d17c",
+   "path": "systemic_mastocytosis/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 82,
+    "algorithm_pages": 9,
+    "boxes": 98,
+    "boxes_text_found_in_pdf_at_bbox": "96/98",
+    "edges_by_evidence": {
+     "two_methods": 48,
+     "image_checked": 33
+    },
+    "decision_boxes": 38,
+    "predicate_status": {
+     "model_reviewed": 36,
+     "none": 2
+    },
+    "decision_types": {
+     "condition": 36,
+     "option": 2
+    },
+    "entries": 8,
+    "entries_with_predicate": 8,
+    "entries_reached_by_link": 3,
+    "roles": {
+     "note": 16,
+     "page_heading": 3,
+     "leaf": 20,
+     "step": 43,
+     "decision": 11,
+     "entry": 8
+    },
+    "links": {
+     "page": 18,
+     "external_guideline": 2
+    },
+    "footnote_refs_by_resolution": {
+     "null": 5,
+     "own_page": 53,
+     "nearest_same_prefix": 4
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "t_cell_lymphomas",
+   "title": "T-Cell Lymphomas",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "February 13, 2026",
+   "pdf_sha256": "1e893cd0246e8ee27f43a59a7b15ead7e1f9f26009b37e9a462b159d56e9bf5e",
+   "path": "t_cell_lymphomas/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 209,
+    "algorithm_pages": 28,
+    "boxes": 248,
+    "boxes_text_found_in_pdf_at_bbox": "246/248",
+    "edges_by_evidence": {
+     "two_methods": 182,
+     "image_checked": 29,
+     "table_text_checked": 30
+    },
+    "decision_boxes": 139,
+    "predicate_status": {
+     "section_only": 7,
+     "model_reviewed": 95,
+     "none": 34,
+     "inherited_from_link": 3
+    },
+    "decision_types": {
+     "other": 15,
+     "condition": 120,
+     "null": 1,
+     "option": 3
+    },
+    "entries": 31,
+    "entries_with_predicate": 30,
+    "entries_reached_by_link": 14,
+    "roles": {
+     "entry": 30,
+     "leaf": 51,
+     "note": 29,
+     "page_heading": 51,
+     "step": 108,
+     "decision": 29,
+     "column_header": 1,
+     "table_root": 1,
+     "table_condition": 5,
+     "table_value": 25
+    },
+    "links": {
+     "page": 58,
+     "external_guideline": 13
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 210,
+     "null": 10,
+     "nearest_same_prefix": 1
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "testicular",
+   "title": "Testicular Cancer",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "June 16, 2026",
+   "pdf_sha256": "fd7fc074ac12e71711f1a69edb9659400d1c85983221b9af7af7be0f46e7cd99",
+   "path": "testicular/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 95,
+    "algorithm_pages": 19,
+    "boxes": 277,
+    "boxes_text_found_in_pdf_at_bbox": "276/277",
+    "edges_by_evidence": {
+     "two_methods": 216,
+     "image_checked": 51
+    },
+    "decision_boxes": 135,
+    "predicate_status": {
+     "model_reviewed": 104,
+     "none": 29,
+     "inherited_from_link": 2
+    },
+    "decision_types": {
+     "condition": 106,
+     "option": 29
+    },
+    "entries": 28,
+    "entries_with_predicate": 28,
+    "entries_reached_by_link": 27,
+    "roles": {
+     "page_heading": 39,
+     "step": 141,
+     "leaf": 58,
+     "decision": 30,
+     "entry": 28,
+     "note": 20
+    },
+    "links": {
+     "page": 72,
+     "discussion": 1
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 209,
+     "null": 15,
+     "nearest_same_prefix": 7,
+     "printed_pointer": 18
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "thymomas_and_thymic_carcinomas",
+   "title": "Thymomas and Thymic Carcinomas",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "April 10, 2026",
+   "pdf_sha256": "17f0ec55781ca1eb155bcdbd2eb55b5c156b4d12cf4005acffcc5cd90f61629e",
+   "path": "thymomas_and_thymic_carcinomas/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 56,
+    "algorithm_pages": 4,
+    "boxes": 57,
+    "boxes_text_found_in_pdf_at_bbox": "57/57",
+    "edges_by_evidence": {
+     "two_methods": 53
+    },
+    "decision_boxes": 25,
+    "predicate_status": {
+     "model_reviewed": 24,
+     "inherited_from_link": 1
+    },
+    "decision_types": {
+     "condition": 24,
+     "other": 1
+    },
+    "entries": 6,
+    "entries_with_predicate": 6,
+    "entries_reached_by_link": 5,
+    "roles": {
+     "page_heading": 4,
+     "decision": 6,
+     "step": 30,
+     "leaf": 12,
+     "entry": 6,
+     "column_header": 2,
+     "note": 1
+    },
+    "links": {
+     "page": 5
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 55
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "thyroid_carcinoma",
+   "title": "Thyroid Carcinoma",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "June 2, 2026",
+   "pdf_sha256": "7b071a4fd6fdcd7366f3a0a6d386fb98e05656d3157ef65eec15d6ffe1227a02",
+   "path": "thyroid_carcinoma/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 159,
+    "algorithm_pages": 46,
+    "boxes": 466,
+    "boxes_text_found_in_pdf_at_bbox": "460/466",
+    "edges_by_evidence": {
+     "two_methods": 342,
+     "image_checked": 71,
+     "single_source": 4
+    },
+    "decision_boxes": 222,
+    "predicate_status": {
+     "model_reviewed": 201,
+     "rejected": 2,
+     "inherited_from_link": 5,
+     "none": 14
+    },
+    "decision_types": {
+     "condition": 208,
+     "null": 1,
+     "option": 10,
+     "other": 3
+    },
+    "entries": 74,
+    "entries_with_predicate": 73,
+    "entries_reached_by_link": 63,
+    "roles": {
+     "page_heading": 76,
+     "note": 16,
+     "decision": 52,
+     "leaf": 117,
+     "entry": 74,
+     "step": 204,
+     "link": 1,
+     "column_header": 2
+    },
+    "links": {
+     "page": 157,
+     "external_guideline": 15
+    },
+    "footnote_refs_by_resolution": {
+     "footnote_page": 24,
+     "own_page": 213,
+     "printed_pointer": 24,
+     "null": 7,
+     "nearest_same_prefix": 2
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "uterine_neoplasms",
+   "title": "Uterine Neoplasms",
+   "category": "Treatment",
+   "version": "3.2026",
+   "version_date": "June 16, 2026",
+   "pdf_sha256": "45a8e58d93940957091d556e98ef0da3ccddefc4b33a01049337789dfbc4b8d4",
+   "path": "uterine_neoplasms/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 151,
+    "algorithm_pages": 20,
+    "boxes": 281,
+    "boxes_text_found_in_pdf_at_bbox": "278/281",
+    "edges_by_evidence": {
+     "two_methods": 237,
+     "image_checked": 26,
+     "single_source": 2,
+     "table_text_checked": 16
+    },
+    "decision_boxes": 142,
+    "predicate_status": {
+     "model_reviewed": 122,
+     "none": 18,
+     "inherited_from_link": 2
+    },
+    "decision_types": {
+     "condition": 125,
+     "option": 16,
+     "other": 1
+    },
+    "entries": 22,
+    "entries_with_predicate": 21,
+    "entries_reached_by_link": 20,
+    "roles": {
+     "page_heading": 31,
+     "leaf": 51,
+     "step": 140,
+     "decision": 40,
+     "entry": 20,
+     "note": 21,
+     "column_header": 9,
+     "table_root": 2,
+     "table_condition": 9,
+     "table_rec": 6,
+     "table_ref": 1
+    },
+    "links": {
+     "page": 71,
+     "external_guideline": 2
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 213,
+     "nearest_same_prefix": 10,
+     "printed_pointer": 7
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "vaginal",
+   "title": "Vaginal Cancer",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "December 4, 2025",
+   "pdf_sha256": "7b82a0eacb7cd2e86fab570ca3cf678f36f2a770958e471b3dea468af8621b32",
+   "path": "vaginal/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 67,
+    "algorithm_pages": 6,
+    "boxes": 42,
+    "boxes_text_found_in_pdf_at_bbox": "42/42",
+    "edges_by_evidence": {
+     "two_methods": 39
+    },
+    "decision_boxes": 22,
+    "predicate_status": {
+     "none": 1,
+     "model_reviewed": 19,
+     "rejected": 1,
+     "inherited_from_link": 1
+    },
+    "decision_types": {
+     "other": 2,
+     "condition": 19,
+     "option": 1
+    },
+    "entries": 7,
+    "entries_with_predicate": 6,
+    "entries_reached_by_link": 5,
+    "roles": {
+     "page_heading": 11,
+     "entry": 7,
+     "step": 21,
+     "leaf": 11,
+     "decision": 3
+    },
+    "links": {
+     "external_guideline": 5,
+     "page": 10
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 46
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "vulvar",
+   "title": "Vulvar Cancer",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "January 6, 2026",
+   "pdf_sha256": "f589d476dcfa1d19dbd315fe9fc7dc4a550be89ed5843bd4fb65bbac0f71cef1",
+   "path": "vulvar/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 88,
+    "algorithm_pages": 13,
+    "boxes": 133,
+    "boxes_text_found_in_pdf_at_bbox": "132/133",
+    "edges_by_evidence": {
+     "two_methods": 109,
+     "image_checked": 18
+    },
+    "decision_boxes": 72,
+    "predicate_status": {
+     "section_only": 1,
+     "model_reviewed": 63,
+     "rejected": 1,
+     "none": 5,
+     "inherited_from_link": 2
+    },
+    "decision_types": {
+     "condition": 67,
+     "option": 5
+    },
+    "entries": 19,
+    "entries_with_predicate": 19,
+    "entries_reached_by_link": 14,
+    "roles": {
+     "page_heading": 32,
+     "entry": 19,
+     "step": 58,
+     "leaf": 33,
+     "decision": 20,
+     "link": 1,
+     "column_header": 2
+    },
+    "links": {
+     "external_guideline": 11,
+     "page": 14
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 95,
+     "nearest_same_prefix": 2,
+     "printed_pointer": 15
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "waldenstrom_macroglobulinemia_lymphoplasmacytic",
+   "title": "Waldenstr\u00f6m Macroglobulinemia_Lymphoplasmacytic Lymphoma",
+   "category": "Treatment",
+   "version": "2.2026",
+   "version_date": "March 3, 2026",
+   "pdf_sha256": "5200e5fc5a574f76d5ccb6d20f4030e95d3cafae34add11271de8896f157a67a",
+   "path": "waldenstrom_macroglobulinemia_lymphoplasmacytic/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 40,
+    "algorithm_pages": 4,
+    "boxes": 30,
+    "boxes_text_found_in_pdf_at_bbox": "30/30",
+    "edges_by_evidence": {
+     "two_methods": 18,
+     "image_checked": 2,
+     "single_source": 2
+    },
+    "decision_boxes": 14,
+    "predicate_status": {
+     "model_reviewed": 8,
+     "none": 3,
+     "inherited_from_link": 2,
+     "rejected": 1
+    },
+    "decision_types": {
+     "condition": 11,
+     "other": 1,
+     "null": 2
+    },
+    "entries": 6,
+    "entries_with_predicate": 5,
+    "entries_reached_by_link": 4,
+    "roles": {
+     "decision": 3,
+     "step": 10,
+     "leaf": 7,
+     "entry": 6,
+     "note": 4,
+     "page_heading": 8
+    },
+    "links": {
+     "page": 6
+    },
+    "footnote_refs_by_resolution": {
+     "null": 2,
+     "own_page": 23
+    },
+    "clinician_validated": false
+   }
+  },
+  {
+   "slug": "wilms_tumor_nephroblastoma",
+   "title": "Wilms Tumor (Nephroblastoma)",
+   "category": "Treatment",
+   "version": "1.2026",
+   "version_date": "May 4, 2026",
+   "pdf_sha256": "f9ede55975a3cecfb5ea7bb1b6b795729d3202d4968bab7a8f34795efe04ae63",
+   "path": "wilms_tumor_nephroblastoma/guideline.json",
+   "built": "2026-10-14",
+   "quality": {
+    "pages": 90,
+    "algorithm_pages": 15,
+    "boxes": 243,
+    "boxes_text_found_in_pdf_at_bbox": "218/243",
+    "edges_by_evidence": {
+     "two_methods": 199,
+     "image_checked": 23,
+     "single_source": 1
+    },
+    "decision_boxes": 105,
+    "predicate_status": {
+     "model_reviewed": 96,
+     "none": 7,
+     "inherited_from_link": 1,
+     "rejected": 1
+    },
+    "decision_types": {
+     "condition": 101,
+     "option": 4
+    },
+    "entries": 16,
+    "entries_with_predicate": 16,
+    "entries_reached_by_link": 9,
+    "roles": {
+     "page_heading": 45,
+     "note": 15,
+     "decision": 26,
+     "leaf": 54,
+     "step": 127,
+     "entry": 16,
+     "column_header": 5
+    },
+    "links": {
+     "page": 17
+    },
+    "footnote_refs_by_resolution": {
+     "own_page": 114,
+     "null": 8,
+     "nearest_same_prefix": 15,
+     "footnote_page": 46
+    },
+    "clinician_validated": false
+   }
+  }
+ ]
+}
