@@ -1,0 +1,39 @@
+{
+ "variables": {
+  "score": {
+   "type": "number",
+   "unit": "points",
+   "definition": "Synthetic score"
+  },
+  "age": {
+   "type": "number",
+   "unit": "years",
+   "definition": "Age"
+  },
+  "stage": {
+   "type": "enum",
+   "values": [
+    "early",
+    "late"
+   ],
+   "definition": "Synthetic stage"
+  }
+ },
+ "derived": {
+  "tier": {
+   "type": "enum",
+   "definition": "Synthetic derived tier",
+   "rules": [
+    {
+     "if": {
+      "fact": "score",
+      "op": ">=",
+      "value": 10
+     },
+     "then": "high"
+    }
+   ],
+   "else": "low"
+  }
+ }
+}

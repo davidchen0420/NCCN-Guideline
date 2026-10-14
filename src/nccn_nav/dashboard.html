@@ -39,6 +39,7 @@ main{display:flex;flex-direction:column;min-width:0;min-height:0}
 .node rect{fill:var(--box);stroke:var(--line);cursor:pointer}.node.pred rect{stroke:var(--pred);stroke-width:1.6}
 .node.ref rect{stroke:var(--link);stroke-dasharray:3 2}.node div{font-size:7.2px;line-height:1.18;padding:2px 3px;overflow:hidden;height:100%;pointer-events:none}
 .node:hover rect{stroke:var(--link);stroke-width:2}.node.sel rect{stroke:var(--link);stroke-width:2.6}
+.node.hdr rect{fill:none;stroke-dasharray:1 3;cursor:default}.node.hdr div{font-weight:600;color:var(--muted)}
 .node.walk rect{fill:color-mix(in srgb,var(--walk) 18%,var(--box));stroke:var(--walk);stroke-width:2}
 .node.cur rect{stroke-width:3.2}.node.fn rect{fill:var(--hl)}sup{color:var(--link);font-weight:600}
 .e{fill:none;stroke-width:1.1}.e.agreed{stroke:var(--agreed)}
@@ -150,7 +151,7 @@ function renderChart(){const box=$('#chart');
   const ang=Math.atan2(p2[1]-p1[1],p2[0]-p1[0]),L=5;
   s+=`<path class="e ${e.cls}${w}" d="M${p2[0]-L*Math.cos(ang-.45)},${p2[1]-L*Math.sin(ang-.45)} L${p2[0]},${p2[1]} L${p2[0]-L*Math.cos(ang+.45)},${p2[1]-L*Math.sin(ang+.45)}"/>`});
  g.nodes.forEach(n=>{const[x0,y0,x1,y1]=n.bbox,full=S.page+':'+n.id;
-  const cls=['node',n.pred?'pred':'',n.links.length?'ref':'',full===S.sel?'sel':'',ws.nodes.has(full)?'walk':'',full===ws.cur?'cur':'',
+  const cls=['node',n.kind==='header'?'hdr':'',n.pred?'pred':'',n.links.length?'ref':'',full===S.sel?'sel':'',ws.nodes.has(full)?'walk':'',full===ws.cur?'cur':'',
    S.fn&&n.footnotes.some(f=>f[0]===S.fn)?'fn':''].filter(Boolean).join(' ');
   const fn=n.footnotes.length?`<sup> ${n.footnotes.map(f=>esc(f[0])).join(',')}</sup>`:'';
   s+=`<g class="${cls}" data-id="${full}"><rect x="${x0-2}" y="${y0-2}" width="${x1-x0+4}" height="${y1-y0+4}" rx="3"/>
@@ -183,7 +184,7 @@ function pageBtn(p,nid){const ok=B.pages[p]||TEXT_PAGES.includes(p);return ok?`<
 function renderDetails(){const el=$('#p-details');const n=S.sel&&NODES[S.sel];
  if(!n){el.innerHTML=B.pages[S.page]?`<p class="muted">Click a box to see its condition, footnotes, linked pages and supporting text. Drag to pan, scroll to zoom.</p>`:`<p class="muted">Text page ${esc(S.page)}.</p>`;return}
  let h=`<b>${esc(n.full)}</b><p>${esc(n.text)}</p>`;
- if(n.pred)h+=`<h3>Branch condition</h3><div class="card"><code>${esc(predText(n.pred))}</code></div>`;
+ if(n.pred)h+=`<h3>Branch condition${B.preds_draft?' <span class="muted">(draft, not clinician-reviewed)</span>':''}</h3><div class="card"><code>${esc(predText(n.pred))}</code></div>`;
  if(n.footnotes.length){h+='<h3>Footnotes</h3>'+n.footnotes.map(f=>`<span class="chip${S.fn===f[0]?' on':''}" data-fn="${esc(f[0])}">${esc(f[0])}</span>`).join('');
   h+=n.footnotes.map(f=>`<div class="fnote${S.fn===f[0]?' on':''}"><sup>${esc(f[0])}</sup> ${esc(f[1])}</div>`).join('')}
  const out=(B.children[n.full]||[]),inc=parents[n.full]||[];
@@ -214,16 +215,17 @@ document.addEventListener('click',e=>{if(!e.target.closest('.search'))$('#result
 
 /* ---------- guided walk + patient facts (port of navigator.py A4/A5 logic) ---------- */
 const hasFacts=()=>Object.values(S.facts).some(v=>v!==null&&v!==undefined);
+const F=()=>derive(S.facts,B.schema);
 function factsDecideNext(kids,depth=3){let fr=[...kids];for(let i=0;i<depth;i++){const nx=[];
- for(const n of fr){const gr=kidsOf(n);if(gr.length>1){const v=gr.map(c=>evaluate(PRED[c],S.facts));
+ for(const n of fr){const gr=kidsOf(n);if(gr.length>1){const v=gr.map(c=>evaluate(PRED[c],F()));
   if(v.filter(x=>x===true).length===1&&!v.includes(null))return true}nx.push(...gr)}fr=nx}return false}
 function reconvergence(kids,depth=3){const reach=kids.map(k=>{let seen=[],fr=[k];for(let i=0;i<depth;i++){fr=fr.flatMap(n=>kidsOf(n));seen=seen.concat(fr)}return seen});
  return reach[0].find(n=>reach.slice(1).every(r=>r.includes(n)))||null}
-function autoStep(w){let guard=0;while(guard++<200){const kids=kidsOf(w.at);if(!kids.length||!hasFacts())return;
+function autoStep(w){let guard=0;while(guard++<200){const kids=kidsOf(w.at);if(!kids.length||!hasFacts())return;const FACT=F();
   const here=getNode(w.at),last=w.path.length?w.path[w.path.length-1].by:null;
   const pass=PRED[w.at]||(here.links&&here.links.length)||last==='entry'||factsDecideNext(kids);
   if(kids.length===1&&!PRED[kids[0]]&&pass){w.path.push({node:kids[0],by:'single-arrow'});w.at=kids[0];continue}
-  const v=kids.map(c=>evaluate(PRED[c],S.facts)),tr=kids.filter((c,i)=>v[i]===true);
+  const v=kids.map(c=>evaluate(PRED[c],F())),tr=kids.filter((c,i)=>v[i]===true);
   if(tr.length===1&&!v.includes(null)){w.path.push({node:tr[0],by:'predicate'});w.at=tr[0];continue}
   const merge=kids.length>1&&v.includes(null)&&!tr.length?reconvergence(kids):null;
   if(merge){w.path.push({node:merge,by:'reconverge',unresolved:kids});w.at=merge;continue}
@@ -247,7 +249,7 @@ function renderWalk(){const el=$('#p-walk'),w=S.walk;
  const kids=kidsOf(w.at);h+='<h3>Next step</h3>';
  if(!kids.length)h+='<div class="card">End of the encoded pathway for this box.</div>';
  else{if(kids.length>1&&hasFacts())h+='<div class="card muted">Facts did not decide this branch; choose below.</div>';
-  h+=kids.map(c=>{const v=hasFacts()?evaluate(PRED[c],S.facts):null;const tag=v===true?' ✓ matches facts':v===false?' ✗ excluded by facts':'';
+  h+=kids.map(c=>{const v=hasFacts()?evaluate(PRED[c],F()):null;const tag=v===true?' ✓ matches facts':v===false?' ✗ excluded by facts':'';
    return`<button class="choice" data-c="${esc(c)}"${v===false?' style="opacity:.55"':''}>${esc(getNode(c).text.slice(0,120))}<span class="muted">${tag}</span></button>`}).join('')}
  h+='<textarea id="expbox" readonly rows="3" style="width:100%;display:none;margin-top:8px"></textarea>';
  el.innerHTML=h;
@@ -257,25 +259,24 @@ function renderWalk(){const el=$('#p-walk'),w=S.walk;
  $('#reset').onclick=()=>{S.walk=null;renderChart();renderWalk()};
  $('#exp').onclick=()=>{const t=$('#expbox');t.style.display='block';t.value=JSON.stringify(w.path.map(s=>s.node));t.select()}}
 
-/* facts form is derived from the predicates, so it follows whatever the guideline encodes */
-function collectFacts(p,acc){if(!p)return;if(p.all||p.any){(p.all||p.any).forEach(x=>collectFacts(x,acc));return}
- if(p.not){collectFacts(p.not,acc);return}const f=acc[p.fact]=acc[p.fact]||{vals:new Set(),num:false,bool:false};
- [].concat(p.value).forEach(v=>{if(typeof v==='number')f.num=true;else if(typeof v==='boolean')f.bool=true;else f.vals.add(v)})}
-const FACTS={};Object.values(PRED).forEach(p=>collectFacts(p,FACTS));
-function renderFacts(){const el=$('#p-facts'),names=Object.keys(FACTS).sort();
- if(!names.length){el.innerHTML='<p class="muted">No branch conditions are encoded, so facts cannot decide branches.</p>';return}
- let h='<p class="muted">Enter what you know. Blank means unknown. Only branches with an encoded condition can be decided automatically; others need your choice.</p>';
- h+=names.map(n=>{const f=FACTS[n];let inp;
-  if(f.bool)inp=`<select data-f="${esc(n)}" data-t="bool"><option value="">unknown</option><option value="true">yes</option><option value="false">no</option></select>`;
-  else if(f.num&&!f.vals.size)inp=`<input type="number" step="any" data-f="${esc(n)}" data-t="num">`;
-  else if(f.vals.size&&!f.num)inp=`<select data-f="${esc(n)}" data-t="str"><option value="">unknown</option>${[...f.vals].sort().map(v=>`<option>${esc(v)}</option>`).join('')}</select>`;
-  else inp=`<input type="text" data-f="${esc(n)}" data-t="str">`;
-  return`<label class="field"><span>${esc(n.replace(/_/g,' '))}</span>${inp}</label>`}).join('');
- h+=`<p><select id="fstart">${Object.keys(B.pages).map(p=>`<option${p===S.page?' selected':''}>${esc(p)}</option>`).join('')}</select></p>
+/* facts form comes from the guideline's fact schema (raw variables); derived classes are computed */
+const VARS=(B.schema&&B.schema.variables)||{};
+function renderFacts(){const el=$('#p-facts'),names=Object.keys(VARS);
+ if(!names.length){el.innerHTML='<p class="muted">No fact schema in this data, so facts cannot decide branches.</p>';return}
+ let h='<p class="muted">Enter what you know; blank means unknown. Only boxes with an encoded condition can be decided automatically, the rest need your choice.'+(B.preds_draft?' Conditions are machine-drafted and not clinician-reviewed.':'')+'</p>';
+ h+=names.map(n=>{const v=VARS[n];let inp;
+  if(v.type==='bool')inp=`<select data-f="${esc(n)}" data-t="bool"><option value="">unknown</option><option value="true">yes</option><option value="false">no</option></select>`;
+  else if(v.type==='enum')inp=`<select data-f="${esc(n)}" data-t="str"><option value="">unknown</option>${(v.values||[]).map(x=>`<option>${esc(x)}</option>`).join('')}</select>`;
+  else inp=`<input type="number" step="any" data-f="${esc(n)}" data-t="num" placeholder="${esc(v.unit||'')}">`;
+  return`<label class="field" title="${esc(v.definition||'')}"><span>${esc(n.replace(/_/g,' '))}</span>${inp}</label>`}).join('');
+ h+=`<div class="card" id="derived"></div><p><select id="fstart">${Object.keys(B.pages).map(p=>`<option${p===S.page?' selected':''}>${esc(p)}</option>`).join('')}</select></p>
  <p><button class="primary" id="frun">Walk from this page with these facts</button> <button id="fclear">Clear</button></p>`;
  el.innerHTML=h;
+ const showDerived=()=>{const d=F(),extra=Object.entries(d).filter(([k])=>!(k in S.facts||(S.facts[k]!==undefined)));
+  $('#derived').innerHTML=extra.length?'<b>Derived by rules</b><br>'+extra.map(([k,v])=>`<span class="chip">${esc(k.replace(/_/g,' '))}: ${esc(v)}</span>`).join(''):'<span class="muted">Derived classifications (risk group, stage…) appear here once enough facts are entered.</span>'};
  el.querySelectorAll('[data-f]').forEach(i=>{i.value=S.facts[i.dataset.f]===undefined||S.facts[i.dataset.f]===null?'':String(S.facts[i.dataset.f]);
-  i.onchange=()=>{const v=i.value;S.facts[i.dataset.f]=v===''?null:i.dataset.t==='num'?Number(v):i.dataset.t==='bool'?v==='true':v}});
+  i.onchange=()=>{const v=i.value;S.facts[i.dataset.f]=v===''?null:i.dataset.t==='num'?Number(v):i.dataset.t==='bool'?v==='true':v;showDerived()}});
+ showDerived();
  $('#frun').onclick=()=>{el.querySelectorAll('[data-f]').forEach(i=>i.onchange());startWalk($('#fstart').value)};
  $('#fclear').onclick=()=>{S.facts={};renderFacts()}}
 
@@ -287,7 +288,7 @@ renderFacts();renderWalk();
 window.addEventListener('hashchange',fromHash);
 if(!fromHash()){let p=null;try{p=localStorage.getItem('dash-page')}catch(e){}
  const first=Object.keys(B.pages)[0];go(B.pages[p]||TEXT_PAGES.includes(p)?p:first)}
-window.__dash={S,startWalk,choose,evaluate};
+window.__dash={S,startWalk,choose,evaluate,derive,F};
 </script>
 </body>
 </html>

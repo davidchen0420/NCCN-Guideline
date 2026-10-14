@@ -1,5 +1,9 @@
 {
- "a": "Synthetic footnote a: illustrative only.",
- "b": "Synthetic footnote b.",
- "c": "Synthetic footnote c, see SAMPLE-A."
+ "SAMPLE-1": {
+  "a": "Synthetic footnote a: illustrative only.",
+  "b": "Synthetic footnote b."
+ },
+ "SAMPLE-2": {
+  "c": "Synthetic footnote c, see SAMPLE-A."
+ }
 }
