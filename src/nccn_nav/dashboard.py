@@ -55,7 +55,8 @@ def load_predicates(private):
     predicates.json is the current, reviewed set: a null value means review rejected the
     draft, so the box has no condition. The raw LLM drafts in llm/pred_out_*.json are used
     only when no predicates.json exists (they still contain the rejected conditions).
-    Returns (preds, review) where review maps box id -> "reviewed" | "draft"."""
+    Returns (preds, review) where review maps box id -> "reviewed" | "draft" | "rejected"
+    (rejected: the box has no condition because review rejected the draft)."""
     private = Path(private)
     path = private / "predicates.json"
     if path.exists():
@@ -66,7 +67,10 @@ def load_predicates(private):
             preds.update({k: v for k, v in json.loads(f.read_text()).items() if v})
     status = _load(private, "predicates_status.json") or {}
     reviewed = set(status.get("reviewed_correct", []))
-    return preds, {k: "reviewed" if k in reviewed else "draft" for k in preds}
+    review = {k: "reviewed" if k in reviewed else "draft" for k in preds}
+    # Boxes whose drafted condition review rejected: the viewer flags them as "not encoded".
+    review.update({k: "rejected" for k in status.get("rejected", []) if k not in preds})
+    return preds, review
 
 
 DOC_KINDS = {"principles": "principles", "staging": "staging", "discussion": "discussion", "other": "reference"}
@@ -196,7 +200,7 @@ def build_bundle(private):
                 if text:  # [letter, text, PDF page index of the page that prints it]
                     fns.append([r, clean(text), first_index.get(src, g.get("page_index"))])
             nodes.append({"id": n["id"], "kind": n.get("kind", "box"), "text": clean(n["text"], True), "bbox": n["bbox"],
-                          "pred": preds.get(nid), "review": review.get(nid) if nid in preds else None,
+                          "pred": preds.get(nid), "review": review.get(nid),
                           "links": node_links, "role": n.get("role"), "footnotes": fns})
             if n.get("kind", "box") == "box":
                 children[nid] = []

@@ -21,7 +21,7 @@ import type { Facts, Pred } from "../types";
 import type { Graph } from "./graph";
 import { derive, evaluate } from "./predicates";
 
-export type StepKind = "met" | "otherwise" | "unknown" | "option" | "inferred" | "flow";
+export type StepKind = "met" | "otherwise" | "unknown" | "uncoded" | "option" | "inferred" | "flow";
 export type EdgeKind = "agreed" | "verified" | "unsure" | "link" | "entry";
 export interface PStep { node: string; kind: StepKind; missing: string[]; edge: EdgeKind; share: number }
 export type EndKind = "leaf" | "later" | "limit";
@@ -29,6 +29,8 @@ export interface Pathway {
   id: string; steps: PStep[]; end: EndKind; next: string[];
   weight: number; likelihood: number;
   met: number; open: number; options: number;
+  /** Arms taken although their condition is not encoded (left to the clinician's judgment). */
+  uncoded: number;
   coverage: number; encoding: number; confidence: number;
   missing: string[];
 }
@@ -110,14 +112,14 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
   const finish = (steps: PStep[], weight: number, end: EndKind, next: string[] = []) => {
     if (done.length >= MAX_PATHS) { truncated = true; return; }
     const crit = steps.filter((s) => s.kind !== "flow" && s.kind !== "option");
-    const met = crit.filter((s) => s.kind !== "unknown").length;
+    const met = crit.filter((s) => s.kind !== "unknown" && s.kind !== "uncoded").length;
     const open = crit.length - met;
     const coverage = crit.length ? met / crit.length : 0;
     const encoding = steps.reduce((a, s) => a + EDGE_W[s.edge] * reviewW(s.node), 0) / steps.length;
     const missing = [...new Set(steps.flatMap((s) => s.missing))];
     done.push({
       id: steps.map((s) => s.node).join(">"), steps, end, next, weight,
-      met, open, options: steps.filter((s) => s.kind === "option").length,
+      met, open, options: steps.filter((s) => s.kind === "option").length, uncoded: steps.filter((s) => s.kind === "uncoded").length,
       coverage, encoding, confidence: Math.round(100 * coverage * encoding), missing,
     });
   };
@@ -159,7 +161,7 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     const tr = groups.filter((_, i) => v[i] === true);
     const fl = groups.filter((_, i) => v[i] === false);
     const unk = groups.filter((_, i) => v[i] === null);
-    const none = groups.filter((_, i) => v[i] === "none");
+    let none = groups.filter((_, i) => v[i] === "none");
     ruledOut += fl.length;
     type Opt = { gr: Group; kind: StepKind; share: number };
     // "Otherwise" arm: every conditioned sibling is false and exactly one has no condition.
@@ -167,6 +169,12 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     const out: Opt[] = [];
     tr.forEach((gr) => out.push({ gr, kind: "met", share: 1 }));
     unk.forEach((gr) => out.push({ gr, kind: "unknown", share: tr.length ? RESIDUAL : 1 }));
+    // A box with no condition is "not encoded" (rather than a free option) when review rejected
+    // its drafted condition, or when conditioned siblings show this branch is decided by facts.
+    const siblingHasPred = groups.some((gr) => g.preds[gr.id]);
+    const uncoded = none.filter((gr) => !gr.pre.length && (g.node(gr.id)?.review === "rejected" || siblingHasPred));
+    uncoded.forEach((gr) => out.push({ gr, kind: "uncoded", share: tr.length ? RESIDUAL : 1 }));
+    none = none.filter((gr) => !uncoded.includes(gr));
     if (none.length) {
       const m = none.map((gr) => textMatches(g, g.node(gr.id)?.text ?? "", raw));
       const anyMine = m.some((x) => x.mine);

@@ -17,10 +17,13 @@ const step = async (name, fn) => { await fn(); console.log(`ok ${++n} ${name}`);
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 watch(page);
 await page.goto(url);
-await step("first visit shows help, then closes", async () => {
-  await page.getByRole("dialog").waitFor();
-  await page.getByRole("button", { name: "Got it" }).click();
+await step("first visit shows the start screen; browsing closes it and opens contents", async () => {
+  await page.getByRole("dialog", { name: /Find where a patient sits/ }).waitFor();
+  assert.ok(await page.getByRole("button", { name: /Enter a patient/ }).isVisible());
+  await page.getByRole("button", { name: /Browse the guideline/ }).click();
   assert.equal(await page.getByRole("dialog").count(), 0);
+  await page.getByRole("button", { name: "Help" }).click();
+  await page.getByRole("button", { name: "Got it" }).click();
 });
 await step("contents list pages and groups documents", async () => {
   await page.locator(".toc-item.alg").first().waitFor();
@@ -90,14 +93,25 @@ await step("patient details rank pathways across pages", async () => {
   assert.equal(await page.locator(".pcard").count(), 1);
   assert.match(await page.locator(".pcard").innerText(), /100%/);
   assert.equal(await page.locator(".trail .step").count(), 6);
+  assert.ok(await page.locator(".trail .step.compact").count() >= 1, "pass-through steps collapse");
+  assert.match(await page.locator(".reco").innerText(), /Recommended at this point/i);
+  assert.match(await page.locator(".scores").innerText(), /Most likely[\s\S]*Complete/);
   assert.ok(await page.locator(".card.walk").count() >= 1, "route lit on the canvas");
 });
+await step("route summary lists details, recommendation and source pages", async () => {
+  await page.getByRole("button", { name: /Summary to copy or print/ }).click();
+  const doc = await page.locator(".sum-doc").innerText();
+  assert.match(doc, /Recommended at this point/i);
+  assert.match(doc, /Score/i);
+  assert.match(doc, /SAMPLE-2, PDF p\.7/);
+  await page.getByRole("button", { name: "Close summary" }).click();
+});
 await step("hovering a step previews its source page; clicking opens the page viewer", async () => {
-  await page.locator(".trail .st-text").nth(2).hover();
+  await page.locator(".trail .step.met .st-text").first().hover();
   await page.locator(".peek").waitFor();
   assert.match(await page.locator(".peek").innerText(), /SAMPLE-1/);
   await page.mouse.move(2, 2);
-  await page.locator(".trail .src-chip").first().click();
+  await page.locator(".reco .src-chip").first().click();
   await page.getByRole("dialog", { name: /Guideline page/ }).waitFor();
   await page.getByRole("button", { name: "Close page viewer" }).click();
   assert.equal(await page.locator(".viewer").count(), 0);
@@ -108,7 +122,8 @@ await page.close();
 const phone = await (await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 })).newPage();
 watch(phone);
 await phone.goto(url);
-await phone.getByRole("button", { name: "Got it" }).click();
+await phone.getByRole("button", { name: /Browse the guideline/ }).tap();
+await phone.getByRole("button", { name: "Close panel" }).first().tap();
 await step("phone: no sideways scroll, drawer closed, readable card text", async () => {
   await cards(phone).first().waitFor();
   assert.equal(await phone.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);

@@ -1,6 +1,6 @@
-import { ArrowLeft, ArrowRight, BookOpen, CircleHelp, History, LayoutGrid, RotateCcw, Search, ExternalLink } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, UserRound, ListChecks, FileText, CircleHelp, History, LayoutGrid, RotateCcw, Search, ExternalLink } from "lucide-react";
 import { useApp } from "../store";
-import { PdfButton } from "../source";
+import { PdfButton, useSource } from "../source";
 
 export function Rail() {
   const { s, set, go } = useApp();
@@ -69,6 +69,54 @@ export function Help() {
         <details><summary>What do likelihood and confidence mean?</summary><p>Likelihood shares 100% across the routes your entries leave open, split at each branch by which arms fit. Confidence multiplies how many of a route's criteria are met by how reliably its arrows and conditions were extracted. Neither is a clinical probability.</p></details>
         <details><summary>Is this the official NCCN tool?</summary><p>No. It is an independent research prototype built from public descriptions of the NCCN Guidelines Navigator. Use the official guidelines for clinical decisions.</p></details>
         <div className="modal-actions"><button className="primary" onClick={close}>Got it</button></div>
+      </div>
+    </div>
+  );
+}
+
+/** First visit: three ways in, plus the optional PDF. Replaces a wall of help text. */
+export function Welcome() {
+  const { s, set, setFacts, bundle } = useApp();
+  const { pdf, pick } = useSource();
+  if (!s.welcome) return null;
+  const close = (patch: Parameters<typeof set>[0] = {}) => {
+    try { localStorage.setItem("nav-help", "1"); } catch { /* storage may be blocked */ }
+    set({ welcome: false, ...patch });
+  };
+  const examples = bundle.examples ?? [];
+  return (
+    <div className="modal" onClick={(e) => { if (e.target === e.currentTarget) close(); }}>
+      <div className="modal-box welcome" role="dialog" aria-modal="true" aria-labelledby="wl-h">
+        <span className="eyebrow">{bundle.title}</span>
+        <h2 id="wl-h">Find where a patient sits in the guideline</h2>
+        <p className="wl-lead">Enter what the record says. The navigator ranks every route through the algorithm that fits, shows which criteria are met, and links each step to the guideline page it came from.</p>
+        <div className="wl-choices">
+          <button type="button" className="wl-choice" onClick={() => close({ rightTab: "patient", sheet: true })} autoFocus>
+            <UserRound size={20} aria-hidden /><b>Enter a patient</b><span>Start with T, N, M, Grade Group, PSA and life expectancy.</span>
+          </button>
+          {examples.length > 0 && (
+            <div className="wl-choice as-div">
+              <ListChecks size={20} aria-hidden /><b>Try an example</b>
+              <span>Hand-encoded from public vignettes.</span>
+              <div className="wl-ex">
+                {examples.map((x) => (
+                  <button key={x.id} type="button" className="linkish" onClick={() => { setFacts({ ...x.facts }); close({ age: x.age ?? null, pathSel: null, start: "auto", rightTab: "paths", sheet: true }); }}>{x.label}</button>
+                ))}
+              </div>
+            </div>
+          )}
+          <button type="button" className="wl-choice" onClick={() => close({ left: "toc" })}>
+            <BookOpen size={20} aria-hidden /><b>Browse the guideline</b><span>Read the algorithm pages, principles and discussion with every reference linked.</span>
+          </button>
+        </div>
+        <div className="wl-pdf">
+          <FileText size={16} aria-hidden />
+          {pdf.status === "ready"
+            ? <span>Source PDF connected: <b>{pdf.name}</b>. Hover any step to preview its page.</span>
+            : <span>Optional: connect your copy of the guideline PDF to preview original pages. It stays in this browser and is never uploaded.</span>}
+          {pdf.status !== "ready" && <button type="button" className="btn small" onClick={pick}>Connect PDF</button>}
+        </div>
+        <p className="wl-fine">An independent research prototype, not the official NCCN tool. Branch conditions are machine-drafted and not clinician-reviewed; always check the source page. <button type="button" className="linkish" onClick={() => close({ help: true })}>How it works</button></p>
       </div>
     </div>
   );

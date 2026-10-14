@@ -49,6 +49,21 @@ describe("ranked pathways", () => {
     expect(r.nextBest?.fact).toBe("score");
   });
 
+  it("marks an arm without a condition as not encoded when its siblings have conditions", () => {
+    const b2 = JSON.parse(JSON.stringify(bundle)) as Bundle;
+    const n3 = b2.pages["SAMPLE-2"].nodes.find((n) => n.id === "n3")!;
+    n3.pred = null;
+    const g2 = buildGraph(b2);
+    const open = rankPathways(g2, { score: 12 });
+    const route = open.paths.find((p) => nodes(p).includes("SAMPLE-2:n3"))!;
+    expect(route.steps.find((s) => s.node === "SAMPLE-2:n3")!.kind).toBe("uncoded");
+    expect(route.uncoded).toBe(1);
+    expect(route.open).toBe(1); // counted as open, never as met
+    // once the conditioned sibling is ruled out, the remaining arm is the "otherwise" branch
+    const other = rankPathways(g2, { score: 12, age: 50 });
+    expect(other.paths[0].steps.find((s) => s.node === "SAMPLE-2:n3")!.kind).toBe("otherwise");
+  });
+
   it("lists raw facts behind a derived condition", () => {
     expect(missingFacts(g, { fact: "tier", op: "==", value: "high" }, {})).toEqual(["score"]);
     expect(missingFacts(g, { fact: "late_stage_stated", op: "==", value: true }, {})).toEqual([]);

@@ -12,7 +12,7 @@ export interface BNode {
   pred: Pred | null;
   links: string[];
   role: string | null;
-  review?: "reviewed" | "draft" | null;
+  review?: "reviewed" | "draft" | "rejected" | null;
   /** [letter, text, 0-based PDF page index of the page that prints it] */
   footnotes: [string, string, number?][];
 }

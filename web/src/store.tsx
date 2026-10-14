@@ -19,7 +19,7 @@ export interface State {
   left: LeftView; rightTab: RightTab; sheet: boolean;
   query: string; kinds: Kind[]; tags: string[]; searchNon: boolean;
   dock: DockTab; fn: string | null; fnIdx: number;
-  walk: Walk | null; facts: Facts; help: boolean;
+  walk: Walk | null; facts: Facts; help: boolean; welcome: boolean;
   age: number | null; start: string; pathSel: string | null;
 }
 
@@ -103,7 +103,7 @@ export function Provider({ bundle, children }: { bundle: Bundle; children: React
       loc, hist: [loc], hpos: 0, answers: [], showNon: false, conf: false,
       left: window.innerWidth > 1180 ? "toc" : null, sheet: false,
       query: "", kinds: [], tags: [], searchNon: false,
-      dock: null, fn: null, fnIdx: 0, walk: null, facts: {}, help: !saved,
+      dock: null, fn: null, fnIdx: 0, walk: null, facts: {}, help: false, welcome: !saved,
       rightTab: "patient", age: null, start: "auto", pathSel: null,
     };
   }, [g]);

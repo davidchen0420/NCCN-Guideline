@@ -3,7 +3,7 @@ import { Canvas } from "./components/Canvas";
 import { Dock } from "./components/Dock";
 import { DocView } from "./components/DocView";
 import { MapView } from "./components/MapView";
-import { Help, Rail, TitleBar } from "./components/Chrome";
+import { Help, Rail, TitleBar, Welcome } from "./components/Chrome";
 import { HistoryPanel, SearchPanel, Toc } from "./components/LeftPanel";
 import { RightPanel } from "./components/RightPanel";
 
@@ -35,6 +35,7 @@ export function App() {
         <button className="sheet-open-btn" onClick={() => set({ sheet: true, dock: null })}>Details &amp; walk</button>
       )}
       <Help />
+      <Welcome />
       <div className="sr" aria-live="polite">{bundle.title}</div>
     </div>
   );
