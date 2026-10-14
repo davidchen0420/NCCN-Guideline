@@ -37,7 +37,13 @@ def table_pages(root):
 
 
 def e2_pages(root):
-    return json.loads((Path(root) / "redflags.json").read_text())["e2_pages"]
+    """Pages that get the vision extraction: every algorithm page with at least two boxes (the
+    first runs covered only red-flagged pages, so these lists are a superset of those)."""
+    root = Path(root)
+    flagged = json.loads((root / "redflags.json").read_text())["e2_pages"]
+    graphs = json.loads((root / "e1_graphs.json").read_text())
+    rest = [c for c, g in graphs.items() if c not in flagged and sum(n["kind"] == "box" for n in g["nodes"]) >= 2]
+    return flagged + rest
 
 
 def render(root):
@@ -87,17 +93,17 @@ def export_tables(root, per=4):
     agent copies text instead of reading it off the image."""
     root = Path(root)
     spec = Spec(root)
-    (root / "tables").mkdir(exist_ok=True)
+    (root / "tables_v2").mkdir(exist_ok=True)
     rows = []
     for c in table_pages(root):
-        if (root / "tables" / f"{fname(c)}.json").exists():
+        if (root / "tables_v2" / f"{fname(c)}.json").exists():
             continue
         lines = sorted(_text_lines(spec.doc[spec.index_of(c)]), key=lambda l: (round(l["bbox"][1]), l["bbox"][0]))
         text_path = root / "llm" / f"table_text_{fname(c)}.txt"
         (root / "llm").mkdir(exist_ok=True)
         text_path.write_text("\n".join(f"y={l['bbox'][1]:.0f} x={l['bbox'][0]:.0f} | {l['text']}" for l in lines))
         rows.append({"page": c, "image": _abs(root / "render" / f"{fname(c)}.png"), "text": _abs(text_path),
-                     "out": _abs(root / "tables" / f"{fname(c)}.json")})
+                     "out": _abs(root / "tables_v2" / f"{fname(c)}.json")})
     paths = _write_batches(root, "table_batch", rows, int(per))
     print(f"{root.name}: {len(rows)} table pages in {len(paths)} batches")
     return paths
@@ -157,7 +163,7 @@ def status_one(root):
     want_e2, want_t = e2_pages(root), table_pages(root)
     row["pages"] = len(graphs)
     row["e2"] = f"{sum((root / 'e2' / f'{fname(c)}.json').exists() for c in want_e2)}/{len(want_e2)}"
-    row["tables"] = f"{sum((root / 'tables' / f'{fname(c)}.json').exists() for c in want_t)}/{len(want_t)}"
+    row["tables"] = f"{sum((root / 'tables_v2' / f'{fname(c)}.json').exists() for c in want_t)}/{len(want_t)}"
     merged = root / "merged_graphs.json"
     if merged.exists():
         m = json.loads(merged.read_text())

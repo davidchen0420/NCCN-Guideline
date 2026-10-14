@@ -74,10 +74,16 @@ def prepare(root, trees=None, limit=None, seed=0):
 REF_RE = re.compile(r"\b([A-Z][A-Z0-9_/]{1,11}-[0-9]+[A-Z]?)\b")
 
 
+LABEL_PREFIX_RE = re.compile(r"^(Diagnosis|Treatment|Next step|Workup|Finding|Assessment):\s+")
+
+
 def _sim(a, b):
     # Page references are what tell look-alike boxes apart ("pMMR/MSS (COL-10)" vs "(COL-11)").
     # A mismatch is a penalty, not a veto: MedGUIDE was built from an older guideline version
     # whose page numbers differ (e.g. PROS-15 there is PROS-17 in v6.2026).
+    # MedGUIDE sometimes labels path steps ("Treatment: ...", "Next step: ..."); the label is
+    # not guideline text.
+    a = LABEL_PREFIX_RE.sub("", a)
     ra, rb = set(REF_RE.findall(a)), set(REF_RE.findall(b))
     penalty = 0.15 if ra and rb and not ra & rb else 0.0
     return max(0.0, text_sim(a, b, min_len=7) - penalty)
@@ -162,7 +168,8 @@ def build_facts(root):
     for run in ("a", "b"):
         raw = {}
         for f in sorted((root / "medguide").glob(f"facts_raw_{run}_*.json")):
-            raw.update(json.loads(f.read_text()))
+            for i, facts in json.loads(f.read_text()).items():  # files may add variables to a case
+                raw.setdefault(i, {}).update(facts)
         runs[run] = raw
     final, earlier, stats, rejected = {}, {}, {}, 0
     ids = sorted(set(runs["a"]) | set(runs["b"]))

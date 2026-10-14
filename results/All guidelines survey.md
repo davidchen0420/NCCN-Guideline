@@ -4,6 +4,7 @@
 **Scope:** all 91 NCCN guideline PDFs, run through the local, no-LLM stage of the pipeline (`python -m nccn_nav.survey private`). This stage covers layout detection, vector graph extraction (E1), footnotes, full text and red flags.
 **Cost:** about $0.40 of Haiku to download the PDFs; the survey itself is local and free.
 **Content:** numbers only, no guideline text.
+**Follow-up:** the full Haiku encoding of all 91 guidelines is reported in [All guidelines encoding.md](All%20guidelines%20encoding.md).
 
 ## Answer in brief
 - **What generalizes:** the local stage runs on every guideline with no per-guideline code or settings. All 91 PDFs processed without errors.
