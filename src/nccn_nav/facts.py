@@ -23,19 +23,43 @@ JUDGMENT_RE = re.compile(
     r"high|low|elevated|large|small|long|short|more_than|fewer_than|judges?_\w+_volume)(_|$)")
 
 UNITS = {
-    # canonical unit -> {alias: factor to canonical}
+    # canonical unit -> {alias: factor to canonical}. Conversions are mass/volume/time scale
+    # changes only; analyte-specific conversions (e.g. creatinine µmol/L) are not guessed.
     "years": {"years": 1, "year": 1, "y": 1, "yr": 1, "months": 1 / 12, "month": 1 / 12, "mo": 1 / 12,
               "weeks": 1 / 52.18, "week": 1 / 52.18, "days": 1 / 365.25, "day": 1 / 365.25},
     "months": {"months": 1, "month": 1, "mo": 1, "years": 12, "year": 12, "y": 12, "yr": 12,
                "weeks": 12 / 52.18, "week": 12 / 52.18, "wk": 12 / 52.18, "days": 12 / 365.25, "day": 12 / 365.25},
     "weeks": {"weeks": 1, "week": 1, "wk": 1, "days": 1 / 7, "day": 1 / 7, "months": 52.18 / 12,
               "month": 52.18 / 12, "mo": 52.18 / 12, "years": 52.18, "year": 52.18},
+    "days": {"days": 1, "day": 1, "d": 1, "weeks": 7, "week": 7, "wk": 7, "months": 30.44, "month": 30.44,
+             "mo": 30.44, "years": 365.25, "year": 365.25, "hours": 1 / 24, "hour": 1 / 24, "h": 1 / 24},
+    "hours": {"hours": 1, "hour": 1, "h": 1, "hr": 1, "days": 24, "day": 24, "d": 24, "minutes": 1 / 60, "min": 1 / 60},
     "cm": {"cm": 1, "mm": 0.1, "m": 100},
     "mm": {"mm": 1, "cm": 10},
-    "ng/ml": {"ng/ml": 1, "ng/dl": 0.01, "ug/l": 1, "µg/l": 1},
-    "ng/dl": {"ng/dl": 1, "ng/ml": 100, "nmol/l": 28.84},
+    "kg": {"kg": 1, "g": 0.001, "lb": 0.45359237, "lbs": 0.45359237},
+    "kg/m2": {"kg/m2": 1, "kg/m²": 1},
+    "ng/ml": {"ng/ml": 1, "ng/dl": 0.01, "ug/l": 1, "µg/l": 1, "pg/ml": 0.001},
+    "ng/dl": {"ng/dl": 1, "ng/ml": 100, "nmol/l": 28.84},  # nmol/L factor is for testosterone
+    "pg/ml": {"pg/ml": 1, "ng/l": 1, "ng/ml": 1000},
+    "g/dl": {"g/dl": 1, "g/l": 0.1, "mg/dl": 0.001},
+    "mg/dl": {"mg/dl": 1, "mg/l": 0.1, "g/dl": 1000, "g/l": 100},
+    "u/ml": {"u/ml": 1, "ku/l": 1, "iu/ml": 1},
+    "u/l": {"u/l": 1, "iu/l": 1},
+    # Cell counts: canonical ×10^9/L (= ×10^3/µL = cells/nL).
+    "x10^9/l": {"x10^9/l": 1, "×10^9/l": 1, "10^9/l": 1, "x10e9/l": 1, "g/l": 1, "/nl": 1,
+                "x10^3/ul": 1, "x10^3/µl": 1, "k/ul": 1, "k/µl": 1, "/ul": 0.001, "/µl": 0.001,
+                "cells/ul": 0.001, "cells/µl": 0.001, "/mm3": 0.001, "cells/mm3": 0.001},
+    "ml/min": {"ml/min": 1, "ml/min/1.73m2": 1, "ml/min/1.73 m2": 1, "ml/min/1.73m²": 1},
+    "gy": {"gy": 1, "cgy": 0.01},
+    "mmhg": {"mmhg": 1, "mm hg": 1},
+    "pack-years": {"pack-years": 1, "pack-year": 1, "pack years": 1, "pack year": 1},
     "percent": {"percent": 1, "%": 1, "pct": 1},
 }
+_ALIASES = sorted({a for t in UNITS.values() for a in t if a.isalpha() or "/" in a or "%" in a}, key=len, reverse=True)
+# A number with a comparison sign or a unit: a bool defined this way hides a threshold.
+THRESHOLD_RE = re.compile(r"[<>≤≥]\s*\d|\b\d+(\.\d+)?\s*(" + "|".join(map(re.escape, _ALIASES)) + r")(?![a-z])", re.I)
+# Dimensionless numbers stored as printed.
+UNITLESS = {"", "count", "score", "grade", "ratio", "index"}
 
 
 def schema_problems(schema):
@@ -44,12 +68,11 @@ def schema_problems(schema):
     for name, var in schema.get("variables", {}).items():
         if JUDGMENT_RE.search(name) and not name.endswith("_stated"):  # "_stated": explicit statement
             out.append((name, "name encodes a threshold/judgment; store the raw measurement"))
-        if var.get("type") == "bool" and re.search(r"[<>≤≥]\s*\d|\b\d+(\.\d+)?\s*(mo|months|years|cm|mm|ng)",
-                                                   var.get("definition", "")):
+        if var.get("type") == "bool" and THRESHOLD_RE.search(var.get("definition", "")):
             out.append((name, "boolean defined by a numeric threshold; use a number variable"))
         if var.get("type") == "enum" and not var.get("values"):
             out.append((name, "enum without allowed values"))
-        if var.get("type") == "number" and var.get("unit", "").lower() not in UNITS and var.get("unit") not in (None, "", "count", "score", "grade"):
+        if var.get("type") == "number" and (var.get("unit") or "").lower() not in UNITS.keys() | UNITLESS:
             out.append((name, f"unit {var.get('unit')!r} has no converter"))
     return out
 
@@ -90,7 +113,7 @@ def _convert(x, unit, target):
     if x is None:
         return None
     if not target or target.lower() not in UNITS:
-        return x
+        return x  # dimensionless (count, score, ...)
     table = UNITS[target.lower()]
     factor = table.get((unit or target).lower().strip())
     if factor is None:

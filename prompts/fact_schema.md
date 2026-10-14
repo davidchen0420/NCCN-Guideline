@@ -7,7 +7,7 @@ Output: write `{ROOT}/fact_schema.json` with the Write tool. Content:
 {"variables": {NAME: VAR, ...}, "derived": {NAME: DERIVED, ...}}
 
 ## VAR: raw facts read directly off a case description
-- number: {"type": "number", "unit": U, "definition": "..."}. U must be one of: years, months, weeks, cm, mm, ng/ml, ng/dl, percent, count, score, grade. Examples: age_years, psa_ng_ml, psa_doubling_time_months, tumor_size_cm, ecog_score, positive_cores_count, positive_cores_percent, gleason_primary, gleason_secondary, life_expectancy_years, months_since_treatment_end, testosterone_ng_dl.
+- number: {"type": "number", "unit": U, "definition": "..."}. U must be one of: years, months, weeks, days, hours, cm, mm, kg, kg/m2, ng/ml, ng/dl, pg/ml, g/dl, mg/dl, u/ml, u/l, x10^9/l (cell counts), ml/min, gy, mmhg, pack-years, percent, count, score, grade, ratio, index. Examples: age_years, psa_ng_ml, psa_doubling_time_months, tumor_size_cm, ecog_score, positive_cores_count, positive_cores_percent, gleason_primary, gleason_secondary, life_expectancy_years, months_since_treatment_end, testosterone_ng_dl, hemoglobin_g_dl, platelets_x10e9_l, creatinine_clearance_ml_min, smoking_pack_years.
 - enum: {"type": "enum", "values": [...], "definition": "..."}. List every value the guideline distinguishes, plus "other". Examples: histology, clinical_t_category ("T1a", "T1b", ..., "T4"), n_category, m_category, egfr_mutation ("exon19_deletion", "L858R", ..., "negative"), msi_status, prior_therapy_type, treatment_phase, resection_margin ("R0", "R1", "R2").
 - bool: {"type": "bool", "definition": "..."}, only for a yes/no event or finding that a case states directly ("prior_adt_received", "symptomatic_bone_metastases", "patient_declines_surgery").
 

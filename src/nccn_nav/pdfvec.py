@@ -267,7 +267,10 @@ def extract_page_graph(doc, index):
 
     brackets = _merge_collinear(brackets)
     # Everything below the lowest connector or bracket is the footnote block.
-    flow_bottom = max([max(t[1], h[1]) for t, h in connectors] + [b["y1"] for b in brackets] + [top]) + 25
+    # A page with no connectors or brackets (a list or prose page) has no flow to bound it: only
+    # marker-led lines are footnotes there.
+    flow_bottom = (max([max(t[1], h[1]) for t, h in connectors] + [b["y1"] for b in brackets]) + 25
+                   if connectors or brackets else bottom)
     lines = _text_lines(page, bands)
     # Footnote lines: below the flow, or starting with a superscript letter marker at the left
     # margin (footnote blocks can sit beside the lower part of a flow).

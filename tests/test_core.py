@@ -175,3 +175,30 @@ def test_extractor_on_synthetic_page(synthetic_doc):
     assert ("Upper branch", "Target") in edges
     assert ("Lower branch", "Below lower") in edges
     assert g["n_unattached"] == 0
+
+
+def test_clinical_unit_conversions():
+    assert _convert(150000, "cells/µL", "x10^9/l") == 150
+    assert _convert(120, "g/L", "g/dl") == 12
+    assert _convert(3, "days", "hours") == 72
+    assert _convert(1, "mmol/l", "mg/dl") is None  # analyte-specific: never guessed
+    assert schema_problems({"variables": {"x": {"type": "number", "unit": "ratio", "definition": ""}}}) == []
+
+
+def test_page_bands_and_prose_page():
+    from nccn_nav.layout import page_bands
+
+    doc = pymupdf.open()
+    page = doc.new_page(width=792, height=612)
+    page.insert_text((40, 50), "Running header title", fontsize=12)
+    page.draw_line((20, 80), (770, 80), width=0.5)
+    page.insert_text((40, 120), "First statement of a list page", fontsize=10)
+    page.insert_text((40, 300), "Second statement further down", fontsize=10)
+    page.insert_text((30, 570), "Note: All recommendations are category 2A unless otherwise indicated.", fontsize=8)
+    top, bottom = page_bands(page)
+    assert 80 < top < 90 and 550 < bottom < 565
+    g = pdfvec.extract_page_graph(doc, 0)
+    text = " ".join(n["text"] for n in g["nodes"])
+    # No arrows on the page: its lines are content, not footnotes; header/footer are excluded.
+    assert "First statement" in text and "Second statement" in text
+    assert "Running header" not in text and "Note: All" not in text
