@@ -12,7 +12,7 @@ Output: write `{OUTPUT}` as one JSON object:
 {"<case id>": {"<variable>": {"value": V, "unit": U, "quote": "<exact words copied from the case>"}, ...}, ...}
 
 Value rules:
-- Numbers: the raw number as written, with "unit" as written (years, months, weeks, days, cm, mm, ng/mL, ng/dL, %).
+- Numbers: the raw number as written, with "unit" as written (for example years, months, days, cm, mm, ng/mL, g/dL, mg/dL, ×10^9/L, cells/µL, mL/min, Gy, pack-years, %).
   - Never convert units and never compare to thresholds yourself.
   - A range or bound ("more than 20 years", "<6 months") becomes {"min": 20} or {"max": 6}.
   - Ages: "68-year-old" gives value 68, unit "years".

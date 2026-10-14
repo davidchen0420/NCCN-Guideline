@@ -118,9 +118,11 @@ def apply(root, merged):
     spec = Spec(root)
     configure(spec)
     report = {}
-    for f in sorted(tdir.glob("*.json")):
-        page = f.stem
-        if page not in merged:
+    from .guideline import fname
+
+    for page in merged:
+        f = tdir / f"{fname(page)}.json"
+        if not f.exists():
             continue
         try:
             rows = json.loads(f.read_text()).get("rows", [])

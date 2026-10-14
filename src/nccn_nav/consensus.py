@@ -3,6 +3,7 @@
 Edges both agree on are accepted; the rest go to a human review queue. The accepted graph
 keeps E1's node text (copied verbatim from the PDF) wherever an E1 node matches.
 """
+from .guideline import fname
 from .scoring import match_nodes, norm, text_sim
 
 
@@ -87,7 +88,7 @@ def merge_all(private):
     merged, stats = {}, {}
     for page, g in e1.items():
         boxes = [n for n in g["nodes"] if n["kind"] == "box"]
-        e2_path = private / "e2" / f"{page}.json"
+        e2_path = private / "e2" / f"{fname(page)}.json"
         edges = {(e["src"], e["dst"]): "e1_only" for e in g["edges"]}
         if e2_path.exists():
             e2 = json.loads(e2_path.read_text())

@@ -269,6 +269,26 @@ def score(root, split_name="test"):
     return a5
 
 
+def export(root, size=10):
+    """LLM inputs for valid items: medguide/extract_input_<k>.jsonl (fact extraction, run twice
+    as a/b) and medguide/a0_input_<k>.jsonl (no-context multiple choice)."""
+    root = Path(root) / "medguide"
+    items = json.loads((root / "items.json").read_text())
+    mapping = json.loads((root / "mapping.json").read_text())
+    valid = [x for x in items if mapping[x["id"]]["valid"]]
+    size = int(size)
+    for old in list(root.glob("extract_input_*.jsonl")) + list(root.glob("a0_input_*.jsonl")):
+        old.unlink()
+    for k in range(0, len(valid), size):
+        chunk = valid[k:k + size]
+        (root / f"extract_input_{k // size}.jsonl").write_text(
+            "\n".join(json.dumps({"id": x["id"], "case": x["profile"]}, ensure_ascii=False) for x in chunk))
+        (root / f"a0_input_{k // size}.jsonl").write_text("\n".join(json.dumps(
+            {"id": x["id"], "case": x["profile"], "options": {"ABCDEFGHIJ"[i]: o for i, o in enumerate(x["options"])}},
+            ensure_ascii=False) for x in chunk))
+    print(f"{len(valid)} valid items -> {(len(valid) + size - 1) // size} files of each kind")
+
+
 if __name__ == "__main__":
     cmd, root = sys.argv[1], sys.argv[2]
-    {"prepare": prepare, "map": map_all, "score": score, "facts": build_facts}[cmd](root, *sys.argv[3:])
+    {"prepare": prepare, "map": map_all, "score": score, "facts": build_facts, "export": export}[cmd](root, *sys.argv[3:])

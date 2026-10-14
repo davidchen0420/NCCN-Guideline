@@ -22,6 +22,11 @@ LABEL_RE = re.compile(rf"{PREFIX}-[A-Z0-9]{{1,4}}")
 NON_FLOW = {"ST", "MS", "ABBR", "CAT", "UPDATES"}
 
 
+def fname(code):
+    """File-name form of a page code ("WM/LPL-1" -> "WM_LPL-1")."""
+    return code.replace("/", "_")
+
+
 def page_labels(doc):
     """0-based page index -> bottom-right page code."""
     out = {}

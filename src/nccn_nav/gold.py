@@ -28,7 +28,7 @@ def write(root, page, keep, new, edges):
     if unknown:
         raise SystemExit(f"edges use unknown labels: {sorted(unknown)}")
     (root / "gold").mkdir(exist_ok=True)
-    (root / "gold" / f"{page}.json").write_text(json.dumps(
+    (root / "gold" / f"{page.replace('/', '_')}.json").write_text(json.dumps(
         {"nodes": nodes, "edges": [{"src": a, "dst": b} for a, b in pairs],
          "basis": "checked by eye from page image"}, indent=1))
     print(f"{page}: {len(nodes)} nodes, {len(pairs)} edges")

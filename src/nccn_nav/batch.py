@@ -12,7 +12,7 @@ import json
 import sys
 from pathlib import Path
 
-from .guideline import Spec
+from .guideline import Spec, fname
 from .pdfvec import _text_lines
 
 SCALE = 1210 / 792  # px per PDF point; prompts/edge_review.md states this scale
@@ -47,7 +47,7 @@ def render(root):
     pages = list(dict.fromkeys(e2_pages(root) + table_pages(root)))
     made = 0
     for code in pages:
-        out = root / "render" / f"{code}.png"
+        out = root / "render" / f"{fname(code)}.png"
         if not out.exists():
             spec.doc[spec.index_of(code)].get_pixmap(matrix=_matrix()).save(out)
             made += 1
@@ -75,8 +75,8 @@ def _write_batches(root, name, rows, per):
 def export_e2(root, per=8):
     root = Path(root)
     (root / "e2").mkdir(exist_ok=True)
-    rows = [{"page": c, "image": _abs(root / "render" / f"{c}.png"), "out": _abs(root / "e2" / f"{c}.json")}
-            for c in e2_pages(root) if not (root / "e2" / f"{c}.json").exists()]
+    rows = [{"page": c, "image": _abs(root / "render" / f"{fname(c)}.png"), "out": _abs(root / "e2" / f"{fname(c)}.json")}
+            for c in e2_pages(root) if not (root / "e2" / f"{fname(c)}.json").exists()]
     paths = _write_batches(root, "e2_batch", rows, int(per))
     print(f"{root.name}: {len(rows)} E2 pages in {len(paths)} batches")
     return paths
@@ -90,14 +90,14 @@ def export_tables(root, per=4):
     (root / "tables").mkdir(exist_ok=True)
     rows = []
     for c in table_pages(root):
-        if (root / "tables" / f"{c}.json").exists():
+        if (root / "tables" / f"{fname(c)}.json").exists():
             continue
         lines = sorted(_text_lines(spec.doc[spec.index_of(c)]), key=lambda l: (round(l["bbox"][1]), l["bbox"][0]))
-        text_path = root / "llm" / f"table_text_{c}.txt"
+        text_path = root / "llm" / f"table_text_{fname(c)}.txt"
         (root / "llm").mkdir(exist_ok=True)
         text_path.write_text("\n".join(f"y={l['bbox'][1]:.0f} x={l['bbox'][0]:.0f} | {l['text']}" for l in lines))
-        rows.append({"page": c, "image": _abs(root / "render" / f"{c}.png"), "text": _abs(text_path),
-                     "out": _abs(root / "tables" / f"{c}.json")})
+        rows.append({"page": c, "image": _abs(root / "render" / f"{fname(c)}.png"), "text": _abs(text_path),
+                     "out": _abs(root / "tables" / f"{fname(c)}.json")})
     paths = _write_batches(root, "table_batch", rows, int(per))
     print(f"{root.name}: {len(rows)} table pages in {len(paths)} batches")
     return paths
@@ -121,7 +121,7 @@ def export_edge_review(root, per=6):
         done |= set(json.loads(f.read_text()))
     pages = []
     for page, g in merged.items():
-        if not (root / "e2" / f"{page}.json").exists():
+        if not (root / "e2" / f"{fname(page)}.json").exists():
             continue
         nodes = {n["id"]: n for n in g["nodes"]}
         w, h = g.get("page_size") or (792, 612)
@@ -133,8 +133,8 @@ def export_edge_review(root, per=6):
                 edges.append({"edge_id": eid, "from": a["text"][:90], "from_pos": _pos(a["bbox"], w, h),
                               "to": b["text"][:90], "to_pos": _pos(b["bbox"], w, h)})
         if edges:
-            pages.append({"slug": root.name, "page": page, "image": _abs(root / "render" / f"{page}.png"),
-                          "out": _abs(root / "review" / f"edge_verdicts_{page}.json"), "edges": edges})
+            pages.append({"slug": root.name, "page": page, "image": _abs(root / "render" / f"{fname(page)}.png"),
+                          "out": _abs(root / "review" / f"edge_verdicts_{fname(page)}.json"), "edges": edges})
     (root / "llm").mkdir(exist_ok=True)
     for old in (root / "llm").glob("edge_review_*.json"):
         old.unlink()
@@ -156,8 +156,8 @@ def status_one(root):
     graphs = json.loads((root / "e1_graphs.json").read_text())
     want_e2, want_t = e2_pages(root), table_pages(root)
     row["pages"] = len(graphs)
-    row["e2"] = f"{sum((root / 'e2' / f'{c}.json').exists() for c in want_e2)}/{len(want_e2)}"
-    row["tables"] = f"{sum((root / 'tables' / f'{c}.json').exists() for c in want_t)}/{len(want_t)}"
+    row["e2"] = f"{sum((root / 'e2' / f'{fname(c)}.json').exists() for c in want_e2)}/{len(want_e2)}"
+    row["tables"] = f"{sum((root / 'tables' / f'{fname(c)}.json').exists() for c in want_t)}/{len(want_t)}"
     merged = root / "merged_graphs.json"
     if merged.exists():
         m = json.loads(merged.read_text())

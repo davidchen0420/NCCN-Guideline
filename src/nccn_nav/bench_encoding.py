@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 
 from .consensus import match_structural
+from .guideline import fname
 from .scoring import graph_prf, text_sim
 
 
@@ -44,7 +45,7 @@ def load_strategies(private, page):
         g = json.loads(merged.read_text())[page]
         # What the navigator uses: E1 boxes with consensus arrows, minus arrows the image check rejected.
         out["E4 merged+review"] = flow_nodes(g)
-    path = private / "e2" / f"{page}.json"
+    path = private / "e2" / f"{fname(page)}.json"
     if path.exists():
         out["E2 VLM (Haiku)"] = json.loads(path.read_text())
     return out
