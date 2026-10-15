@@ -622,6 +622,9 @@ function GuidelinePanel({ g, model, focus, go, bundle, loadError, patients, chos
       </button>
     );
   };
+  const [allEx, setAllEx] = useState(false);
+  const chosenAt = patients.findIndex((x) => x.id === chosen);
+  const shownEx = allEx || chosenAt >= 2 ? patients : patients.slice(0, 2);
   const nPages = best ? new Set(best.steps.map((s) => s.node.split(":")[0])).size : 0;
   // answers the route actually used: the pathway's own list when it has one, else the conditions it met
   const used = best ? ((best as Pathway & { used?: string[] }).used?.length ?? (graph ? best.steps.filter((st) => st.kind === "met" && graph.preds[st.node]).length : 0)) : 0;
@@ -648,9 +651,10 @@ function GuidelinePanel({ g, model, focus, go, bundle, loadError, patients, chos
           : patients.length === 0 ? <p className="note">No example patients for this guideline yet. Use “Find a recommendation for a patient” to enter one.</p>
           : (<>
             <div className="pchips" role="group" aria-label="Example patients">
-              {patients.map((p) => (
+              {shownEx.map((p) => (
                 <button key={p.id} type="button" className={`pchip${chosen === p.id ? " on" : ""}`} aria-pressed={chosen === p.id} title={p.note} onClick={() => choosePatient(chosen === p.id ? null : p.id)}>{p.id === "mine" ? p.label : `Example: ${p.label}`}</button>
               ))}
+              {shownEx.length < patients.length && <button type="button" className="pchip more-ex" onClick={() => setAllEx(true)}>More examples ({patients.length - shownEx.length})</button>}
             </div>
             {chosen && !best && <p className="note">No recommendation fits this patient.</p>}
             {best && (
@@ -660,7 +664,7 @@ function GuidelinePanel({ g, model, focus, go, bundle, loadError, patients, chos
                 {last && <p className="route-end">Recommendation: <span>{recText.length > 160 ? `${recText.slice(0, 160).trimEnd()}…` : recText}</span></p>}
                 <div className="route-actions">
                   <button type="button" className="btn small" onClick={openWithPatient}>Open in the reader with this patient <ArrowRight size={13} aria-hidden /></button>
-                  {verify && <button type="button" className="btn small" {...verifyHover} onClick={() => src.open(verify)}><ExternalLink size={13} aria-hidden /> {T.verify}</button>}
+                  {verify && <button type="button" className="btn small" title="Opens in a new window" {...verifyHover} onClick={() => src.open(verify)}><ExternalLink size={13} aria-hidden /> {T.verify}</button>}
                 </div>
                 <p className="route-fine">{T.prototype}</p>
               </div>
@@ -742,7 +746,7 @@ function PagePanel({ g, page, go, bundle, loadError, route, open, hoverBox, prev
       <p className="panel-meta">{advanced ? `${p.boxes} boxes · ${p.decisions} with an encoded condition` : `${p.boxes} ${p.boxes === 1 ? T.step : T.steps}`}{p.start ? " · a good place to start" : ""}</p>
       <div className="pp-actions">
         <button type="button" className="btn primary" onClick={() => { try { sessionStorage.setItem("oc-intent", "read"); } catch { /* blocked */ } open(); }}>Read this page <ArrowRight size={15} aria-hidden /></button>
-        <button type="button" className="btn" disabled={!pageSrc} onClick={() => pageSrc && src.open(pageSrc)} data-testid="open-pdf-page"><FileText size={15} aria-hidden /> {T.openPage}</button>
+        <button type="button" className="btn" disabled={!pageSrc} title="Opens in a new window" onClick={() => pageSrc && src.open(pageSrc)} data-testid="open-pdf-page"><FileText size={15} aria-hidden /> {T.openPage}</button>
       </div>
       {pdfReady ? (
         <div className="seg" role="group" aria-label="The card shows">

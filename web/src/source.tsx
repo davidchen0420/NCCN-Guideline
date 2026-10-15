@@ -185,12 +185,42 @@ export function SourceProvider({ children, bundle: given }: { children: ReactNod
   }, [connectFiles]);
 
   const anchor = useRef<HTMLElement | null>(null);
+  // A preview is for a pointer that went to the item, not one that merely rests where the screen changed
+  // under it: none for a moment after any click or key press, and none until the pointer really moves.
+  const quiet = useRef(0);
+  const moved = useRef({ t: 0, x: -99, y: -99 });
+  const pending = useRef<{ t: SrcTarget; el: HTMLElement } | null>(null);   // an item the pointer rests on, waiting for it to move
+  const peekRef = useRef<(t: SrcTarget, el: HTMLElement) => void>(() => {});
+  useEffect(() => {
+    const bump = () => { quiet.current = performance.now() + 800; };
+    const move = (e: MouseEvent) => {
+      const m = moved.current;
+      if (Math.abs(e.clientX - m.x) < 2 && Math.abs(e.clientY - m.y) < 2) return;
+      m.t = performance.now(); m.x = e.clientX; m.y = e.clientY;
+      const w = pending.current;
+      if (w && e.target instanceof Node && w.el.contains(e.target)) { pending.current = null; peekRef.current(w.t, w.el); }
+    };
+    window.addEventListener("pointerdown", bump, true); window.addEventListener("keydown", bump, true); window.addEventListener("mousemove", move, true);
+    return () => { window.removeEventListener("pointerdown", bump, true); window.removeEventListener("keydown", bump, true); window.removeEventListener("mousemove", move, true); };
+  }, []);
   const peek = useCallback((t: SrcTarget, el: HTMLElement) => {
     window.clearTimeout(timer.current);
-    const rect = el.getBoundingClientRect();
+    const armed = performance.now();
     anchor.current = el;
-    timer.current = window.setTimeout(() => setPeek({ t, rect }), 280);
+    pending.current = { t, el };
+    const fire = () => {
+      const now = performance.now();
+      if (now < quiet.current) { timer.current = window.setTimeout(fire, quiet.current - now + 20); return; }
+      if (!el.isConnected) return;
+      let keyboard = false;
+      try { keyboard = el.matches(":focus-visible"); } catch { /* older browsers */ }
+      if (!keyboard && moved.current.t < armed - 100) return;   // the pointer has not moved since the item appeared under it
+      pending.current = null;
+      setPeek({ t, rect: el.getBoundingClientRect() });
+    };
+    timer.current = window.setTimeout(fire, 280);
   }, []);
+  peekRef.current = peek;
   // a preview never outlives what it previews: it closes when its item leaves the page
   // (another page or view opened under the pointer) or the reader moves elsewhere
   useEffect(() => {
@@ -202,6 +232,7 @@ export function SourceProvider({ children, bundle: given }: { children: ReactNod
   useEffect(() => { setPeek(null); }, [loc]);
   const unpeek = useCallback(() => {
     window.clearTimeout(timer.current);
+    pending.current = null;
     timer.current = window.setTimeout(() => setPeek(null), 160);
   }, []);
   const holdPeek = useCallback(() => window.clearTimeout(timer.current), []);
@@ -209,6 +240,7 @@ export function SourceProvider({ children, bundle: given }: { children: ReactNod
   // browser refuses a pop-up, the floating viewer in the page instead.
   const winRef = useRef<Window | null>(null);
   const [win, setWin] = useState<Window | null>(null);
+  const [blocked, setBlocked] = useState(false);
   const open = useCallback((t: SrcTarget) => {
     window.clearTimeout(timer.current); setPeek(null);
     let w = winRef.current && !winRef.current.closed ? winRef.current : null;
@@ -231,6 +263,7 @@ export function SourceProvider({ children, bundle: given }: { children: ReactNod
       }
     }
     w?.focus();
+    setBlocked(!w);   // no window: the viewer opens in the page, with a note saying why
     setView(t);
   }, []);
   useEffect(() => () => { winRef.current?.close(); }, []);
@@ -250,7 +283,7 @@ export function SourceProvider({ children, bundle: given }: { children: ReactNod
       <input ref={folderRef} type="file" hidden multiple {...{ webkitdirectory: "", directory: "" }} data-testid="pdf-folder-input"
         onChange={(e) => { connectFiles([...(e.target.files ?? [])]); e.target.value = ""; }} />
       {peekT && createPortal(<Peek t={peekT.t} rect={peekT.rect} onEnter={holdPeek} onLeave={unpeek} onOpen={() => open(peekT.t)} />, document.body)}
-      {view && bundle && <Viewer key={win ? "win" : "float"} t={view} win={win} onClose={() => { winRef.current?.close(); winRef.current = null; setWin(null); setView(null); }} onNav={(page) => setView({ page, label: pageLabel(bundle, page) })} />}
+      {view && bundle && <Viewer key={win ? "win" : "float"} t={view} win={win} blocked={blocked} onClose={() => { winRef.current?.close(); winRef.current = null; setWin(null); setView(null); }} onNav={(page) => setView({ page, label: pageLabel(bundle, page) })} />}
       {drag && createPortal(<div className="drop"><p><FileText size={18} /> {key ? "Drop the guideline PDF (or a folder of NCCN PDFs) to connect it" : "Drop NCCN guideline PDFs to connect them"}</p></div>, document.body)}
     </Ctx.Provider>
   );
@@ -345,10 +378,18 @@ function Peek({ t, rect, onEnter, onLeave, onOpen }: { t: SrcTarget; rect: DOMRe
   // Never over the hovered item itself (it must stay clickable): beside it when a side has room,
   // narrowed to fit the roomier side, else above or below it.
   const want = innerWidth >= 1280 ? 480 : 340, gap = 10, minW = 260;
-  const roomL = rect.left - gap - 8, roomR = innerWidth - 8 - rect.right - gap;
+  // The reader's right-hand panel (or the atlas panel) stays uncovered: for an item inside it the preview goes
+  // to the left of the panel; for any other item it may not reach into the panel.
+  const panelEl = document.querySelector("aside.right, aside.atlas-panel");
+  const pr = panelEl ? panelEl.getBoundingClientRect() : null;
+  const docked = !!pr && pr.width > 0 && pr.left > innerWidth * 0.4;
+  const inPanel = docked && rect.left >= pr!.left - 1;
+  const bound = docked ? pr!.left : innerWidth;
+  const aL = inPanel ? pr!.left : rect.left;
+  const roomL = aL - gap - 8, roomR = inPanel ? -1 : bound - 8 - rect.right - gap;
   const side: "left" | "right" | "below" = roomL >= want ? "left" : roomR >= want ? "right" : Math.max(roomL, roomR) >= minW ? (roomL >= roomR ? "left" : "right") : "below";
-  const W = side === "below" ? Math.min(want, innerWidth - 16) : Math.min(want, side === "left" ? roomL : roomR);
-  const left = side === "left" ? rect.left - gap - W : side === "right" ? rect.right + gap : Math.max(8, Math.min(innerWidth - W - 8, rect.left));
+  const W = side === "below" ? Math.min(want, bound - 16) : Math.min(want, side === "left" ? roomL : roomR);
+  const left = side === "left" ? aL - gap - W : side === "right" ? rect.right + gap : Math.max(8, Math.min(bound - W - 8, rect.left));
   const estH = Math.round(W * 612 / 792) + 130;
   const place = (h: number) => {
     if (side !== "below") return Math.max(8, Math.min(Math.max(8, rect.top - 20), innerHeight - 8 - h));
@@ -377,7 +418,7 @@ function Peek({ t, rect, onEnter, onLeave, onOpen }: { t: SrcTarget; rect: DOMRe
       </button>
       <div className="peek-cap">
         <span><b>{labelName(bundle, t.label)}</b> · NCCN page, PDF p.{t.page + 1}</span>
-        <button type="button" className="linkish" onClick={onOpen}>Open NCCN page</button>
+        <button type="button" className="linkish" onClick={onOpen} title="Opens in a new window">Open NCCN page</button>
       </div>
       {t.action && <div className="peek-cap"><span /><button type="button" className="linkish" onClick={t.action.run}>{t.action.label} <ArrowRight size={12} aria-hidden /></button></div>}
       {pdf.status !== "ready" && <PeekConnect showText={showText} />}
@@ -417,7 +458,7 @@ export function PageCrop({ t, width = 300 }: { t: SrcTarget; width?: number }) {
 
 declare global { interface Window { documentPictureInPicture?: { requestWindow: (o: { width: number; height: number }) => Promise<Window> } } }
 
-function Viewer({ t, win = null, onClose, onNav }: { t: SrcTarget; win?: Window | null; onClose: () => void; onNav: (page: number) => void }) {
+function Viewer({ t, win = null, blocked = false, onClose, onNav }: { t: SrcTarget; win?: Window | null; blocked?: boolean; onClose: () => void; onNav: (page: number) => void }) {
   const { pdf, pick, pickFolder, bundle } = useSource();
   const advanced = useAdvanced();
   const [zoom, setZoom] = useState(1);
@@ -488,6 +529,7 @@ function Viewer({ t, win = null, onClose, onNav }: { t: SrcTarget; win?: Window 
         </span>
       </div>
       <div className="viewer-body" ref={body}>
+        {blocked && !pip && <p className="viewer-msg" role="status">Your browser blocked the new window; showing the page here.</p>}
         <EditionNote />
         {pdf.status !== "ready" && (
           <p className="viewer-msg">{pdf.status === "loading" ? "Opening the NCCN page…" : <>The NCCN page isn't available here, so this is a rebuilt copy. <button type="button" className="linkish" onClick={pick}>Choose your NCCN PDF file</button>{advanced && <> or <button type="button" className="linkish" onClick={pickFolder}>a folder of NCCN PDFs</button></>} to see the original; it stays in this browser.</>}</p>

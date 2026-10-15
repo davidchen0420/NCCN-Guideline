@@ -117,3 +117,4 @@
 /* the small page chip on cards and steps */
 .src-chip { font-size: 12.5px; min-height: 28px; }
 .peek-cap .linkish { white-space: nowrap; flex: none; }
+.pchip.more-ex { border-style: dashed; color: var(--muted); }

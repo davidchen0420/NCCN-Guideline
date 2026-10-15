@@ -18,7 +18,9 @@ import type { AtlasRaw } from "./atlas/model";
 
 /** The guideline the hash points into; "#atlas…" and "#list" are the home views. */
 const slugOf = (hash: string) => { const m = hash.replace(/^#/, "").match(/^([a-z0-9_]+)(\/|$)/); return m && m[1] !== "atlas" && m[1] !== "list" ? m[1] : null; };
-const homeView = (hash: string): "atlas" | "list" => (hash.replace(/^#/, "").startsWith("list") ? "list" : "atlas");
+/** On a phone the first visit (no hash) opens the list: the radial map is one tap away. */
+const phoneFirst = (hash: string) => hash.replace(/^#/, "") === "" && typeof matchMedia !== "undefined" && matchMedia("(max-width: 480px)").matches;
+const homeView = (hash: string): "atlas" | "list" => (hash.replace(/^#/, "").startsWith("list") || phoneFirst(hash) ? "list" : "atlas");
 const RECENT = "nav-recent";
 const recent = (): string[] => { try { return JSON.parse(readPref(RECENT) ?? "[]"); } catch { return []; } };
 const remember = (slug: string) => writePref(RECENT, JSON.stringify([slug, ...recent().filter((s) => s !== slug)].slice(0, 6)));
@@ -223,7 +225,7 @@ export function LibraryHome({ lib, onOpen, onAtlas }: { lib: Library; onOpen: (s
         <p className="lib-lead">Pick a guideline to find the NCCN recommendation for a patient, or read its pages.</p>
         <div className="field lib-search">
           <SearchIcon size={15} aria-hidden />
-          <input type="search" autoFocus value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={onKey} placeholder="Which cancer or topic? e.g. prostate, lymphoma, nausea" aria-label="Find a guideline" />
+          <input type="search" autoFocus value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={onKey} placeholder="Which cancer or topic?" aria-label="Find a guideline" />
         </div>
         <div className="chips" role="group" aria-label="Category">
           <button type="button" className={`chip${!cat ? " on" : ""}`} aria-pressed={!cat} onClick={() => setCat(null)}>All</button>
