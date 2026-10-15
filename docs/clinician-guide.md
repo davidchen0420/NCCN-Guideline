@@ -8,7 +8,7 @@ It is a **research prototype**. It is **not an official NCCN tool**, and NCCN ha
 ## Five steps to a recommendation
 1. **Pick the guideline.** Type a cancer or topic ("Which cancer or topic?"), choose the guideline, then choose **Find a recommendation for a patient**.
 2. **Say where the patient is now.** In the **Patient** tab choose New diagnosis, Follow-up, Recurrence or relapse, and so on. If you are not sure, choose Not sure.
-3. **Answer the questions.** You see only the questions that change the recommendation, one at a time (or all together as a form). You can also **paste from the note** and check what it found. Skip anything you do not know; nothing is required.
+3. **Answer the questions.** You see only the questions that change the recommendation, one at a time (or all together as a form). You can also **paste a note** and check what it found. Skip anything you do not know; nothing is required.
 4. **Read the recommendation.** Open the **Recommendation** tab. The card shows the best match, what NCCN recommends, why, and what is still unknown. Other possible recommendations are listed below it.
 5. **Check it on the NCCN page.** Press **Verify on the NCCN page**.
 
@@ -17,7 +17,11 @@ On the diagram, **hover** over any step to preview the NCCN page it came from, w
 
 ## What the labels mean
 - **Best match / Also possible / Less likely**: how well the recommendation fits the answers so far. This is a ranking, **not a probability**.
-- **Matches your answers**: every condition on the way to this recommendation is met by what you entered.
+- **Matches your answers**: shown only on the top recommendation, when your answers decided it and nothing is missing. Other options that also fit say **Also fits your answers**.
+- **One of N possible recommendations**: several options fit your answers equally; the guideline does not choose between them, so read them all (NCCN-preferred options are listed first).
+- **Possible starting point**: none of your answers decided this yet; answer the questions to narrow it down.
+- **Answer these to reach a recommendation**: the answers so far stop before any recommendation; the listed questions are the ones needed next.
+- **Why** lists the answers that decided the recommendation, then any answers you entered that were **not used** for it.
 - **Needs N more answers**: N answers could still change or confirm this recommendation. The names are listed under **Still unknown**; select one to answer it.
 - **Your clinical judgment needed here**: the guideline branches at this point, but OncoCarta cannot decide for you. Use your own judgment and read the NCCN page.
 - **Carried over from diagnosis**: when you move a patient from a new diagnosis to a later point in care, answers that described the patient at diagnosis are held aside and do not affect the recommendation until you mark each one **Still true**, change it or clear it.
