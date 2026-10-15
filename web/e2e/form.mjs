@@ -118,7 +118,7 @@ await step("one question at a time: the next question, answered with a number ke
   await fromMore("Start over");
   await panel.getByTestId("mode-interview").click();
   const q1 = await panel.locator(".iv-q").innerText();
-  await page.locator("body").click({ position: { x: 700, y: 500 } }).catch(() => {});
+  await page.getByTestId("title").click().catch(() => {});   // focus off the form so the number key reaches the interview
   await page.keyboard.press("1");
   await page.waitForFunction((q) => document.querySelector(".iv-q")?.textContent !== q || document.querySelector(".interview.done"), q1);
   assert.equal(await panel.locator(".chips-strip li").count(), 1);

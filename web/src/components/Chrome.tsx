@@ -3,15 +3,15 @@ import { createPortal } from "react-dom";
 import { Library as LibraryIcon, ArrowLeft, ArrowRight, BookOpen, UserRound, ListChecks, CircleHelp, RotateCcw, Search, ExternalLink, Settings } from "lucide-react";
 import { useApp } from "../store";
 import { PdfButton } from "../source";
-import { writePref } from "../lib/prefs";
+import { readPref, writePref } from "../lib/prefs";
 import { T } from "../lib/terms";
-import { setGuideHidden, useGuideHidden } from "./Guide";
+import { setGuideSteps, useGuideSteps } from "./Guide";
 import "../styles/shell.css";
 
 /** Settings: Advanced tools, the 3-step guide, Help. A small popover beside the rail button. */
 function SettingsMenu() {
   const { s, set, isPhone } = useApp();
-  const guideHidden = useGuideHidden();
+  const guideSteps = useGuideSteps();
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState<{ left?: number; right?: number; top?: number; bottom?: number }>({});
   const btn = useRef<HTMLButtonElement>(null);
@@ -48,9 +48,9 @@ function SettingsMenu() {
               <small>Reviewer views: arrow certainty, other paths, scores, guided walk, encoding details</small></span>
           </label>
           <label className="set-row">
-            <input type="checkbox" className="sw" checked={!guideHidden} onChange={(e) => setGuideHidden(!e.target.checked)} data-testid="guide-toggle" />
+            <input type="checkbox" className="sw" checked={guideSteps} onChange={(e) => setGuideSteps(e.target.checked)} data-testid="guide-toggle" />
             <span className="set-t"><b>Show the 3-step guide</b>
-              <small>The Patient, Recommendation, Check the NCCN page strip above the panel</small></span>
+              <small>Patient, Recommendation, Check the NCCN page: a progress strip above the panel</small></span>
           </label>
           <button type="button" className="set-help" onClick={() => { setOpen(false); set({ help: true }); }}><CircleHelp size={16} aria-hidden />Help</button>
         </div>, document.body)}
@@ -58,9 +58,27 @@ function SettingsMenu() {
   );
 }
 
+const LEFT_KEY = "oc-left";
+
+/** On wide screens Contents starts closed (the diagram needs the room) unless Advanced tools are on
+ * or the reader last left it open. Runs once, before the first paint. */
+export function useInitialLeft() {
+  const { s, set } = useApp();
+  useLayoutEffect(() => {
+    if (window.innerWidth <= 1180 || s.left !== "toc") return;
+    const pref = readPref(LEFT_KEY);
+    if (pref === "0" || (pref === null && !s.advanced)) set({ left: null });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+}
+
 export function Rail() {
-  const { s, set, library } = useApp();
-  const toggle = (v: "toc" | "search") => set({ left: s.left === v ? null : v });
+  const { s, set, library, isPhone } = useApp();
+  const toggle = (v: "toc" | "search") => {
+    const left = s.left === v || (v === "toc" && s.left === "hist") ? null : v;
+    if (!isPhone) writePref(LEFT_KEY, left ? "1" : "0");   // remembered for next time (wide screens)
+    set({ left });
+  };
   const b = (label: string, icon: React.ReactNode, on: boolean, f: () => void, id: string) => (
     <button className={on ? "on" : ""} aria-label={label} title={label} aria-pressed={on} onClick={f} data-testid={id}>{icon}</button>
   );
@@ -100,7 +118,7 @@ export function TitleBar() {
         </>
       )}
       <PdfButton />
-      <a className="ib ext quiet" href="https://www.nccn.org/guidelines/category_1" target="_blank" rel="noopener noreferrer" title="Official NCCN guidelines" aria-label="Official NCCN guidelines"><ExternalLink size={15} /></a>
+      <a className="ib ext quiet" href="https://www.nccn.org/guidelines/category_1" target="_blank" rel="noopener noreferrer" title="Official NCCN guidelines" aria-label="NCCN.org, official NCCN guidelines"><ExternalLink size={15} /><span className="ext-t">NCCN.org</span></a>
     </div>
   );
 }
