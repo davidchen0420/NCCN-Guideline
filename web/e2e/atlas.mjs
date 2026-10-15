@@ -146,7 +146,7 @@ await step("Enter a patient: the reader opens on the form, with steps saying wha
   assert.ok(hint && view && hint.x >= view.x && hint.x + hint.width <= view.x + view.width + 1, "canvas hint stays over the canvas");
   // with an example loaded the steps move on: see the routes, then pick one
   await guide.getByRole("button", { name: /load an example patient/ }).click().catch(() => {});
-  await p.waitForFunction(() => /best match is shown below|Best next question|See \d+ possible/.test(document.querySelector(".guide")?.textContent ?? ""));
+  await p.waitForFunction(() => /recommendation is shown below|Best next question|See \d+ possible/.test(document.querySelector(".guide")?.textContent ?? ""));
   await ctx.close();
 });
 await step("the reader returns to the atlas at its page", async () => {

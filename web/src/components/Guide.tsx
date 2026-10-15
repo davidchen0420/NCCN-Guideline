@@ -72,7 +72,7 @@ export function GuideBar() {
         : <span>No {T.recommendation} fits these answers yet.</span>}
     </>);
   } else if (s.rightTab === "paths" && s.pathSel === null) {
-    next = <>Your best match is shown below. Open another possible recommendation to compare, or <b>{isPhone ? "tap a step" : "hover a step"}</b> to see its NCCN page.</>;
+    next = <>The recommendation is shown below, with any other possible ones. Compare them, or <b>{isPhone ? "tap a step" : "hover a step"}</b> to see its NCCN page.</>;
   } else {
     next = <><b>{isPhone ? "Tap a step" : "Hover a step"}</b> to see its NCCN page; {isPhone ? "tap" : "click"} to open it in its own window.</>;
   }
