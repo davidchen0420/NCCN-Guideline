@@ -1,4 +1,4 @@
-// Library smoke test: serves the repository over http and drives built/nccn-explorer.html.
+// Library smoke test: serves the repository over http and drives built/oncocarta.html.
 //   node e2e/library.mjs            (from web/, after `python -m nccn_nav.dashboard --library`)
 import { chromium } from "playwright-core";
 import { strict as assert } from "node:assert";
@@ -15,7 +15,7 @@ const server = createServer(async (req, res) => {
   catch { res.writeHead(404); res.end(); }
 }).listen(0, "127.0.0.1");
 await new Promise((r) => server.once("listening", r));
-const base = `http://127.0.0.1:${server.address().port}/built/nccn-explorer.html`;
+const base = `http://127.0.0.1:${server.address().port}/built/oncocarta.html`;
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH, args: ["--no-sandbox"] });
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
