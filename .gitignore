@@ -1,6 +1,8 @@
-# Licensed NCCN content. Source PDFs may be committed only at data/<slug>/pdf/<slug>.pdf
-# (approved by the repository owner, who will make the repository private).
+# Licensed NCCN content. Source PDFs may be committed only in Guideline/ (the owner's folder of
+# NCCN PDFs, any subfolders) or at data/<slug>/pdf/<slug>.pdf; approved by the repository owner,
+# who will make the repository private.
 *.pdf
+!Guideline/**/*.pdf
 !data/*/pdf/*.pdf
 .DS_Store
 # Derived from licensed NCCN content: keep local

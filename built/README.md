@@ -15,13 +15,14 @@ PYTHONPATH=src python -m nccn_nav.dashboard --library [--pdfs DIR]  # -> built/o
 PYTHONPATH=src python -m nccn_nav.dashboard data/prostate built     # -> built/prostate-oncocarta.html (any data/<slug>)
 ```
 
-To ship the source PDFs with the app, copy them into the one place the repository tracks them, `data/<slug>/pdf/<slug>.pdf` (matched to each guideline by SHA-256, else by file name), then commit and rebuild:
+To ship the source PDFs with the app, commit your folder of NCCN PDFs as `Guideline/` at the top of the repository (any subfolders; `.gitignore` tracks PDFs only there and at `data/<slug>/pdf/<slug>.pdf`). The library build matches each to its guideline by SHA-256 (else by file name) and records its path:
 
 ```
-PYTHONPATH=src python -m nccn_nav.dashboard --import-pdfs Guideline   # any folder of NCCN PDFs; lists files that match no guideline
-git add data/*/pdf/*.pdf && git commit -m "Add the NCCN source PDFs"
+git add Guideline && git commit -m "Add the NCCN source PDFs" && git push
 PYTHONPATH=src python -m nccn_nav.dashboard --library
 ```
+
+PDFs kept elsewhere can be copied into `data/<slug>/pdf/<slug>.pdf` with `PYTHONPATH=src python -m nccn_nav.dashboard --import-pdfs DIR`.
 
 Served from the repository, the page then loads each guideline's PDF itself; a hosted copy serves them as `pdfs/<slug>.pdf` next to the page. Without them, in OncoCarta use "Connect PDF" → "Connect a folder of NCCN PDFs" once (matched to all guidelines by SHA-256 and kept in your browser), or choose or drop a single guideline's PDF.
 
