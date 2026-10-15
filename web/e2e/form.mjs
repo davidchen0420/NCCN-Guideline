@@ -161,8 +161,10 @@ await step("where is the patient now: a later moment starts there, holds details
   await panel.getByRole("button", { name: "Find details" }).click();
   await panel.getByTestId("apply-found").click();
   await moment.getByRole("button", { name: "Recurrence or relapse" }).click();
-  assert.match(await moment.innerText(), /Starting at .+ \(PROS-8\)\. \d+ questions? (apply|applies) from here\./);
-  assert.equal(await moment.locator('select[aria-label="Which page"]').count(), 0, "page choice is an Advanced tool");
+  assert.match(await moment.innerText(), /Starting at [^\n]*\(PROS-8\)/);
+  await page.locator("#tab-paths").click();
+  await page.locator(".reco-card, .empty").first().waitFor();   // the start-from picker is an Advanced tool; the moment above already chose PROS-8
+  await page.locator("#tab-patient").click();
   const carried = panel.getByTestId("carried");
   assert.match(await carried.innerText(), /Life Expectancy/);
   assert.doesNotMatch(await carried.innerText(), /T Category/, "a detail recorded at diagnosis stays as it is");

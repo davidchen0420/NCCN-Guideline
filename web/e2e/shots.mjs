@@ -49,11 +49,13 @@ for (const scheme of ["light", "dark"]) {
     await p.waitForTimeout(800);
     await shot("4-patient");
     // 5 recommendation: load an example patient
-    const load = p.locator('select[aria-label="Load a patient"]');
+    await p.getByTestId("patient-more").click().catch(() => {});
+    const load = p.locator('select[aria-label="Load an example"], select[aria-label="Load a patient"]').first();
     if (await load.count()) {
       const opt = await load.locator("option").nth(1).getAttribute("value").catch(() => null);
       if (opt) await load.selectOption(opt).catch(() => {});
     }
+    await p.keyboard.press("Escape").catch(() => {});
     await p.locator("#tab-paths").click().catch(() => {});
     await p.waitForTimeout(1200);
     await shot("5-recommendation");
