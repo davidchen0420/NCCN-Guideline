@@ -93,7 +93,6 @@ class AtlasBuildTest(unittest.TestCase):
         self.assertIn("survivorship", p["ext"])
         self.assertIn([0, 1], p["links"], "PROS-1 leads to PROS-2")
 
-    @unittest.skipUnless((DATA / "index.json").exists(), "canonical data not present")
     def _isolated_data(self, d):
         """A copy of data/ (symlinked) with no real PDFs beside it, e.g. in Guideline/."""
         data = Path(d) / "data"
@@ -102,6 +101,7 @@ class AtlasBuildTest(unittest.TestCase):
             (data / c.name).symlink_to(c)
         return data
 
+    @unittest.skipUnless((DATA / "index.json").exists(), "canonical data not present")
     def test_local_pdfs_are_found_by_name_and_listed_by_path(self):
         with tempfile.TemporaryDirectory() as d:
             data = self._isolated_data(d)
