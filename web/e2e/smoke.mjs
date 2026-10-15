@@ -25,6 +25,7 @@ const advancedCtx = await browser.newContext({ viewport: { width: 1440, height: 
 await advancedCtx.addInitScript(() => { try { localStorage.setItem("oc-advanced", "1"); } catch { /* blocked */ } });
 const page = await advancedCtx.newPage();
 watch(page);
+await page.addInitScript(() => { try { localStorage.setItem("oc-form-mode", "form"); } catch { /* */ } });   // the full form, not one question at a time
 await page.goto(url);
 await step("first visit shows the start screen; browsing closes it and opens contents", async () => {
   await page.getByRole("dialog", { name: /Find where a patient sits/ }).waitFor();

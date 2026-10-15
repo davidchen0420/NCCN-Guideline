@@ -1,5 +1,5 @@
-// The patient form: paste the record, deciding details with previews, checks, saved patients,
-// one question at a time. Serves the repo and drives built/oncocarta.html.
+// The patient panel: one question at a time on a first visit, the full form, paste from the note,
+// previews, checks, the More menu with saved patients, moments. Serves the repo and drives built/oncocarta.html.
 //   node e2e/form.mjs   (from web/, after `python -m nccn_nav.dashboard --library`)
 import { chromium } from "playwright-core";
 import { strict as assert } from "node:assert";
@@ -27,18 +27,41 @@ await page.addInitScript(() => { try { localStorage.setItem("nav-help", "1"); lo
 let n = 0;
 const step = async (name, fn) => { await fn(); console.log(`ok ${++n} ${name}`); };
 const panel = page.locator(".rp-body");
+const more = panel.getByTestId("patient-more");
+/** Open the More menu and click one of its buttons. */
+const fromMore = async (name) => { await more.click(); await panel.getByRole("button", { name, exact: true }).click(); };
 
 await page.goto(base + "#prostate/");
 await page.locator("[data-testid=card]").first().waitFor();
-await step("before any entry: the details that decide the first branches, each saying which box", async () => {
+await step("first visit: one question at a time, saying which page it decides; the form is one link away", async () => {
   const dec = panel.locator(".fgroup.deciders");
-  assert.match(await dec.locator("legend").innerText(), /Start with these/i);
+  assert.match(await dec.locator("legend").innerText(), /Questions that decide the first steps/);
+  assert.equal(await panel.locator(".interview").count(), 1, "one question at a time is the default");
+  assert.match(await panel.locator(".interview .decides").innerText(), /Decides: .+ \(PROS-\d+\)/);
+  assert.match(await panel.locator(".iv-n").innerText(), /^Question 1/);
+  assert.equal(await panel.locator('select[aria-label="Which page"]').count(), 0, "page choice is an Advanced tool");
+  assert.match(await panel.getByTestId("moment").innerText(), /Where is the patient now\?/);
+  await panel.getByTestId("mode-form").click();
+  assert.equal(await panel.locator(".interview").count(), 0);
   assert.ok(await dec.locator(".pf.decider").count() >= 1);
-  assert.match(await dec.locator(".decides").first().innerText(), /Decides\s+PROS-\d+/);
+  assert.match(await dec.locator(".decides").first().innerText(), /Decides: .+ \(PROS-\d+\)/);
   assert.equal(await panel.locator(".more-details").getAttribute("open"), null, "the rest is folded away");
+  assert.equal(await panel.locator(".more-details").getByText("Stated in the record").count(), 0, "stated values are an Advanced tool");
+  assert.equal(await panel.locator(".computed .ovr").count(), 0);
+});
+await step("the More menu holds saving, loading and starting over, and closes with Escape or a click outside", async () => {
+  await more.click();
+  const menu = panel.getByRole("dialog", { name: "More patient options" });
+  for (const b of ["Save this patient", "Start over"]) assert.ok(await menu.getByRole("button", { name: b, exact: true }).isVisible(), b);
+  assert.ok(await menu.getByLabel("Load an example").isVisible(), "examples");
+  await page.keyboard.press("Escape");
+  assert.equal(await menu.count(), 0);
+  await more.click();
+  await panel.locator(".fgroup.deciders legend").click();
+  assert.equal(await menu.count(), 0);
 });
 await step("paste the record: details found, shown with their evidence, applied after review", async () => {
-  await panel.getByText("Paste from the record").click();
+  await panel.getByText("Paste from the note").click();
   await panel.locator(".paste textarea").fill("64-year-old man with low-risk prostate cancer (cT1c, Gleason 3+3, PSA 5 ng/mL), life expectancy about 18 years. PSA nadir was 0.2.");
   await panel.getByRole("button", { name: "Find details" }).click();
   const found = await panel.locator(".found li").allInnerTexts();
@@ -57,6 +80,8 @@ await step("deciding details preview where each answer leads; choosing one from 
   await page.waitForFunction(() => document.querySelectorAll(".fgroup.deciders .previews li").length > 0, null, { timeout: 10000 });
   const first = panel.locator(".fgroup.deciders .pf.decider").first();
   const name = (await first.locator(".flabel span").first().innerText()).trim();
+  assert.match(await first.locator(".previews").first().innerText(), /Leads to: .+|doesn't change the result yet|no recommendation fits/);
+  assert.doesNotMatch(await first.locator(".previews").first().innerText(), /route|settles nothing/);
   await first.locator(".previews button").first().click();
   await page.waitForTimeout(300);
   await page.waitForFunction((nm) => [...document.querySelectorAll(".chips-strip li")].some((li) => li.textContent.includes(nm.split(" ")[0])), name);
@@ -79,16 +104,18 @@ await step("number keys choose an answer", async () => {
   assert.equal(await page.locator("#fact-visceral_metastases_present button", { hasText: "No" }).getAttribute("aria-checked"), "true");
 });
 await step("patients are saved in the browser and loaded back", async () => {
-  await panel.getByRole("button", { name: "Save", exact: true }).first().click();
+  await fromMore("Save this patient");
   await panel.getByLabel("Name for this patient").fill("Test patient A");
   await panel.locator(".save-row button[type=submit]").click();
-  await panel.getByRole("button", { name: "Clear", exact: true }).click();
+  await fromMore("Start over");
   assert.equal(await panel.locator(".chips-strip").count(), 0);
-  await panel.locator('select[aria-label="Load a patient"]').selectOption({ label: "Test patient A" });
+  await more.click();
+  await panel.getByRole("button", { name: /Test patient A/ }).first().click();
   assert.match(await panel.locator(".chips-strip").innerText(), /cT: T1c/);
+  assert.equal(await panel.getByRole("dialog", { name: "More patient options" }).count(), 0, "loading closes the menu");
 });
-await step("one question at a time: the next deciding detail, answered with a number key, Back undoes", async () => {
-  await panel.getByRole("button", { name: "Clear", exact: true }).click();
+await step("one question at a time: the next question, answered with a number key, Back undoes", async () => {
+  await fromMore("Start over");
   await panel.getByTestId("mode-interview").click();
   const q1 = await panel.locator(".iv-q").innerText();
   await page.locator("body").click({ position: { x: 700, y: 500 } }).catch(() => {});
@@ -101,25 +128,41 @@ await step("one question at a time: the next deciding detail, answered with a nu
   await panel.getByRole("button", { name: /Don't know/ }).click();
   await page.evaluate(() => document.querySelector(".guide .need")?.click());
   await page.waitForFunction(() => !document.querySelector(".interview"));
-  await panel.locator(".mode-switch button").first().click();
+});
+await step("the interview ends with the number of recommendations and a way to see them", async () => {
+  await page.reload();
+  await page.locator("[data-testid=card]").first().waitFor();
+  if (await panel.getByTestId("mode-interview").count()) await panel.getByTestId("mode-interview").click();
+  // answer with the first choice until every question that changes the recommendation is asked
+  for (let i = 0; i < 12 && !(await panel.locator(".interview.done").count()); i++) {
+    const opt = panel.locator(".iv-options button").first();
+    if (await opt.count()) await opt.click(); else await panel.getByRole("button", { name: /Don't know/ }).click();
+    await page.waitForTimeout(150);
+  }
+  await panel.locator(".interview.done").waitFor();
+  assert.match(await panel.locator(".interview.done").innerText(), /That's every question that changes the recommendation\.[\s\S]*possible recommendation/);
+  await panel.getByRole("button", { name: "See the recommendation" }).click();
+  assert.equal(await page.locator("#tab-paths").getAttribute("aria-selected"), "true");
+  await page.locator("#tab-patient").click();
 });
 await step("where is the patient now: a later moment starts there, holds details that may have changed, and leads with the current situation", async () => {
   await page.goto(base + "#prostate/");
   await page.locator("[data-testid=card]").first().waitFor();
-  const clear = panel.getByRole("button", { name: "Clear", exact: true });
-  if (await clear.isEnabled()) await clear.click();
+  await more.click();
+  const over = panel.getByRole("button", { name: "Start over", exact: true });
+  if (await over.isEnabled()) await over.click(); else await page.keyboard.press("Escape");
+  // the full form for the checks below (the choice is remembered)
+  if (await panel.getByTestId("mode-form").count()) await panel.getByTestId("mode-form").click();
   const moment = panel.getByTestId("moment");
   assert.equal(await moment.getByRole("button", { name: "Not sure" }).getAttribute("aria-pressed"), "true");
   // details at diagnosis: life expectancy describes the patient then; the T category is recorded at diagnosis
-  await panel.getByText("Paste from the record").click();
+  await panel.getByText("Paste from the note").click();
   await panel.locator(".paste textarea").fill("64-year-old man, cT2a, Gleason 3+4, PSA 8 ng/mL, life expectancy 15 years.");
   await panel.getByRole("button", { name: "Find details" }).click();
   await panel.getByTestId("apply-found").click();
   await moment.getByRole("button", { name: "Recurrence or relapse" }).click();
-  assert.match(await moment.innerText(), /Starting at PROS-8/);
-  await page.locator("#tab-paths").click();
-  assert.equal(await page.locator("#start").inputValue(), "PROS-8", "the routes start from the same page");
-  await page.locator("#tab-patient").click();
+  assert.match(await moment.innerText(), /Starting at .+ \(PROS-8\)\. \d+ questions? (apply|applies) from here\./);
+  assert.equal(await moment.locator('select[aria-label="Which page"]').count(), 0, "page choice is an Advanced tool");
   const carried = panel.getByTestId("carried");
   assert.match(await carried.innerText(), /Life Expectancy/);
   assert.doesNotMatch(await carried.innerText(), /T Category/, "a detail recorded at diagnosis stays as it is");
@@ -128,7 +171,7 @@ await step("where is the patient now: a later moment starts there, holds details
   await panel.locator(".more-details > summary").click();
   const heads = (await panel.locator(".more-details legend, .more-details > details > summary").allInnerTexts()).join(" | ");
   assert.match(heads, /CURRENT SITUATION[\s\S]*TREATMENT SO FAR[\s\S]*ORIGINAL DIAGNOSIS/i, heads);
-  assert.match(await panel.locator(".scope-note").innerText(), /used from PROS-8/);
+  assert.match(await panel.locator(".scope-note").innerText(), /details that apply from .+ \(PROS-8\)/);
   const before = await panel.locator(".more-details .pf").count();
   await panel.getByTestId("show-all").click();
   assert.ok(await panel.locator(".more-details .pf").count() > before, "show all widens the form");
@@ -143,21 +186,29 @@ await step("where is the patient now: a later moment starts there, holds details
   assert.equal(await panel.getByTestId("carried").count(), 1);
   await moment.getByRole("button", { name: "New diagnosis" }).click();
   assert.equal(await panel.getByTestId("carried").count(), 0);
-  assert.match(await moment.innerText(), /Starting at PROS-1/);
+  assert.match(await moment.innerText(), /Starting at .+ \(PROS-1\)/);
   // kept across a reload
   await moment.getByRole("button", { name: "Recurrence or relapse" }).click();
   await page.reload();
   await page.locator("[data-testid=card]").first().waitFor();
-  assert.match(await panel.getByTestId("moment").innerText(), /Starting at PROS-8/);
+  assert.match(await panel.getByTestId("moment").innerText(), /Starting at .+ \(PROS-8\)/);
   assert.equal(await panel.getByTestId("carried").count(), 1);
   await panel.getByTestId("moment").getByRole("button", { name: "Not sure" }).click();
+});
+await step("Advanced tools add the page choice, stated values and override links", async () => {
+  await page.evaluate(() => localStorage.setItem("oc-advanced", "1"));
+  await page.reload();
+  await page.locator("[data-testid=card]").first().waitFor();
+  await panel.locator(".more-details > summary").click();
+  assert.equal(await panel.locator(".more-details").getByText("Stated in the record").count(), 1);
+  await page.evaluate(() => localStorage.removeItem("oc-advanced"));
 });
 await step("works across guidelines: multi-disease guideline asks the disease first", async () => {
   await page.goto(base + "#b_cell_lymphomas/");
   await page.locator("[data-testid=card]").first().waitFor();
   await page.locator("#fact-guideline_section").waitFor();
   await page.locator("#fact-guideline_section").selectOption({ index: 1 });
-  await page.waitForFunction(() => document.querySelector(".fgroup.deciders legend")?.textContent?.includes("Decides your routes"));
+  await page.waitForFunction(() => document.querySelector(".fgroup.deciders legend")?.textContent?.includes("Questions that change the recommendation"));
 });
 await browser.close();
 server.close();

@@ -31,7 +31,7 @@ const META: Record<string, Meta> = {
   bone_metastases_count: { label: "Bone metastases", group: "metastatic", hint: "Number of lesions." },
   bone_metastases_beyond_vertebrae_pelvis_count: { label: "…outside spine and pelvis", group: "metastatic", hint: "How many of those lie outside the vertebral bodies and pelvis." },
   visceral_metastases_present: { label: "Visceral metastases", group: "metastatic" },
-  clinician_judges_oligometastatic: { label: "Oligometastatic (clinician judgment)", group: "metastatic" },
+  clinician_judges_oligometastatic: { label: "Oligometastatic (clinical judgment)", group: "metastatic" },
   brca1_2_mutation: { label: "BRCA1/2 mutation", group: "molecular" },
   hrr_mutation_other_than_brca: { label: "Other HRR gene mutation", group: "molecular" },
   crpc_stated: { label: "Record states CRPC", group: "stated" },
