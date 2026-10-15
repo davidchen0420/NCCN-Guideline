@@ -15,6 +15,14 @@ PYTHONPATH=src python -m nccn_nav.dashboard --library [--pdfs DIR]  # -> built/o
 PYTHONPATH=src python -m nccn_nav.dashboard data/prostate built     # -> built/prostate-oncocarta.html (any data/<slug>)
 ```
 
-The source PDFs are not included yet. They may be committed at `data/<slug>/pdf/<slug>.pdf` (the only place `.gitignore` allows PDFs); the library build then finds them. To preview original pages, either put your copies where the library build finds them (`data/<slug>/`, `Guideline/`, `private/`, `pdf/`, `pdfs/`, or pass `--pdfs DIR`) and rebuild with `--library` (it records their paths, matched by SHA-256), or in OncoCarta use "Source PDF" → "Connect a folder of NCCN PDFs" once (matched to all guidelines by SHA-256 and kept in your browser), or choose or drop a single guideline's PDF.
+To ship the source PDFs with the app, copy them into the one place the repository tracks them, `data/<slug>/pdf/<slug>.pdf` (matched to each guideline by SHA-256, else by file name), then commit and rebuild:
+
+```
+PYTHONPATH=src python -m nccn_nav.dashboard --import-pdfs Guideline   # any folder of NCCN PDFs; lists files that match no guideline
+git add data/*/pdf/*.pdf && git commit -m "Add the NCCN source PDFs"
+PYTHONPATH=src python -m nccn_nav.dashboard --library
+```
+
+Served from the repository, the page then loads each guideline's PDF itself; a hosted copy serves them as `pdfs/<slug>.pdf` next to the page. Without them, in OncoCarta use "Connect PDF" → "Connect a folder of NCCN PDFs" once (matched to all guidelines by SHA-256 and kept in your browser), or choose or drop a single guideline's PDF.
 
 **Licensing note.** The offline file and the data it reads contain processed NCCN guideline text. NCCN's PDF header says the content may not be distributed or used with an AI model or tool; make sure your agreement with NCCN allows publishing this before keeping the repository public.

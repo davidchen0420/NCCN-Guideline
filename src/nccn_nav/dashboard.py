@@ -10,6 +10,8 @@ Outputs that embed guideline text are licensed-derived content.
                                                          (offline, one guideline embedded)
   python -m nccn_nav.dashboard --library [data_dir] [out.html] [--pdfs DIR]  ->  built/oncocarta.html
                                                          (all guidelines; serve the repo over http)
+  python -m nccn_nav.dashboard --import-pdfs DIR [data_dir]  ->  data/<slug>/pdf/<slug>.pdf
+                                                         (copies the NCCN PDFs in DIR that match a guideline)
   python -m nccn_nav.dashboard --sample                ->  ./sample_out/dashboard.html
 """
 import json
@@ -387,6 +389,29 @@ def find_pdfs(data_dir="data", roots=None):
     return {**by_name, **found}
 
 
+def import_pdfs(src_dir, data_dir="data"):
+    """Copy the source PDFs found under `src_dir` to data/<slug>/pdf/<slug>.pdf, the one place
+    the repository tracks them (see .gitignore), so the library can serve them. A PDF is matched
+    by its recorded pdf_sha256 (else its file name). Returns {slug: path} of the copies made or
+    already in place, and the PDFs under `src_dir` that match no guideline."""
+    import shutil
+    data_dir, src_dir = Path(data_dir), Path(src_dir)
+    if not src_dir.is_dir():
+        raise SystemExit(f"{src_dir}: not a folder")
+    found = find_pdfs(data_dir, [src_dir])
+    placed = {}
+    for slug, f in sorted(found.items()):
+        dest = data_dir / slug / "pdf" / f"{slug}.pdf"
+        if f.resolve() != dest.resolve():
+            if not dest.exists() or dest.read_bytes() != f.read_bytes():
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(f, dest)
+        placed[slug] = dest
+    used = {p.resolve() for p in found.values()}
+    unmatched = [p for p in sorted(src_dir.rglob("*.pdf")) if p.resolve() not in used]
+    return placed, unmatched
+
+
 def write_packs(data_dir, out_dir):
     """Each guideline as a small script next to the page (`<out_dir>/<slug>.js`): gzip-compressed
     guideline.json (with its example patients) in base64, registered on window.__OC_PACKS.
@@ -444,6 +469,13 @@ if __name__ == "__main__":
         out_dir = Path(args[1]) if len(args) > 1 else Path("sample_out")
         path, b = build(HERE / "sample", out_dir, "Sample guideline (synthetic demo data)")
         print(path, len(b["pages"]), "flow pages", sum(len(p["nodes"]) for p in b["pages"].values()), "boxes")
+    elif args and args[0] == "--import-pdfs":
+        if len(args) < 2:
+            raise SystemExit("usage: python -m nccn_nav.dashboard --import-pdfs DIR [data_dir]")
+        placed, unmatched = import_pdfs(args[1], args[2] if len(args) > 2 else "data")
+        print(f"{len(placed)} guideline PDFs in data/<slug>/pdf/")
+        for p in unmatched:
+            print("  no guideline matches", p)
     elif args and args[0] == "--library":
         rest = args[1:]
         roots = []

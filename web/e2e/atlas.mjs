@@ -248,6 +248,21 @@ await step("source PDF: found next to the data, shown on hover, opened on click"
   await p.locator(".pdf-btn.ready").first().waitFor({ timeout: 20000 });
   await ctx.close();
 });
+await step("hosted copy: the PDF published next to the page; clicking a box shows its original page", async () => {
+  const pdf = await makeGuidelinePdf(join(ROOT, "data/prostate/guideline.json"));
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const p = await ctx.newPage();
+  p.on("pageerror", (e) => errors.push("hosted pdf: " + e.message));
+  await p.addInitScript(() => { try { localStorage.setItem("nav-help", "1"); localStorage.setItem("oc-canvas-hint", "1"); } catch { /* */ } });
+  await p.route("**/built/pdfs/prostate.pdf", (r) => r.fulfill({ status: 200, contentType: "application/pdf", body: pdf }));
+  await p.goto(base + "#prostate/flow/PROS-2");
+  if (await p.getByRole("dialog", { name: /Find where a patient sits/ }).count()) await p.getByRole("button", { name: /Browse the guideline/ }).click();
+  await p.locator(".pdf-btn.ready").first().waitFor({ timeout: 20000 });
+  await p.locator(".canvas [data-testid=card]:visible").filter({ hasText: "Intermediate" }).first().click({ position: { x: 20, y: 40 } });
+  await p.locator(".viewer .page-img img").waitFor();
+  assert.match(await p.locator(".viewer-title").innerText(), /PROS-2 · PDF page \d+ of 222/);
+  await ctx.close();
+});
 await step("source PDF: a folder is matched to guidelines and kept in the browser", async () => {
   const pdf = await makeGuidelinePdf(join(ROOT, "data/prostate/guideline.json"));
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });

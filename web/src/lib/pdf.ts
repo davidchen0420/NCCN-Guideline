@@ -149,6 +149,7 @@ export async function connectFolder(files: File[], guidelines: PdfGuideline[] = 
 /** Where a served copy of a guideline's PDF may sit, relative to the data folder. */
 export function pdfCandidates(base: string, slug: string, manifest?: Record<string, string>): string[] {
   const out = manifest?.[slug] ? [manifest[slug]] : [];
+  out.push(`pdfs/${slug}.pdf`);   // published next to the page (the hosted copy)
   out.push(`${base}${slug}/pdf/${slug}.pdf`, `${base}${slug}/${slug}.pdf`, `${base}../private/${slug}/pdf/${slug}.pdf`, `${base}../pdf/${slug}.pdf`);
   return [...new Set(out)];
 }

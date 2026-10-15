@@ -141,6 +141,24 @@ class AtlasBuildTest(unittest.TestCase):
             self.assertEqual(dashboard.find_pdfs(data).get("prostate"), pdf)
 
     @unittest.skipUnless((DATA / "index.json").exists(), "canonical data not present")
+    def test_import_pdfs_copies_matches_into_data(self):
+        with tempfile.TemporaryDirectory() as d:
+            data = self._isolated_data(d)
+            (data / "prostate").unlink()   # a real folder, so nothing is written into the repository
+            (data / "prostate").mkdir()
+            src = Path(d) / "Downloads" / "Treatment"
+            src.mkdir(parents=True)
+            (src / "prostate.pdf").write_bytes(b"%PDF-1.4\n%%EOF\n")
+            (src / "Something Else.pdf").write_bytes(b"%PDF-1.4\n%%EOF\n")
+            placed, unmatched = dashboard.import_pdfs(src.parent, data)
+            dest = data / "prostate" / "pdf" / "prostate.pdf"
+            self.assertEqual(placed, {"prostate": dest})
+            self.assertEqual(dest.read_bytes(), b"%PDF-1.4\n%%EOF\n")
+            self.assertEqual(unmatched, [src / "Something Else.pdf"])
+            placed, _ = dashboard.import_pdfs(src.parent, data)   # again: nothing to do
+            self.assertEqual(placed, {"prostate": dest})
+
+    @unittest.skipUnless((DATA / "index.json").exists(), "canonical data not present")
     def test_library_page_embeds_the_atlas(self):
         with tempfile.TemporaryDirectory() as d:
             html = dashboard.build_library(self.DATA, Path(d) / "built" / "oncocarta.html").read_text()
