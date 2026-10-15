@@ -59,16 +59,20 @@ async function start() {
 function OpenFile() {
   return (
     <div className="lib-loading">
-      <h1>Open a guideline</h1>
-      <p>This page could not find the guideline library next to it. Browsers do not let pages opened from disk read neighbouring files, so either serve the repository folder (for example <code>python -m http.server</code> in the repository, then open <code>/built/oncocarta.html</code>), or open one guideline file here.</p>
-      <label className="btn primary">Choose a guideline.json
+      <h1>OncoCarta can't find its guideline files</h1>
+      <p>Open it from its original folder (keep the guidelines folder beside it), or ask whoever shared it with you for a working copy.</p>
+      <details className="le-details">
+        <summary>Details</summary>
+        <p>Browsers do not let a page opened from disk read neighbouring files. Either serve the repository folder (for example <code>python -m http.server</code> in the repository, then open <code>/built/oncocarta.html</code>), or open one guideline file here.</p>
+      </details>
+      <label className="btn primary">Open one guideline file
         <input type="file" accept=".json,application/json" hidden onChange={async (e) => {
           const f = e.target.files?.[0];
           if (!f) return;
           try {
             const j = JSON.parse(await f.text());
             if (isGuidelineFile(j)) single(adaptGuideline(j));
-            else alert("That file is not a guideline.json (format nccn-guideline/1).");
+            else alert("That file is not an OncoCarta guideline.");
           } catch (err) { alert("Could not read the file: " + String(err)); }
         }} />
       </label>
@@ -76,4 +80,7 @@ function OpenFile() {
   );
 }
 
-start().catch((e) => { document.body.textContent = "Could not load guideline data: " + String(e); });
+start().catch((e) => {
+  console.error(e);
+  document.body.textContent = "OncoCarta could not load its guideline data. Reload the page; if this keeps happening, report it.";
+});

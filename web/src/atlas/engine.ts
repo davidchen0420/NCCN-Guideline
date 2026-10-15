@@ -1424,11 +1424,17 @@ export class Engine {
     const head = CARD_HEAD * k;
     ctx.globalAlpha = inner;
     ctx.textBaseline = "middle"; ctx.textAlign = "left";
-    ctx.fillStyle = th.muted; ctx.font = `500 ${clamp(head * 0.3, 9, 14)}px ${MONO}`;
-    ctx.fillText(f.page, x0 + clamp(s * 16, 10, 24), y0 + head * 0.55);
-    const iw = ctx.measureText(`${f.page}  `).width;
+    // the title first, its code after it in quiet type
+    const codeFont = `500 ${clamp(head * 0.3, 9, 14)}px ${MONO}`;
+    ctx.font = codeFont;
+    const iw = ctx.measureText(`  ${f.page}`).width;
     ctx.fillStyle = th.ink; ctx.font = `600 ${clamp(head * 0.4, 11, 20)}px ${SERIF}`;
-    ctx.fillText(ellipsize(ctx, c?.title ?? q.p.title, w - iw - 50), x0 + clamp(s * 16, 10, 24) + iw, y0 + head * 0.55);
+    const titleText = ellipsize(ctx, c?.title ?? q.p.title, w - iw - 50);
+    const tx = x0 + clamp(s * 16, 10, 24);
+    ctx.fillText(titleText, tx, y0 + head * 0.55);
+    const tw = ctx.measureText(titleText).width;
+    ctx.fillStyle = th.muted; ctx.font = codeFont;
+    ctx.fillText(f.page, tx + tw + ctx.measureText("  ").width, y0 + head * 0.55);
     if (!c) {
       ctx.fillStyle = th.muted; ctx.font = `13px ${SANS}`; ctx.textAlign = "center";
       ctx.fillText(this.bundles.has(g.slug) ? "This page has no steps." : "Reading the page…", px, py);

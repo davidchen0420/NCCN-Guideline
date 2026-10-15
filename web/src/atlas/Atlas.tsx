@@ -5,7 +5,7 @@
  * so Back goes up a level and links can point at any place on the map.
  */
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight, ChevronRight, Compass, FileText, List, Minus, Plus, Search as SearchIcon, UserRound, X } from "lucide-react";
+import { ArrowRight, ChevronRight, Compass, ExternalLink, FileText, List, Minus, Plus, Search as SearchIcon, UserRound, X } from "lucide-react";
 import type { Bundle, Example, Facts, Library } from "../types";
 import { buildGraph, type Graph } from "../lib/graph";
 import { rankPathways, confidenceWord, hasFacts, type Pathway } from "../lib/pathways";
@@ -15,7 +15,7 @@ import { Engine, type Focus, type Hit, type Route } from "./engine";
 import { getGuideline } from "../Library";
 import { readPatient, writePatient } from "../lib/patient";
 import { renderPage } from "../lib/pdf";
-import { PageImage, PdfButton, SourceProvider, useSource, type SrcTarget } from "../source";
+import { PageImage, PdfButton, SourceProvider, useSource, useSrc, type SrcTarget } from "../source";
 import { useAdvanced } from "../store";
 import { T, matchWord, supportPhrase } from "../lib/terms";
 import { readPref, writePref } from "../lib/prefs";
@@ -149,6 +149,7 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
   useEffect(() => { engineRef.current?.setShowOriginal(showOriginal); }, [showOriginal]);
   const advanced = useAdvanced();
   const narrow = useMedia("(max-width: 640px)");
+  const phone = useMedia("(max-width: 480px)");
   const wide = useMedia("(min-width: 900px)");
   const docked = narrow || focus.level > 0 || (focus.level === 0 && !!focus.site);
   const [gliding, setGliding] = useState(false);
@@ -176,13 +177,15 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
     else if (f.site) go({ level: 0 });
   }, [go, model]);
   const openReader = useCallback((s: string, page?: string, node?: string, rect: DOMRect | null = null) => {
+    // reading, not entering a patient: the reader skips its welcome dialog
+    try { if (!sessionStorage.getItem("oc-intent")) sessionStorage.setItem("oc-intent", "read"); } catch { /* blocked */ }
     morph(rect, () => onOpen(s, page, node));
   }, [onOpen]);
   const bundlesRef = useRef<Record<string, Bundle | string>>({});
   /** The original PDF page of a page or box, in the floating viewer (the reader one click on). */
   const openSource = useCallback((s: string, page: string, node?: string, rect: DOMRect | null = null) => {
     const b = bundlesRef.current[s];
-    const t = sourceTarget(typeof b === "object" ? b : null, page, node, { label: "Open in the reader", run: () => onOpen(s, page, node) });
+    const t = sourceTarget(typeof b === "object" ? b : null, page, node, { label: "Open in the reader", run: () => { try { sessionStorage.setItem("oc-intent", "read"); } catch { /* blocked */ } onOpen(s, page, node); } });
     if (t && srcRef.current) srcRef.current.open(t); else openReader(s, page, node, rect);
   }, [onOpen, openReader]);
 
@@ -382,7 +385,7 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
       <header className="atlas-top">
         <nav className="crumbs" aria-label="Where you are">
           <span className="crumb-mark" aria-hidden><Compass size={16} /></span>
-          {(narrow && crumbs.length > 2 ? crumbs.slice(-2) : crumbs).map((c, i) => (
+          {(phone && g ? crumbs.filter((_, i) => i !== 1).slice(focus.level === 2 ? -2 : -1) : narrow && crumbs.length > 2 ? crumbs.slice(-2) : crumbs).map((c, i) => (
             <span key={i} className="crumb">
               {i > 0 && <ChevronRight size={13} aria-hidden className="crumb-sep" />}
               {c.f ? <button type="button" onClick={() => go(c.f!)}>{c.root ? <b>OncoCarta</b> : c.label}</button> : <span aria-current="page">{c.root ? <b>OncoCarta</b> : c.label}</span>}
@@ -443,6 +446,7 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
           {g && focus.level === 1 && (
             <GuidelinePanel g={g} model={model} focus={focus} go={go} bundle={bundle} loadError={loadError}
               patients={patients} chosen={chosen?.id ?? null} best={best} graph={graph}
+              verify={best ? sourceTarget(bundle, best.steps[best.steps.length - 1].node.split(":")[0], best.steps[best.steps.length - 1].node) : null}
               choosePatient={(id) => setPatient(id && slug ? { slug, id } : null)}
               open={(page) => openReader(g.slug, page)}
               retry={() => setBundles((x) => { const n = { ...x }; delete n[g.slug]; return n; })}
@@ -454,7 +458,7 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
             <PagePanel g={g} page={focus.page} go={go} retry={() => setBundles((x) => { const n = { ...x }; delete n[g.slug]; return n; })} bundle={bundle} loadError={loadError} route={route}
               pdfReady={pdfReady} showOriginal={showOriginal} setShowOriginal={setShowOriginal}
               readBox={(node) => openReader(g.slug, focus.page, node)}
-              source={(node) => sourceTarget(bundle, focus.page, node, { label: "Open in the reader", run: () => onOpen(g.slug, focus.page, node) })}
+              source={(node) => sourceTarget(bundle, focus.page, node, { label: "Open in the reader", run: () => { try { sessionStorage.setItem("oc-intent", "read"); } catch { /* blocked */ } onOpen(g.slug, focus.page, node); } })}
               open={(node) => openReader(g.slug, focus.page, node, node ? engineRef.current?.boxRect(g.slug, focus.page, node) ?? null : null)}
               hoverBox={(node) => engineRef.current?.setKbd(node ? { kind: "box", slug: g.slug, page: focus.page, node } : null)}
               preview={(h) => engineRef.current?.setPreview(h)} />
@@ -600,10 +604,12 @@ interface GPProps {
   g: GNode; model: Model; focus: Focus; go: (f: Focus) => void; bundle: Bundle | null; loadError: string | null;
   patients: { id: string; label: string; note?: string }[]; chosen: string | null; best: Pathway | null; graph: Graph | null;
   choosePatient: (id: string | null) => void; open: (page?: string) => void; openWithPatient: () => void; preview: (h: Hit) => void;
-  enterPatient: () => void; retry: () => void;
+  enterPatient: () => void; retry: () => void; verify: SrcTarget | null;
 }
-function GuidelinePanel({ g, model, focus, go, bundle, loadError, patients, chosen, best, graph, choosePatient, open, openWithPatient, preview, enterPatient, retry }: GPProps) {
+function GuidelinePanel({ g, model, focus, go, bundle, loadError, patients, chosen, best, graph, choosePatient, open, openWithPatient, preview, enterPatient, retry, verify }: GPProps) {
   const advanced = useAdvanced();
+  const src = useSource();
+  const verifyHover = useSrc(verify, { click: false });
   const starts = g.pages.filter((p) => p.start);
   const section = focus.level === 1 ? focus.section ?? null : null;
   const last = best && graph ? graph.node(best.steps[best.steps.length - 1]?.node ?? "") : null;
@@ -617,6 +623,9 @@ function GuidelinePanel({ g, model, focus, go, bundle, loadError, patients, chos
     );
   };
   const nPages = best ? new Set(best.steps.map((s) => s.node.split(":")[0])).size : 0;
+  // answers the route actually used: the pathway's own list when it has one, else the conditions it met
+  const used = best ? ((best as Pathway & { used?: string[] }).used?.length ?? (graph ? best.steps.filter((st) => st.kind === "met" && graph.preds[st.node]).length : 0)) : 0;
+  const recText = last ? stripMarks(last.text) : "";
   return (
     <div className="panel-body">
       <p className="eyebrow" style={{ color: g.site.color }}>{g.site.label} · {CATEGORY_LABEL[g.category] ?? g.category}</p>
@@ -624,7 +633,7 @@ function GuidelinePanel({ g, model, focus, go, bundle, loadError, patients, chos
       <p className="panel-meta">{g.version ? `Version ${g.version}` : ""}{g.date ? ` · ${g.date}` : ""}</p>
       <div className="pp-actions stack">
         <button type="button" className="btn primary" onClick={() => enterPatient()} data-testid="enter-patient"><UserRound size={15} aria-hidden /> Find a recommendation for a patient</button>
-        <button type="button" className="btn" onClick={() => open(starts[0]?.id)}>Read the guideline <ArrowRight size={15} aria-hidden /></button>
+        <button type="button" className="btn" onClick={() => { try { sessionStorage.setItem("oc-intent", "read"); } catch { /* blocked */ } open(starts[0]?.id); }}>Read the guideline <ArrowRight size={15} aria-hidden /></button>
       </div>
       <p className="panel-how">Answer a few questions about the patient to find the NCCN recommendation, or read the guideline pages.</p>
 
@@ -643,13 +652,17 @@ function GuidelinePanel({ g, model, focus, go, bundle, loadError, patients, chos
                 <button key={p.id} type="button" className={`pchip${chosen === p.id ? " on" : ""}`} aria-pressed={chosen === p.id} title={p.note} onClick={() => choosePatient(chosen === p.id ? null : p.id)}>{p.id === "mine" ? p.label : `Example: ${p.label}`}</button>
               ))}
             </div>
-            {chosen && !best && <p className="note">No recommendation fits this patient from the start pages.</p>}
+            {chosen && !best && <p className="note">No recommendation fits this patient.</p>}
             {best && (
               <div className="route-card">
-                <p className="route-lik"><b>{matchWord(best.likelihood)}</b> · {supportPhrase(best.open)}{advanced && <> · {Math.round(best.likelihood * 100)}% of the weight · {confidenceWord(best.confidence)} confidence ({Math.round(best.confidence)})</>}</p>
+                <p className="route-lik"><b>{matchWord(best.likelihood)}</b> · {used > 0 ? supportPhrase(best.open) : "Not yet based on any patient answers"}{advanced && <> · {Math.round(best.likelihood * 100)}% of the weight · {confidenceWord(best.confidence)} confidence ({Math.round(best.confidence)})</>}</p>
                 {advanced && <p className="route-meta">{best.met} criteria met · {best.open} still open · through {nPages} pages</p>}
-                {last && <p className="route-end">Ends at: <span>{stripMarks(last.text).slice(0, 160)}</span></p>}
-                <button type="button" className="btn small" onClick={openWithPatient}>Open in the reader with this patient <ArrowRight size={13} aria-hidden /></button>
+                {last && <p className="route-end">Recommendation: <span>{recText.length > 160 ? `${recText.slice(0, 160).trimEnd()}…` : recText}</span></p>}
+                <div className="route-actions">
+                  <button type="button" className="btn small" onClick={openWithPatient}>Open in the reader with this patient <ArrowRight size={13} aria-hidden /></button>
+                  {verify && <button type="button" className="btn small" {...verifyHover} onClick={() => src.open(verify)}><ExternalLink size={13} aria-hidden /> {T.verify}</button>}
+                </div>
+                <p className="route-fine">{T.prototype}</p>
               </div>
             )}
           </>)}
@@ -728,13 +741,13 @@ function PagePanel({ g, page, go, bundle, loadError, route, open, hoverBox, prev
       <h2 className="panel-title">{p.title} <code className="ptid">{p.id}</code></h2>
       <p className="panel-meta">{advanced ? `${p.boxes} boxes · ${p.decisions} with an encoded condition` : `${p.boxes} ${p.boxes === 1 ? T.step : T.steps}`}{p.start ? " · a good place to start" : ""}</p>
       <div className="pp-actions">
-        <button type="button" className="btn primary" onClick={() => open()}>Read this page <ArrowRight size={15} aria-hidden /></button>
+        <button type="button" className="btn primary" onClick={() => { try { sessionStorage.setItem("oc-intent", "read"); } catch { /* blocked */ } open(); }}>Read this page <ArrowRight size={15} aria-hidden /></button>
         <button type="button" className="btn" disabled={!pageSrc} onClick={() => pageSrc && src.open(pageSrc)} data-testid="open-pdf-page"><FileText size={15} aria-hidden /> {T.openPage}</button>
       </div>
       {pdfReady ? (
         <div className="seg" role="group" aria-label="The card shows">
           <button type="button" className={!showOriginal ? "on" : ""} aria-pressed={!showOriginal} onClick={() => setShowOriginal(false)}>Diagram</button>
-          <button type="button" className={showOriginal ? "on" : ""} aria-pressed={showOriginal} onClick={() => setShowOriginal(true)}>Original page</button>
+          <button type="button" className={showOriginal ? "on" : ""} aria-pressed={showOriginal} onClick={() => setShowOriginal(true)}>NCCN page</button>
         </div>
       ) : bundle && <p className="note">The NCCN page isn't available here, so the diagram is rebuilt from the guideline text. <button type="button" className="linkish" onClick={src.pick}>Connect the NCCN PDF</button>{advanced && <> or <button type="button" className="linkish" onClick={src.pickFolder}>a folder of NCCN PDFs</button></>} to see the original page.</p>}
       {route && route.pages.includes(page) && <p className="note route-note">The example patient's path passes through this page (highlighted).</p>}
@@ -771,7 +784,7 @@ function BoxRow({ text, cond, onRoute, t, hover, read }: { text: string; cond: b
         onMouseEnter={(e) => { hover(true); if (t && matchMedia("(hover: hover)").matches) src.peek(t, e.currentTarget); }}
         onMouseLeave={() => { hover(false); src.unpeek(); }}
         onFocus={(e) => { hover(true); if (t) src.peek(t, e.currentTarget); }} onBlur={() => { hover(false); src.unpeek(); }}>
-        {cond && <span className="bl-cond" title="Has a condition the app can check" />}
+        {cond && <span className="bl-cond" title="Can be checked against the patient's answers" />}
         <span>{text.slice(0, 140)}</span>
       </button>
       <button type="button" className="bl-read" aria-label="Open this step in the reader" title="Open in the reader" onClick={read}><ArrowRight size={13} /></button>

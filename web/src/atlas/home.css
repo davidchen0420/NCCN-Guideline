@@ -99,3 +99,14 @@
 /* ---------- legend ---------- */
 .legend { font-size: 13px; width: 270px; }
 .lg-note { font-size: 12.5px; }
+
+/* route card: the verify link and the prototype note */
+.route-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.route-fine { margin: 8px 0 0; font-size: 12.5px; line-height: 1.4; color: var(--muted); }
+
+/* hover preview and viewer: readable text, and a warning when the PDF is another edition */
+.peek { font-size: 13px; }
+.peek-note { font-size: 12.5px; }
+.edition-note { margin: 0; padding: 8px 11px; font-size: 12.5px; line-height: 1.4; color: var(--warn); background: color-mix(in srgb, var(--warn) 8%, var(--surface)); border-top: 1px solid color-mix(in srgb, var(--warn) 30%, var(--line)); }
+.viewer-body .edition-note { border: 1px solid color-mix(in srgb, var(--warn) 30%, var(--line)); border-radius: 8px; margin-bottom: 10px; }
+.viewer-msg { font-size: 13px; }
