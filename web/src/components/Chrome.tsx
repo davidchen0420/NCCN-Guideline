@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Library as LibraryIcon, ArrowLeft, ArrowRight, BookOpen, UserRound, ListChecks, CircleHelp, RotateCcw, Search, ExternalLink, Settings } from "lucide-react";
+import { Library as LibraryIcon, ArrowLeft, ArrowRight, BookOpen, UserRound, ListChecks, CircleHelp, RotateCcw, Search, ExternalLink, Settings, X } from "lucide-react";
 import { useApp } from "../store";
 import { PdfButton } from "../source";
 import { readPref, writePref } from "../lib/prefs";
@@ -38,7 +38,7 @@ function SettingsMenu() {
   return (
     <>
       <button ref={btn} type="button" className={open ? "on" : ""} aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded={open}
-        onClick={() => setOpen((o) => !o)} data-testid="rail-settings"><Settings size={20} /></button>
+        onClick={() => setOpen((o) => !o)} data-testid="rail-settings"><Settings size={20} /><span className="rl" aria-hidden>Settings</span></button>
       {open && createPortal(
         <div ref={menu} className="set-menu" role="dialog" aria-label="Settings" style={pos}>
           <h3>Settings</h3>
@@ -79,12 +79,13 @@ export function Rail() {
     if (!isPhone) writePref(LEFT_KEY, left ? "1" : "0");   // remembered for next time (wide screens)
     set({ left });
   };
-  const b = (label: string, icon: React.ReactNode, on: boolean, f: () => void, id: string) => (
-    <button className={on ? "on" : ""} aria-label={label} title={label} aria-pressed={on} onClick={f} data-testid={id}>{icon}</button>
+  // short text under each icon on wide screens (the aria-label is the full name)
+  const b = (label: string, icon: React.ReactNode, on: boolean, f: () => void, id: string, short = label) => (
+    <button className={on ? "on" : ""} aria-label={label} title={label} aria-pressed={on} onClick={f} data-testid={id}>{icon}<span className="rl" aria-hidden>{short}</span></button>
   );
   return (
     <nav className="rail" aria-label="OncoCarta">
-      {library && b("All guidelines", <LibraryIcon size={20} />, false, () => library.home(s.loc.kind === "flow" ? s.loc.page : null), "rail-library")}
+      {library && b("All guidelines", <LibraryIcon size={20} />, false, () => library.home(s.loc.kind === "flow" ? s.loc.page : null), "rail-library", "Guidelines")}
       {b("Contents", <BookOpen size={20} />, s.left === "toc" || s.left === "hist", () => toggle("toc"), "rail-toc")}
       {b("Search", <Search size={20} />, s.left === "search", () => toggle("search"), "rail-search")}
       <span className="grow" />
@@ -118,7 +119,7 @@ export function TitleBar() {
         </>
       )}
       <PdfButton />
-      <a className="ib ext quiet" href="https://www.nccn.org/guidelines/category_1" target="_blank" rel="noopener noreferrer" title="Official NCCN guidelines" aria-label="NCCN.org, official NCCN guidelines"><ExternalLink size={15} /><span className="ext-t">NCCN.org</span></a>
+      <a className="ib ext quiet" href="https://www.nccn.org/guidelines/category_1" target="_blank" rel="noopener noreferrer" title="Official NCCN guidelines (opens the NCCN website)" aria-label="NCCN website, official NCCN guidelines"><ExternalLink size={15} /><span className="ext-t">NCCN website</span></a>
     </div>
   );
 }
@@ -155,15 +156,24 @@ export function Help() {
 /** First visit: three ways in. Replaces a wall of help text. */
 export function Welcome() {
   const { s, set, setFacts, bundle } = useApp();
-  if (!s.welcome) return null;
   const close = (patch: Parameters<typeof set>[0] = {}) => {
     writePref("nav-help", "1");
     set({ welcome: false, ...patch });
   };
+  // the close button and Escape do what "Read the guideline" does
+  useEffect(() => {
+    if (!s.welcome) return;
+    const k = (e: KeyboardEvent) => { if (e.key === "Escape") { writePref("nav-help", "1"); set({ welcome: false, left: "toc" }); } };
+    document.addEventListener("keydown", k);
+    return () => document.removeEventListener("keydown", k);
+  }, [s.welcome, set]);
+  if (!s.welcome) return null;
   const examples = bundle.examples ?? [];
   return (
     <div className="modal" onClick={(e) => { if (e.target === e.currentTarget) close(); }}>
       <div className="modal-box welcome" role="dialog" aria-modal="true" aria-labelledby="wl-h">
+        <button type="button" className="wl-x" aria-label="Close" title="Close (Esc)" onClick={() => close({ left: "toc" })}><X size={18} aria-hidden /></button>
+        <div className="wl-scroll">
         <span className="eyebrow">OncoCarta · {bundle.title}</span>
         <h2 id="wl-h">Find where a patient sits in the guideline</h2>
         <p className="wl-lead">Tell OncoCarta about your patient. It shows the NCCN recommendations that fit, and each step links to the original NCCN page so you can check it.</p>
@@ -186,7 +196,8 @@ export function Welcome() {
             <BookOpen size={20} aria-hidden /><b>Read the guideline</b><span>Read the pages one by one, with every reference linked.</span>
           </button>
         </div>
-        <p className="wl-fine">{T.prototype} <button type="button" className="linkish" onClick={() => close({ help: true })}>How to use it</button></p>
+        </div>
+        <p className="wl-fine wl-foot">{T.prototype} <button type="button" className="linkish" onClick={() => close({ help: true })}>How to use it</button></p>
       </div>
     </div>
   );

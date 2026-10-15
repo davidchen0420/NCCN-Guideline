@@ -23,7 +23,7 @@ export function Dock() {
   const bodyRef = useRef<HTMLDivElement>(null);
   useEffect(() => { bodyRef.current?.querySelector(".fn-item.on")?.scrollIntoView({ block: "nearest" }); }, [s.fn, s.dock]);
   const page = s.loc.kind === "flow" ? s.loc.page : null;
-  const tabs: [DockTab, string][] = [["fn", DOCK_LABEL.fn], ["E", DOCK_LABEL.E], ["P", DOCK_LABEL.P]];
+  const tabs: [DockTab, string, string][] = [["fn", DOCK_LABEL.fn, "Footnotes for the steps on this page"], ["E", DOCK_LABEL.E, "NCCN categories of evidence and consensus"], ["P", DOCK_LABEL.P, "NCCN categories of preference"]];
 
   const notes = new Map<string, { text: string; nodes: string[]; pdf?: number }>();
   if (page) for (const n of g.bundle.pages[page].nodes) for (const [l, t, pdf] of n.footnotes) {
@@ -43,8 +43,8 @@ export function Dock() {
   return (
     <div className={`dock${s.dock ? " open" : ""}`}>
       <div className="dock-tabs" role="tablist">
-        {tabs.map(([k, label]) => (
-          <button key={k} role="tab" aria-selected={s.dock === k} className={s.dock === k ? "on" : ""} title={label}
+        {tabs.map(([k, label, tip]) => (
+          <button key={k} role="tab" aria-selected={s.dock === k} className={s.dock === k ? "on" : ""} title={tip}
             onClick={() => set({ dock: s.dock === k ? null : k, sheet: false })}>
             {k === "fn" && <Asterisk size={16} aria-hidden />}<span>{label}</span>
           </button>

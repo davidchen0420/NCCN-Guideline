@@ -58,6 +58,19 @@ await step("selecting an answer highlights its path and hides the rest", async (
   await page.getByTestId("clear").click();
   assert.equal(await page.locator(".card.answer").count(), 0);
 });
+await step("every click on a step opens its NCCN page, whether the highlight turns on or off", async () => {
+  for (const w of advancedCtx.pages()) if (w !== page) await w.close();
+  await page.waitForTimeout(200);
+  const card = page.locator('[data-id="SAMPLE-1:n3"]');
+  const [on] = await Promise.all([advancedCtx.waitForEvent("page"), card.click()]);
+  assert.equal(await page.locator(".card.answer").count(), 1);
+  await on.close();
+  await page.waitForTimeout(200);
+  const [off] = await Promise.all([advancedCtx.waitForEvent("page"), card.click()]);
+  assert.equal(await page.locator(".card.answer").count(), 0, "second click turns the highlight off");
+  await off.close();
+  await page.waitForTimeout(200);
+});
 await step("footnote badge opens the dock and steps instances", async () => {
   await page.locator('[data-id="SAMPLE-1:n3"] .fb').first().click();
   assert.match(await page.locator(".dock-body").innerText(), /1 of 1 place on this page/);
@@ -230,7 +243,7 @@ await step("wide screen, default mode: Contents starts closed, remembers the las
   const z = await wide.locator(".zoomctl").boundingBox(), v = await wide.locator(".canvas").boundingBox();
   assert.ok(z && v && z.x > v.x + v.width / 2 && z.y > v.y + v.height / 2, "zoom group in the bottom-right quarter");
   assert.ok(await wide.getByRole("button", { name: "Zoom in" }).isVisible() && await wide.getByRole("button", { name: "Fit page" }).isVisible());
-  assert.match(await wide.locator(".ext-t").innerText(), /NCCN\.org/);
+  assert.match(await wide.locator(".ext-t").innerText(), /NCCN website/);
   await wide.getByTestId("rail-toc").click();
   assert.equal(await wide.locator(".app.left-open").count(), 1);
   await wide.reload();
@@ -248,6 +261,33 @@ await step("wide screen, Advanced: zoom slider is back", async () => {
   assert.equal(await wide.locator(".zbox input[type=range]").isVisible(), true);
 });
 await wide.close();
+
+// ------------------------------------------------------------------ welcome dialog
+const first = await (await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true })).newPage();
+watch(first);
+await first.goto(url);
+await step("welcome: close button and Escape read the guideline; the disclaimer stays in view on a phone", async () => {
+  await first.getByRole("dialog", { name: /Find where a patient sits/ }).waitFor();
+  const foot = await first.locator(".wl-foot").boundingBox();
+  assert.ok(foot && foot.y + foot.height <= 844 + 1, "disclaimer and How to use it fit on the screen");
+  assert.ok(await first.getByRole("button", { name: "How to use it" }).isVisible());
+  assert.ok(await first.getByRole("button", { name: "Close", exact: true }).isVisible());
+  await first.keyboard.press("Escape");
+  assert.equal(await first.getByRole("dialog").count(), 0);
+  await first.reload();
+  await first.waitForTimeout(300);
+  assert.equal(await first.getByRole("dialog").count(), 0, "closing is remembered");
+});
+await first.close();
+const esc = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
+watch(esc);
+await esc.goto(url);
+await step("welcome: the close button opens the contents like Read the guideline", async () => {
+  await esc.getByRole("button", { name: "Close", exact: true }).click();
+  assert.equal(await esc.getByRole("dialog").count(), 0);
+  await esc.locator(".toc-item.alg").first().waitFor();
+});
+await esc.close();
 
 // ------------------------------------------------------------------ phone
 const phone = await (await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 })).newPage();

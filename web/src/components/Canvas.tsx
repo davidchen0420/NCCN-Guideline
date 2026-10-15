@@ -96,9 +96,9 @@ export function Canvas({ page }: { page: string }) {
   const source = useSource();
   const select = (shortId: string) => {
     const full = `${page}:${shortId}`;
-    // choosing a box also opens its original page (the floating viewer follows each new choice)
+    // every click opens the step's NCCN page (the window follows each choice); the highlight toggles on its own
     const src = boxSrc(g, full);
-    if (src && !s.answers.includes(full)) source.open(src);
+    if (src) source.open(src);
     dispatch({ type: "toggleAnswer", id: full });
     clicked.current = full;
     dispatch({ type: "go", loc: { kind: "flow", page, node: full }, push: false });
@@ -141,7 +141,7 @@ export function Canvas({ page }: { page: string }) {
                 })}
               </svg>
               {layout.headers.map((h) => (
-                <div key={h.id} className="col-head" style={{ left: h.x, width: h.w, top: 14 }}>{h.text.toLowerCase().replace(/(^|\s)\S/g, (m) => m.toUpperCase())}</div>
+                <div key={h.id} className="col-head" title={h.text} style={{ left: h.x, width: h.w, top: 14 }}>{h.text.toLowerCase().replace(/(^|\s)\S/g, (m) => m.toUpperCase())}</div>
               ))}
               {boxes.map((n) => {
                 const p = byId[n.id];
