@@ -9,6 +9,7 @@ import type { PDFDocumentProxy } from "pdfjs-dist";
 import { ArrowRight, ChevronLeft, ChevronRight, FileText, FolderOpen, Minus, Plus, X, PictureInPicture2 } from "lucide-react";
 import { useAdvanced, useAppMaybe } from "./store";
 import type { Bundle } from "./types";
+import { pageName } from "./lib/terms";
 import { connectFolder, forgetPdf, knownGuidelines, loadSavedPdf, openPdf, PDFS_CHANGED, renderPage, savedPdfSlugs, savePdf, sha256, type FolderResult, type Rendered } from "./lib/pdf";
 
 export interface SrcTarget {
@@ -19,7 +20,7 @@ export interface SrcTarget {
   /** an extra action offered with the page (e.g. open the box in the reader) */
   action?: { label: string; run: () => void };
 }
-type PdfState = { status: "none" | "loading" | "ready" | "error"; doc?: PDFDocumentProxy; name?: string; note?: string; verified?: boolean };
+type PdfState = { status: "none" | "loading" | "ready" | "error"; doc?: PDFDocumentProxy; name?: string; note?: string; verified?: boolean; /** the file is not the edition the guideline was encoded from */ edition?: boolean };
 
 type FolderState = { status: "idle" | "working" | "done"; done?: number; total?: number; result?: FolderResult };
 
@@ -64,8 +65,8 @@ export function useSrc(t: SrcTarget | null, opts: { click?: boolean } = { click:
 export function SrcChip({ t, text }: { t: SrcTarget; text?: string }) {
   const props = useSrc(t);
   return (
-    <button type="button" className="src-chip" aria-label={`Source: ${t.label}, PDF page ${t.page + 1}. Open page`} {...props}>
-      <FileText size={12} aria-hidden />{text ?? `${t.label} · p.${t.page + 1}`}
+    <button type="button" className="src-chip" aria-label={`Open the NCCN page, PDF page ${t.page + 1}`} {...props}>
+      <FileText size={12} aria-hidden />{text ?? `NCCN page (PDF p.${t.page + 1})`}
     </button>
   );
 }
@@ -104,7 +105,8 @@ export function SourceProvider({ children, bundle: given }: { children: ReactNod
       const got = want ? await sha256(copy) : null;
       if (want && got && got !== want) mismatch = `This PDF is not the file the guideline was encoded from${bundle?.guideline?.version ? ` (version ${bundle.guideline.version})` : ""}. Page previews and box outlines may point at the wrong place.`;
       const doc = await openPdf(data);
-      setPdf({ status: "ready", doc, name, note: mismatch ?? check(doc), verified: !!want && !!got && !mismatch });
+      const note = mismatch ?? check(doc);
+      setPdf({ status: "ready", doc, name, note, verified: !!want && !!got && !mismatch, edition: !!note });
       if (save && key) { await savePdf(key, name, copy); window.dispatchEvent(new CustomEvent(PDFS_CHANGED)); }
     } catch (e) {
       setPdf({ status: "error", name, note: `Could not open ${name}: ${String((e as Error).message ?? e)}` });
@@ -212,6 +214,7 @@ export function SourceProvider({ children, bundle: given }: { children: ReactNod
         w.document.documentElement.dataset.theme = document.documentElement.dataset.theme ?? "";
         w.document.body.className = "pip-body";
         const ww = w;
+        ww.addEventListener("keydown", (e) => { if (e.key === "Escape") ww.close(); });
         ww.addEventListener("pagehide", () => { if (winRef.current === ww) { winRef.current = null; setWin(null); setView(null); } });
         winRef.current = w; setWin(w);
       }
@@ -293,7 +296,7 @@ function Reconstructed({ page, bbox, big }: { page: number; bbox?: number[]; big
   }
   const doc = Object.values(bundle.docs).find((d) => d.pages.some((p) => p.pdf === page));
   const text = doc?.pages.find((p) => p.pdf === page)?.text;
-  return <div className="recon-text">{text ? text.slice(0, big ? 6000 : 700) : "This page is not in the extracted text."}</div>;
+  return <div className="recon-text">{text ? text.slice(0, big ? 6000 : 700) : "A preview of this page is not available."}</div>;
 }
 
 export function PageImage({ t, width, big }: { t: SrcTarget; width: number; big?: boolean }) {
@@ -309,27 +312,56 @@ export function PageImage({ t, width, big }: { t: SrcTarget; width: number; big?
   );
 }
 
+/** A page label with its title first when the guideline knows it: "Low-Risk Group (PROS-3)". */
+function labelName(bundle: Bundle | null, label: string): string {
+  const title = bundle?.pages[label]?.title;
+  return title ? pageName(label, title) : label;
+}
+
+/** Shown when the PDF in use is not the edition the guideline was encoded from (default users too). */
+function EditionNote() {
+  const { pdf } = useSource();
+  if (pdf.status !== "ready" || !pdf.edition) return null;
+  return <p className="edition-note" role="status">This PDF is a different edition from the one OncoCarta was built on, so highlighted steps may be in the wrong place.</p>;
+}
+
 // ---------------------------------------------------------------- hover card
 
 function Peek({ t, rect, onEnter, onLeave, onOpen }: { t: SrcTarget; rect: DOMRect; onEnter: () => void; onLeave: () => void; onOpen: () => void }) {
-  const { pdf } = useSource();
-  const W = 340, gap = 10;
-  const right = rect.right + gap + W < innerWidth;
-  const left = right ? rect.right + gap : Math.max(8, rect.left - gap - W);
-  const top = Math.min(Math.max(8, rect.top - 20), innerHeight - 330);
+  const { pdf, bundle } = useSource();
+  // large enough to read on a desktop screen; beside the hovered item, on its left when there is room
+  // (the right-hand panel's counters stay uncovered)
+  const W = innerWidth >= 1280 ? 480 : 340, gap = 10;
+  const estH = Math.round(W * 612 / 792) + 130;
+  const fitsLeft = rect.left - gap - W >= 8, fitsRight = rect.right + gap + W <= innerWidth - 8;
+  const left = fitsLeft ? rect.left - gap - W : fitsRight ? rect.right + gap : Math.max(8, Math.min(innerWidth - W - 8, rect.left));
+  const top0 = Math.min(Math.max(8, rect.top - 20), Math.max(8, innerHeight - estH - 8));
+  // the card's real height is known once the page image and notes have laid out: keep all of it on screen
+  const ref = useRef<HTMLDivElement>(null);
+  const [top, setTop] = useState(top0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const fit = () => setTop(Math.max(8, Math.min(top0, innerHeight - 8 - el.offsetHeight)));
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [top0]);
   // Without the PDF, a box is best shown in its reconstructed page; footnotes and prose as text.
   const showText = pdf.status !== "ready" && !!t.excerpt && !t.bbox;
   return (
-    <div className="peek" role="dialog" aria-label={`Source preview: ${t.label}`} style={{ left, top, width: W }} onMouseEnter={onEnter} onMouseLeave={onLeave}>
-      <button type="button" className="peek-page" onClick={onOpen} aria-label="Open this page">
+    <div ref={ref} className="peek" role="dialog" aria-label={`Source preview: ${t.label}`} style={{ left, top, width: W }} onMouseEnter={onEnter} onMouseLeave={onLeave}>
+      <button type="button" className="peek-page" onClick={onOpen} aria-label="Open NCCN page">
         {showText ? <div className="recon-text">{t.excerpt}</div> : <PageImage t={t} width={W * 2} />}
       </button>
       <div className="peek-cap">
-        <span><b>{t.label}</b> · PDF page {t.page + 1}</span>
-        <button type="button" className="linkish" onClick={onOpen}>Open page</button>
+        <span><b>{labelName(bundle, t.label)}</b> · NCCN page, PDF p.{t.page + 1}</span>
+        <button type="button" className="linkish" onClick={onOpen}>Open NCCN page</button>
       </div>
       {t.action && <div className="peek-cap"><span /><button type="button" className="linkish" onClick={t.action.run}>{t.action.label} <ArrowRight size={12} aria-hidden /></button></div>}
       {pdf.status !== "ready" && <PeekConnect showText={showText} />}
+      <EditionNote />
     </div>
   );
 }
@@ -339,7 +371,7 @@ function PeekConnect({ showText }: { showText: boolean }) {
   const advanced = useAdvanced();
   return (
     <p className="peek-note">
-      {pdf.status === "loading" ? "Opening the NCCN page…" : <>{showText ? "Text from the guideline" : "Rebuilt from the guideline text"} — the NCCN page isn't available here. <button type="button" className="linkish" onClick={pick}>Connect the NCCN PDF</button>{advanced && <> or <button type="button" className="linkish" onClick={pickFolder}>a folder of NCCN PDFs</button></>} to see the original.</>}
+      {pdf.status === "loading" ? "Opening the NCCN page…" : <>{showText ? "Text from the guideline" : "Rebuilt from the guideline text"} — the NCCN page isn't available here. <button type="button" className="linkish" onClick={pick}>Choose your NCCN PDF file</button>{advanced && <> or <button type="button" className="linkish" onClick={pickFolder}>a folder of NCCN PDFs</button></>} to see the original; it stays in this browser.</>}
     </p>
   );
 }
@@ -372,7 +404,15 @@ function Viewer({ t, win = null, onClose, onNav }: { t: SrcTarget; win?: Window 
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
   const [popped, setPip] = useState<Window | null>(null);
   const pip = win ?? popped;
-  useEffect(() => { if (pip) pip.document.title = `${t.label} · NCCN PDF page ${t.page + 1}`; }, [pip, t.label, t.page]);
+  const name = labelName(bundle, t.label);
+  useEffect(() => { if (pip) pip.document.title = `${name} · NCCN PDF page ${t.page + 1}`; }, [pip, name, t.page]);
+  // Escape closes the page (also when focus is elsewhere in the app); the page behind does not also step back
+  useEffect(() => {
+    if (win) return;
+    const f = (e: KeyboardEvent) => { if (e.key === "Escape") { e.stopPropagation(); onClose(); } };
+    window.addEventListener("keydown", f, true);
+    return () => window.removeEventListener("keydown", f, true);
+  }, [win, onClose]);
   const box = useRef<HTMLDivElement>(null);
   const body = useRef<HTMLDivElement>(null);
   const [bw, setBw] = useState(600);
@@ -415,7 +455,7 @@ function Viewer({ t, win = null, onClose, onNav }: { t: SrcTarget; win?: Window 
   const content = (
     <>
       <div className="viewer-bar" onPointerDown={pip ? undefined : drag}>
-        <span className="viewer-title"><b>{t.label}</b> · PDF page {t.page + 1}{total ? ` of ${total}` : ""}</span>
+        <span className="viewer-title"><b>{name}</b> · NCCN page, PDF p.{t.page + 1}{total ? ` of ${total}` : ""}</span>
         <span className="viewer-tools">
           <button type="button" aria-label="Previous page" disabled={t.page <= 0} onClick={() => onNav(t.page - 1)}><ChevronLeft size={16} /></button>
           <button type="button" aria-label="Next page" disabled={!!total && t.page >= total - 1} onClick={() => onNav(t.page + 1)}><ChevronRight size={16} /></button>
@@ -428,8 +468,9 @@ function Viewer({ t, win = null, onClose, onNav }: { t: SrcTarget; win?: Window 
         </span>
       </div>
       <div className="viewer-body" ref={body}>
+        <EditionNote />
         {pdf.status !== "ready" && (
-          <p className="viewer-msg">{pdf.status === "loading" ? "Opening the NCCN page…" : <>Rebuilt from the guideline text — the NCCN page isn't available here. <button type="button" className="linkish" onClick={pick}>Connect the NCCN PDF</button>{advanced && <> or <button type="button" className="linkish" onClick={pickFolder}>a folder of NCCN PDFs</button></>} to see the original.</>}</p>
+          <p className="viewer-msg">{pdf.status === "loading" ? "Opening the NCCN page…" : <>The NCCN page isn't available here, so this is a rebuilt copy. <button type="button" className="linkish" onClick={pick}>Choose your NCCN PDF file</button>{advanced && <> or <button type="button" className="linkish" onClick={pickFolder}>a folder of NCCN PDFs</button></>} to see the original; it stays in this browser.</>}</p>
         )}
         <div className="viewer-page" style={{ width: `${zoom * 100}%` }}><PageImage t={t} width={width} big /></div>
       </div>

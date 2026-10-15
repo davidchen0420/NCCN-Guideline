@@ -9,6 +9,7 @@ import type { Bundle, Example, Library, LibraryEntry } from "./types";
 import { adaptGuideline, isGuidelineFile } from "./lib/adapt";
 import { Provider, useAdvanced, type LibraryNav } from "./store";
 import { readPref, writePref } from "./lib/prefs";
+import { T } from "./lib/terms";
 import { SourceProvider } from "./source";
 import { App } from "./App";
 import { Atlas } from "./atlas/Atlas";
@@ -66,7 +67,7 @@ function loadPack(lib: Library, slug: string): Promise<unknown> {
   return new Promise((resolve, reject) => {
     const have = window.__OC_PACKS?.[slug];
     const unpack = (b64: string) => {
-      if (typeof DecompressionStream === "undefined") { reject(new Error("This browser cannot unpack the guideline (it needs Safari 16.4, Chrome 80, Firefox 113 or later).")); return; }
+      if (typeof DecompressionStream === "undefined") { reject(new Error("This browser is too old to open the guideline. Use a current Safari, Chrome or Firefox.")); return; }
       const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
       new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"))).text()
         .then((t) => resolve(JSON.parse(t)), reject);
@@ -84,8 +85,9 @@ function loadPack(lib: Library, slug: string): Promise<unknown> {
 async function loadGuideline(lib: Library, e: LibraryEntry): Promise<Bundle> {
   let j: unknown = null;
   const errs: string[] = [];
+  let packed = false;
   if (lib.packs) {
-    try { j = await loadPack(lib, e.slug); } catch (err) { errs.push(String((err as Error).message ?? err)); }
+    try { j = await loadPack(lib, e.slug); packed = !!j; } catch (err) { errs.push(String((err as Error).message ?? err)); }
   }
   if (!j) {
     const url = new URL(`${lib.base}${e.path}`, location.href).href;
@@ -106,10 +108,11 @@ async function loadGuideline(lib: Library, e: LibraryEntry): Promise<Bundle> {
       ? `the guideline files were not found next to this page (${errs.join("; ")}). Keep the page in its folder: built/oncocarta.html needs built/guidelines/ beside it.`
       : errs.join("; "));
   }
-  if (!isGuidelineFile(j)) throw new Error(`${e.path} is not a guideline.json file`);
+  if (!isGuidelineFile(j)) throw new Error(`${e.path} is not an OncoCarta guideline file`);
   const b = adaptGuideline(j);
   b.pdf_candidates = pdfCandidates(lib.base, e.slug, lib.pdfs);   // a served copy of the source PDF, if any
-  if (!b.examples?.length && location.protocol.startsWith("http")) {
+  // a packed guideline carries its example patients (or has none): no request, no 404 in the console
+  if (!packed && !b.examples?.length && location.protocol.startsWith("http")) {
     try {   // hand-encoded example patients, when the guideline has them
       const x = await fetch(`${lib.base}${e.slug}/vignettes/examples.json`);
       if (x.ok) b.examples = (await x.json()) as Example[];
@@ -244,7 +247,7 @@ export function LibraryHome({ lib, onOpen, onAtlas }: { lib: Library; onOpen: (s
         </section>
       ))}
       {!list.length && <p className="note lib-none">No guideline matches “{q}”.</p>}
-      <p className="lib-fine">OncoCarta is an independent research prototype built on encoded NCCN Guidelines®. It is not made, reviewed or endorsed by NCCN. The guidelines were encoded by software; branch conditions are machine-drafted and not clinician-reviewed. Always check the source page.</p>
+      <p className="lib-fine">OncoCarta is an independent research prototype built on NCCN Guidelines®. It is not made, reviewed or endorsed by NCCN. {T.prototype}</p>
     </div>
   );
 }

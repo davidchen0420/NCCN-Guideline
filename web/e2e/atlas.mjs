@@ -114,11 +114,19 @@ await step("an example patient's route is shown and opens in the reader", async 
   await page.locator(".pchip").first().click();
   await page.locator(".route-card").waitFor();
   const card = await page.locator(".route-card").innerText();
-  assert.match(card, /(Best match|Also possible|Less likely|Unlikely)[\s\S]*(Matches your answers|Needs \d+ more answers?)[\s\S]*Ends at:/);
+  assert.match(card, /(Best match|Also possible|Less likely|Unlikely)[\s\S]*(Matches your answers|Needs \d+ more answers?)[\s\S]*Recommendation:/);
+  assert.match(card, /Verify on the NCCN page/);
+  assert.match(card, /Research prototype, not an official NCCN tool/, "the route card carries the disclaimer");
   assert.doesNotMatch(card, /criteria met|of the weight/, "route statistics are for Advanced tools");
   await setAdvanced(page, true);
   assert.match(await page.locator(".route-card").innerText(), /criteria met/);
   await setAdvanced(page, false);
+  // the verify link opens the NCCN page in its own window; Escape closes that window again
+  const [nccn] = await Promise.all([page.context().waitForEvent("page"), page.getByRole("button", { name: "Verify on the NCCN page" }).click()]);
+  await nccn.locator(".viewer-title").waitFor();
+  await nccn.keyboard.press("Escape");
+  await nccn.waitForEvent("close", { timeout: 5000 }).catch(() => {});
+  assert.ok(nccn.isClosed(), "Escape closes the NCCN page window");
   await page.getByRole("button", { name: /Open in the reader with this patient/ }).click();
   await page.locator("[data-testid=card]").first().waitFor();
   assert.match(await hash(), /^#prostate\/flow\/PROS-1/);
@@ -199,12 +207,12 @@ await step("the keyboard tree walks sites, guidelines and pages", async () => {
 });
 await step("clicking a guideline on the ring opens its map", async () => {
   await page.goto(base + "#atlas");
-  await page.waitForTimeout(1500);
+  await page.waitForTimeout(3000);
   // find the Survivorship marker by hovering along its spoke until the tooltip names it
   const box = await page.locator(".atlas-canvas").boundingBox();
   let hit = null;
   for (let a = -0.6; a <= -0.05 && !hit; a += 0.01) {
-    for (const r of [0.33, 0.34, 0.35, 0.36, 0.37]) {
+    for (const r of [0.30, 0.31, 0.32, 0.33, 0.34, 0.35, 0.36, 0.37]) {
       const x = box.width / 2 + Math.sin(a) * r * Math.min(box.width, box.height - 60), y = 30 + box.height / 2 - Math.cos(a) * r * Math.min(box.width, box.height - 60);
       await page.mouse.move(x, y);
       const t = await page.locator(".tip .tip-title").textContent({ timeout: 50 }).catch(() => null);
@@ -232,7 +240,21 @@ await step("small screens: search docked, details as a bottom sheet", async () =
   assert.ok(await m.locator(".hub.docked").count());
   const r = await m.locator(".atlas-panel").boundingBox();
   assert.ok(r.y > 844 * 0.45, "panel sits at the bottom");
+  assert.equal((await m.locator(".crumbs").innerText()).trim(), "Prostate Cancer", "phone breadcrumb: the guideline name only");
   await m.close();
+});
+await step("Read the guideline and Read this page ask the reader to skip its welcome", async () => {
+  const p = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await p.addInitScript(() => { window.__intents = []; const set = Storage.prototype.setItem; Storage.prototype.setItem = function (k, v) { if (k === "oc-intent") window.__intents.push(v); return set.call(this, k, v); }; });
+  await p.goto(base + "#atlas/prostate");
+  await p.getByRole("button", { name: /Read the guideline/ }).click();
+  await p.locator("[data-testid=card]").first().waitFor({ timeout: 15000 });
+  assert.ok((await p.evaluate(() => window.__intents)).includes("read"), "reading intent set");
+  await p.goto(base + "#atlas/prostate/PROS-2");
+  await p.getByRole("button", { name: "Read this page" }).click();
+  await p.locator("[data-testid=card]").first().waitFor({ timeout: 15000 });
+  assert.equal((await p.evaluate(() => window.__intents)).filter((x) => x === "read").length >= 2, true);
+  await p.close();
 });
 await step("reduced motion: no intro, the map is drawn at once", async () => {
   const p = await browser.newPage({ viewport: { width: 1200, height: 800 }, reducedMotion: "reduce" });
@@ -254,7 +276,7 @@ await step("source PDF: found next to the data, shown on hover, opened on click"
   let served = 0;
   await p.route("**/data/prostate/pdf/prostate.pdf", (r) => { served++; r.fulfill({ status: 200, contentType: "application/pdf", body: pdf }); });
   await p.goto(base + "#atlas/prostate/PROS-3");
-  await p.getByRole("button", { name: "Original page", exact: true }).waitFor({ timeout: 20000 });   // the PDF loaded by itself
+  await p.getByRole("button", { name: "NCCN page", exact: true }).waitFor({ timeout: 20000 });   // the PDF loaded by itself
   assert.ok(served >= 1, "the served copy was fetched");
   assert.equal(await p.getByTestId("pdf-btn").count(), 0, "PDFs ship with the app: nothing to connect, nothing shown");
   // the page card is the diagram; "Original page" draws the PDF page instead (its blue box outlines show)
@@ -265,7 +287,7 @@ await step("source PDF: found next to the data, shown on hover, opened on click"
   });
   assert.ok((await bluePx()) < 200, "the card is the diagram, not the PDF page");
   assert.equal(await p.getByRole("button", { name: "Diagram", exact: true }).getAttribute("aria-pressed"), "true");
-  await p.getByRole("button", { name: "Original page", exact: true }).click();
+  await p.getByRole("button", { name: "NCCN page", exact: true }).click();
   await p.waitForTimeout(1500);
   const blue = await p.evaluate(() => {
     const c = document.querySelector(".atlas-canvas"), d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data;
@@ -277,13 +299,17 @@ await step("source PDF: found next to the data, shown on hover, opened on click"
   await row.hover();
   await p.locator(".peek .page-img img").waitFor();
   const hl = await p.locator(".peek .hl").boundingBox(), img = await p.locator(".peek .page-img img").boundingBox();
+  const peekBox = await p.locator(".peek").boundingBox(), rowBox = await row.boundingBox();
+  assert.ok(peekBox.width >= 440, `the preview is large enough to read on desktop (${Math.round(peekBox.width)}px)`);
+  assert.ok(peekBox.x + peekBox.width <= rowBox.x, "the preview sits to the left of the panel row, not over the panel");
+  assert.match(await p.locator(".peek .edition-note").innerText(), /different edition/, "the synthetic PDF is another edition: default users are warned");
   assert.ok(hl && img && hl.x >= img.x && hl.y >= img.y && hl.x + hl.width <= img.x + img.width + 1, "box outlined inside the page");
   assert.equal(await p.locator(".peek .recon").count(), 0, "not the reconstruction");
   await p.getByRole("button", { name: "Diagram", exact: true }).click();
   // click: the original page opens in its own window, one click from the reader
   const [win] = await Promise.all([ctx.waitForEvent("page"), row.click()]);
   await win.locator(".viewer .page-img img").waitFor();
-  assert.match(await win.locator(".viewer-title").innerText(), /PROS-3 · PDF page \d+ of 222/);
+  assert.match(await win.locator(".viewer-title").innerText(), /PROS-3[\s\S]*PDF p\.\d+ of 222/);
   assert.match(await win.title(), /PROS-3/);
   assert.equal(await p.locator(".viewer").count(), 0, "not over the diagram");
   await win.locator(".viewer-act").click();
@@ -314,7 +340,7 @@ await step("hosted copy: the PDF published next to the page; clicking a box show
   // click: the page in its own window, reused for the next box
   const [win] = await Promise.all([ctx.waitForEvent("page"), card.click({ position: { x: 20, y: 40 } })]);
   await win.locator(".viewer .page-img img").waitFor();
-  assert.match(await win.locator(".viewer-title").innerText(), /PROS-2 · PDF page \d+ of 222/);
+  assert.match(await win.locator(".viewer-title").innerText(), /PROS-2[\s\S]*PDF p\.\d+ of 222/);
   await p.locator(".canvas [data-testid=card]:visible").filter({ hasText: "High" }).first().click({ position: { x: 20, y: 30 } });
   await p.waitForTimeout(500);
   assert.equal(ctx.pages().length, 2, "one window for the pages");
