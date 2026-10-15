@@ -44,7 +44,7 @@ for (const scheme of ["light", "dark"]) {
     await p.waitForTimeout(1500);
     await shot("3-reader-first-visit");
     // 4 patient questions: enter a patient
-    const enter = p.getByRole("button", { name: /Enter a patient/ });
+    const enter = p.getByRole("button", { name: /Find a recommendation for a patient/ });
     if (await enter.count()) await enter.first().click();
     await p.waitForTimeout(800);
     await shot("4-patient");

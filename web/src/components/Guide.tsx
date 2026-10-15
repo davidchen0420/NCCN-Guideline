@@ -47,7 +47,7 @@ export function GuideBar() {
   const n = ranking.paths.length;
   const step = filled === 0 ? 1 : s.pathSel === null && s.rightTab !== "paths" ? 1 : s.pathSel === null ? 2 : 3;
   const steps: [number, string, string, () => void][] = [
-    [1, "Patient", filled ? `${filled} of ${total} answered` : "start here", () => set({ rightTab: "patient", sheet: true })],
+    [1, "Patient", filled ? `${filled} answered` : "start here", () => set({ rightTab: "patient", sheet: true })],
     [2, "Recommendation", n ? `${n} possible` : "none yet", () => set({ rightTab: "paths", sheet: true })],
     [3, "Check the NCCN page", "hover a step", () => set({ rightTab: "paths", sheet: true })],
   ];
@@ -72,7 +72,7 @@ export function GuideBar() {
         : <span>No {T.recommendation} fits these answers yet.</span>}
     </>);
   } else if (s.rightTab === "paths" && s.pathSel === null) {
-    next = <>The best match is shown first. <b>{isPhone ? "Tap a step" : "Hover a step"}</b> on the diagram to see its NCCN page.</>;
+    next = <>Your best match is shown below. Open another possible recommendation to compare, or <b>{isPhone ? "tap a step" : "hover a step"}</b> to see its NCCN page.</>;
   } else {
     next = <><b>{isPhone ? "Tap a step" : "Hover a step"}</b> to see its NCCN page; {isPhone ? "tap" : "click"} to open it in its own window.</>;
   }
@@ -113,12 +113,12 @@ export function CanvasHint() {
     <div className="canvas-hint" role="note">
       {isPhone ? (
         <>
-          <span><b>Tap</b> a step to follow it</span>
+          <span><b>Tap</b> a step to open its NCCN page and highlight where it leads</span>
           <span><b>Drag</b> to move, <b>pinch</b> to zoom</span>
         </>
       ) : (
         <>
-          <span><b>Click</b> a step to follow it</span>
+          <span><b>Click</b> a step to open its NCCN page and highlight where it leads</span>
           <span><b>Hover</b> to preview its NCCN page</span>
           <span><b>Drag</b> to move, <b>scroll</b> to zoom</span>
         </>

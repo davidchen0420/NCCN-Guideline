@@ -59,7 +59,7 @@ export function Dock() {
           {s.dock === "P" && <><h3>Categories of preference</h3><p className="note">Summaries in our own words; see the guideline for the official wording.</p>
             {PREF.map(([k, c, t]) => <div className="def" key={k}><span className={`tag tag-${c}`}>{k}</span><p>{t}</p></div>)}</>}
           {s.dock === "fn" && <>
-            <h3>Footnotes{page ? <> <code className="quiet">{page}</code></> : ""}</h3>
+            <h3>Footnotes{page ? <>: {g.bundle.pages[page]?.title || page} <code className="quiet">{g.bundle.pages[page]?.title ? page : ""}</code></> : ""}</h3>
             {!sorted.length && <p className="note">{page ? "This page has no footnotes." : "Open an algorithm page to see its footnotes."}</p>}
             {sorted.map(([l, v]) => {
               const on = s.fn === l;
@@ -69,12 +69,12 @@ export function Dock() {
                   <div>
                     {on && v.nodes.length > 0 && (
                       <div className="inst">
-                        <button aria-label="Previous instance" onClick={(e) => { e.stopPropagation(); step(-1); }}><ChevronLeft size={14} /></button>
-                        <span>{s.fnIdx + 1} of {v.nodes.length} instance{v.nodes.length > 1 ? "s" : ""}</span>
-                        <button aria-label="Next instance" onClick={(e) => { e.stopPropagation(); step(1); }}><ChevronRight size={14} /></button>
+                        <button aria-label="Previous place" onClick={(e) => { e.stopPropagation(); step(-1); }}><ChevronLeft size={14} /></button>
+                        <span>{s.fnIdx + 1} of {v.nodes.length} {v.nodes.length > 1 ? "places" : "place"} on this page</span>
+                        <button aria-label="Next place" onClick={(e) => { e.stopPropagation(); step(1); }}><ChevronRight size={14} /></button>
                       </div>
                     )}
-                    <p><Linked text={v.text} />{v.pdf !== undefined && <> <SrcChip t={{ page: v.pdf, label: `Footnote ${l}`, excerpt: v.text }} text={`p.${v.pdf + 1}`} /></>}</p>
+                    <p><Linked text={v.text} />{v.pdf !== undefined && <> <SrcChip t={{ page: v.pdf, label: `Footnote ${l}`, excerpt: v.text }} text={`NCCN page (PDF p.${v.pdf + 1})`} /></>}</p>
                   </div>
                 </div>
               );

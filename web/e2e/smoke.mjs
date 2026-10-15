@@ -29,8 +29,8 @@ await page.addInitScript(() => { try { localStorage.setItem("oc-form-mode", "for
 await page.goto(url);
 await step("first visit shows the start screen; browsing closes it and opens contents", async () => {
   await page.getByRole("dialog", { name: /Find where a patient sits/ }).waitFor();
-  assert.ok(await page.getByRole("button", { name: /Enter a patient/ }).isVisible());
-  await page.getByRole("button", { name: /Browse the guideline/ }).click();
+  assert.ok(await page.getByRole("button", { name: /Find a recommendation for a patient/ }).isVisible());
+  await page.getByRole("button", { name: /Read the guideline/ }).click();
   assert.equal(await page.getByRole("dialog").count(), 0);
   await page.getByRole("button", { name: "Help" }).click();
   await page.getByRole("button", { name: "Got it" }).click();
@@ -60,7 +60,7 @@ await step("selecting an answer highlights its path and hides the rest", async (
 });
 await step("footnote badge opens the dock and steps instances", async () => {
   await page.locator('[data-id="SAMPLE-1:n3"] .fb').first().click();
-  assert.match(await page.locator(".dock-body").innerText(), /1 of 1 instance/);
+  assert.match(await page.locator(".dock-body").innerText(), /1 of 1 place on this page/);
   await page.getByRole("tab", { name: "Evidence" }).click();
   assert.match(await page.locator(".dock-body").innerText(), /Category 1/);
   await page.getByRole("tab", { name: "Preference" }).click();
@@ -144,7 +144,7 @@ await page.close();
 const plain = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
 watch(plain);
 await plain.goto(url);
-await plain.getByRole("button", { name: /Browse the guideline/ }).click();
+await plain.getByRole("button", { name: /Read the guideline/ }).click();
 await step("default mode: help is a 5-step list without the technical section", async () => {
   await plain.getByRole("button", { name: "Help" }).click();
   const help = plain.getByRole("dialog", { name: "How to use OncoCarta" });
@@ -164,10 +164,14 @@ await step("default mode: reviewer controls are hidden", async () => {
   assert.equal(await plain.getByTestId("rail-hist").count(), 0, "history is an Advanced view");
   assert.equal(await plain.getByTestId("clear").count(), 0, "nothing to clear yet");
 });
-await step("default mode: choosing a step shows the Step tab and a Clear selection chip", async () => {
+await step("default mode: choosing a step shows the Step tab and a Show whole diagram chip", async () => {
+  const plane = () => plain.locator(".react-transform-component").first().evaluate((e) => getComputedStyle(e).transform);
+  const before = await plane();
   await plain.locator('[data-id="SAMPLE-1:n3"]').click();
   await plain.locator("#tab-details").waitFor();
-  assert.match(await plain.getByTestId("clear").innerText(), /Clear selection/);
+  assert.equal(await plain.locator("#tab-patient").getAttribute("aria-selected"), "true", "the panel stays on the tab the reader was on");
+  assert.equal(await plane(), before, "the diagram keeps its pan and zoom");
+  assert.match(await plain.getByTestId("clear").innerText(), /Show whole diagram/);
   await plain.getByTestId("clear").click();
   assert.equal(await plain.getByTestId("clear").count(), 0);
 });
@@ -249,7 +253,7 @@ await wide.close();
 const phone = await (await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 })).newPage();
 watch(phone);
 await phone.goto(url);
-await phone.getByRole("button", { name: /Browse the guideline/ }).tap();
+await phone.getByRole("button", { name: /Read the guideline/ }).tap();
 await phone.getByRole("button", { name: "Close panel" }).first().tap();
 await step("phone: no sideways scroll, drawer closed, readable card text", async () => {
   await cards(phone).first().waitFor();

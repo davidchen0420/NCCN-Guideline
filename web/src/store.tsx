@@ -139,7 +139,7 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
     const fromHash = hashToLoc(location.hash, g, prefix);
     const saved = readPref("nav-help");
     const patient = slug ? readPatient(slug) : null;   // carried over from the atlas, or entered earlier this session
-    // "Enter a patient" in the atlas: open on the patient form, no welcome screen
+    // "Enter a patient" / "Read the guideline" in the atlas: no welcome screen ("patient" also opens the form)
     let intent: string | null = null;
     try { intent = sessionStorage.getItem("oc-intent"); sessionStorage.removeItem("oc-intent"); } catch { /* blocked */ }
     const loc = fromHash ?? ({ kind: "flow", page: g.flowPages.find((p) => (bundle.roots[p] ?? []).length) ?? g.flowPages[0] } as Loc);
@@ -147,7 +147,7 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
       loc, hist: [loc], hpos: 0, answers: [], showNon: false, conf: false,
       left: window.innerWidth > 1180 ? "toc" : null, sheet: intent === "patient",
       query: "", kinds: [], tags: [], searchNon: false,
-      dock: null, fn: null, fnIdx: 0, walk: null, facts: patient?.facts ?? {}, help: false, welcome: !saved && !(patient && Object.keys(patient.facts).length) && intent !== "patient",
+      dock: null, fn: null, fnIdx: 0, walk: null, facts: patient?.facts ?? {}, help: false, welcome: !saved && !(patient && Object.keys(patient.facts).length) && intent !== "patient" && intent !== "read",
       rightTab: "patient", age: patient?.age ?? null, start: patient?.start && g.bundle.pages[patient.start] ? patient.start : "auto", pathSel: null,
       stale: patient?.stale ?? [], advanced: readFlag(ADVANCED_KEY),
     };
