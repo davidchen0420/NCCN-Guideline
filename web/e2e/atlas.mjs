@@ -212,15 +212,16 @@ await step("clicking a guideline on the ring opens its map", async () => {
   const box = await page.locator(".atlas-canvas").boundingBox();
   let hit = null;
   for (let a = -0.6; a <= -0.05 && !hit; a += 0.01) {
-    for (const r of [0.30, 0.31, 0.32, 0.33, 0.34, 0.35, 0.36, 0.37]) {
+    for (const r of [0.30, 0.31, 0.32, 0.33, 0.34, 0.35]) {
       const x = box.width / 2 + Math.sin(a) * r * Math.min(box.width, box.height - 60), y = 30 + box.height / 2 - Math.cos(a) * r * Math.min(box.width, box.height - 60);
       await page.mouse.move(x, y);
-      const t = await page.locator(".tip .tip-title").textContent({ timeout: 50 }).catch(() => null);
+      const t = await page.locator(".tip .tip-title").textContent({ timeout: 120 }).catch(() => null);
       if (t === "Survivorship") { hit = [x, y]; break; }
     }
   }
   assert.ok(hit, "found Survivorship on the ring");
   await page.mouse.click(...hit);
+  await page.waitForFunction((h) => location.hash === h, "#atlas/survivorship", { timeout: 4000 }).catch(() => page.mouse.click(...hit));   // a busy machine can swallow the first click
   await waitHash("#atlas/survivorship");
   await page.waitForTimeout(1400);
   assert.ok(await ink(200, 150, 600, 600) > 0.02, "pages bloom out");
@@ -254,6 +255,53 @@ await step("Read the guideline and Read this page ask the reader to skip its wel
   await p.getByRole("button", { name: "Read this page" }).click();
   await p.locator("[data-testid=card]").first().waitFor({ timeout: 15000 });
   assert.equal((await p.evaluate(() => window.__intents)).filter((x) => x === "read").length >= 2, true);
+  await p.close();
+});
+await step("example patients: two shown, the rest behind More examples", async () => {
+  const p = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await p.goto(base + "#atlas/prostate");
+  await p.locator(".pchip").first().waitFor();
+  assert.equal(await p.locator(".pchips[aria-label='Example patients'] .pchip:not(.more-ex)").count(), 2);
+  assert.match(await p.locator(".more-ex").innerText(), /More examples \(\d+\)/);
+  await p.locator(".more-ex").click();
+  assert.ok(await p.locator(".pchips[aria-label='Example patients'] .pchip:not(.more-ex)").count() >= 3);
+  assert.equal(await p.locator(".more-ex").count(), 0);
+  await p.close();
+});
+await step("phone: the first visit opens the list, the map is one tap away", async () => {
+  const m = await browser.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  m.on("pageerror", (e) => errors.push("phone home: " + e.message));
+  await m.goto(base);
+  await m.locator(".lib-row").first().waitFor();
+  assert.equal(await m.locator(".atlas-canvas").count(), 0, "no radial map on the phone's first screen");
+  await m.getByTestId("to-atlas").click();
+  await m.locator(".atlas-canvas").waitFor();
+  await m.close();
+});
+await step("a preview needs a real pointer move and never opens right after a click", async () => {
+  const p = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await p.goto(base);
+  await p.waitForTimeout(500);
+  await p.mouse.move(1250, 620);   // rests where the step list is about to appear
+  await p.evaluate(() => { location.hash = "#atlas/prostate/PROS-2"; });
+  await p.locator(".box-list .bl-main").first().waitFor();
+  await p.waitForTimeout(1800);
+  assert.equal(await p.locator(".peek").count(), 0, "no preview for a pointer that did not move");
+  await p.mouse.move(1253, 624);
+  await p.locator(".peek").waitFor({ timeout: 5000 });
+  await p.close();
+});
+await step("Open NCCN page says it opens a new window; a blocked pop-up shows the page here, with a note", async () => {
+  const p = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await p.addInitScript(() => { window.open = () => null; });
+  await p.goto(base + "#atlas/prostate/PROS-2");
+  const btn = p.getByTestId("open-pdf-page");
+  await btn.waitFor();
+  assert.equal(await btn.getAttribute("title"), "Opens in a new window");
+  await p.waitForFunction(() => !document.querySelector("[data-testid=open-pdf-page]")?.disabled);
+  await btn.click();
+  await p.locator(".viewer").waitFor({ timeout: 10000 });
+  assert.match(await p.locator(".viewer").innerText(), /Your browser blocked the new window; showing the page here\./);
   await p.close();
 });
 await step("reduced motion: no intro, the map is drawn at once", async () => {
