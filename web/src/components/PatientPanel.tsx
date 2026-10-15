@@ -3,7 +3,7 @@ import { useApp, useAdvanced } from "../store";
 import type { Facts, Schema, VarSpec } from "../types";
 import { derive } from "../lib/predicates";
 import { GROUPS, factValue, filledCount, formatNumber, groupOf, label, meta, numberText, parseNumber, unitLabel, valueLabel } from "../lib/factMeta";
-import { contradictions, decidingFacts, plausibility, previewAnswer, previewValues, type Decider, type Preview } from "../lib/formAssist";
+import { contradictions, decidingFacts, plausibility, previewAnswer, previewValues, remainingQuestions, type Decider, type Preview } from "../lib/formAssist";
 import { applyFound, extractFacts, type Found } from "../lib/extract";
 import type { Graph } from "../lib/graph";
 import type { Ranking } from "../lib/pathways";
@@ -219,7 +219,7 @@ function LifeExpectancyHelper({ age, onApply }: { age: number | null; onApply: (
 
 /* ---------------- previews, computed a few at a time so typing stays smooth ---------------- */
 
-function usePreviews(g: Graph, facts: Facts, deciders: Decider[], ranking: Ranking): Map<string, Preview[]> {
+function usePreviews(g: Graph, facts: Facts, deciders: Decider[], ranking: Ranking, start: string): Map<string, Preview[]> {
   const [out, setOut] = useState<Map<string, Preview[]>>(new Map());
   const cache = useRef(new Map<string, Preview>());
   useEffect(() => {
@@ -234,9 +234,9 @@ function usePreviews(g: Graph, facts: Facts, deciders: Decider[], ranking: Ranki
       const t0 = performance.now();
       while (i < jobs.length && performance.now() - t0 < 12) {
         const { fact, v } = jobs[i++];
-        const key = `${fkey}|${fact}|${JSON.stringify(v)}`;
+        const key = `${start}|${fkey}|${fact}|${JSON.stringify(v)}`;
         let p = cache.current.get(key);
-        if (!p) { p = previewAnswer(g, facts, fact, v, ranking); cache.current.set(key, p); }
+        if (!p) { p = previewAnswer(g, facts, fact, v, ranking, start); cache.current.set(key, p); }
         result.set(fact, [...(result.get(fact) ?? []), p]);
       }
       flush();
@@ -245,7 +245,7 @@ function usePreviews(g: Graph, facts: Facts, deciders: Decider[], ranking: Ranki
     if (cache.current.size > 2000) cache.current.clear();
     const t = window.setTimeout(step, 30);
     return () => { off = true; window.clearTimeout(t); };
-  }, [g, facts, deciders, ranking]);
+  }, [g, facts, deciders, ranking, start]);
   return out;
 }
 
@@ -331,7 +331,9 @@ export function PatientPanel() {
     }
     if (changed) setFacts(f);
   }, [sectionVar, secValue, deciders, s.facts, vars, setFacts]);
-  const previews = usePreviews(g, s.facts, deciders, ranking);
+  const previews = usePreviews(g, s.facts, deciders, ranking, s.start);
+  // an honest count for the interview: the questions still open on the routes that matter
+  const remaining = useMemo(() => remainingQuestions(g, ranking, s.facts).filter((d) => d.fact !== sectionVar).length, [g, ranking, s.facts, sectionVar]);
   const conflicts = useMemo(() => contradictions(s.facts, schema), [s.facts, schema]);
   const deciderSet = useMemo(() => new Set(deciders.map((d) => d.fact)), [deciders]);
   const onPage = useCallback((page: string) => go({ kind: "flow", page }), [go]);
@@ -426,7 +428,7 @@ export function PatientPanel() {
               : <button type="button" onClick={() => setModeKeep("interview")} data-testid="mode-interview">One question at a time</button>}
           </div>
           {mode === "interview" ? (
-            <Interview deciders={deciders} previews={previews} subtype={typeof secValue === "string" ? secValue : undefined} answer={set1} onPage={onPage} routes={ranking.paths.length} toPaths={() => set({ rightTab: "paths" })} />
+            <Interview deciders={deciders} remaining={remaining} previews={previews} subtype={typeof secValue === "string" ? secValue : undefined} answer={set1} onPage={onPage} routes={ranking.paths.length} toPaths={() => set({ rightTab: "paths" })} />
           ) : (<>
             <p className="note" id="dec-note">{anyFacts
               ? "Answering any of these can change the recommendation. Under each choice you can see where it leads."
@@ -736,8 +738,8 @@ function PasteRecord({ schema }: { schema: Schema }) {
 
 /* ---------------- one question at a time ---------------- */
 
-function Interview({ deciders, previews, subtype, answer, onPage, routes, toPaths }: {
-  deciders: Decider[]; previews: Map<string, Preview[]>; subtype?: string; answer: (f: string, v: unknown) => void;
+function Interview({ deciders, remaining, previews, subtype, answer, onPage, routes, toPaths }: {
+  deciders: Decider[]; remaining: number; previews: Map<string, Preview[]>; subtype?: string; answer: (f: string, v: unknown) => void;
   onPage: (p: string) => void; routes: number; toPaths: () => void;
 }) {
   const { bundle } = useApp();
@@ -765,7 +767,7 @@ function Interview({ deciders, previews, subtype, answer, onPage, routes, toPath
   const go = (v: unknown) => { setAsked([...asked, cur]); answer(cur, v); };
   return (
     <div className="interview" aria-live="polite">
-      <p className="iv-n">Question {asked.length + 1}{queue.length > 1 ? " · a few more may follow" : ""}</p>
+      <p className="iv-n">Question {asked.length + 1}{remaining > 1 ? ` · about ${remaining - 1} more` : ""}</p>
       <p className="iv-q" id="iv-q">{m.label}{spec.time === "at_diagnosis" ? " (at diagnosis)" : spec.time === "history" ? " (history)" : ""}</p>
       {d?.node && <Decides why={d} onPage={onPage} />}
       {m.hint && <p className="hint">{m.hint}</p>}

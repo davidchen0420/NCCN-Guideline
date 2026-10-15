@@ -295,7 +295,7 @@ export function whyAnswers(g: Graph, p: Pathway, facts: Record<string, unknown>)
 
 /** How many of the patient's answers decided a step on this route (the route's own `used` when it has one). */
 export const usedCount = (g: Graph, p: Pathway, facts: Record<string, unknown>) =>
-  (p as { used?: string[] }).used?.length ?? usedAnswers(g, p, facts).size;
+  p.used?.length ?? usedAnswers(g, p, facts).size;
 
 /** A box's content with page references as plain text (the headline is not a link). */
 function plainBlocks(blocks: Block[]): Block[] {
