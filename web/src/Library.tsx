@@ -7,7 +7,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { BookOpen, Search as SearchIcon, ArrowRight, Compass, List } from "lucide-react";
 import type { Bundle, Example, Library, LibraryEntry } from "./types";
 import { adaptGuideline, isGuidelineFile } from "./lib/adapt";
-import { Provider, type LibraryNav } from "./store";
+import { Provider, useAdvanced, type LibraryNav } from "./store";
+import { readPref, writePref } from "./lib/prefs";
 import { SourceProvider } from "./source";
 import { App } from "./App";
 import { Atlas } from "./atlas/Atlas";
@@ -18,8 +19,8 @@ import type { AtlasRaw } from "./atlas/model";
 const slugOf = (hash: string) => { const m = hash.replace(/^#/, "").match(/^([a-z0-9_]+)(\/|$)/); return m && m[1] !== "atlas" && m[1] !== "list" ? m[1] : null; };
 const homeView = (hash: string): "atlas" | "list" => (hash.replace(/^#/, "").startsWith("list") ? "list" : "atlas");
 const RECENT = "nav-recent";
-const recent = (): string[] => { try { return JSON.parse(localStorage.getItem(RECENT) ?? "[]"); } catch { return []; } };
-const remember = (slug: string) => { try { localStorage.setItem(RECENT, JSON.stringify([slug, ...recent().filter((s) => s !== slug)].slice(0, 6))); } catch { /* storage blocked */ } };
+const recent = (): string[] => { try { return JSON.parse(readPref(RECENT) ?? "[]"); } catch { return []; } };
+const remember = (slug: string) => writePref(RECENT, JSON.stringify([slug, ...recent().filter((s) => s !== slug)].slice(0, 6)));
 
 /** Find data/index.json next to the page (or where the build said it is). */
 export async function findLibrary(): Promise<Library | null> {
@@ -163,15 +164,19 @@ export function LibraryShell({ lib, atlas = null }: { lib: Library; atlas?: Atla
   if ("error" in state) {
     return (
       <div className="lib-loading load-error" role="alert">
-        <h2>Could not open this guideline</h2>
-        <p className="le-why">{state.error}</p>
-        <p className="note">{location.protocol === "file:"
-          ? "Opened from disk: keep built/oncocarta.html next to its built/guidelines/ folder."
-          : `Served from ${location.host}. If the address is 0.0.0.0 or [::], open it as localhost instead; check the server is still running.`}</p>
+        <h2>This guideline couldn't open</h2>
+        <p>Try again, or go back to all guidelines.</p>
         <div className="le-actions">
           <button type="button" className="btn primary" onClick={() => { forget(state.slug); setAttempt((a) => a + 1); }}>Try again</button>
           <button type="button" className="btn" onClick={() => nav.home()}>Back to all guidelines</button>
         </div>
+        <details className="le-details">
+          <summary>Details</summary>
+          <p className="le-why">{state.error}</p>
+          <p className="note">{location.protocol === "file:"
+            ? "Opened from disk: keep built/oncocarta.html next to its built/guidelines/ folder."
+            : `Served from ${location.host}. If the address is 0.0.0.0 or [::], open it as localhost instead; check the server is still running.`}</p>
+        </details>
       </div>
     );
   }
@@ -206,16 +211,16 @@ export function LibraryHome({ lib, onOpen, onAtlas }: { lib: Library; onOpen: (s
       <header className="lib-head">
         {onAtlas && (
           <div className="view-switch lib-switch" role="group" aria-label="View">
-            <button type="button" aria-pressed="false" onClick={onAtlas} data-testid="to-atlas"><Compass size={14} aria-hidden /> Atlas</button>
+            <button type="button" aria-pressed="false" onClick={onAtlas} data-testid="to-atlas"><Compass size={14} aria-hidden /> Map</button>
             <button type="button" className="on" aria-pressed="true"><List size={14} aria-hidden /> List</button>
           </div>
         )}
         <h1 className="brand">OncoCarta</h1>
-        <p className="lib-count">{lib.guidelines.length} encoded NCCN Guidelines</p>
-        <p className="lib-lead">Pick a guideline to enter a patient, see the routes through its algorithm that fit, and check each step against the source page.</p>
+        <p className="lib-count">{lib.guidelines.length} NCCN guidelines</p>
+        <p className="lib-lead">Pick a guideline to find the NCCN recommendation for a patient, or read its pages.</p>
         <div className="field lib-search">
           <SearchIcon size={15} aria-hidden />
-          <input type="search" autoFocus value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={onKey} placeholder="Find a guideline, e.g. prostate, lymphoma, antiemesis" aria-label="Find a guideline" />
+          <input type="search" autoFocus value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={onKey} placeholder="Which cancer or topic? e.g. prostate, lymphoma, nausea" aria-label="Find a guideline" />
         </div>
         <div className="chips" role="group" aria-label="Category">
           <button type="button" className={`chip${!cat ? " on" : ""}`} aria-pressed={!cat} onClick={() => setCat(null)}>All</button>
@@ -245,14 +250,15 @@ export function LibraryHome({ lib, onOpen, onAtlas }: { lib: Library; onOpen: (s
 }
 
 function Row({ e, onOpen }: { e: LibraryEntry; onOpen: (slug: string) => void }) {
+  const advanced = useAdvanced();
   const q = quality(e);
   return (
     <li>
       <button type="button" className="lib-row" onClick={() => onOpen(e.slug)}>
         <BookOpen size={16} aria-hidden />
         <span className="lib-title">{e.title}</span>
-        <span className="lib-meta">{e.version ? `v${e.version}` : ""}{e.version_date ? ` · ${e.version_date}` : ""}</span>
-        <span className="lib-q" title="Algorithm pages · boxes with an encoded condition">{q.pages} algorithm pages · {q.encoded} conditions</span>
+        <span className="lib-meta">{e.version ? `Version ${e.version}` : ""}{e.version_date ? ` · ${e.version_date}` : ""}</span>
+        {advanced && <span className="lib-q" title="Algorithm pages · boxes with an encoded condition">{q.pages} algorithm pages · {q.encoded} conditions</span>}
         <ArrowRight size={14} aria-hidden className="lib-go" />
       </button>
     </li>

@@ -7,7 +7,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { createPortal } from "react-dom";
 import type { PDFDocumentProxy } from "pdfjs-dist";
 import { ArrowRight, ChevronLeft, ChevronRight, FileText, FolderOpen, Minus, Plus, X, PictureInPicture2 } from "lucide-react";
-import { useAppMaybe } from "./store";
+import { useAdvanced, useAppMaybe } from "./store";
 import type { Bundle } from "./types";
 import { connectFolder, forgetPdf, knownGuidelines, loadSavedPdf, openPdf, PDFS_CHANGED, renderPage, savedPdfSlugs, savePdf, sha256, type FolderResult, type Rendered } from "./lib/pdf";
 
@@ -336,9 +336,10 @@ function Peek({ t, rect, onEnter, onLeave, onOpen }: { t: SrcTarget; rect: DOMRe
 
 function PeekConnect({ showText }: { showText: boolean }) {
   const { pdf, pick, pickFolder } = useSource();
+  const advanced = useAdvanced();
   return (
     <p className="peek-note">
-      {pdf.status === "loading" ? "Opening the PDF…" : <>{showText ? "Text as extracted." : "Reconstructed from the extracted layout."} To see the original page, <button type="button" className="linkish" onClick={pick}>connect this guideline's PDF</button> or <button type="button" className="linkish" onClick={pickFolder}>a folder of NCCN PDFs</button>.</>}
+      {pdf.status === "loading" ? "Opening the NCCN page…" : <>{showText ? "Text from the guideline" : "Rebuilt from the guideline text"} — the NCCN page isn't available here. <button type="button" className="linkish" onClick={pick}>Connect the NCCN PDF</button>{advanced && <> or <button type="button" className="linkish" onClick={pickFolder}>a folder of NCCN PDFs</button></>} to see the original.</>}
     </p>
   );
 }
@@ -366,6 +367,7 @@ declare global { interface Window { documentPictureInPicture?: { requestWindow: 
 
 function Viewer({ t, win = null, onClose, onNav }: { t: SrcTarget; win?: Window | null; onClose: () => void; onNav: (page: number) => void }) {
   const { pdf, pick, pickFolder, bundle } = useSource();
+  const advanced = useAdvanced();
   const [zoom, setZoom] = useState(1);
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
   const [popped, setPip] = useState<Window | null>(null);
@@ -427,7 +429,7 @@ function Viewer({ t, win = null, onClose, onNav }: { t: SrcTarget; win?: Window 
       </div>
       <div className="viewer-body" ref={body}>
         {pdf.status !== "ready" && (
-          <p className="viewer-msg">{pdf.status === "loading" ? "Opening the PDF…" : <>Showing the page as extracted. <button type="button" className="linkish" onClick={pick}>Connect this guideline's PDF</button> or <button type="button" className="linkish" onClick={pickFolder}>a folder of NCCN PDFs</button> to see the original.</>}</p>
+          <p className="viewer-msg">{pdf.status === "loading" ? "Opening the NCCN page…" : <>Rebuilt from the guideline text — the NCCN page isn't available here. <button type="button" className="linkish" onClick={pick}>Connect the NCCN PDF</button>{advanced && <> or <button type="button" className="linkish" onClick={pickFolder}>a folder of NCCN PDFs</button></>} to see the original.</>}</p>
         )}
         <div className="viewer-page" style={{ width: `${zoom * 100}%` }}><PageImage t={t} width={width} big /></div>
       </div>
@@ -446,7 +448,19 @@ function Viewer({ t, win = null, onClose, onNav }: { t: SrcTarget; win?: Window 
  * file, or a whole folder matched to every guideline by checksum). */
 export function PdfButton({ total }: { total?: number }) {
   const { bundle, pdf, saved, folder, pick, pickFolder, disconnect } = useSource();
+  const advanced = useAdvanced();
   const [open, setOpen] = useState(false);
+  // PDFs ship with the app: say something only when this guideline's PDF is still missing after
+  // the automatic look for it (a short wait, so the button does not flash while it is fetched)
+  const missing = !!bundle && (pdf.status === "none" || pdf.status === "error");
+  const [late, setLate] = useState(false);
+  const slug = bundle?.guideline?.slug ?? bundle?.title;
+  useEffect(() => {
+    setLate(false);
+    if (!missing) return;
+    const t = window.setTimeout(() => setLate(true), 1500);
+    return () => window.clearTimeout(t);
+  }, [missing, slug]);
   const ref = useRef<HTMLSpanElement>(null);
   useEffect(() => {
     if (!open) return;
@@ -462,6 +476,17 @@ export function PdfButton({ total }: { total?: number }) {
     ? (ready ? (pdf.verified ? "Source PDF ✓" : "Source PDF") : pdf.status === "loading" ? "Opening PDF…" : "Connect PDF")
     : `Source PDFs${saved.size ? ` · ${saved.size}${n ? ` of ${n}` : ""}` : ""}`;
   const st = bundle ? pdf.status : saved.size ? "ready" : "none";
+  if (!advanced) {
+    if (!missing || !late) return null;
+    return (
+      <span className="pdf-ctl">
+        <button type="button" className="pdf-btn none" data-testid="pdf-btn" onClick={pick}
+          title="The NCCN page isn't available here. Choose the guideline's PDF from your computer to see the original pages. It stays in this browser.">
+          <FileText size={14} aria-hidden />Connect the NCCN PDF
+        </button>
+      </span>
+    );
+  }
   return (
     <span className="pdf-ctl" ref={ref}>
       <button type="button" className={`pdf-btn ${st}`} aria-expanded={open} aria-haspopup="dialog" data-testid="pdf-btn" onClick={() => setOpen((o) => !o)}

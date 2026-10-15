@@ -1431,12 +1431,12 @@ export class Engine {
     ctx.fillText(ellipsize(ctx, c?.title ?? q.p.title, w - iw - 50), x0 + clamp(s * 16, 10, 24) + iw, y0 + head * 0.55);
     if (!c) {
       ctx.fillStyle = th.muted; ctx.font = `13px ${SANS}`; ctx.textAlign = "center";
-      ctx.fillText(this.bundles.has(g.slug) ? "This page has no boxes." : "Reading the page…", px, py);
+      ctx.fillText(this.bundles.has(g.slug) ? "This page has no steps." : "Reading the page…", px, py);
       ctx.restore(); return;
     }
     if (!c.boxes.length) {
       ctx.fillStyle = th.muted; ctx.font = `italic 14px ${SERIF}`; ctx.textAlign = "center";
-      ctx.fillText("No boxes were extracted from this page.", px, py);
+      ctx.fillText("No steps could be read from this page.", px, py);
       ctx.restore(); return;
     }
     const [owx, owy] = this.cardOrigin(q, c);

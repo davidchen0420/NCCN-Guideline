@@ -1,0 +1,101 @@
+/* Home hub, guideline and page panels in plain words: readable sizes, comfortable targets, and the
+   few rules the clinician-facing copy needs. Loaded after atlas.css, so it refines it. */
+
+/* ---------- search: the way in ---------- */
+.hub-field { height: 48px; padding: 0 10px 0 16px; gap: 10px; }
+.hub-field input { font-size: 16px; }
+.hub-field input::placeholder { color: var(--muted); }
+.hub-field kbd { font-size: 12px; padding: 1px 6px; }
+.hub:not(.docked) .hub-field { padding-left: 14px; }
+.hub:not(.docked) .hub-field input { font-size: 15px; }
+.hub:not(.docked) .hub-field kbd { display: none; }
+.hub-clear { width: 32px; height: 32px; }
+.hub.docked .hub-field { height: 44px; }
+.hub-hint { font-size: 13.5px; color: var(--muted); margin-top: 8px; }
+.hub-meta { font-size: 12px; margin-top: 10px; }
+
+/* the research-prototype note stays on the home map */
+.proto-note { position: absolute; z-index: 3; bottom: 8px; left: 50%; transform: translateX(-50%); width: clamp(260px, calc(100vw - 640px), 640px); margin: 0; text-align: center; font-size: 12.5px; line-height: 1.4; color: var(--muted); pointer-events: none; animation: fade 1s ease both 1.2s; }
+.atlas-hint { bottom: 56px; font-size: 13px; }
+.atlas-hint kbd { font-size: 12px; }
+@media (max-width: 899px) {
+  .proto-note { left: 12px; right: 64px; width: auto; transform: none; bottom: 8px; }
+  .atlas-hint { bottom: 76px; font-size: 12.5px; gap: 12px; }
+}
+@media (max-width: 640px) {
+  .atlas-hint { animation: fade .6s ease both 2.4s; left: 12px; right: 64px; transform: none; white-space: normal; border-radius: 16px; padding: 8px 8px 8px 14px; justify-content: space-between; }
+  .atlas-hint span:nth-child(2) { display: none; }
+  .proto-note { font-size: 12px; line-height: 1.3; }
+}
+
+/* ---------- top bar targets ---------- */
+.crumb button, .crumb > span[aria-current] { min-height: 30px; display: inline-flex; align-items: center; }
+.crumbs { font-size: 14px; }
+.view-switch button { min-height: 32px; font-size: 13px; padding: 4px 12px; }
+.panel-x { width: 32px; height: 32px; top: 8px; right: 8px; }
+.zoom button { height: 34px; width: 36px; }
+
+/* ---------- results, tooltip ---------- */
+.res-kind { font-size: 11.5px; }
+.res-label { font-size: 14.5px; }
+.res-sub { font-size: 12.5px; }
+.results li { min-height: 40px; align-content: center; }
+.tip { font-size: 13px; }
+.tip-eyebrow { font-size: 12px; }
+.tip-meta { font-size: 12.5px; }
+.tip-hint { font-size: 12px; color: var(--muted); }
+.tip-page > span { font-size: 12px; }
+.tip-stats dt { font-size: 12px; }
+
+/* ---------- panels ---------- */
+.panel-meta { font-size: 13px; }
+.panel-how { font-size: 13.5px; color: var(--muted); line-height: 1.5; margin-top: 10px; }
+.psec h3 { font-size: 12px; }
+.panel-list.compact button { font-size: 13.5px; min-height: 32px; align-items: center; }
+.panel-list code { font-size: 12px; }
+.pp-actions.stack { flex-direction: column; margin-top: 16px; }
+.pp-actions.stack .btn { width: 100%; justify-content: center; min-height: 40px; font-size: 14.5px; }
+.pp-actions .btn { min-height: 36px; }
+.pchip { font-size: 13px; min-height: 32px; padding: 5px 12px; }
+.gchip { font-size: 12.5px; min-height: 32px; padding: 4px 10px; }
+.route-lik { font-size: 14px; }
+.route-meta { font-size: 12.5px; }
+.route-end { font-size: 13px; }
+.route-end span { font-size: 14px; }
+.seg button { min-height: 32px; font-size: 13px; padding: 4px 12px; }
+.box-list button { font-size: 13.5px; }
+.box-list button::before { font-size: 12px; }
+.box-list .bl-read { width: 34px; }
+.panel-body .note { font-size: 13.5px; line-height: 1.5; }
+.panel-body .note p { margin: 0; }
+.stats dt { font-size: 12px; }
+.panel-key { font-size: 12px; color: var(--muted); }
+
+/* About this guideline */
+.about { margin-top: 22px; border-top: 1px solid var(--line-2); padding-top: 4px; }
+.about > summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px; min-height: 36px; font-size: 13.5px; font-weight: 500; color: var(--ink-2); }
+.about > summary::-webkit-details-marker { display: none; }
+.about > summary::before { content: "›"; display: inline-block; width: 12px; color: var(--muted); transition: transform .15s; }
+.about[open] > summary::before { transform: rotate(90deg); }
+.about > summary:hover { color: var(--ink); }
+.about-line { font-size: 13px; color: var(--muted); line-height: 1.5; margin: 6px 0; }
+.about h3 { margin-top: 14px; }
+.about.related { margin-top: 18px; }
+.about.related .panel-list { margin: 0 -8px; }
+.about.related .panel-list button { justify-content: space-between; }
+.about .stats { margin-top: 10px; }
+
+/* technical detail kept out of the way */
+.more { margin-top: 6px; }
+.more > summary { cursor: pointer; font-size: 13px; color: var(--muted); min-height: 28px; }
+.le-details { font-size: 13.5px; }
+.le-details > summary { cursor: pointer; color: var(--muted); min-height: 32px; display: flex; align-items: center; }
+.le-details[open] > summary { margin-bottom: 4px; }
+
+/* list view: the Map/List switch hugs the right edge instead of stretching across the grid */
+.lib-switch { float: none; justify-self: end; }
+@media (max-width: 640px) { .crumbs { font-size: 13px; } }
+
+/* ---------- legend ---------- */
+.legend { font-size: 13px; width: 270px; }
+.lg-note { font-size: 12.5px; }

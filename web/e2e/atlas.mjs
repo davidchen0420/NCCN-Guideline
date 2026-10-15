@@ -28,6 +28,11 @@ let n = 0;
 const step = async (name, fn) => { await fn(); console.log(`ok ${++n} ${name}`); };
 const hash = () => page.evaluate(() => location.hash);
 const waitHash = (h) => page.waitForFunction((x) => location.hash === x, h);
+/** Turn Advanced tools on or off in a running page (what the Settings switch does). */
+const setAdvanced = (pg, on) => pg.evaluate((on) => {
+  if (on) localStorage.setItem("oc-advanced", "1"); else localStorage.removeItem("oc-advanced");
+  window.dispatchEvent(new CustomEvent("oc-advanced-changed", { detail: on }));
+}, on);
 /** How much ink there is in a region of the canvas (0 = blank paper). */
 const ink = (x, y, w, h) => page.evaluate(([x, y, w, h]) => {
   const c = document.querySelector(".atlas-canvas");
@@ -44,7 +49,15 @@ await step("the atlas is the home page and draws the map", async () => {
   await page.getByRole("combobox", { name: /Search guidelines/ }).waitFor();
   await page.waitForTimeout(3000);   // intro
   assert.ok(await ink(300, 100, 840, 700) > 0.02, "map is drawn");
+  assert.equal(await page.getByRole("combobox").getAttribute("placeholder"), "Which cancer or topic?");
+  assert.match(await page.locator(".proto-note").innerText(), /Research prototype, not an official NCCN tool/);
+  assert.equal(await page.locator(".hub-meta").count(), 0, "encoding counts are for Advanced tools");
+  assert.doesNotMatch(await page.locator(".atlas-hint").innerText(), /\bboxes?\b|encoded|\barcs?\b/i);
+  assert.match(await page.locator(".atlas-hint").innerText(), /Click a cancer site or guideline to open it[\s\S]*Scroll to zoom[\s\S]*Esc to go back[\s\S]*\/ to search/);
+  await setAdvanced(page, true);
   assert.match(await page.locator(".hub-meta").innerText(), /91 guidelines · [\d,]+ pages\s+\d+ cross-references/);
+  await setAdvanced(page, false);
+  assert.equal(await page.locator(".hub-meta").count(), 0);
 });
 await step("every organ site is named on the home page, at every screen size", async () => {
   for (const [w, h] of [[1440, 900], [1280, 800], [1024, 768], [768, 1024], [390, 844]]) {
@@ -78,6 +91,16 @@ await step("search finds a guideline and opens its map", async () => {
   await waitHash("#atlas/prostate");
   assert.equal(await page.locator(".atlas-panel .panel-title").innerText(), "Prostate Cancer");
   assert.ok(await page.locator(".hub.docked").count(), "search docks at the top");
+  assert.ok(await page.getByTestId("enter-patient").isVisible());
+  assert.match(await page.getByTestId("enter-patient").innerText(), /Find a recommendation for a patient/);
+  await page.getByRole("button", { name: /Read the guideline/ }).waitFor();
+  assert.doesNotMatch(await page.locator(".atlas-panel").innerText(), /Decision boxes encoded|share of boxes with a condition/, "encoding stats are for Advanced tools");
+  await page.locator(".atlas-panel .about > summary").click();
+  assert.doesNotMatch(await page.locator(".atlas-panel").innerText(), /Decision boxes encoded/);
+  await setAdvanced(page, true);
+  await page.locator(".atlas-panel .stats").waitFor();
+  assert.match(await page.locator(".atlas-panel .about").innerText(), /Decision boxes encoded/);
+  await setAdvanced(page, false);
 });
 await step("search by abbreviation and by page", async () => {
   await page.getByRole("combobox").fill("CLL");
@@ -87,9 +110,15 @@ await step("search by abbreviation and by page", async () => {
   await page.getByRole("combobox").fill("");
 });
 await step("an example patient's route is shown and opens in the reader", async () => {
+  assert.match(await page.locator(".pchip").first().innerText(), /^Example: /);
   await page.locator(".pchip").first().click();
   await page.locator(".route-card").waitFor();
+  const card = await page.locator(".route-card").innerText();
+  assert.match(card, /(Best match|Also possible|Less likely|Unlikely)[\s\S]*(Matches your answers|Needs \d+ more answers?)[\s\S]*Ends at:/);
+  assert.doesNotMatch(card, /criteria met|of the weight/, "route statistics are for Advanced tools");
+  await setAdvanced(page, true);
   assert.match(await page.locator(".route-card").innerText(), /criteria met/);
+  await setAdvanced(page, false);
   await page.getByRole("button", { name: /Open in the reader with this patient/ }).click();
   await page.locator("[data-testid=card]").first().waitFor();
   assert.match(await hash(), /^#prostate\/flow\/PROS-1/);
@@ -128,6 +157,10 @@ await step("the reader returns to the atlas at its page", async () => {
 await step("a page shows its boxes; a box opens in the reader at that box", async () => {
   await page.locator(".box-list button").first().waitFor();
   assert.ok(await page.locator(".box-list button").count() >= 3);
+  assert.equal(await page.getByRole("heading", { name: "Steps on this page" }).count(), 1);
+  await page.getByRole("button", { name: "Read this page" }).waitFor();
+  assert.equal(await page.getByTestId("open-pdf-page").innerText(), "Open NCCN page");
+  assert.doesNotMatch(await page.locator(".atlas-panel .panel-meta").innerText(), /encoded|boxes/);
   await page.waitForTimeout(1200);
   assert.ok(await ink(100, 150, 800, 600) > 0.02, "the page card is drawn");
   await page.locator(".box-list button").nth(1).click();
@@ -221,8 +254,9 @@ await step("source PDF: found next to the data, shown on hover, opened on click"
   let served = 0;
   await p.route("**/data/prostate/pdf/prostate.pdf", (r) => { served++; r.fulfill({ status: 200, contentType: "application/pdf", body: pdf }); });
   await p.goto(base + "#atlas/prostate/PROS-3");
-  await p.locator(".atlas .pdf-btn.ready").waitFor({ timeout: 20000 });
+  await p.getByRole("button", { name: "Original page", exact: true }).waitFor({ timeout: 20000 });   // the PDF loaded by itself
   assert.ok(served >= 1, "the served copy was fetched");
+  assert.equal(await p.getByTestId("pdf-btn").count(), 0, "PDFs ship with the app: nothing to connect, nothing shown");
   // the page card is the diagram; "Original page" draws the PDF page instead (its blue box outlines show)
   await p.waitForTimeout(1500);
   const bluePx = () => p.evaluate(() => {
@@ -254,7 +288,10 @@ await step("source PDF: found next to the data, shown on hover, opened on click"
   assert.equal(await p.locator(".viewer").count(), 0, "not over the diagram");
   await win.locator(".viewer-act").click();
   await p.waitForFunction(() => /^#prostate\/flow\/PROS-3\/.+/.test(location.hash));
-  // the reader finds the same PDF: its card previews are original pages too
+  // the reader finds the same PDF: its card previews are original pages too (Advanced shows the PDF control)
+  await p.evaluate(() => localStorage.setItem("oc-advanced", "1"));
+  await p.goto(base + "#prostate/flow/PROS-3");
+  await p.reload();
   if (await p.getByRole("dialog", { name: /Find where a patient sits/ }).count()) await p.getByRole("button", { name: /Browse the guideline/ }).click();
   await p.locator(".pdf-btn.ready").first().waitFor({ timeout: 20000 });
   await ctx.close();
@@ -264,7 +301,7 @@ await step("hosted copy: the PDF published next to the page; clicking a box show
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const p = await ctx.newPage();
   p.on("pageerror", (e) => errors.push("hosted pdf: " + e.message));
-  await p.addInitScript(() => { try { localStorage.setItem("nav-help", "1"); localStorage.setItem("oc-canvas-hint", "1"); } catch { /* */ } });
+  await p.addInitScript(() => { try { localStorage.setItem("nav-help", "1"); localStorage.setItem("oc-canvas-hint", "1"); localStorage.setItem("oc-advanced", "1"); } catch { /* */ } });
   await p.route("**/built/pdfs/prostate.pdf", (r) => r.fulfill({ status: 200, contentType: "application/pdf", body: pdf }));
   await p.goto(base + "#prostate/flow/PROS-2");
   if (await p.getByRole("dialog", { name: /Find where a patient sits/ }).count()) await p.getByRole("button", { name: /Browse the guideline/ }).click();
@@ -288,6 +325,7 @@ await step("source PDF: a folder is matched to guidelines and kept in the browse
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const p = await ctx.newPage();
   p.on("pageerror", (e) => errors.push("folder: " + e.message));
+  await p.addInitScript(() => { try { localStorage.setItem("oc-advanced", "1"); } catch { /* */ } });   // the folder menu is an Advanced tool
   await p.goto(base + "#atlas");
   await p.getByTestId("pdf-btn").click();
   const dir = await mkdtemp(join(tmpdir(), "oc-pdfs-"));
@@ -316,6 +354,7 @@ await step("opened from disk (file://): guidelines, Enter a patient and the list
   assert.ok(await p.locator('select[aria-label="Load a patient"] option').count() > 1, "example patients come with the guideline");
   await p.goto(url + "#atlas/prostate/PROS-3");
   await p.locator(".box-list .bl-main").first().waitFor({ timeout: 15000 });
+  await p.getByRole("button", { name: "Connect the NCCN PDF" }).first().waitFor({ timeout: 8000 });   // no PDF next to a file:// page
   await p.goto(url + "#list");
   await p.locator(".lib-row").nth(3).click();
   await p.locator("[data-testid=card]").first().waitFor({ timeout: 15000 });
@@ -328,6 +367,9 @@ await step("a guideline that cannot be read says which file and offers Try again
   await p.goto(base + "#kidney/");
   const box = p.locator(".load-error");
   await box.waitFor({ timeout: 15000 });
+  assert.match(await box.innerText(), /This guideline couldn't open[\s\S]*Try again, or go back to all guidelines/);
+  assert.doesNotMatch(await box.innerText(), /kidney\.js/, "the file names are behind Details");
+  await box.getByText("Details", { exact: true }).click();
   assert.match(await box.innerText(), /guidelines\/kidney\.js[\s\S]*kidney\/guideline\.json/);
   block = false;
   await p.getByRole("button", { name: "Try again" }).click();
