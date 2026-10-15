@@ -4,6 +4,7 @@ import { useApp } from "../store";
 import { Linked } from "./Rich";
 import type { DockTab } from "../store";
 import { SrcChip } from "../source";
+import { DOCK_LABEL } from "../lib/terms";
 
 const EVID: [string, string][] = [
   ["Category 1", "Based on high-level evidence, with uniform NCCN consensus that the intervention is appropriate."],
@@ -22,7 +23,7 @@ export function Dock() {
   const bodyRef = useRef<HTMLDivElement>(null);
   useEffect(() => { bodyRef.current?.querySelector(".fn-item.on")?.scrollIntoView({ block: "nearest" }); }, [s.fn, s.dock]);
   const page = s.loc.kind === "flow" ? s.loc.page : null;
-  const tabs: [DockTab, string][] = [["fn", "Footnotes"], ["E", "Evidence"], ["P", "Preference"]];
+  const tabs: [DockTab, string][] = [["fn", DOCK_LABEL.fn], ["E", DOCK_LABEL.E], ["P", DOCK_LABEL.P]];
 
   const notes = new Map<string, { text: string; nodes: string[]; pdf?: number }>();
   if (page) for (const n of g.bundle.pages[page].nodes) for (const [l, t, pdf] of n.footnotes) {
@@ -45,7 +46,7 @@ export function Dock() {
         {tabs.map(([k, label]) => (
           <button key={k} role="tab" aria-selected={s.dock === k} className={s.dock === k ? "on" : ""} title={label}
             onClick={() => set({ dock: s.dock === k ? null : k, sheet: false })}>
-            {k === "fn" ? <Asterisk size={17} /> : k}<span className="sr">{label}</span>
+            {k === "fn" && <Asterisk size={16} aria-hidden />}<span>{label}</span>
           </button>
         ))}
         <span className="grow" />
@@ -58,7 +59,7 @@ export function Dock() {
           {s.dock === "P" && <><h3>Categories of preference</h3><p className="note">Summaries in our own words; see the guideline for the official wording.</p>
             {PREF.map(([k, c, t]) => <div className="def" key={k}><span className={`tag tag-${c}`}>{k}</span><p>{t}</p></div>)}</>}
           {s.dock === "fn" && <>
-            <h3>Footnotes{page ? ` · ${page}` : ""}</h3>
+            <h3>Footnotes{page ? <> <code className="quiet">{page}</code></> : ""}</h3>
             {!sorted.length && <p className="note">{page ? "This page has no footnotes." : "Open an algorithm page to see its footnotes."}</p>}
             {sorted.map(([l, v]) => {
               const on = s.fn === l;

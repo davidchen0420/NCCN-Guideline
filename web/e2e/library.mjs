@@ -40,7 +40,7 @@ await step("search narrows the list and opens a guideline", async () => {
 });
 await step("an example patient is routed with the data's option conditions", async () => {
   await page.locator('select[aria-label="Load a patient"]').selectOption("ex:V1");
-  await page.getByRole("tab", { name: /Pathways/ }).click();
+  await page.getByRole("tab", { name: /Recommendation/ }).click();
   assert.match(await page.locator(".pcard").first().innerText(), /Most likely/);
   assert.match(await page.locator(".trail").innerText(), /Matches treatment received/);
 });
@@ -50,7 +50,7 @@ await step("multi-disease guidelines ask for the disease first", async () => {
   await closeWelcome();
   await page.getByRole("tab", { name: "Patient" }).click();
   await page.locator("#fact-guideline_section").selectOption({ index: 1 });
-  await page.getByRole("tab", { name: /Pathways/ }).click();
+  await page.getByRole("tab", { name: /Recommendation/ }).click();
   assert.ok(await page.locator(".pcard").count() >= 1);
 });
 await step("a reference to another guideline opens it at that page", async () => {
@@ -95,7 +95,7 @@ if (process.argv.includes("--all")) {
       const lower = labels.filter((l) => /\b(Ecog|Psa|Mri|Pet|Hiv|Covid|Ldh|Egfr|Her2)\b/.test(l) || /_/.test(l));
       if (lower.length) errs.push("labels: " + lower.slice(0, 3).join(", "));
       if (!labels.length) errs.push("no patient fields");
-      await p.getByRole("tab", { name: /Pathways/ }).click();
+      await p.getByRole("tab", { name: /Recommendation/ }).click();
       const start = p.locator("#start");
       const opts = await start.locator("option").count();
       if (opts > 1) { await start.selectOption({ index: 1 }); await p.locator(".pcard, .empty").first().waitFor({ timeout: 10000 }); }

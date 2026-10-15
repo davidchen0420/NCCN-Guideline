@@ -17,7 +17,8 @@ export function App() {
       <aside className="left" aria-label="Side panel">
         {s.left === "toc" && <Toc />}
         {s.left === "search" && <SearchPanel />}
-        {s.left === "hist" && <HistoryPanel />}
+        {s.left === "hist" && s.advanced && <HistoryPanel />}
+        {s.left === "hist" && !s.advanced && <Toc />}
         {isPhone && s.left && <button className="scrim" aria-label="Close panel" onClick={() => set({ left: null })} />}
       </aside>
       <main className="stage">
@@ -34,7 +35,7 @@ export function App() {
         <RightPanel />
       </aside>
       {isPhone && !s.sheet && l.kind !== "map" && (
-        <button className="sheet-open-btn" onClick={() => set({ sheet: true, dock: null })}>Details &amp; walk</button>
+        <button className="sheet-open-btn" onClick={() => set({ sheet: true, dock: null })}>{s.advanced ? "Details & walk" : "Patient & recommendation"}</button>
       )}
       <Help />
       <Welcome />

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Footprints, Undo2, RotateCcw, Copy } from "lucide-react";
 import { useApp } from "../store";
 import { Blocks, Linked } from "./Rich";
@@ -18,8 +18,20 @@ const plainOf = (g: { parsed: Map<string, { plain: string }> }, id: string) => g
 export function RightPanel() {
   const { s, set } = useApp();
   const { ranking } = useApp();
-  const tabs: ["patient" | "paths" | "details" | "walk", string][] = [["patient", "Patient"], ["paths", "Pathways"], ["details", "Details"], ["walk", "Walk"]];
+  type Tab = "patient" | "paths" | "details" | "walk";
+  // Patient and Recommendation always; Step once a step is chosen (or in Advanced); Walk only in Advanced.
+  // The tab you are on stays listed so the panel never loses its own label.
+  const stepChosen = s.loc.kind === "flow" && !!s.loc.node;
+  const all: [Tab, string, boolean][] = [
+    ["patient", "Patient", true],
+    ["paths", "Recommendation", true],
+    ["details", "Step", stepChosen || s.advanced],
+    ["walk", "Walk", s.advanced],
+  ];
+  const tabs = all.filter(([k, , show]) => show || k === s.rightTab).map(([k, l]) => [k, l] as [Tab, string]);
   const keys = tabs.map((t) => t[0]);
+  // the guided walk is an Advanced view: leave it when Advanced tools are switched off
+  useEffect(() => { if (!s.advanced && s.rightTab === "walk") set({ rightTab: "paths" }); }, [s.advanced, s.rightTab, set]);
   return (
     <div className="rp">
       <div className="rp-tabs" role="tablist" aria-label="Panel"

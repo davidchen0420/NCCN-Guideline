@@ -1,24 +1,77 @@
-import { Library as LibraryIcon, ArrowLeft, ArrowRight, BookOpen, UserRound, ListChecks, FileText, CircleHelp, History, LayoutGrid, RotateCcw, Search, ExternalLink } from "lucide-react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { Library as LibraryIcon, ArrowLeft, ArrowRight, BookOpen, UserRound, ListChecks, CircleHelp, RotateCcw, Search, ExternalLink, Settings } from "lucide-react";
 import { useApp } from "../store";
-import { PdfButton, useSource } from "../source";
-import { startingFacts } from "../lib/pathways";
-import { label } from "../lib/factMeta";
+import { PdfButton } from "../source";
+import { writePref } from "../lib/prefs";
+import { T } from "../lib/terms";
+import { setGuideHidden, useGuideHidden } from "./Guide";
+import "../styles/shell.css";
+
+/** Settings: Advanced tools, the 3-step guide, Help. A small popover beside the rail button. */
+function SettingsMenu() {
+  const { s, set, isPhone } = useApp();
+  const guideHidden = useGuideHidden();
+  const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState<{ left?: number; right?: number; top?: number; bottom?: number }>({});
+  const btn = useRef<HTMLButtonElement>(null);
+  const menu = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (!open || !btn.current) return;
+    const r = btn.current.getBoundingClientRect();
+    setPos(isPhone
+      ? { top: r.bottom + 6, right: 8 }
+      : { left: r.right + 8, bottom: Math.max(8, window.innerHeight - r.bottom) });
+  }, [open, isPhone]);
+  useEffect(() => {
+    if (!open) return;
+    const f = (e: MouseEvent) => {
+      const t = e.target as Node;
+      if (!menu.current?.contains(t) && !btn.current?.contains(t)) setOpen(false);
+    };
+    const k = (e: KeyboardEvent) => { if (e.key === "Escape") { setOpen(false); btn.current?.focus(); } };
+    document.addEventListener("mousedown", f); document.addEventListener("keydown", k);
+    return () => { document.removeEventListener("mousedown", f); document.removeEventListener("keydown", k); };
+  }, [open]);
+
+  return (
+    <>
+      <button ref={btn} type="button" className={open ? "on" : ""} aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded={open}
+        onClick={() => setOpen((o) => !o)} data-testid="rail-settings"><Settings size={20} /></button>
+      {open && createPortal(
+        <div ref={menu} className="set-menu" role="dialog" aria-label="Settings" style={pos}>
+          <h3>Settings</h3>
+          <label className="set-row">
+            <input type="checkbox" className="sw" checked={s.advanced} onChange={(e) => set({ advanced: e.target.checked })} data-testid="advanced-toggle" />
+            <span className="set-t"><b>Advanced tools</b>
+              <small>Reviewer views: arrow certainty, other paths, scores, guided walk, encoding details</small></span>
+          </label>
+          <label className="set-row">
+            <input type="checkbox" className="sw" checked={!guideHidden} onChange={(e) => setGuideHidden(!e.target.checked)} data-testid="guide-toggle" />
+            <span className="set-t"><b>Show the 3-step guide</b>
+              <small>The Patient, Recommendation, Check the NCCN page strip above the panel</small></span>
+          </label>
+          <button type="button" className="set-help" onClick={() => { setOpen(false); set({ help: true }); }}><CircleHelp size={16} aria-hidden />Help</button>
+        </div>, document.body)}
+    </>
+  );
+}
 
 export function Rail() {
-  const { s, set, go, library } = useApp();
-  const toggle = (v: "toc" | "search" | "hist") => set({ left: s.left === v ? null : v });
+  const { s, set, library } = useApp();
+  const toggle = (v: "toc" | "search") => set({ left: s.left === v ? null : v });
   const b = (label: string, icon: React.ReactNode, on: boolean, f: () => void, id: string) => (
     <button className={on ? "on" : ""} aria-label={label} title={label} aria-pressed={on} onClick={f} data-testid={id}>{icon}</button>
   );
   return (
     <nav className="rail" aria-label="OncoCarta">
       {library && b("All guidelines", <LibraryIcon size={20} />, false, () => library.home(s.loc.kind === "flow" ? s.loc.page : null), "rail-library")}
-      {b("Whole guideline", <LayoutGrid size={20} />, s.loc.kind === "map", () => go({ kind: "map" }), "rail-map")}
-      {b("Contents", <BookOpen size={20} />, s.left === "toc", () => toggle("toc"), "rail-toc")}
+      {b("Contents", <BookOpen size={20} />, s.left === "toc" || s.left === "hist", () => toggle("toc"), "rail-toc")}
       {b("Search", <Search size={20} />, s.left === "search", () => toggle("search"), "rail-search")}
-      {b("History", <History size={20} />, s.left === "hist", () => toggle("hist"), "rail-hist")}
       <span className="grow" />
       {b("Help", <CircleHelp size={20} />, s.help, () => set({ help: true }), "rail-help")}
+      <SettingsMenu />
     </nav>
   );
 }
@@ -26,65 +79,67 @@ export function Rail() {
 export function TitleBar() {
   const { s, g, dispatch, set } = useApp();
   const l = s.loc;
-  const title = l.kind === "flow" ? g.bundle.pages[l.page].title || l.page : l.kind === "doc" ? g.bundle.docs[l.code].title : "Whole guideline";
+  const title = l.kind === "flow" ? g.bundle.pages[l.page].title || l.page : l.kind === "doc" ? g.bundle.docs[l.code].title : "Guideline overview";
   const code = l.kind === "flow" ? l.page : l.kind === "doc" ? l.code : "";
   const flow = l.kind === "flow";
+  const adv = s.advanced;
   return (
     <div className="titlebar">
       <button className="ib" aria-label="Back" title="Back" disabled={s.hpos < 1} onClick={() => dispatch({ type: "hist", delta: -1 })}><ArrowLeft size={18} /></button>
       <button className="ib" aria-label="Forward" title="Forward" disabled={s.hpos >= s.hist.length - 1} onClick={() => dispatch({ type: "hist", delta: 1 })}><ArrowRight size={18} /></button>
-      <h1 className="tb-title" data-testid="title">{code && <code>{code}</code>}<span>{title}</span></h1>
-      {flow && (
+      <h1 className="tb-title" data-testid="title"><span>{title}</span>{code && code !== title && <code>{code}</code>}</h1>
+      {flow && s.answers.length > 0 && (
+        <button type="button" className="clear-chip" onClick={() => dispatch({ type: "clear" })} data-testid="clear" title="Clear the selected answers and show the whole diagram">
+          <RotateCcw size={14} aria-hidden /><span className="cc-t">Clear selection</span><b className="cc-n">{s.answers.length}</b>
+        </button>
+      )}
+      {flow && adv && (
         <>
           <label className="switch sm" title="Other paths: show the paths that do not go through your selected answers"><input type="checkbox" aria-label="Other paths" checked={s.showNon} onChange={(e) => set({ showNon: e.target.checked })} data-testid="non-active" /><i /><span>Other paths</span></label>
-          <button className="ib" aria-label="Clear selected answers" title="Clear selected answers" disabled={!s.answers.length} onClick={() => dispatch({ type: "clear" })} data-testid="clear">
-            <RotateCcw size={17} />{s.answers.length > 0 && <b className="count">{s.answers.length}</b>}
-          </button>
           <label className="switch sm conf" title="Arrow certainty: mark arrows found by only one of the two extraction methods"><input type="checkbox" aria-label="Arrow certainty" checked={s.conf} onChange={(e) => set({ conf: e.target.checked })} /><i /><span>Arrow certainty</span></label>
         </>
       )}
       <PdfButton />
-      <a className="ib ext" href="https://www.nccn.org/guidelines/category_1" target="_blank" rel="noopener noreferrer" title="Official NCCN guidelines" aria-label="Official NCCN guidelines"><ExternalLink size={16} /></a>
+      <a className="ib ext quiet" href="https://www.nccn.org/guidelines/category_1" target="_blank" rel="noopener noreferrer" title="Official NCCN guidelines" aria-label="Official NCCN guidelines"><ExternalLink size={15} /></a>
     </div>
   );
 }
 
 export function Help() {
-  const { s, set } = useApp();
+  const { s, set, library } = useApp();
   if (!s.help) return null;
-  const close = () => { try { localStorage.setItem("nav-help", "1"); } catch { /* ignore */ } set({ help: false }); };
+  const close = () => { writePref("nav-help", "1"); set({ help: false }); };
   return (
     <div className="modal" role="dialog" aria-modal="true" aria-label="How to use OncoCarta" onClick={(e) => { if (e.target === e.currentTarget) close(); }}>
       <div className="modal-box">
         <h2>How to use OncoCarta</h2>
-        <ol>
-          <li><b>Patient</b>: enter what the record says (or load an example). Leave anything unknown blank.</li>
-          <li><b>Pathways</b>: every route through the algorithm that your entries leave open, ranked by how well it fits. Each shows how many of its criteria are met and a confidence score; pick one to see every step and light it up on the page.</li>
-          <li><b>Sources</b>: hover a step, card or footnote to preview the guideline page it came from; click to open the page in a window you can move, zoom and pop out. Connect the PDF once (it stays in this browser) to see original pages.</li>
-          <li><b>Contents</b>: pick a page; blue is the algorithm, teal the principles, amber the discussion. The grid icon shows the whole guideline.</li>
-          <li><b>Select answers</b>: click a card. Its pathway lights up and other paths hide until you switch on <i>Other paths</i>. The reset arrow clears every answer.</li>
-          <li><b>Links</b>: page references (blue chips and underlined titles) open that page; Back and Forward retrace your steps.</li>
-          <li><b>Footnotes</b>: tap a letter on a card, then use the arrows to step through every place it applies.</li>
-          <li><b>Search</b>: results are listed beside the page. Quotes find an exact phrase, and filters gray out cards that do not apply.</li>
-          <li><b>Walk</b>: step through the algorithm yourself from any card. Branches your entries decide are followed for you.</li>
+        <ol className="help-steps">
+          <li><b>Pick a guideline.</b> {library ? <>Use <i>All guidelines</i> (top of the left bar) to choose the cancer type.</> : <>This file holds one NCCN guideline; use <i>Contents</i> to move between its pages.</>}</li>
+          <li><b>Say where the patient is, and answer the questions.</b> In the <i>Patient</i> tab, choose the point in care, then answer what you know. Leave anything unknown blank.</li>
+          <li><b>Read the recommendation.</b> The <i>Recommendation</i> tab lists the options that fit this patient, best match first, and says what is still missing. Pick one to light it up on the diagram.</li>
+          <li><b>Check the NCCN page.</b> Hover a step on the diagram to preview its NCCN page with the step highlighted. Click a step to open that page in its own window.</li>
+          <li><b>Save or print.</b> Open the summary from the <i>Recommendation</i> tab to copy it or print it for the record.</li>
         </ol>
-        <details><summary>Are the branch conditions clinician-reviewed?</summary><p>No. A language model drafted them and a second pass reviewed them; conditions that failed review are dropped. Always check the source page.</p></details>
-        <details><summary>What do likelihood and confidence mean?</summary><p>Likelihood shares 100% across the routes your entries leave open, split at each branch by which arms fit. Confidence multiplies how many of a route's criteria are met by how reliably its arrows and conditions were extracted. Neither is a clinical probability.</p></details>
-        <details><summary>Is OncoCarta an official NCCN tool?</summary><p>No. It is an independent research prototype, not made, reviewed or endorsed by NCCN. Use the official guidelines for clinical decisions.</p></details>
+        <p className="help-tip">Press <kbd>?</kbd> any time to open this help. <i>Settings</i> (the gear) has the reviewer tools, under <i>Advanced tools</i>.</p>
+        <p className="help-fine">{T.prototype}</p>
+        {s.advanced && (
+          <details className="help-data"><summary>About the data</summary>
+            <details><summary>Are the branch conditions clinician-reviewed?</summary><p>No. A language model drafted them and a second pass reviewed them; conditions that failed review are dropped. Always check the source page.</p></details>
+            <details><summary>What do likelihood and confidence mean?</summary><p>Likelihood shares 100% across the routes your entries leave open, split at each branch by which arms fit. Confidence multiplies how many of a route's criteria are met by how reliably its arrows and conditions were extracted. Neither is a clinical probability; the plain words Best match, Also possible and Less likely come from the likelihood.</p></details>
+          </details>
+        )}
         <div className="modal-actions"><button className="primary" onClick={close}>Got it</button></div>
       </div>
     </div>
   );
 }
 
-/** First visit: three ways in, plus the optional PDF. Replaces a wall of help text. */
+/** First visit: three ways in. Replaces a wall of help text. */
 export function Welcome() {
-  const { s, set, setFacts, bundle, g } = useApp();
-  const start = startingFacts(g, 5);
-  const { pdf, pick } = useSource();
+  const { s, set, setFacts, bundle } = useApp();
   if (!s.welcome) return null;
   const close = (patch: Parameters<typeof set>[0] = {}) => {
-    try { localStorage.setItem("nav-help", "1"); } catch { /* storage may be blocked */ }
+    writePref("nav-help", "1");
     set({ welcome: false, ...patch });
   };
   const examples = bundle.examples ?? [];
@@ -93,15 +148,15 @@ export function Welcome() {
       <div className="modal-box welcome" role="dialog" aria-modal="true" aria-labelledby="wl-h">
         <span className="eyebrow">OncoCarta · {bundle.title}</span>
         <h2 id="wl-h">Find where a patient sits in the guideline</h2>
-        <p className="wl-lead">Enter what the record says. OncoCarta ranks every route through the algorithm that fits, shows which criteria are met, and links each step to the guideline page it came from.</p>
+        <p className="wl-lead">Tell OncoCarta about your patient. It shows the NCCN recommendations that fit, and each step links to the original NCCN page so you can check it.</p>
         <div className="wl-choices">
-          <button type="button" className="wl-choice" onClick={() => close({ rightTab: "patient", sheet: true })} autoFocus>
-            <UserRound size={20} aria-hidden /><b>Enter a patient</b><span>{start.length ? <>Start with {start.map(label).join(", ")}.</> : "Enter what the record says; pathways update as you type."}</span>
+          <button type="button" className="wl-choice primary-choice" onClick={() => close({ rightTab: "patient", sheet: true })} autoFocus>
+            <UserRound size={20} aria-hidden /><b>Enter a patient</b><span>Find the NCCN recommendation for them</span>
           </button>
           {examples.length > 0 && (
             <div className="wl-choice as-div">
               <ListChecks size={20} aria-hidden /><b>Try an example</b>
-              <span>Hand-encoded from public vignettes.</span>
+              <span>See how it works with a made-up patient.</span>
               <div className="wl-ex">
                 {examples.map((x) => (
                   <button key={x.id} type="button" className="linkish" onClick={() => { setFacts({ ...x.facts }); close({ age: x.age ?? null, pathSel: null, start: "auto", stale: [], rightTab: "paths", sheet: true }); }}>{x.label}</button>
@@ -110,17 +165,10 @@ export function Welcome() {
             </div>
           )}
           <button type="button" className="wl-choice" onClick={() => close({ left: "toc" })}>
-            <BookOpen size={20} aria-hidden /><b>Browse the guideline</b><span>Read the algorithm pages, principles and discussion with every reference linked.</span>
+            <BookOpen size={20} aria-hidden /><b>Browse the guideline</b><span>Read the pages one by one, with every reference linked.</span>
           </button>
         </div>
-        <div className="wl-pdf">
-          <FileText size={16} aria-hidden />
-          {pdf.status === "ready"
-            ? <span>Source PDF connected: <b>{pdf.name}</b>. Hover any step to preview its page.</span>
-            : <span>Optional: connect your copy of the guideline PDF to preview original pages. It stays in this browser and is never uploaded.</span>}
-          {pdf.status !== "ready" && <button type="button" className="btn small" onClick={pick}>Connect PDF</button>}
-        </div>
-        <p className="wl-fine">An independent research prototype, not the official NCCN tool. Branch conditions are machine-drafted and not clinician-reviewed; always check the source page. <button type="button" className="linkish" onClick={() => close({ help: true })}>How it works</button></p>
+        <p className="wl-fine">{T.prototype} <button type="button" className="linkish" onClick={() => close({ help: true })}>How to use it</button></p>
       </div>
     </div>
   );
