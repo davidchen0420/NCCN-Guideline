@@ -8,7 +8,7 @@ import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "r
 import { ArrowRight, ChevronRight, Compass, FileText, List, Minus, Plus, Search as SearchIcon, UserRound, X } from "lucide-react";
 import type { Bundle, Example, Facts, Library } from "../types";
 import { buildGraph, type Graph } from "../lib/graph";
-import { rankPathways, likelihoodWord, confidenceWord, hasFacts, type Pathway } from "../lib/pathways";
+import { rankPathways, confidenceWord, hasFacts, type Pathway } from "../lib/pathways";
 import { stripMarks } from "../lib/adapt";
 import { buildModel, searchIndex, CATEGORY_LABEL, type AtlasRaw, type GNode, type Model, type SearchHit } from "./model";
 import { Engine, type Focus, type Hit, type Route } from "./engine";
@@ -16,7 +16,11 @@ import { getGuideline } from "../Library";
 import { readPatient, writePatient } from "../lib/patient";
 import { renderPage } from "../lib/pdf";
 import { PageImage, PdfButton, SourceProvider, useSource, type SrcTarget } from "../source";
+import { useAdvanced } from "../store";
+import { T, matchWord, supportPhrase } from "../lib/terms";
+import { readPref, writePref } from "../lib/prefs";
 import "./atlas.css";
+import "./home.css";
 
 /* ---------------- hash <-> focus ---------------- */
 
@@ -143,6 +147,7 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
   const [pdfReady, setPdfReady] = useState(false);
   const [showOriginal, setShowOriginal] = useState(false);   // the card is the diagram; the PDF page is a preview away
   useEffect(() => { engineRef.current?.setShowOriginal(showOriginal); }, [showOriginal]);
+  const advanced = useAdvanced();
   const narrow = useMedia("(max-width: 640px)");
   const wide = useMedia("(min-width: 900px)");
   const docked = narrow || focus.level > 0 || (focus.level === 0 && !!focus.site);
@@ -240,7 +245,7 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
   // site annotations keep clear of the legend and the zoom buttons
   useEffect(() => {
     const f = () => {
-      const r = [...document.querySelectorAll(".atlas .legend, .atlas .zoom, .atlas .atlas-hint")].map((el) => { const b = el.getBoundingClientRect(); return [b.left, b.top, b.right, b.bottom] as [number, number, number, number]; });
+      const r = [...document.querySelectorAll(".atlas .legend, .atlas .zoom, .atlas .atlas-hint, .atlas .proto-note")].map((el) => { const b = el.getBoundingClientRect(); return [b.left, b.top, b.right, b.bottom] as [number, number, number, number]; });
       engineRef.current?.setObstacles(r);
     };
     f();
@@ -365,7 +370,7 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
   if (focus.level === 2) crumbs.push({ label: focus.page, f: null });
   crumbs[crumbs.length - 1].f = null;
 
-  const canvasLabel = focus.level === 2 ? `${g!.title}, page ${focus.page}: its boxes as printed` : g ? `${g.title}: ${g.pages.length} algorithm pages and the links between them` : site ? `${site.label}: ${site.members.length} guidelines` : `Map of ${model.guidelines.length} guidelines in ${model.sites.length} sites, with ${model.links.length} references between them`;
+  const canvasLabel = focus.level === 2 ? `${g!.title}, page ${focus.page}: its steps as printed` : g ? `${g.title}: ${g.pages.length} pages and how they connect` : site ? `${site.label}: ${site.members.length} guidelines` : `Map of ${model.guidelines.length} NCCN guidelines grouped by cancer site`;
 
   return (
     <SourceProvider bundle={bundle}>
@@ -387,7 +392,7 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
         <div className="top-right">
         <PdfButton total={model.guidelines.length} />
         <div className="view-switch" role="group" aria-label="View">
-          <button type="button" className="on" aria-pressed="true"><Compass size={14} aria-hidden /> Atlas</button>
+          <button type="button" className="on" aria-pressed="true"><Compass size={14} aria-hidden /> Map</button>
           <button type="button" aria-pressed="false" onClick={onList} data-testid="to-list"><List size={14} aria-hidden /> List</button>
         </div>
         </div>
@@ -398,8 +403,8 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
         <div className="hub-q">
         <div className={`hub-field${searchOpen && q ? " open" : ""}`}>
           <SearchIcon size={16} aria-hidden />
-          <input ref={inputRef} type="search" value={q} placeholder={docked ? "Search guidelines and pages" : `Search ${model.guidelines.length} guidelines`}
-            aria-label="Search guidelines, sections and pages" role="combobox" aria-expanded={searchOpen && hits.length > 0} aria-controls="atlas-results"
+          <input ref={inputRef} type="search" value={q} placeholder="Which cancer or topic?"
+            aria-label="Which cancer or topic? Search guidelines, sections and pages" role="combobox" aria-expanded={searchOpen && hits.length > 0} aria-controls="atlas-results"
             aria-activedescendant={searchOpen && hits[active] ? `res-${active}` : undefined} autoComplete="off" spellCheck={false}
             onFocus={() => setSearchOpen(true)} onBlur={() => setTimeout(() => setSearchOpen(false), 120)}
             onChange={(e) => { setQ(e.target.value); setSearchOpen(true); }}
@@ -416,17 +421,17 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
             {hits.map((h, i) => (
               <li key={`${h.kind}-${i}`} id={`res-${i}`} role="option" aria-selected={i === active} className={i === active ? "on" : ""}
                 onMouseDown={(e) => { e.preventDefault(); choose(h); }} onMouseEnter={() => setActive(i)}>
-                <span className={`res-kind k-${h.kind}`}>{h.kind === "guideline" ? "Guideline" : h.kind === "site" ? "Site" : h.kind === "section" ? "Section" : "Page"}</span>
+                <span className={`res-kind k-${h.kind}`}>{h.kind === "guideline" ? "Guideline" : h.kind === "site" ? "Cancer site" : h.kind === "section" ? "Section" : "Page"}</span>
                 <span className="res-label">{h.label}</span>
-                <span className="res-sub">{h.sub}</span>
+                <span className="res-sub">{h.sub.replace("algorithm pages", "pages")}</span>
               </li>
             ))}
             {!hits.length && <li className="res-none" role="option" aria-selected="false" aria-disabled="true">Nothing matches “{q}”.</li>}
           </ul>
         )}
         </div>
-        {!docked && <p className="hub-meta">{fmt(model.guidelines.length)} guidelines · {fmt(model.totalPages)} pages<br />{fmt(model.links.length)} cross-references</p>}
-        {!docked && <p className="hub-hint">or follow a branch of the map</p>}
+        {!docked && advanced && <p className="hub-meta">{fmt(model.guidelines.length)} guidelines · {fmt(model.totalPages)} pages<br />{fmt(model.links.length)} cross-references</p>}
+        {!docked && <p className="hub-hint">or click a cancer site on the map</p>}
       </div>
 
       {tip && <Tip tip={tip} model={model} bundle={bundle} />}
@@ -440,12 +445,13 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
               patients={patients} chosen={chosen?.id ?? null} best={best} graph={graph}
               choosePatient={(id) => setPatient(id && slug ? { slug, id } : null)}
               open={(page) => openReader(g.slug, page)}
+              retry={() => setBundles((x) => { const n = { ...x }; delete n[g.slug]; return n; })}
               enterPatient={() => { try { sessionStorage.setItem("oc-intent", "patient"); } catch { /* blocked */ } openReader(g.slug, g.pages.find((p) => p.start)?.id); }}
               openWithPatient={() => { if (chosen && route) { writePatient(g.slug, chosen.facts, chosen.age); openReader(g.slug, route.pages[0]); } }}
               preview={(h) => engineRef.current?.setPreview(h)} />
           )}
           {g && focus.level === 2 && (
-            <PagePanel g={g} page={focus.page} go={go} bundle={bundle} loadError={loadError} route={route}
+            <PagePanel g={g} page={focus.page} go={go} retry={() => setBundles((x) => { const n = { ...x }; delete n[g.slug]; return n; })} bundle={bundle} loadError={loadError} route={route}
               pdfReady={pdfReady} showOriginal={showOriginal} setShowOriginal={setShowOriginal}
               readBox={(node) => openReader(g.slug, focus.page, node)}
               source={(node) => sourceTarget(bundle, focus.page, node, { label: "Open in the reader", run: () => onOpen(g.slug, focus.page, node) })}
@@ -460,6 +466,7 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
       )}
 
       {focus.level === 0 && !site && legend && <Legend onClose={() => setLegend(false)} />}
+      {focus.level === 0 && !site && <p className="proto-note" role="note">{T.prototype}</p>}
       <AtlasHint level={focus.level} />
 
       <div className="zoom" role="group" aria-label="Zoom">
@@ -480,13 +487,14 @@ function safeArea(panel: boolean, wide: boolean) {
   const top = 60;
   if (panel && wide) return { x0: 0, y0: top, x1: w - 384, y1: h - 8 };
   if (panel) return { x0: 0, y0: top + 40, x1: w, y1: h - Math.min(h * 0.42, 360) };
-  return { x0: 0, y0: w <= 640 ? top + 48 : top - 20, x1: w, y1: h - 8 };
+  return { x0: 0, y0: w <= 640 ? top + 48 : top - 20, x1: w, y1: h - 40 };   // the last 40 px hold the prototype note
 }
 
 /* ---------------- tooltip ---------------- */
 
 function Tip({ tip, model, bundle }: { tip: { hit: Hit; x: number; y: number }; model: Model; bundle: Bundle | null }) {
   const { pdf } = useSource();
+  const advanced = useAdvanced();
   const ready = pdf.status === "ready";
   const ref = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<{ left: number; top: number }>({ left: tip.x + 16, top: tip.y + 16 });
@@ -507,13 +515,13 @@ function Tip({ tip, model, bundle }: { tip: { hit: Hit; x: number; y: number }; 
     body = (<>
       <p className="tip-eyebrow" style={{ color: g.site.color }}>{g.site.label} · {CATEGORY_LABEL[g.category] ?? g.category}</p>
       <p className="tip-title">{g.title}</p>
-      <p className="tip-meta">{g.version ? `Version ${g.version}` : ""}{g.date ? ` · ${g.date}` : ""}</p>
-      <dl className="tip-stats">
+      <p className="tip-meta">{[g.version ? `Version ${g.version}` : "", g.date, `${g.pages.length} pages`].filter(Boolean).join(" · ")}</p>
+      {advanced && <dl className="tip-stats">
         <div><dt>Algorithm pages</dt><dd>{g.pages.length}</dd></div>
         <div><dt>Boxes</dt><dd>{fmt(g.boxes)}</dd></div>
         <div><dt>Encoded conditions</dt><dd>{fmt(g.encoded)}</dd></div>
-      </dl>
-      {(g.cites.length > 0 || g.citedBy.length > 0) && <p className="tip-meta">Cites {g.cites.length} · cited by {g.citedBy.length} guidelines</p>}
+      </dl>}
+      {advanced && (g.cites.length > 0 || g.citedBy.length > 0) && <p className="tip-meta">Cites {g.cites.length} · cited by {g.citedBy.length} guidelines</p>}
     </>);
   } else if (h.kind === "site") {
     const s = model.sites.find((x) => x.id === h.site)!;
@@ -528,11 +536,11 @@ function Tip({ tip, model, bundle }: { tip: { hit: Hit; x: number; y: number }; 
     if (!p) return null;
     const out = g.links.filter(([a]) => a === p.index).length, inn = g.links.filter(([, b]) => b === p.index).length;
     body = (<>
-      <p className="tip-eyebrow"><code>{p.id}</code>{p.start ? " · Start page" : ""}{p.section !== null ? ` · ${g.sections[p.section]}` : ""}</p>
-      <p className="tip-title">{p.title}</p>
-      <p className="tip-meta">{p.boxes} boxes · {p.decisions} with an encoded condition · reached from {inn}, leads to {out} pages</p>
+      <p className="tip-eyebrow">{p.start ? "A good place to start" : p.section !== null ? g.sections[p.section] : "Guideline page"}</p>
+      <p className="tip-title">{p.title} <code>{p.id}</code></p>
+      <p className="tip-meta">{p.boxes} steps{advanced ? ` · ${p.decisions} with an encoded condition · reached from ${inn}, leads to ${out} pages` : ""}</p>
       {ready && bundle?.guideline?.slug === h.slug && bundle.pages[h.page]?.pdf !== undefined && (
-        <div className="tip-page"><PageImage t={{ page: bundle.pages[h.page].pdf!, label: h.page }} width={560} /><span>Original PDF page {bundle.pages[h.page].pdf! + 1}</span></div>
+        <div className="tip-page"><PageImage t={{ page: bundle.pages[h.page].pdf!, label: h.page }} width={560} /><span>NCCN page {bundle.pages[h.page].pdf! + 1}</span></div>
       )}
     </>);
   } else if (h.kind === "box") {
@@ -540,21 +548,21 @@ function Tip({ tip, model, bundle }: { tip: { hit: Hit; x: number; y: number }; 
     if (!n) return null;
     const text = stripMarks(n.text);
     body = (<>
-      <p className="tip-eyebrow"><code>{h.page}</code> · {n.pred ? "Condition" : n.role === "leaf" ? "Next step" : "Box"}</p>
+      <p className="tip-eyebrow">{n.pred ? "A decision" : n.role === "leaf" ? "Recommendation" : "Step"} · <code>{h.page}</code></p>
       {ready && n.bbox && bundle?.pages[h.page]?.pdf !== undefined
-        ? <div className="tip-page full"><PageImage t={{ page: bundle.pages[h.page].pdf!, bbox: n.bbox, label: h.page }} width={880} /><span>Original PDF · page {bundle.pages[h.page].pdf! + 1} · box highlighted</span></div>
+        ? <div className="tip-page full"><PageImage t={{ page: bundle.pages[h.page].pdf!, bbox: n.bbox, label: h.page }} width={880} /><span>NCCN page {bundle.pages[h.page].pdf! + 1} · this step is highlighted</span></div>
         : <p className="tip-box">{text.length > 320 ? text.slice(0, 320) + "…" : text}</p>}
     </>);
   } else if (h.kind === "jump") {
     const g = model.bySlug.get(h.slug)!;
     const p = g.pages.find((x) => x.id === h.to);
-    body = (<><p className="tip-eyebrow">Go to page</p><p className="tip-title"><code>{h.to}</code> {p?.title}</p></>);
+    body = (<><p className="tip-eyebrow">Go to page</p><p className="tip-title">{p?.title} <code>{h.to}</code></p></>);
   } else if (h.kind === "cite") {
     const g = model.bySlug.get(h.slug)!, t = model.bySlug.get(h.to)!;
     const from = g.cites.find((c) => c.slug === h.to)?.pages.map((i) => g.pages[i]?.id).filter(Boolean) ?? [];
-    body = (<><p className="tip-eyebrow" style={{ color: t.site.color }}>Cited guideline</p><p className="tip-title">{t.title}</p><p className="tip-meta">Cited on {from.join(", ")}</p></>);
+    body = (<><p className="tip-eyebrow" style={{ color: t.site.color }}>Related guideline</p><p className="tip-title">{t.title}</p><p className="tip-meta">Referred to on {from.join(", ")}</p></>);
   }
-  const hint = h.kind === "box" ? (ready ? "Click to open the page in its own window" : "Click to open the page (connect the PDF to see the original)") : h.kind === "page" ? "Click to open the page" : h.kind === "guideline" ? "Click to open its map" : h.kind === "site" ? "Click to zoom to this site" : "Click to go there";
+  const hint = h.kind === "box" ? (ready ? "Click to open the NCCN page in its own window" : "Click to see this step on the page") : h.kind === "page" ? "Click to open this page" : h.kind === "guideline" ? "Click to open this guideline" : h.kind === "site" ? "Click to see its guidelines" : "Click to go there";
   return (
     <div ref={ref} className="tip" style={pos} role="tooltip">
       {body}
@@ -570,7 +578,8 @@ function SitePanel({ site, go, preview }: { site: Model["sites"][number]; go: (f
     <div className="panel-body">
       <p className="eyebrow" style={{ color: site.color }}>Site</p>
       <h2 className="panel-title">{site.label}</h2>
-      <p className="panel-meta">{site.members.length} guidelines · {fmt(site.members.reduce((n, g) => n + g.pages.length, 0))} algorithm pages</p>
+      <p className="panel-meta">{site.members.length} guidelines · {fmt(site.members.reduce((n, g) => n + g.pages.length, 0))} pages</p>
+      <p className="panel-how">Pick a guideline to find the NCCN recommendation for a patient, or read its pages.</p>
       <ul className="panel-list">
         {site.members.map((g) => (
           <li key={g.slug}>
@@ -591,9 +600,10 @@ interface GPProps {
   g: GNode; model: Model; focus: Focus; go: (f: Focus) => void; bundle: Bundle | null; loadError: string | null;
   patients: { id: string; label: string; note?: string }[]; chosen: string | null; best: Pathway | null; graph: Graph | null;
   choosePatient: (id: string | null) => void; open: (page?: string) => void; openWithPatient: () => void; preview: (h: Hit) => void;
-  enterPatient: () => void;
+  enterPatient: () => void; retry: () => void;
 }
-function GuidelinePanel({ g, model, focus, go, bundle, loadError, patients, chosen, best, graph, choosePatient, open, openWithPatient, preview, enterPatient }: GPProps) {
+function GuidelinePanel({ g, model, focus, go, bundle, loadError, patients, chosen, best, graph, choosePatient, open, openWithPatient, preview, enterPatient, retry }: GPProps) {
+  const advanced = useAdvanced();
   const starts = g.pages.filter((p) => p.start);
   const section = focus.level === 1 ? focus.section ?? null : null;
   const last = best && graph ? graph.node(best.steps[best.steps.length - 1]?.node ?? "") : null;
@@ -606,38 +616,38 @@ function GuidelinePanel({ g, model, focus, go, bundle, loadError, patients, chos
       </button>
     );
   };
+  const nPages = best ? new Set(best.steps.map((s) => s.node.split(":")[0])).size : 0;
   return (
     <div className="panel-body">
       <p className="eyebrow" style={{ color: g.site.color }}>{g.site.label} · {CATEGORY_LABEL[g.category] ?? g.category}</p>
       <h2 className="panel-title">{g.title}</h2>
       <p className="panel-meta">{g.version ? `Version ${g.version}` : ""}{g.date ? ` · ${g.date}` : ""}</p>
-      <dl className="stats">
-        <div><dt>Algorithm pages</dt><dd>{g.pages.length}</dd></div>
-        <div><dt>Boxes</dt><dd>{fmt(g.boxes)}</dd></div>
-        <div><dt>Decision boxes encoded</dt><dd>{pct(g.encoded, g.decisions)}%<span className="bar" aria-hidden><i style={{ width: `${pct(g.encoded, g.decisions)}%` }} /></span></dd></div>
-      </dl>
-      <div className="pp-actions">
-        <button type="button" className="btn primary" onClick={() => enterPatient()} data-testid="enter-patient"><UserRound size={15} aria-hidden /> Enter a patient</button>
+      <div className="pp-actions stack">
+        <button type="button" className="btn primary" onClick={() => enterPatient()} data-testid="enter-patient"><UserRound size={15} aria-hidden /> Find a recommendation for a patient</button>
         <button type="button" className="btn" onClick={() => open(starts[0]?.id)}>Read the guideline <ArrowRight size={15} aria-hidden /></button>
       </div>
-      <p className="panel-how">Enter what the record says and OncoCarta ranks the routes through these pages that fit; or read the pages yourself.</p>
+      <p className="panel-how">Answer a few questions about the patient to find the NCCN recommendation, or read the guideline pages.</p>
 
       <section className="psec">
-        <h3><UserRound size={14} aria-hidden /> A patient's route</h3>
-        {loadError ? <p className="note">Could not read this guideline: {loadError}</p>
-          : !bundle ? <p className="note shimmer">Reading the guideline…</p>
-          : patients.length === 0 ? <p className="note">No example patients for this guideline yet. Enter a patient in the reader and come back: the route shows up here.</p>
+        <h3><UserRound size={14} aria-hidden /> Example patients</h3>
+        {loadError ? (
+          <div className="note">
+            <p>This guideline couldn't open. <button type="button" className="linkish" onClick={retry}>Try again</button></p>
+            <details className="more"><summary>Details</summary><span className="le-why">{loadError}</span></details>
+          </div>
+        ) : !bundle ? <p className="note shimmer">Reading the guideline…</p>
+          : patients.length === 0 ? <p className="note">No example patients for this guideline yet. Use “Find a recommendation for a patient” to enter one.</p>
           : (<>
-            <div className="pchips" role="group" aria-label="Patient">
+            <div className="pchips" role="group" aria-label="Example patients">
               {patients.map((p) => (
-                <button key={p.id} type="button" className={`pchip${chosen === p.id ? " on" : ""}`} aria-pressed={chosen === p.id} title={p.note} onClick={() => choosePatient(chosen === p.id ? null : p.id)}>{p.label}</button>
+                <button key={p.id} type="button" className={`pchip${chosen === p.id ? " on" : ""}`} aria-pressed={chosen === p.id} title={p.note} onClick={() => choosePatient(chosen === p.id ? null : p.id)}>{p.id === "mine" ? p.label : `Example: ${p.label}`}</button>
               ))}
             </div>
-            {chosen && !best && <p className="note">No route fits this patient from the start pages.</p>}
+            {chosen && !best && <p className="note">No recommendation fits this patient from the start pages.</p>}
             {best && (
               <div className="route-card">
-                <p className="route-lik"><b>{likelihoodWord(best.likelihood)}</b> · {Math.round(best.likelihood * 100)}% of the weight · {confidenceWord(best.confidence)} confidence ({Math.round(best.confidence)})</p>
-                <p className="route-meta">{best.met} criteria met · {best.open} still open · through {new Set(best.steps.map((s) => s.node.split(":")[0])).size} pages</p>
+                <p className="route-lik"><b>{matchWord(best.likelihood)}</b> · {supportPhrase(best.open)}{advanced && <> · {Math.round(best.likelihood * 100)}% of the weight · {confidenceWord(best.confidence)} confidence ({Math.round(best.confidence)})</>}</p>
+                {advanced && <p className="route-meta">{best.met} criteria met · {best.open} still open · through {nPages} pages</p>}
                 {last && <p className="route-end">Ends at: <span>{stripMarks(last.text).slice(0, 160)}</span></p>}
                 <button type="button" className="btn small" onClick={openWithPatient}>Open in the reader with this patient <ArrowRight size={13} aria-hidden /></button>
               </div>
@@ -647,12 +657,12 @@ function GuidelinePanel({ g, model, focus, go, bundle, loadError, patients, chos
 
       {starts.length > 0 && (
         <section className="psec">
-          <h3>Start here</h3>
+          <h3>Where to start</h3>
           <ul className="panel-list compact">
             {starts.map((p) => (
               <li key={p.id}>
                 <button type="button" onClick={() => go({ level: 2, slug: g.slug, page: p.id })} onMouseEnter={() => preview({ kind: "page", slug: g.slug, page: p.id })} onMouseLeave={() => preview(null)}>
-                  <code>{p.id}</code><span className="pl-title">{p.title}</span>
+                  <span className="pl-title">{p.title}</span><code>{p.id}</code>
                 </button>
               </li>
             ))}
@@ -671,13 +681,21 @@ function GuidelinePanel({ g, model, focus, go, bundle, loadError, patients, chos
         </section>
       )}
 
-      {(g.cites.length > 0 || g.citedBy.length > 0) && (
-        <section className="psec">
-          {g.cites.length > 0 && <><h3>Cites</h3><div className="gchips">{g.cites.map((c) => chip(c.slug))}</div></>}
-          {g.citedBy.length > 0 && <><h3>Cited by</h3><div className="gchips">{[...new Set(g.citedBy)].map(chip)}</div></>}
-        </section>
-      )}
-      <p className="panel-key"><span className="k-start" aria-hidden /> start page <span className="k-wedge" aria-hidden /> share of boxes with a condition <span className="k-dash" aria-hidden /> extra link</p>
+      <details className="psec about">
+        <summary>About this guideline</summary>
+        <p className="about-line">{g.pages.length} pages{g.version ? ` · NCCN Guidelines Version ${g.version}` : ""}{g.date ? `, ${g.date}` : ""}.</p>
+        <p className="about-line">{T.prototype}</p>
+        {advanced && (
+          <dl className="stats">
+            <div><dt>Algorithm pages</dt><dd>{g.pages.length}</dd></div>
+            <div><dt>Boxes</dt><dd>{fmt(g.boxes)}</dd></div>
+            <div><dt>Decision boxes encoded</dt><dd>{pct(g.encoded, g.decisions)}%<span className="bar" aria-hidden><i style={{ width: `${pct(g.encoded, g.decisions)}%` }} /></span></dd></div>
+          </dl>
+        )}
+        {g.cites.length > 0 && <><h3>Refers to</h3><div className="gchips">{g.cites.map((c) => chip(c.slug))}</div></>}
+        {g.citedBy.length > 0 && <><h3>Referred to by</h3><div className="gchips">{[...new Set(g.citedBy)].map(chip)}</div></>}
+        {advanced && <p className="panel-key"><span className="k-start" aria-hidden /> start page <span className="k-wedge" aria-hidden /> share of boxes with a condition <span className="k-dash" aria-hidden /> extra link</p>}
+      </details>
     </div>
   );
 }
@@ -686,10 +704,11 @@ interface PPProps {
   g: GNode; page: string; go: (f: Focus) => void; bundle: Bundle | null; loadError: string | null; route: Route | null;
   open: (node?: string) => void; hoverBox: (node: string | null) => void; preview: (h: Hit) => void;
   pdfReady: boolean; showOriginal: boolean; setShowOriginal: (v: boolean) => void;
-  readBox: (node: string) => void; source: (node?: string) => SrcTarget | null;
+  readBox: (node: string) => void; source: (node?: string) => SrcTarget | null; retry: () => void;
 }
-function PagePanel({ g, page, go, bundle, loadError, route, open, hoverBox, preview, pdfReady, showOriginal, setShowOriginal, readBox, source }: PPProps) {
+function PagePanel({ g, page, go, bundle, loadError, route, open, hoverBox, preview, pdfReady, showOriginal, setShowOriginal, readBox, source, retry }: PPProps) {
   const src = useSource();
+  const advanced = useAdvanced();
   const pageSrc = source();
   const p = g.pages.find((x) => x.id === page)!;
   const fp = bundle?.pages[page];
@@ -699,35 +718,29 @@ function PagePanel({ g, page, go, bundle, loadError, route, open, hoverBox, prev
   const pageLink = (x: typeof p) => (
     <li key={x.id}>
       <button type="button" onClick={() => go({ level: 2, slug: g.slug, page: x.id })} onMouseEnter={() => preview({ kind: "page", slug: g.slug, page: x.id })} onMouseLeave={() => preview(null)}>
-        <code>{x.id}</code><span className="pl-title">{x.title}</span>
+        <span className="pl-title">{x.title}</span><code>{x.id}</code>
       </button>
     </li>
   );
   return (
     <div className="panel-body">
       <p className="eyebrow"><button type="button" className="linkish" onClick={() => go({ level: 1, slug: g.slug })} style={{ color: g.site.color }}>{g.short}</button>{p.section !== null ? ` · ${g.sections[p.section]}` : ""}</p>
-      <h2 className="panel-title"><code className="ptid">{p.id}</code> {p.title}</h2>
-      <p className="panel-meta">{p.boxes} boxes · {p.decisions} with an encoded condition{p.start ? " · a start page" : ""}</p>
+      <h2 className="panel-title">{p.title} <code className="ptid">{p.id}</code></h2>
+      <p className="panel-meta">{advanced ? `${p.boxes} boxes · ${p.decisions} with an encoded condition` : `${p.boxes} ${p.boxes === 1 ? T.step : T.steps}`}{p.start ? " · a good place to start" : ""}</p>
       <div className="pp-actions">
         <button type="button" className="btn primary" onClick={() => open()}>Read this page <ArrowRight size={15} aria-hidden /></button>
-        <button type="button" className="btn" disabled={!pageSrc} onClick={() => pageSrc && src.open(pageSrc)} data-testid="open-pdf-page"><FileText size={15} aria-hidden /> Original PDF page</button>
+        <button type="button" className="btn" disabled={!pageSrc} onClick={() => pageSrc && src.open(pageSrc)} data-testid="open-pdf-page"><FileText size={15} aria-hidden /> {T.openPage}</button>
       </div>
       {pdfReady ? (
         <div className="seg" role="group" aria-label="The card shows">
           <button type="button" className={!showOriginal ? "on" : ""} aria-pressed={!showOriginal} onClick={() => setShowOriginal(false)}>Diagram</button>
           <button type="button" className={showOriginal ? "on" : ""} aria-pressed={showOriginal} onClick={() => setShowOriginal(true)}>Original page</button>
         </div>
-      ) : bundle && <p className="note">The card shows the boxes as extracted. <button type="button" className="linkish" onClick={src.pick}>Connect this guideline's PDF</button> or <button type="button" className="linkish" onClick={src.pickFolder}>a folder of NCCN PDFs</button> to see the original page here.</p>}
-      {route && route.pages.includes(page) && <p className="note route-note">The selected patient's route passes through this page (highlighted).</p>}
-      {(from.length > 0 || to.length > 0) && (
-        <section className="psec two">
-          {from.length > 0 && <div><h3>Reached from</h3><ul className="panel-list compact">{from.map(pageLink)}</ul></div>}
-          {to.length > 0 && <div><h3>Leads to</h3><ul className="panel-list compact">{to.map(pageLink)}</ul></div>}
-        </section>
-      )}
+      ) : bundle && <p className="note">The NCCN page isn't available here, so the diagram is rebuilt from the guideline text. <button type="button" className="linkish" onClick={src.pick}>Connect the NCCN PDF</button>{advanced && <> or <button type="button" className="linkish" onClick={src.pickFolder}>a folder of NCCN PDFs</button></>} to see the original page.</p>}
+      {route && route.pages.includes(page) && <p className="note route-note">The example patient's path passes through this page (highlighted).</p>}
       <section className="psec">
-        <h3>Boxes on this page</h3>
-        {loadError ? <p className="note">Could not read this guideline: {loadError}</p> : !bundle ? <p className="note shimmer">Reading the page…</p> : !boxes.length ? <p className="note no-boxes">No boxes were extracted from this page. Read it in the guideline, or check the source PDF.</p> : (
+        <h3>Steps on this page</h3>
+        {loadError ? <p className="note">This guideline couldn't open. <button type="button" className="linkish" onClick={retry}>Try again</button></p> : !bundle ? <p className="note shimmer">Reading the page…</p> : !boxes.length ? <p className="note no-boxes">No steps could be read from this page. Open the NCCN page to see it.</p> : (
           <ol className="box-list">
             {boxes.map((n) => { const full = `${page}:${n.id}`; return (
               <BoxRow key={n.id} text={stripMarks(n.text)} cond={!!n.pred} onRoute={!!route?.nodes.has(full)} t={source(full)}
@@ -736,12 +749,19 @@ function PagePanel({ g, page, go, bundle, loadError, route, open, hoverBox, prev
           </ol>
         )}
       </section>
+      {(from.length > 0 || to.length > 0) && (
+        <details className="psec about related">
+          <summary>Pages before and after this one</summary>
+          {from.length > 0 && <><h3>Comes from</h3><ul className="panel-list compact">{from.map(pageLink)}</ul></>}
+          {to.length > 0 && <><h3>Leads to</h3><ul className="panel-list compact">{to.map(pageLink)}</ul></>}
+        </details>
+      )}
     </div>
   );
 }
 
-/** A box in the page panel: hover previews the original PDF page around it, click opens that page,
- * the arrow opens the box in the reader. */
+/** A step in the page panel: hover previews the original NCCN page around it, click opens that page,
+ * the arrow opens the step in the reader. */
 function BoxRow({ text, cond, onRoute, t, hover, read }: { text: string; cond: boolean; onRoute: boolean; t: SrcTarget | null; hover: (on: boolean) => void; read: () => void }) {
   const src = useSource();
   return (
@@ -751,10 +771,10 @@ function BoxRow({ text, cond, onRoute, t, hover, read }: { text: string; cond: b
         onMouseEnter={(e) => { hover(true); if (t && matchMedia("(hover: hover)").matches) src.peek(t, e.currentTarget); }}
         onMouseLeave={() => { hover(false); src.unpeek(); }}
         onFocus={(e) => { hover(true); if (t) src.peek(t, e.currentTarget); }} onBlur={() => { hover(false); src.unpeek(); }}>
-        {cond && <span className="bl-cond" title="Has an encoded condition" />}
+        {cond && <span className="bl-cond" title="Has a condition the app can check" />}
         <span>{text.slice(0, 140)}</span>
       </button>
-      <button type="button" className="bl-read" aria-label="Open this box in the reader" title="Open in the reader" onClick={read}><ArrowRight size={13} /></button>
+      <button type="button" className="bl-read" aria-label="Open this step in the reader" title="Open in the reader" onClick={read}><ArrowRight size={13} /></button>
     </li>
   );
 }
@@ -763,16 +783,16 @@ function BoxRow({ text, cond, onRoute, t, hover, read }: { text: string; cond: b
 
 /** How to move around the map, once, until dismissed or a guideline is opened. */
 function AtlasHint({ level }: { level: number }) {
-  const [show, setShow] = useState(() => { try { return localStorage.getItem("oc-atlas-hint") !== "1"; } catch { return true; } });
-  const close = useCallback(() => { setShow(false); try { localStorage.setItem("oc-atlas-hint", "1"); } catch { /* blocked */ } }, []);
+  const [show, setShow] = useState(() => readPref("oc-atlas-hint") !== "1");
+  const close = useCallback(() => { setShow(false); writePref("oc-atlas-hint", "1"); }, []);
   useEffect(() => { if (level > 0 && show) close(); }, [level, show, close]);
   if (!show || level > 0) return null;
   return (
     <div className="atlas-hint" role="note">
-      <span><b>Click</b> a site or a guideline to go in</span>
-      <span><b>Scroll</b> or pinch to zoom</span>
-      <span><kbd>Esc</kbd> back out</span>
-      <span><kbd>/</kbd> search</span>
+      <span><b>Click</b> a cancer site or guideline to open it</span>
+      <span><b>Scroll</b> to zoom</span>
+      <span><kbd>Esc</kbd> to go back</span>
+      <span><kbd>/</kbd> to search</span>
       <button type="button" aria-label="Dismiss" onClick={close}><X size={13} /></button>
     </div>
   );
@@ -781,6 +801,7 @@ function AtlasHint({ level }: { level: number }) {
 /* ---------------- legend ---------------- */
 
 function Legend({ onClose }: { onClose: () => void }) {
+  const advanced = useAdvanced();
   return (
     <aside className="legend" aria-label="Legend">
       <button type="button" className="panel-x" aria-label="Hide legend" onClick={onClose}><X size={14} /></button>
@@ -791,7 +812,7 @@ function Legend({ onClose }: { onClose: () => void }) {
         <li><svg viewBox="0 0 20 20" aria-hidden><path d="M10 2 18 10 10 18 2 10Z" className="lg-ring" /><circle cx="10" cy="10" r="2" className="lg-fill" /></svg>Detection, prevention &amp; risk</li>
         <li><svg viewBox="0 0 20 20" aria-hidden><rect x="3" y="3" width="14" height="14" rx="4" className="lg-ring" /><circle cx="10" cy="10" r="2" className="lg-fill" /></svg>Specific populations</li>
       </ul>
-      <p className="lg-note">Size: number of algorithm pages. Outer arc: share of decision boxes with an encoded condition. Curves: one guideline citing another; point at a guideline to trace them.</p>
+      <p className="lg-note">Each colour is a cancer site; the shape is the kind of guideline. Bigger means more pages.{advanced && " Outer arc: share of decision boxes with an encoded condition. Curves: one guideline citing another; point at a guideline to trace them."}</p>
     </aside>
   );
 }
