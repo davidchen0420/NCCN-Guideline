@@ -37,14 +37,20 @@ await step("first visit: one question at a time, saying which page it decides; t
   const dec = panel.locator(".fgroup.deciders");
   assert.match(await dec.locator("legend").innerText(), /Questions that decide the first steps/);
   assert.equal(await panel.locator(".interview").count(), 1, "one question at a time is the default");
-  assert.match(await panel.locator(".interview .decides").innerText(), /Decides: .+ \(PROS-\d+\)/);
+  assert.match(await panel.locator(".interview .decides").innerText(), /Changes the recommendation at: .+ \(PROS-\d+\)/);
   assert.match(await panel.locator(".iv-n").innerText(), /^Question 1/);
   assert.equal(await panel.locator('select[aria-label="Which page"]').count(), 0, "page choice is an Advanced tool");
   assert.match(await panel.getByTestId("moment").innerText(), /Where is the patient now\?/);
+  assert.equal((await panel.locator(".filled").innerText()).trim(), "0 answered", "no total: nothing says every question is required");
+  // "Paste a note" in the top bar opens the paste box and puts the cursor in it
+  await panel.getByTestId("paste-open").click();
+  await page.waitForFunction(() => document.activeElement?.matches(".paste textarea"));
+  assert.ok(await panel.locator(".paste textarea").isVisible());
+  await panel.locator(".paste summary").click();
   await panel.getByTestId("mode-form").click();
   assert.equal(await panel.locator(".interview").count(), 0);
   assert.ok(await dec.locator(".pf.decider").count() >= 1);
-  assert.match(await dec.locator(".decides").first().innerText(), /Decides: .+ \(PROS-\d+\)/);
+  assert.match(await dec.locator(".decides").first().innerText(), /Changes the recommendation at: .+ \(PROS-\d+\)/);
   assert.equal(await panel.locator(".more-details").getAttribute("open"), null, "the rest is folded away");
   assert.equal(await panel.locator(".more-details").getByText("Stated in the record").count(), 0, "stated values are an Advanced tool");
   assert.equal(await panel.locator(".computed .ovr").count(), 0);
@@ -52,7 +58,7 @@ await step("first visit: one question at a time, saying which page it decides; t
 await step("the More menu holds saving, loading and starting over, and closes with Escape or a click outside", async () => {
   await more.click();
   const menu = panel.getByRole("dialog", { name: "More patient options" });
-  for (const b of ["Save this patient", "Start over"]) assert.ok(await menu.getByRole("button", { name: b, exact: true }).isVisible(), b);
+  for (const b of ["Save in this browser", "Start over"]) assert.ok(await menu.getByRole("button", { name: b, exact: true }).isVisible(), b);
   assert.ok(await menu.getByLabel("Load an example").isVisible(), "examples");
   await page.keyboard.press("Escape");
   assert.equal(await menu.count(), 0);
@@ -63,7 +69,7 @@ await step("the More menu holds saving, loading and starting over, and closes wi
 await step("paste the record: details found, shown with their evidence, applied after review", async () => {
   await panel.getByText("Paste from the note").click();
   await panel.locator(".paste textarea").fill("64-year-old man with low-risk prostate cancer (cT1c, Gleason 3+3, PSA 5 ng/mL), life expectancy about 18 years. PSA nadir was 0.2.");
-  await panel.getByRole("button", { name: "Find details" }).click();
+  await panel.getByRole("button", { name: "Read the note" }).click();
   const found = await panel.locator(".found li").allInnerTexts();
   assert.ok(found.some((t) => /Clinical T Category\s+T1c/.test(t)), found.join(" | "));
   assert.ok(found.some((t) => /Grade Group\s+1[\s\S]*Gleason 3\+3/.test(t)));
@@ -104,8 +110,8 @@ await step("number keys choose an answer", async () => {
   assert.equal(await page.locator("#fact-visceral_metastases_present button", { hasText: "No" }).getAttribute("aria-checked"), "true");
 });
 await step("patients are saved in the browser and loaded back", async () => {
-  await fromMore("Save this patient");
-  await panel.getByLabel("Name for this patient").fill("Test patient A");
+  await fromMore("Save in this browser");
+  await panel.getByLabel("Label for this patient").fill("Test patient A");
   await panel.locator(".save-row button[type=submit]").click();
   await fromMore("Start over");
   assert.equal(await panel.locator(".chips-strip").count(), 0);
@@ -158,9 +164,20 @@ await step("where is the patient now: a later moment starts there, holds details
   // details at diagnosis: life expectancy describes the patient then; the T category is recorded at diagnosis
   await panel.getByText("Paste from the note").click();
   await panel.locator(".paste textarea").fill("64-year-old man, cT2a, Gleason 3+4, PSA 8 ng/mL, life expectancy 15 years.");
-  await panel.getByRole("button", { name: "Find details" }).click();
+  await panel.getByRole("button", { name: "Read the note" }).click();
   await panel.getByTestId("apply-found").click();
   await moment.getByRole("button", { name: "Recurrence or relapse" }).click();
+  assert.match(await moment.innerText(), /Starting at [^\n]*\(PROS-8\)/);
+  // a phase with several pages: choose the situation by title (the page select is an Advanced tool)
+  const sit = moment.getByTestId("situations");
+  assert.ok(await sit.getByRole("radio").count() >= 2, "several situations in this phase");
+  assert.equal(await sit.getByRole("radio").first().getAttribute("aria-checked"), "true");
+  const second = sit.getByRole("radio").nth(1);
+  const title2 = (await second.locator("span").innerText()).trim();
+  await second.click();
+  assert.equal(await second.getAttribute("aria-checked"), "true");
+  assert.ok((await moment.locator(".hint").innerText()).includes(title2), "the hint names the chosen situation");
+  await sit.getByRole("radio").first().click();
   assert.match(await moment.innerText(), /Starting at [^\n]*\(PROS-8\)/);
   await page.locator("#tab-paths").click();
   await page.locator(".reco-card, .empty").first().waitFor();   // the start-from picker is an Advanced tool; the moment above already chose PROS-8
@@ -173,7 +190,7 @@ await step("where is the patient now: a later moment starts there, holds details
   await panel.locator(".more-details > summary").click();
   const heads = (await panel.locator(".more-details legend, .more-details > details > summary").allInnerTexts()).join(" | ");
   assert.match(heads, /CURRENT SITUATION[\s\S]*TREATMENT SO FAR[\s\S]*ORIGINAL DIAGNOSIS/i, heads);
-  assert.match(await panel.locator(".scope-note").innerText(), /details that apply from .+ \(PROS-8\)/);
+  assert.match(await panel.locator(".scope-note").innerText(), /questions that matter from .+ \(PROS-8\)/);
   const before = await panel.locator(".more-details .pf").count();
   await panel.getByTestId("show-all").click();
   assert.ok(await panel.locator(".more-details .pf").count() > before, "show all widens the form");
@@ -201,6 +218,10 @@ await step("Advanced tools add the page choice, stated values and override links
   await page.evaluate(() => localStorage.setItem("oc-advanced", "1"));
   await page.reload();
   await page.locator("[data-testid=card]").first().waitFor();
+  await panel.getByTestId("moment").getByRole("button", { name: "Recurrence or relapse" }).click();
+  assert.equal(await panel.locator('select[aria-label="Which page"]').count(), 1, "Advanced: the page select");
+  assert.equal(await panel.getByTestId("situations").count(), 0);
+  await panel.getByTestId("moment").getByRole("button", { name: "Not sure" }).click();
   await panel.locator(".more-details > summary").click();
   assert.equal(await panel.locator(".more-details").getByText("Stated in the record").count(), 1);
   await page.evaluate(() => localStorage.removeItem("oc-advanced"));
@@ -211,6 +232,26 @@ await step("works across guidelines: multi-disease guideline asks the disease fi
   await page.locator("#fact-guideline_section").waitFor();
   await page.locator("#fact-guideline_section").selectOption({ index: 1 });
   await page.waitForFunction(() => document.querySelector(".fgroup.deciders legend")?.textContent?.includes("Questions that change the recommendation"));
+});
+await step("a chosen subtype keeps its moments; a long answer list is searched, not numbered", async () => {
+  const sel = page.locator("#fact-guideline_section");
+  await sel.selectOption({ label: "Diffuse Large B-Cell Lymphoma" });
+  await page.waitForFunction(() => document.querySelectorAll(".moment-chips button").length >= 3);
+  // a subtype with a single moment says where it starts instead of showing chips
+  await sel.selectOption({ label: "Burkitt Lymphoma" });
+  await page.waitForFunction(() => /Starting at/.test(document.querySelector("[data-testid=moment]")?.textContent ?? ""));
+  assert.equal(await panel.locator(".moment-chips").count(), 0);
+  // more than nine choices: type to narrow them (number keys only reach 9)
+  await sel.selectOption({ label: "HIV-Related B-Cell Lymphomas" });
+  if (await panel.getByTestId("mode-interview").count()) await panel.getByTestId("mode-interview").click();
+  const search = panel.locator(".iv-search input");
+  await search.waitFor();
+  assert.equal(await panel.locator(".iv-options").count(), 0);
+  assert.doesNotMatch(await panel.locator(".iv-n").innerText(), /\d+ more/, "no promised count");
+  await search.fill("burkitt");
+  assert.equal(await panel.locator(".iv-list button").count(), 1);
+  await search.press("Enter");
+  await page.waitForFunction(() => [...document.querySelectorAll(".chips-strip li")].some((li) => /Histology/.test(li.textContent)));
 });
 await browser.close();
 server.close();

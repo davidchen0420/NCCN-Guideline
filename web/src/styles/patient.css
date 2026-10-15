@@ -6,7 +6,8 @@
 /* ---------- top bar ---------- */
 .patient .patient-top { align-items: center; flex-wrap: nowrap; }
 .patient .filled { font-size: var(--fs-md); color: var(--ink-2); }
-.patient .meter { width: 160px; height: 4px; }
+.pt-actions { display: flex; align-items: center; gap: 4px; flex: none; }
+.pt-paste-btn { min-height: 34px; padding: 4px 10px; font-size: var(--fs-md); color: var(--accent); }
 .pt-more { position: relative; flex: none; }
 .pt-more-btn { min-height: 34px; padding: 4px 12px; font-size: var(--fs-md); }
 .pt-more-btn svg { transition: transform .15s; }
@@ -61,6 +62,14 @@
 .patient .moment .sel { min-height: 34px; font-size: var(--fs-md); }
 .patient .section-pick .pf, .patient .moment .pf { margin-bottom: 4px; }
 .patient .moment .pf .sel, .patient .section-pick .pf .sel { min-height: 36px; font-size: var(--fs-md); }
+
+/* which situation: one page per row, title first */
+.patient .situations { display: grid; gap: 4px; margin: 4px 0 2px; }
+.patient .situations button { display: block; text-align: left; border: 1px solid var(--line-strong); background: var(--surface); border-radius: var(--r); padding: 6px 12px; min-height: 36px; font-size: var(--fs-md); color: var(--ink); }
+.patient .situations button i { font-style: normal; color: var(--muted); font-size: var(--fs-sm); }
+.patient .situations button:hover { border-color: var(--ink-2); }
+.patient .situations button[aria-checked=true] { background: var(--accent-soft); border-color: var(--accent); }
+.patient .situations button[aria-checked=true] span { font-weight: 600; }
 
 /* carried over from diagnosis */
 .patient .carried { padding: 10px 12px 12px; }
@@ -120,6 +129,13 @@
 .patient .iv-to { font-size: var(--fs-sm); white-space: normal; overflow: visible; color: var(--ink-2); }
 .patient .iv-to .pv-page { font-weight: 600; color: var(--accent); }
 .patient .iv-to .pv-open { color: var(--muted); }
+.patient .iv-search { display: grid; gap: 6px; }
+.patient .iv-search input { width: 100%; border: 1px solid var(--line-strong); border-radius: var(--r); padding: 8px 10px; min-height: 38px; font-size: var(--fs-md); background: var(--surface); color: var(--ink); }
+.patient .iv-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; max-height: 300px; overflow: auto; }
+.patient .iv-list button { width: 100%; text-align: left; border: 1px solid var(--line-strong); background: var(--surface); border-radius: var(--r); padding: 7px 12px; min-height: 38px; display: grid; gap: 1px; }
+.patient .iv-list button:hover, .patient .iv-list button:focus-visible { border-color: var(--accent); background: var(--accent-soft); }
+.patient .iv-list b { font-size: var(--fs-md); font-weight: 600; }
+.patient .iv-none { color: var(--muted); font-size: var(--fs-sm); padding: 6px 2px; }
 .patient .iv-tip { font-size: var(--fs-sm); color: var(--muted); }
 .patient .iv-actions { gap: 8px; align-items: center; }
 .patient .iv-actions .btn { min-height: 34px; padding: 5px 12px; font-size: var(--fs-md); }
@@ -154,7 +170,7 @@
 .patient .fgroup.more summary { min-height: 32px; display: flex; align-items: center; }
 
 @media (max-width: 520px) {
-  .patient .meter { width: 100px; }
+  .pt-paste-btn { padding: 4px 8px; }
   .patient .iv-q { font-size: 18px; }
   .patient .interview { padding: 12px; }
 }
