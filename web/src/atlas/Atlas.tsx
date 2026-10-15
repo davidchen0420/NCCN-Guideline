@@ -15,7 +15,7 @@ import { Engine, type Focus, type Hit, type Route } from "./engine";
 import { getGuideline } from "../Library";
 import { readPatient, writePatient } from "../lib/patient";
 import { renderPage } from "../lib/pdf";
-import { PageCrop, PageImage, PdfButton, SourceProvider, useSource, type SrcTarget } from "../source";
+import { PageImage, PdfButton, SourceProvider, useSource, type SrcTarget } from "../source";
 import "./atlas.css";
 
 /* ---------------- hash <-> focus ---------------- */
@@ -141,7 +141,7 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
   const srcRef = useRef<SourceApi | null>(null);
   const prefetch = useRef(0);
   const [pdfReady, setPdfReady] = useState(false);
-  const [showOriginal, setShowOriginal] = useState(true);
+  const [showOriginal, setShowOriginal] = useState(false);   // the card is the diagram; the PDF page is a preview away
   useEffect(() => { engineRef.current?.setShowOriginal(showOriginal); }, [showOriginal]);
   const narrow = useMedia("(max-width: 640px)");
   const wide = useMedia("(min-width: 900px)");
@@ -542,7 +542,7 @@ function Tip({ tip, model, bundle }: { tip: { hit: Hit; x: number; y: number }; 
     body = (<>
       <p className="tip-eyebrow"><code>{h.page}</code> · {n.pred ? "Condition" : n.role === "leaf" ? "Next step" : "Box"}</p>
       {ready && n.bbox && bundle?.pages[h.page]?.pdf !== undefined
-        ? <div className="tip-page"><PageCrop t={{ page: bundle.pages[h.page].pdf!, bbox: n.bbox, label: h.page }} width={276} /><span>Original PDF · page {bundle.pages[h.page].pdf! + 1}</span></div>
+        ? <div className="tip-page full"><PageImage t={{ page: bundle.pages[h.page].pdf!, bbox: n.bbox, label: h.page }} width={880} /><span>Original PDF · page {bundle.pages[h.page].pdf! + 1} · box highlighted</span></div>
         : <p className="tip-box">{text.length > 320 ? text.slice(0, 320) + "…" : text}</p>}
     </>);
   } else if (h.kind === "jump") {
@@ -554,7 +554,7 @@ function Tip({ tip, model, bundle }: { tip: { hit: Hit; x: number; y: number }; 
     const from = g.cites.find((c) => c.slug === h.to)?.pages.map((i) => g.pages[i]?.id).filter(Boolean) ?? [];
     body = (<><p className="tip-eyebrow" style={{ color: t.site.color }}>Cited guideline</p><p className="tip-title">{t.title}</p><p className="tip-meta">Cited on {from.join(", ")}</p></>);
   }
-  const hint = h.kind === "box" ? (ready ? "Click to open the original PDF page" : "Click to open the page (connect the PDF to see the original)") : h.kind === "page" ? "Click to open the page" : h.kind === "guideline" ? "Click to open its map" : h.kind === "site" ? "Click to zoom to this site" : "Click to go there";
+  const hint = h.kind === "box" ? (ready ? "Click to open the page in its own window" : "Click to open the page (connect the PDF to see the original)") : h.kind === "page" ? "Click to open the page" : h.kind === "guideline" ? "Click to open its map" : h.kind === "site" ? "Click to zoom to this site" : "Click to go there";
   return (
     <div ref={ref} className="tip" style={pos} role="tooltip">
       {body}
@@ -714,8 +714,8 @@ function PagePanel({ g, page, go, bundle, loadError, route, open, hoverBox, prev
       </div>
       {pdfReady ? (
         <div className="seg" role="group" aria-label="The card shows">
+          <button type="button" className={!showOriginal ? "on" : ""} aria-pressed={!showOriginal} onClick={() => setShowOriginal(false)}>Diagram</button>
           <button type="button" className={showOriginal ? "on" : ""} aria-pressed={showOriginal} onClick={() => setShowOriginal(true)}>Original page</button>
-          <button type="button" className={!showOriginal ? "on" : ""} aria-pressed={!showOriginal} onClick={() => setShowOriginal(false)}>Extracted boxes</button>
         </div>
       ) : bundle && <p className="note">The card shows the boxes as extracted. <button type="button" className="linkish" onClick={src.pick}>Connect this guideline's PDF</button> or <button type="button" className="linkish" onClick={src.pickFolder}>a folder of NCCN PDFs</button> to see the original page here.</p>}
       {route && route.pages.includes(page) && <p className="note route-note">The selected patient's route passes through this page (highlighted).</p>}

@@ -194,6 +194,7 @@
 .tip-page > span { display: block; font-size: 10.5px; color: var(--muted); margin-top: 4px; font-family: var(--mono); }
 .tip-page .page-img, .tip-page .page-crop { border: 1px solid var(--line); border-radius: 4px; overflow: hidden; background: #fff; }
 .tip:has(.tip-page) { max-width: 304px; }
+.tip:has(.tip-page.full) { max-width: 452px; width: 452px; }
 .pp-actions { display: flex; gap: 8px; margin-top: 14px; }
 .pp-actions .btn.primary { margin-top: 0; flex: 1; justify-content: center; }
 .pp-actions .btn:not(.primary) { white-space: nowrap; }

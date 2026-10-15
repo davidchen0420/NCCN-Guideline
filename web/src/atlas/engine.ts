@@ -143,7 +143,7 @@ export class Engine {
   /** rendered original PDF pages for page cards, keyed "slug/page" */
   private pageImages = new Map<string, { img: CanvasImageSource; w: number; h: number }>();
   /** draw page cards from the original PDF page when it is available */
-  showOriginal = true;
+  showOriginal = false;   // page cards draw the diagram; the PDF page only when asked
   private time = 0;
   focus: Focus = { level: 0 };
   hover: Hit = null;

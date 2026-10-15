@@ -223,7 +223,15 @@ await step("source PDF: found next to the data, shown on hover, opened on click"
   await p.goto(base + "#atlas/prostate/PROS-3");
   await p.locator(".atlas .pdf-btn.ready").waitFor({ timeout: 20000 });
   assert.ok(served >= 1, "the served copy was fetched");
-  // the page card is drawn from the original page (its red banner is cropped away, the blue box outlines are not)
+  // the page card is the diagram; "Original page" draws the PDF page instead (its blue box outlines show)
+  await p.waitForTimeout(1500);
+  const bluePx = () => p.evaluate(() => {
+    const c = document.querySelector(".atlas-canvas"), d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data;
+    let n = 0; for (let i = 0; i < d.length; i += 4) if (d[i + 2] > 150 && d[i] < 90 && d[i + 1] < 90) n++; return n;
+  });
+  assert.ok((await bluePx()) < 200, "the card is the diagram, not the PDF page");
+  assert.equal(await p.getByRole("button", { name: "Diagram", exact: true }).getAttribute("aria-pressed"), "true");
+  await p.getByRole("button", { name: "Original page", exact: true }).click();
   await p.waitForTimeout(1500);
   const blue = await p.evaluate(() => {
     const c = document.querySelector(".atlas-canvas"), d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data;
@@ -237,11 +245,14 @@ await step("source PDF: found next to the data, shown on hover, opened on click"
   const hl = await p.locator(".peek .hl").boundingBox(), img = await p.locator(".peek .page-img img").boundingBox();
   assert.ok(hl && img && hl.x >= img.x && hl.y >= img.y && hl.x + hl.width <= img.x + img.width + 1, "box outlined inside the page");
   assert.equal(await p.locator(".peek .recon").count(), 0, "not the reconstruction");
-  // click: the original page opens in the floating viewer, one click from the reader
-  await row.click();
-  await p.locator(".viewer .page-img img").waitFor();
-  assert.match(await p.locator(".viewer-title").innerText(), /PROS-3 · PDF page \d+ of 222/);
-  await p.locator(".viewer-act").click();
+  await p.getByRole("button", { name: "Diagram", exact: true }).click();
+  // click: the original page opens in its own window, one click from the reader
+  const [win] = await Promise.all([ctx.waitForEvent("page"), row.click()]);
+  await win.locator(".viewer .page-img img").waitFor();
+  assert.match(await win.locator(".viewer-title").innerText(), /PROS-3 · PDF page \d+ of 222/);
+  assert.match(await win.title(), /PROS-3/);
+  assert.equal(await p.locator(".viewer").count(), 0, "not over the diagram");
+  await win.locator(".viewer-act").click();
   await p.waitForFunction(() => /^#prostate\/flow\/PROS-3\/.+/.test(location.hash));
   // the reader finds the same PDF: its card previews are original pages too
   if (await p.getByRole("dialog", { name: /Find where a patient sits/ }).count()) await p.getByRole("button", { name: /Browse the guideline/ }).click();
@@ -258,9 +269,18 @@ await step("hosted copy: the PDF published next to the page; clicking a box show
   await p.goto(base + "#prostate/flow/PROS-2");
   if (await p.getByRole("dialog", { name: /Find where a patient sits/ }).count()) await p.getByRole("button", { name: /Browse the guideline/ }).click();
   await p.locator(".pdf-btn.ready").first().waitFor({ timeout: 20000 });
-  await p.locator(".canvas [data-testid=card]:visible").filter({ hasText: "Intermediate" }).first().click({ position: { x: 20, y: 40 } });
-  await p.locator(".viewer .page-img img").waitFor();
-  assert.match(await p.locator(".viewer-title").innerText(), /PROS-2 · PDF page \d+ of 222/);
+  const card = p.locator(".canvas [data-testid=card]:visible").filter({ hasText: "Intermediate" }).first();
+  // hover: the page with the box highlighted
+  await card.hover({ position: { x: 30, y: 30 } });
+  await p.locator(".peek .page-img img").waitFor();
+  assert.equal(await p.locator(".peek .hl").count(), 1, "box highlighted");
+  // click: the page in its own window, reused for the next box
+  const [win] = await Promise.all([ctx.waitForEvent("page"), card.click({ position: { x: 20, y: 40 } })]);
+  await win.locator(".viewer .page-img img").waitFor();
+  assert.match(await win.locator(".viewer-title").innerText(), /PROS-2 · PDF page \d+ of 222/);
+  await p.locator(".canvas [data-testid=card]:visible").filter({ hasText: "High" }).first().click({ position: { x: 20, y: 30 } });
+  await p.waitForTimeout(500);
+  assert.equal(ctx.pages().length, 2, "one window for the pages");
   await ctx.close();
 });
 await step("source PDF: a folder is matched to guidelines and kept in the browser", async () => {

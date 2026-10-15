@@ -192,7 +192,34 @@ export function SourceProvider({ children, bundle: given }: { children: ReactNod
     timer.current = window.setTimeout(() => setPeek(null), 160);
   }, []);
   const holdPeek = useCallback(() => window.clearTimeout(timer.current), []);
-  const open = useCallback((t: SrcTarget) => { window.clearTimeout(timer.current); setPeek(null); setView(t); }, []);
+  // Opening a page puts it in its own browser window (one, reused for each page opened); when the
+  // browser refuses a pop-up, the floating viewer in the page instead.
+  const winRef = useRef<Window | null>(null);
+  const [win, setWin] = useState<Window | null>(null);
+  const open = useCallback((t: SrcTarget) => {
+    window.clearTimeout(timer.current); setPeek(null);
+    let w = winRef.current && !winRef.current.closed ? winRef.current : null;
+    if (!w) {
+      try {
+        w = window.open("", "oncocarta-page", `popup=yes,width=${Math.min(860, screen.availWidth - 40)},height=${Math.min(1000, screen.availHeight - 60)}`);
+      } catch { w = null; }
+      if (w) {
+        w.document.body.replaceChildren();
+        w.document.head.querySelectorAll("style[data-oc]").forEach((s) => s.remove());
+        [...document.styleSheets].forEach((ss) => {
+          try { const st = w!.document.createElement("style"); st.dataset.oc = ""; st.textContent = [...ss.cssRules].map((r) => r.cssText).join("\n"); w!.document.head.appendChild(st); } catch { /* cross-origin sheet */ }
+        });
+        w.document.documentElement.dataset.theme = document.documentElement.dataset.theme ?? "";
+        w.document.body.className = "pip-body";
+        const ww = w;
+        ww.addEventListener("pagehide", () => { if (winRef.current === ww) { winRef.current = null; setWin(null); setView(null); } });
+        winRef.current = w; setWin(w);
+      }
+    }
+    w?.focus();
+    setView(t);
+  }, []);
+  useEffect(() => () => { winRef.current?.close(); }, []);
 
   useEffect(() => {
     const esc = (e: KeyboardEvent) => { if (e.key === "Escape") { setPeek(null); } };
@@ -209,7 +236,7 @@ export function SourceProvider({ children, bundle: given }: { children: ReactNod
       <input ref={folderRef} type="file" hidden multiple {...{ webkitdirectory: "", directory: "" }} data-testid="pdf-folder-input"
         onChange={(e) => { connectFiles([...(e.target.files ?? [])]); e.target.value = ""; }} />
       {peekT && createPortal(<Peek t={peekT.t} rect={peekT.rect} onEnter={holdPeek} onLeave={unpeek} onOpen={() => open(peekT.t)} />, document.body)}
-      {view && bundle && <Viewer t={view} onClose={() => setView(null)} onNav={(page) => setView({ page, label: pageLabel(bundle, page) })} />}
+      {view && bundle && <Viewer key={win ? "win" : "float"} t={view} win={win} onClose={() => { winRef.current?.close(); winRef.current = null; setWin(null); setView(null); }} onNav={(page) => setView({ page, label: pageLabel(bundle, page) })} />}
       {drag && createPortal(<div className="drop"><p><FileText size={18} /> {key ? "Drop the guideline PDF (or a folder of NCCN PDFs) to connect it" : "Drop NCCN guideline PDFs to connect them"}</p></div>, document.body)}
     </Ctx.Provider>
   );
@@ -337,11 +364,13 @@ export function PageCrop({ t, width = 300 }: { t: SrcTarget; width?: number }) {
 
 declare global { interface Window { documentPictureInPicture?: { requestWindow: (o: { width: number; height: number }) => Promise<Window> } } }
 
-function Viewer({ t, onClose, onNav }: { t: SrcTarget; onClose: () => void; onNav: (page: number) => void }) {
+function Viewer({ t, win = null, onClose, onNav }: { t: SrcTarget; win?: Window | null; onClose: () => void; onNav: (page: number) => void }) {
   const { pdf, pick, pickFolder, bundle } = useSource();
   const [zoom, setZoom] = useState(1);
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
-  const [pip, setPip] = useState<Window | null>(null);
+  const [popped, setPip] = useState<Window | null>(null);
+  const pip = win ?? popped;
+  useEffect(() => { if (pip) pip.document.title = `${t.label} · NCCN PDF page ${t.page + 1}`; }, [pip, t.label, t.page]);
   const box = useRef<HTMLDivElement>(null);
   const body = useRef<HTMLDivElement>(null);
   const [bw, setBw] = useState(600);
@@ -377,7 +406,7 @@ function Viewer({ t, onClose, onNav }: { t: SrcTarget; onClose: () => void; onNa
     w.addEventListener("pagehide", () => setPip(null));
     setPip(w);
   };
-  useEffect(() => () => { pip?.close(); }, [pip]);
+  useEffect(() => () => { popped?.close(); }, [popped]);
 
   const total = bundle?.pdf_pages ?? pdf.doc?.numPages ?? 0;
   const width = Math.round(Math.max(320, bw) * zoom * (window.devicePixelRatio > 1 ? 2 : 1));
