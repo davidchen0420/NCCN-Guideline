@@ -194,16 +194,56 @@ await step("Settings: Advanced tools reveals the reviewer views, and the guide c
   await plain.getByTestId("rail-hist").waitFor();
   await plain.getByTestId("rail-settings").click();
   await plain.getByTestId("advanced-toggle").uncheck();
-  await plain.getByTestId("guide-toggle").uncheck();
   await plain.keyboard.press("Escape");
   assert.equal(await plain.getByLabel("Arrow certainty").count(), 0);
-  assert.equal(await plain.locator(".guide").count(), 0, "guide hidden");
+});
+await step("the 3-step strip is off by default (one-line hint only) and Settings turns it on", async () => {
+  assert.equal(await plain.locator(".guide").count(), 1, "one-line hint");
+  assert.equal(await plain.locator(".guide-steps").count(), 0, "no stepper row");
   await plain.getByTestId("rail-settings").click();
+  assert.equal(await plain.getByTestId("guide-toggle").isChecked(), false);
   await plain.getByTestId("guide-toggle").check();
   await plain.keyboard.press("Escape");
-  assert.equal(await plain.locator(".guide").count(), 1);
+  assert.equal(await plain.locator(".guide-steps li").count(), 3);
+  await plain.getByTestId("rail-settings").click();
+  await plain.getByTestId("guide-toggle").uncheck();
+  await plain.keyboard.press("Escape");
+  assert.equal(await plain.locator(".guide-steps").count(), 0);
+  await plain.getByRole("button", { name: "Hide this hint" }).click();
+  assert.equal(await plain.locator(".guide").count(), 0, "hint dismissed");
 });
 await plain.close();
+
+// ------------------------------------------------------------------ default layout on a wide screen
+const wide = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
+watch(wide);
+await wide.addInitScript(() => { try { localStorage.setItem("nav-help", "1"); } catch { /* blocked */ } });
+await wide.goto(url);
+await step("wide screen, default mode: Contents starts closed, remembers the last choice, zoom controls sit bottom right", async () => {
+  await cards(wide).first().waitFor();
+  assert.equal(await wide.locator(".app.left-open").count(), 0, "Contents closed");
+  assert.equal(await wide.locator(".zbox input[type=range]").isVisible(), false, "no zoom slider outside Advanced");
+  const z = await wide.locator(".zoomctl").boundingBox(), v = await wide.locator(".canvas").boundingBox();
+  assert.ok(z && v && z.x > v.x + v.width / 2 && z.y > v.y + v.height / 2, "zoom group in the bottom-right quarter");
+  assert.ok(await wide.getByRole("button", { name: "Zoom in" }).isVisible() && await wide.getByRole("button", { name: "Fit page" }).isVisible());
+  assert.match(await wide.locator(".ext-t").innerText(), /NCCN\.org/);
+  await wide.getByTestId("rail-toc").click();
+  assert.equal(await wide.locator(".app.left-open").count(), 1);
+  await wide.reload();
+  await cards(wide).first().waitFor();
+  assert.equal(await wide.locator(".app.left-open").count(), 1, "open again after reload");
+  await wide.getByTestId("rail-toc").click();
+  await wide.reload();
+  await cards(wide).first().waitFor();
+  assert.equal(await wide.locator(".app.left-open").count(), 0, "closed again after reload");
+});
+await step("wide screen, Advanced: zoom slider is back", async () => {
+  await wide.getByTestId("rail-settings").click();
+  await wide.getByTestId("advanced-toggle").check();
+  await wide.keyboard.press("Escape");
+  assert.equal(await wide.locator(".zbox input[type=range]").isVisible(), true);
+});
+await wide.close();
 
 // ------------------------------------------------------------------ phone
 const phone = await (await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 })).newPage();

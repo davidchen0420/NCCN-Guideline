@@ -3,7 +3,7 @@ import { Canvas } from "./components/Canvas";
 import { Dock } from "./components/Dock";
 import { DocView } from "./components/DocView";
 import { MapView } from "./components/MapView";
-import { Help, Rail, TitleBar, Welcome } from "./components/Chrome";
+import { Help, Rail, TitleBar, Welcome, useInitialLeft } from "./components/Chrome";
 import { HistoryPanel, SearchPanel, Toc } from "./components/LeftPanel";
 import { RightPanel } from "./components/RightPanel";
 import { CanvasHint } from "./components/Guide";
@@ -11,8 +11,9 @@ import { CanvasHint } from "./components/Guide";
 export function App() {
   const { s, bundle, set, isPhone } = useApp();
   const l = s.loc;
+  useInitialLeft();
   return (
-    <div className={`app${s.left ? " left-open" : ""}${s.sheet ? " sheet-open" : ""}${s.dock ? " dock-open" : ""}`} data-phone={isPhone}>
+    <div className={`app${s.left ? " left-open" : ""}${s.sheet ? " sheet-open" : ""}${s.dock ? " dock-open" : ""}${s.advanced ? " adv" : ""}`} data-phone={isPhone}>
       <Rail />
       <aside className="left" aria-label="Side panel">
         {s.left === "toc" && <Toc />}

@@ -10,32 +10,37 @@ import { fieldCount, filledCount, label } from "../lib/factMeta";
 import { readFlag, writeFlag } from "../lib/prefs";
 import { T } from "../lib/terms";
 
+/** The one-line hint can be dismissed (oc-guide-hidden); the full 3-step strip is opt-in (oc-guide-steps). */
 export const GUIDE_KEY = "oc-guide-hidden";
-const GUIDE_EVENT = "oc-guide-hidden-changed";
+export const STEPS_KEY = "oc-guide-steps";
 const HINT_KEY = "oc-canvas-hint";
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 
-/** Hide or show the 3-step guide (remembered in this browser; Settings and the guide both use it). */
-export function setGuideHidden(hidden: boolean): void {
-  writeFlag(GUIDE_KEY, hidden);
-  window.dispatchEvent(new CustomEvent(GUIDE_EVENT, { detail: hidden }));
-}
-export function useGuideHidden(): boolean {
-  const [hidden, setHidden] = useState(() => readFlag(GUIDE_KEY));
+function useFlag(key: string): boolean {
+  const [v, setV] = useState(() => readFlag(key));
   useEffect(() => {
-    const f = (e: Event) => setHidden(!!(e as CustomEvent).detail);
-    window.addEventListener(GUIDE_EVENT, f);
-    return () => window.removeEventListener(GUIDE_EVENT, f);
-  }, []);
-  return hidden;
+    const f = (e: Event) => setV(!!(e as CustomEvent).detail);
+    window.addEventListener(`oc-pref:${key}`, f);
+    return () => window.removeEventListener(`oc-pref:${key}`, f);
+  }, [key]);
+  return v;
 }
+function setFlag(key: string, on: boolean) {
+  writeFlag(key, on);
+  window.dispatchEvent(new CustomEvent(`oc-pref:${key}`, { detail: on }));
+}
+/** Dismiss or bring back the one-line hint above the panel. */
+export const setGuideHidden = (hidden: boolean) => setFlag(GUIDE_KEY, hidden);
+export const useGuideHidden = () => useFlag(GUIDE_KEY);
+/** Show or hide the full 3-step strip (off by default); turning it on also brings the hint back. */
+export function setGuideSteps(on: boolean) { setFlag(STEPS_KEY, on); if (on) setFlag(GUIDE_KEY, false); }
+export const useGuideSteps = () => useFlag(STEPS_KEY);
 
 export function GuideBar() {
-  const { s, g, set, ranking, focusFact, setFacts, bundle } = useApp();
+  const { s, g, set, ranking, focusFact, setFacts, bundle, isPhone } = useApp();
   const hidden = useGuideHidden();
-  if (hidden) {
-    return <button type="button" className="guide-show" onClick={() => setGuideHidden(false)}>Show the 3-step guide</button>;
-  }
+  const stepper = useGuideSteps();
+  if (hidden && !stepper) return null;
   const schema = bundle.schema;
   const filled = schema ? filledCount(s.facts, schema) : 0;
   const total = schema ? fieldCount(schema) : 0;
@@ -67,13 +72,13 @@ export function GuideBar() {
         : <span>No {T.recommendation} fits these answers yet.</span>}
     </>);
   } else if (s.rightTab === "paths" && s.pathSel === null) {
-    next = <><b>Pick an option</b> to light it up on the diagram and list its steps. The first one is the best match.</>;
+    next = <>The best match is shown first. <b>{isPhone ? "Tap a step" : "Hover a step"}</b> on the diagram to see its NCCN page.</>;
   } else {
-    next = <><b>Hover a step</b> to see its NCCN page; click to open it in its own window.</>;
+    next = <><b>{isPhone ? "Tap a step" : "Hover a step"}</b> to see its NCCN page; {isPhone ? "tap" : "click"} to open it in its own window.</>;
   }
   return (
-    <div className="guide" role="region" aria-label="Steps">
-      <ol className="guide-steps">
+    <div className={`guide${stepper ? "" : " hint-only"}`} role="region" aria-label="Steps">
+      {stepper && <ol className="guide-steps">
         {steps.map(([k, t, sub, f]) => (
           <li key={k} className={k < step ? "done" : k === step ? "on" : ""}>
             <button type="button" onClick={f} aria-current={k === step ? "step" : undefined}>
@@ -82,9 +87,9 @@ export function GuideBar() {
             </button>
           </li>
         ))}
-      </ol>
+      </ol>}
       <p className="guide-next">{next}</p>
-      <button type="button" className="guide-x" aria-label="Hide these steps" title="Hide these steps (Settings brings them back)" onClick={() => setGuideHidden(true)}><X size={13} /></button>
+      <button type="button" className="guide-x" aria-label="Hide this hint" title="Hide this hint (Settings brings it back)" onClick={() => setGuideHidden(true)}><X size={13} /></button>
     </div>
   );
 }
