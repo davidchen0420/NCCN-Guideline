@@ -1,7 +1,6 @@
 /* ---------- Recommendation tab (clinician view) and step details ---------- */
 /* Tokens only, so light and dark follow the theme. Body 14px, secondary 12.5px, labels 12px; targets 32px. */
 
-.rc-count { margin: 0 0 10px; font-size: var(--fs-md); color: var(--ink-2); }
 
 /* the one card */
 .reco.reco-card { display: grid; gap: 16px; background: var(--surface); border: 1px solid var(--line-strong); border-left: 4px solid var(--route); border-radius: 8px; padding: 16px 16px 14px; box-shadow: var(--shadow); }
@@ -11,12 +10,13 @@
 .rc-support.open { color: var(--open); font-weight: 500; }
 .rc-label { display: block; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; }
 .rc-main { display: grid; gap: 6px; }
-.reco-card .reco-box { font-size: 17px; line-height: 1.5; }
+.reco-card .reco-box { font-size: 18px; line-height: 1.45; font-weight: 600; }
+.reco-card .reco-box ul { font-weight: 400; font-size: 16px; }
 .reco-card .tag, .pcard .tag { font-size: var(--fs-xs); padding: 3px 7px; }
 .rc-more { display: grid; gap: 6px; justify-items: start; }
 .reco-card .reco-then { margin: 0; font-size: var(--fs-md); }
 .reco-card .linkish, .rc-others .linkish { font-size: var(--fs-sm); }
-.rc-tap { min-height: 32px; }
+.rc-tap { min-height: 32px; min-width: 32px; padding: 0 2px; }
 
 /* where to check it */
 .rc-source { display: flex; flex-wrap: wrap; gap: 12px 14px; align-items: flex-start; padding: 12px; background: var(--surface-2); border: 1px solid var(--line-2); border-radius: var(--r); }

@@ -9,8 +9,9 @@ import { label } from "../lib/factMeta";
 import { Blocks, Linked } from "./Rich";
 import { PageCrop, SrcChip, useSource, useSrc, type SrcTarget } from "../source";
 import type { Graph } from "../lib/graph";
+import type { Block, Inline, Item } from "../lib/parseBox";
 import { Summary } from "./Summary";
-import { T, countRecs, matchWord, pageName, supportPhrase } from "../lib/terms";
+import { T, matchWord, pageName, supportPhrase } from "../lib/terms";
 import "../styles/reco.css";
 
 export const pct = (x: number) => (x >= 0.995 ? "100%" : x < 0.01 ? "<1%" : `${Math.round(x * 100)}%`);
@@ -287,6 +288,13 @@ export function whyAnswers(g: Graph, p: Pathway, facts: Record<string, unknown>)
   return [...out].map(([k, v]) => [label(k), v]);
 }
 
+/** A box's content with page references as plain text (the headline is not a link). */
+function plainBlocks(blocks: Block[]): Block[] {
+  const inl = (xs: Inline[]): Inline[] => xs.map((x) => (x.t === "ref" ? { t: "text", v: x.label } : x.t === "link" ? { t: "text", v: x.text } : x));
+  const item = (it: Item): Item => ({ inline: inl(it.inline), children: it.children.map(item) });
+  return blocks.map((b) => (b.t === "lead" || b.t === "para" ? { ...b, inline: inl(b.inline) } : b.t === "list" ? { ...b, items: b.items.map(item) } : b));
+}
+
 /** The pages a route passes through, in order, with the first box on each. */
 function routePages(p: Pathway) {
   const out: { code: string; node: string }[] = [];
@@ -324,16 +332,14 @@ function RecoCard({ p }: { p: Pathway }) {
       </div>
       <div className="rc-main">
         <span className="rc-label">NCCN recommends</span>
-        <div className="reco-box" tabIndex={0} {...hover}><Blocks blocks={g.parsed.get(id)!.blocks} /></div>
+        <div className="reco-box" tabIndex={0} {...hover}><Blocks blocks={plainBlocks(g.parsed.get(id)!.blocks)} /></div>
         {(n.footnotes.length > 0 || f.follow || goto) && (
           <div className="rc-more">
-            {f.follow && (
+            {goto ? (
               <p className="reco-then">
-                <b>Then:</b> {clip(plain(g, f.follow.node), 160)}
-                {goto && <> <button type="button" className="linkish" onClick={() => toDiagram(goto)}>Open {pageName(goto, g.bundle.pages[goto]?.title)} <ArrowRight size={12} /></button></>}
+                <b>Then:</b> continues on <button type="button" className="linkish rc-tap" onClick={() => toDiagram(goto)}>{pageName(goto, g.bundle.pages[goto]?.title)} <ArrowRight size={12} aria-hidden /></button>
               </p>
-            )}
-            {!f.follow && goto && <p className="reco-then"><button type="button" className="linkish" onClick={() => toDiagram(goto)}>Continues on {pageName(goto, g.bundle.pages[goto]?.title)} <ArrowRight size={12} /></button></p>}
+            ) : f.follow && <p className="reco-then"><b>Then:</b> {clip(plain(g, f.follow.node), 160)}</p>}
             {n.footnotes.length > 0 && (
               <button type="button" className="linkish rc-tap" aria-expanded={fn} onClick={() => setFn(!fn)}>
                 {fn ? <ChevronDown size={13} aria-hidden /> : <ChevronRight size={13} aria-hidden />} Footnotes {n.footnotes.map((x) => x[0]).join(", ")}
@@ -351,9 +357,9 @@ function RecoCard({ p }: { p: Pathway }) {
           </button>
         )}
         <div className="rc-src-text">
-          <span className="rc-label">On the NCCN page</span>
+          <span className="rc-label">Shown on</span>
           <b className="rc-src-title">{name}</b>
-          {src && <span className="rc-src-pdf">PDF page {src.page + 1}</span>}
+          {src && <span className="rc-src-pdf">NCCN PDF page {src.page + 1}</span>}
           <div className="rc-src-actions">
             <VerifyButton id={id} primary />
             <button type="button" className="linkish rc-tap" onClick={() => toDiagram(n.page, n.full)}><LocateFixed size={13} aria-hidden /> Show in the diagram</button>
@@ -435,7 +441,6 @@ function ClinicianView({ p }: { p: Pathway }) {
   const pick = (id: string) => { showPath(id); document.getElementById("rp-panel")?.scrollTo({ top: 0 }); };
   return (
     <>
-      <p className="rc-count" aria-live="polite">{countRecs(1 + others.length)}</p>
       <RecoCard key={p.id} p={p} />
       {others.length > 0 && (
         <section className="rc-others" aria-label="Other possible recommendations">

@@ -50,6 +50,12 @@ await step("an example patient gets one recommendation to verify on the NCCN pag
   assert.match(text, /NCCN recommends/i);
   assert.match(text, /Why/i);
   assert.match(text, /Research prototype/i);
+  assert.match(text, /Shown on[\s\S]*NCCN PDF page \d+/i);
+  assert.equal(await card.locator(".reco-box a, .reco-box button").count(), 0, "the headline is plain text, not a link");
+  assert.doesNotMatch(await page.locator(".paths").innerText(), /possible recommendations? for this patient/, "the count lives in the other-recommendations heading");
+  assert.match(await page.locator(".rc-others h3").innerText(), /^Other possible recommendations \(\d+\)$/);
+  const more = card.getByRole("button", { name: /^Show all \d+$/ });
+  if (await more.count()) assert.ok((await more.boundingBox()).height >= 32, "Show all is a 32px target");
   assert.equal(await card.getByRole("button", { name: "Verify on the NCCN page" }).count(), 1);
   assert.equal(await card.getByRole("button", { name: /Summary to copy or print/ }).count(), 1);
   // the reviewer views stay behind Advanced tools
