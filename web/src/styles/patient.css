@@ -49,7 +49,7 @@
 .patient .fgroup.moment legend, .patient .fgroup.deciders legend, .patient .fgroup.section-pick legend {
   font-size: var(--fs-lg); font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--ink); margin-bottom: 8px; }
 .patient .fgroup.deciders { border-top-color: var(--accent-line); }
-.patient .fgroup.deciders legend em { font-size: var(--fs-sm); color: var(--muted); font-weight: 400; }
+.patient .fgroup.deciders legend em { font-size: var(--fs-sm); color: var(--muted); font-weight: 400; white-space: nowrap; flex: none; margin-left: 12px; }
 .patient .fgroup.deciders > .note { margin: 0 0 10px; font-size: var(--fs-sm); }
 .patient .note { font-size: var(--fs-sm); }
 .patient .hint { font-size: var(--fs-sm); }
@@ -69,7 +69,15 @@
 .patient .situations button i { font-style: normal; color: var(--muted); font-size: var(--fs-sm); }
 .patient .situations button:hover { border-color: var(--ink-2); }
 .patient .situations button[aria-checked=true] { background: var(--accent-soft); border-color: var(--accent); }
-.patient .situations button[aria-checked=true] span { font-weight: 600; }
+
+.patient .situations button { display: grid; gap: 1px; }
+.patient .sit-t i { font-style: normal; color: var(--muted); font-size: var(--fs-sm); }
+.patient .sit-h { font-size: var(--fs-sm); color: var(--muted); line-height: 1.35; }
+.patient .situations button[aria-checked=true] .sit-t { font-weight: 600; }
+.patient .hint.prompt { color: var(--ink); font-weight: 600; }
+
+/* the disease or subtype comes first; its own heading is the label */
+.patient .pt-disease > .pf > .flabel { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* carried over from diagnosis */
 .patient .carried { padding: 10px 12px 12px; }
@@ -151,7 +159,10 @@
 .patient .paste summary .paste-sub { color: var(--muted); font-size: var(--fs-sm); }
 .patient .paste textarea { font-size: var(--fs-md); }
 .patient .paste .btn { min-height: 34px; font-size: var(--fs-md); }
-.patient .paste .btn.primary { margin-top: 4px; }
+.patient .paste .btn { white-space: nowrap; flex: none; }
+.patient .paste-actions { flex-wrap: wrap; row-gap: 4px; }
+.patient .paste .btn.primary { margin-top: 0; }
+.patient .apply-bar { position: sticky; bottom: 0; padding: 8px 0 4px; background: var(--surface-2); }
 .patient .found label { font-size: var(--fs-md); }
 .patient .found q { font-size: var(--fs-sm); }
 .patient .fd-was { font-size: var(--fs-xs); }
