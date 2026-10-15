@@ -104,13 +104,31 @@ class AtlasBuildTest(unittest.TestCase):
             self.assertEqual(found.get("prostate"), pdfs / "prostate.pdf")
             self.assertNotIn("unrelated", found)
             out = dashboard.build_library(self.DATA, Path(d) / "built" / "oncocarta.html", pdf_roots=[pdfs])
-            self.assertIn('"prostate": "../nccn/prostate.pdf"', out.read_text())
+            self.assertIn('"prostate":"../nccn/prostate.pdf"', out.read_text())
+
+    @unittest.skipUnless((DATA / "index.json").exists(), "canonical data not present")
+    def test_guideline_packs_round_trip(self):
+        import base64, gzip, re
+        with tempfile.TemporaryDirectory() as d:
+            out = dashboard.write_packs(self.DATA, Path(d) / "guidelines")
+            body = (out / "prostate.js").read_text()
+            m = re.fullmatch(r'\(window\.__OC_PACKS=window\.__OC_PACKS\|\|\{\}\)\["prostate"\]="([A-Za-z0-9+/=]+)";\n', body)
+            self.assertIsNotNone(m)
+            g = json.loads(gzip.decompress(base64.b64decode(m.group(1))))
+            self.assertEqual(g["guideline"]["slug"], "prostate")
+            self.assertTrue(g.get("viewer_examples"), "example patients travel with the guideline")
+            self.assertEqual(len(list(out.glob("*.js"))), len(json.loads((self.DATA / "index.json").read_text())["guidelines"]))
+            before = (out / "prostate.js").stat().st_mtime_ns
+            dashboard.write_packs(self.DATA, out)
+            self.assertEqual((out / "prostate.js").stat().st_mtime_ns, before, "unchanged packs are not rewritten")
 
     @unittest.skipUnless((DATA / "index.json").exists(), "canonical data not present")
     def test_library_page_embeds_the_atlas(self):
         with tempfile.TemporaryDirectory() as d:
             html = dashboard.build_library(self.DATA, Path(d) / "built" / "oncocarta.html").read_text()
             self.assertIn("window.__ATLAS__={", html)
+            self.assertIn('"packs":"guidelines/"', html)
+            self.assertTrue((Path(d) / "built" / "guidelines" / "prostate.js").exists())
             self.assertNotIn("/*ATLAS*/null", html)
 
 

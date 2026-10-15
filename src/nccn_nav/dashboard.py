@@ -387,18 +387,46 @@ def find_pdfs(data_dir="data", roots=None):
     return {**by_name, **found}
 
 
+def write_packs(data_dir, out_dir):
+    """Each guideline as a small script next to the page (`<out_dir>/<slug>.js`): gzip-compressed
+    guideline.json (with its example patients) in base64, registered on window.__OC_PACKS.
+    Browsers load scripts from disk, which they refuse for fetch(), so the library also works
+    when the page is opened as a file. Files are rewritten only when their content changes."""
+    import base64
+    import gzip
+    data_dir, out_dir = Path(data_dir), Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    index = json.loads((data_dir / "index.json").read_text())["guidelines"]
+    for e in index:
+        g = json.loads((data_dir / e["path"]).read_text())
+        examples = _load(data_dir / e["slug"], "vignettes/examples.json")
+        if examples:
+            g["viewer_examples"] = examples
+        raw = json.dumps(g, ensure_ascii=False, separators=(",", ":")).encode()
+        packed = base64.b64encode(gzip.compress(raw, 9, mtime=0)).decode()
+        body = f'(window.__OC_PACKS=window.__OC_PACKS||{{}})[{json.dumps(e["slug"])}]="{packed}";\n'
+        path = out_dir / f'{e["slug"]}.js'
+        if not path.exists() or path.read_text() != body:
+            path.write_text(body)
+    return out_dir
+
+
 def build_library(data_dir="data", out_path="built/oncocarta.html", pdf_roots=None):
-    """The library viewer: no guideline embedded; it reads <data_dir>/index.json and each
-    <slug>/guideline.json over http, relative to where the page is served. The atlas overview
-    (build_atlas) is embedded for the home page, and the paths of any local source PDFs
-    (find_pdfs; never the PDFs themselves) so previews show the original pages."""
+    """The library viewer. The atlas overview (build_atlas) and the guideline list are embedded;
+    each guideline is a script in `guidelines/` next to the page (write_packs), so the page works
+    opened from disk as well as served. When served it can also read <data_dir> directly. The
+    paths of any local source PDFs (find_pdfs; never the PDFs themselves) are recorded so
+    previews show the original pages."""
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)
     rel = lambda p: Path(os.path.relpath(Path(p).resolve(), out.parent.resolve())).as_posix()
     base = rel(data_dir).rstrip("/") + "/"
     pdfs = {slug: rel(p) for slug, p in sorted(find_pdfs(data_dir, pdf_roots).items())}
+    write_packs(data_dir, out.parent / "guidelines")
+    index = json.loads((Path(data_dir) / "index.json").read_text())["guidelines"]
+    library = {"base": base, "pdfs": pdfs, "packs": "guidelines/", "index": index}
     atlas = json.dumps(build_atlas(data_dir), ensure_ascii=False, separators=(",", ":"))
-    out.write_text(_fill(_template(), library=json.dumps({"base": base, "pdfs": pdfs}), atlas=atlas))
+    out.write_text(_fill(_template(), library=json.dumps(library, ensure_ascii=False, separators=(",", ":")), atlas=atlas))
     return out
 
 

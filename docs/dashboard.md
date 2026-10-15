@@ -4,7 +4,7 @@ OncoCarta is a React + TypeScript app (in `web/`) that turns the encoded guideli
 
 ```
 cd web && npm install && npm run build && cd ..                     # app -> src/nccn_nav/dashboard.html
-PYTHONPATH=src python -m nccn_nav.dashboard --library               # all guidelines -> built/oncocarta.html (serve the repo over http)
+PYTHONPATH=src python -m nccn_nav.dashboard --library               # all guidelines -> built/oncocarta.html + built/guidelines/*.js (open directly or serve)
 PYTHONPATH=src python -m nccn_nav.dashboard data/<slug> [out_dir]   # one guideline, offline -> <out_dir>/<slug>-oncocarta.html
 PYTHONPATH=src python -m nccn_nav.dashboard --sample out            # synthetic demo data (older format), safe to share
 ```
@@ -29,7 +29,7 @@ The library opens on a map of every guideline (`web/src/atlas/`). Built from `bu
 
 ## Library
 - **List view:** every guideline in `data/index.json`, grouped by category, with search, version and date, and how much of each is encoded (algorithm pages, boxes with an encoded condition). Recently opened guidelines come first.
-- **Loading:** a guideline is fetched when opened; the URL hash names it (`#prostate/flow/PROS-3`), so links, Back/Forward and bookmarks work. Example patients load from `<slug>/vignettes/examples.json` when present.
+- **Loading:** a guideline is read when opened, from its compressed script in `built/guidelines/` (this works for a page opened from disk, where browsers refuse `fetch`), else from `data/` when served; the URL hash names it (`#prostate/flow/PROS-3`), so links, Back/Forward and bookmarks work. Example patients load from `<slug>/vignettes/examples.json` when present.
 - **Between guidelines:** links typed `external_guideline` in the data, and page codes of another guideline's prefix (`DIS-A`, `LCS-11`), open that guideline at that page. Details lists the other guidelines a box cites.
 - **Multi-disease guidelines** (29 of 91, `sections` in the data): the patient form asks for the disease or subtype first; entry boxes carry the section condition.
 - **Starting points:** in auto mode, routes start from the algorithm pages that have entry boxes and that no other page leads to (one per disease), plus entry boxes elsewhere that the entries select (own condition, else the linking boxes' `link_condition`).

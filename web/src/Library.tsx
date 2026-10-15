@@ -23,6 +23,12 @@ const remember = (slug: string) => { try { localStorage.setItem(RECENT, JSON.str
 
 /** Find data/index.json next to the page (or where the build said it is). */
 export async function findLibrary(): Promise<Library | null> {
+  const L = window.__LIBRARY__;
+  if (L?.index?.length) {
+    // the guideline list is in the page: nothing to fetch (works opened from disk)
+    registerGuidelines(L.index);
+    return { base: L.base ?? "../data/", guidelines: L.index, pdfs: L.pdfs, packs: L.packs };
+  }
   const bases = [window.__LIBRARY__?.base, "data/", "../data/", "./"].filter((x): x is string => typeof x === "string");
   for (const base of [...new Set(bases)]) {
     try {
@@ -52,17 +58,55 @@ export function getGuideline(lib: Library, slug: string): Promise<Bundle> {
   return p;
 }
 
+/** A guideline packed as a script next to the page (python -m nccn_nav.dashboard --library).
+ * Script tags load from disk where fetch() is refused, so this works for a page opened as a file. */
+function loadPack(lib: Library, slug: string): Promise<unknown> {
+  return new Promise((resolve, reject) => {
+    const have = window.__OC_PACKS?.[slug];
+    const unpack = (b64: string) => {
+      if (typeof DecompressionStream === "undefined") { reject(new Error("This browser cannot unpack the guideline (it needs Safari 16.4, Chrome 80, Firefox 113 or later).")); return; }
+      const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+      new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"))).text()
+        .then((t) => resolve(JSON.parse(t)), reject);
+    };
+    if (have) { unpack(have); return; }
+    const el = document.createElement("script");
+    el.src = `${lib.packs}${slug}.js`;
+    el.async = true;
+    el.onload = () => { const b64 = window.__OC_PACKS?.[slug]; if (b64) unpack(b64); else reject(new Error(`${el.src} did not contain the guideline`)); };
+    el.onerror = () => reject(new Error(`could not read ${el.src}`));
+    document.head.appendChild(el);
+  });
+}
+
 async function loadGuideline(lib: Library, e: LibraryEntry): Promise<Bundle> {
-  const r = await fetch(`${lib.base}${e.path}`);
-  if (!r.ok) throw new Error(`${e.path}: HTTP ${r.status}`);
-  const j = await r.json();
+  let j: unknown = null;
+  const errs: string[] = [];
+  if (lib.packs) {
+    try { j = await loadPack(lib, e.slug); } catch (err) { errs.push(String((err as Error).message ?? err)); }
+  }
+  if (!j) {
+    try {
+      const r = await fetch(`${lib.base}${e.path}`);
+      if (!r.ok) throw new Error(`${e.path}: HTTP ${r.status}`);
+      j = await r.json();
+    } catch (err) { errs.push(String((err as Error).message ?? err)); }
+  }
+  if (!j) {
+    const disk = location.protocol === "file:";
+    throw new Error(disk
+      ? `the guideline files were not found next to this page (${errs.join("; ")}). Keep the page in its folder: built/oncocarta.html needs built/guidelines/ beside it.`
+      : errs.join("; "));
+  }
   if (!isGuidelineFile(j)) throw new Error(`${e.path} is not a guideline.json file`);
   const b = adaptGuideline(j);
   b.pdf_candidates = pdfCandidates(lib.base, e.slug, lib.pdfs);   // a served copy of the source PDF, if any
-  try {   // hand-encoded example patients, when the guideline has them
-    const x = await fetch(`${lib.base}${e.slug}/vignettes/examples.json`);
-    if (x.ok) b.examples = (await x.json()) as Example[];
-  } catch { /* none */ }
+  if (!b.examples?.length && location.protocol.startsWith("http")) {
+    try {   // hand-encoded example patients, when the guideline has them
+      const x = await fetch(`${lib.base}${e.slug}/vignettes/examples.json`);
+      if (x.ok) b.examples = (await x.json()) as Example[];
+    } catch { /* none */ }
+  }
   return b;
 }
 

@@ -73,6 +73,6 @@ export type Facts = Record<string, unknown>;
 
 export interface LibraryEntry { slug: string; title: string; category: string; version?: string; version_date?: string; path: string; pdf_sha256?: string; quality?: Record<string, unknown> }
 /** pdfs: served copies of the source PDFs found at build time (slug -> path relative to the page) */
-export interface Library { base: string; guidelines: LibraryEntry[]; pdfs?: Record<string, string> }
+export interface Library { base: string; guidelines: LibraryEntry[]; pdfs?: Record<string, string>; packs?: string }
 
-declare global { interface Window { __BUNDLE__: Bundle | null; __GUIDELINE__?: unknown; __LIBRARY__?: { base?: string; pdfs?: Record<string, string> } | null } }
+declare global { interface Window { __BUNDLE__: Bundle | null; __GUIDELINE__?: unknown; __LIBRARY__?: { base?: string; pdfs?: Record<string, string>; packs?: string; index?: LibraryEntry[] } | null; __OC_PACKS?: Record<string, string> } }
