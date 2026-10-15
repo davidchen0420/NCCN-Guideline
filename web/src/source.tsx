@@ -184,11 +184,22 @@ export function SourceProvider({ children, bundle: given }: { children: ReactNod
     return () => { window.removeEventListener("dragover", over); window.removeEventListener("dragleave", leave); window.removeEventListener("drop", drop); };
   }, [connectFiles]);
 
+  const anchor = useRef<HTMLElement | null>(null);
   const peek = useCallback((t: SrcTarget, el: HTMLElement) => {
     window.clearTimeout(timer.current);
     const rect = el.getBoundingClientRect();
+    anchor.current = el;
     timer.current = window.setTimeout(() => setPeek({ t, rect }), 280);
   }, []);
+  // a preview never outlives what it previews: it closes when its item leaves the page
+  // (another page or view opened under the pointer) or the reader moves elsewhere
+  useEffect(() => {
+    if (!peekT) return;
+    const iv = window.setInterval(() => { if (anchor.current && !anchor.current.isConnected) setPeek(null); }, 200);
+    return () => window.clearInterval(iv);
+  }, [peekT]);
+  const loc = app?.s.loc;
+  useEffect(() => { setPeek(null); }, [loc]);
   const unpeek = useCallback(() => {
     window.clearTimeout(timer.current);
     timer.current = window.setTimeout(() => setPeek(null), 160);
@@ -331,23 +342,32 @@ function Peek({ t, rect, onEnter, onLeave, onOpen }: { t: SrcTarget; rect: DOMRe
   const { pdf, bundle } = useSource();
   // large enough to read on a desktop screen; beside the hovered item, on its left when there is room
   // (the right-hand panel's counters stay uncovered)
-  const W = innerWidth >= 1280 ? 480 : 340, gap = 10;
+  // Never over the hovered item itself (it must stay clickable): beside it when a side has room,
+  // narrowed to fit the roomier side, else above or below it.
+  const want = innerWidth >= 1280 ? 480 : 340, gap = 10, minW = 260;
+  const roomL = rect.left - gap - 8, roomR = innerWidth - 8 - rect.right - gap;
+  const side: "left" | "right" | "below" = roomL >= want ? "left" : roomR >= want ? "right" : Math.max(roomL, roomR) >= minW ? (roomL >= roomR ? "left" : "right") : "below";
+  const W = side === "below" ? Math.min(want, innerWidth - 16) : Math.min(want, side === "left" ? roomL : roomR);
+  const left = side === "left" ? rect.left - gap - W : side === "right" ? rect.right + gap : Math.max(8, Math.min(innerWidth - W - 8, rect.left));
   const estH = Math.round(W * 612 / 792) + 130;
-  const fitsLeft = rect.left - gap - W >= 8, fitsRight = rect.right + gap + W <= innerWidth - 8;
-  const left = fitsLeft ? rect.left - gap - W : fitsRight ? rect.right + gap : Math.max(8, Math.min(innerWidth - W - 8, rect.left));
-  const top0 = Math.min(Math.max(8, rect.top - 20), Math.max(8, innerHeight - estH - 8));
+  const place = (h: number) => {
+    if (side !== "below") return Math.max(8, Math.min(Math.max(8, rect.top - 20), innerHeight - 8 - h));
+    if (rect.bottom + gap + h <= innerHeight - 8) return rect.bottom + gap;
+    return Math.max(8, rect.top - gap - h);   // above
+  };
   // the card's real height is known once the page image and notes have laid out: keep all of it on screen
   const ref = useRef<HTMLDivElement>(null);
-  const [top, setTop] = useState(top0);
+  const [top, setTop] = useState(() => place(estH));
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const fit = () => setTop(Math.max(8, Math.min(top0, innerHeight - 8 - el.offsetHeight)));
+    const fit = () => setTop(place(el.offsetHeight));
     fit();
     const ro = new ResizeObserver(fit);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [top0]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rect, side, W]);
   // Without the PDF, a box is best shown in its reconstructed page; footnotes and prose as text.
   const showText = pdf.status !== "ready" && !!t.excerpt && !t.bbox;
   return (
