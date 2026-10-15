@@ -9,7 +9,8 @@ import type { Graph } from "../lib/graph";
 import type { Ranking } from "../lib/pathways";
 import { resolveRef } from "../lib/graph";
 import { SrcChip } from "../source";
-import { PHASES, followsDisease, moments, momentsFor, reachableFacts, startPhase } from "../lib/moments";
+import { PHASES, followsDisease, moments, momentsFor, reachableFacts, startPhase, type Phase } from "../lib/moments";
+import { stripMarks } from "../lib/adapt";
 import { T, countRecs, pageName } from "../lib/terms";
 import { readPref, writePref } from "../lib/prefs";
 import { ArrowRight, ChevronDown, ClipboardPaste, RotateCcw, Save, Search as SearchIcon, Trash2, X } from "lucide-react";
@@ -24,16 +25,21 @@ function usePageName() {
   }, [g]);
 }
 
-/** Where an answer leads, in words: the page it reaches (title first), nothing yet, or no match. */
+/** The answers worth a line: only when they lead to different places, never back to the page the
+ * question is on or the page the recommendation starts at, and nothing for an answer that changes nothing. */
+function informative(pvs: Preview[], skip: (string | undefined)[]): Preview[] {
+  const key = (p: Preview) => (p.routes === 0 ? "none" : p.decides ? `page:${p.decides.page}` : "same");
+  if (pvs.length < 2 || new Set(pvs.map(key)).size < 2) return [];
+  return pvs.filter((p) => p.routes === 0 || (p.decides && !skip.includes(p.decides.page)));
+}
+
+/** Where an answer leads, in words: the page it reaches (title first), or that no recommendation fits. */
 function Leads({ p }: { p: Preview }) {
   const name = usePageName();
-  const advanced = useAdvanced();
   if (p.routes === 0) return <span className="pv-none">{T.noneFits}</span>;
-  if (p.decides) {
-    const n = name(p.decides.page);
-    return <span className="pv-to">Leads to: <span className="pv-page">{n.title ? <>{n.title} <i>({n.code})</i></> : n.code}</span></span>;
-  }
-  return <span className="pv-open">{T.noChangeYet}{advanced && ` · ${p.routes} ${p.routes === 1 ? T.recommendation : T.recommendations} open`}</span>;
+  if (!p.decides) return null;
+  const n = name(p.decides.page);
+  return <span className="pv-to">Leads to: <span className="pv-page">{n.title ? <>{n.title} <i>({n.code})</i></> : n.code}</span></span>;
 }
 
 /** "Decides: Page title (PROS-5)"; Advanced also shows the box text and how much of the fit it is open on. */
@@ -156,18 +162,19 @@ function Field({ name, spec, value, onChange, needed, used, why, previews, quiet
       )}
       {check && <span className={`check ${check.level}`} role={check.level === "error" ? "alert" : "status"}>{check.message}</span>}
       {m.hint && <span className="hint">{m.hint}</span>}
-      {previews && previews.length > 0 && value === undefined && <Previews previews={previews} onPick={onChange} />}
+      {previews && previews.length > 0 && value === undefined && <Previews previews={previews} skip={[why?.page]} onPick={onChange} />}
     </div>
   );
 }
 
 /** Where each answer leads: the page its branch reaches on the best-matching recommendation. */
-function Previews({ previews, onPick }: { previews: Preview[]; onPick: (v: unknown) => void }) {
-  const same = previews.every((p) => p.decides?.node === previews[0].decides?.node && p.routes === previews[0].routes);
-  if (same) return null;
+function Previews({ previews, skip, onPick }: { previews: Preview[]; skip: (string | undefined)[]; onPick: (v: unknown) => void }) {
+  const { s } = useApp();
+  const shown = informative(previews, [...skip, s.start]);
+  if (!shown.length) return null;
   return (
     <ul className="previews" aria-label="Where each answer leads">
-      {previews.map((p) => (
+      {shown.map((p) => (
         <li key={String(p.value)}>
           <button type="button" onClick={() => onPick(p.value)} title="Choose this answer">
             <b>{valueLabel(p.value)}</b><ArrowRight size={12} aria-hidden />
@@ -418,14 +425,14 @@ export function PatientPanel() {
       )}
 
       <fieldset className="fgroup deciders" aria-describedby="dec-note">
-        <legend>{anyFacts ? T.questions : T.questionsFirst}{mode === "form" && !needDisease && <em>{deciders.length}</em>}</legend>
+        <legend>{T.questions}{mode === "form" && !needDisease && <em>{deciders.length} {deciders.length === 1 ? "question" : "questions"}</em>}</legend>
         {needDisease ? (
           <p className="note" id="dec-note">Choose the disease or subtype above to see the questions.</p>
         ) : (<>
           <div className="mode-switch" role="group" aria-label="How to answer">
             {mode === "interview"
-              ? <button type="button" onClick={() => setModeKeep("form")} data-testid="mode-form">See all questions as a form</button>
-              : <button type="button" onClick={() => setModeKeep("interview")} data-testid="mode-interview">One question at a time</button>}
+              ? <button type="button" onClick={() => setModeKeep("form")} data-testid="mode-form">Show all questions</button>
+              : <button type="button" onClick={() => setModeKeep("interview")} data-testid="mode-interview">One at a time</button>}
           </div>
           {mode === "interview" ? (
             <Interview deciders={deciders} remaining={remaining} previews={previews} subtype={typeof secValue === "string" ? secValue : undefined} answer={set1} onPage={onPage} routes={ranking.paths.length} toPaths={() => set({ rightTab: "paths" })} />
@@ -517,8 +524,10 @@ const clipT = (t: string, n = 56) => (t.length > n ? t.slice(0, n).trimEnd() + "
 
 /** The moment the patient is at: a new diagnosis, follow-up, recurrence, advanced disease or a
  * later line. It starts the algorithm at that moment's page and limits the form to its details.
- * In a guideline that covers several diseases, the disease or subtype is chosen here too, and the
- * moments offered are that subtype's. When a phase has several pages, they are listed by title. */
+ * A phase with several pages is never answered for the clinician: "Which situation?" lists the
+ * pages by title, with what each one is for, and the start is set only when one is picked.
+ * In a guideline that covers several diseases the disease or subtype comes first, and the
+ * moments offered are that subtype's. */
 function WhereNow({ count, disease }: { count: number; disease: ReactNode }) {
   const { s, g, setStart } = useApp();
   const advanced = useAdvanced();
@@ -526,6 +535,9 @@ function WhereNow({ count, disease }: { count: number; disease: ReactNode }) {
   const list = useMemo(() => momentsFor(g, all, s.facts), [g, all, s.facts]);
   const sec = g.bundle.sections;
   const secVal = sec ? s.facts[sec.variable] : undefined;
+  // a phase chosen whose page is not chosen yet
+  const [pending, setPending] = useState<Phase | null>(null);
+  useEffect(() => { if (s.start !== "auto") setPending(null); }, [s.start]);
   // a start page left over from another disease or subtype would leave nothing that fits
   useEffect(() => {
     if (s.start === "auto" || !sec || secVal === undefined) return;
@@ -539,48 +551,67 @@ function WhereNow({ count, disease }: { count: number; disease: ReactNode }) {
   const extra = follows && !chips && secVal !== undefined && list.length > 0;
   const phase = startPhase(g, s.start);
   const isMoment = list.some((m) => m.page === s.start);
-  const pages = chips ? (phase && isMoment ? list.filter((m) => m.phase === phase) : []) : extra ? list : [];
+  const current = isMoment ? phase : null;
+  const active = pending ?? current;
+  const pages = chips ? (active ? list.filter((m) => m.phase === active) : []) : extra ? list : [];
   const only = extra && list.length === 1 ? list[0] : null;
-  if (!disease && !chips && !only && pages.length < 2) return null;
+  const choosing = pages.length > 1 && !pages.some((m) => m.page === s.start);
+  const pickPhase = (p: Phase) => {
+    const ps = list.filter((m) => m.phase === p);
+    if (ps.length === 1) { setPending(null); setStart(ps[0].page); }
+    else if (current !== p) { setPending(p); setStart("auto"); }
+  };
+  const showMoments = (chips || only || pages.length > 1) && (!sec || secVal !== undefined);
+  if (!disease && !showMoments) return null;
   const nameOf = (page: string, max = 70) => { const t = g.bundle.pages[page]?.title ?? ""; return pageName(page, t && t !== page ? clipT(t, max) : null); };
-  return (
-    <fieldset className="fgroup moment" data-testid="moment">
-      <legend>Where is the patient now?</legend>
-      {disease}
-      {disease && chips && <p className="pt-sublabel" id="moment-l">Point in the patient's care</p>}
-      {chips && (
-        <div className="moment-chips" role="group" aria-label={disease ? undefined : "Where is the patient now?"} aria-labelledby={disease ? "moment-l" : undefined}>
-          <button type="button" aria-pressed={s.start === "auto"} onClick={() => setStart("auto")} title="Let your answers decide where the recommendation starts">Not sure</button>
-          {present.map((p) => (
-            <button key={p.id} type="button" aria-pressed={isMoment && phase === p.id} title={p.hint}
-              onClick={() => { if (!(isMoment && phase === p.id)) setStart(list.find((m) => m.phase === p.id)!.page); }}>{p.label}</button>
-          ))}
-        </div>
-      )}
-      {pages.length > 1 && (advanced ? (
-        <select className="sel small" aria-label="Which page" value={pages.some((m) => m.page === s.start) ? s.start : ""} onChange={(e) => e.target.value && setStart(e.target.value)}>
-          {!pages.some((m) => m.page === s.start) && <option value="">Choose a page…</option>}
-          {pages.map((m) => <option key={m.page} value={m.page}>{pageName(m.page, clipT(m.title))}</option>)}
-        </select>
-      ) : (<>
-        <p className="pt-sublabel" id="sit-l">Which situation?</p>
-        <div className="situations" role="radiogroup" aria-labelledby="sit-l" data-testid="situations">
-          {pages.map((m) => (
-            <button key={m.page} type="button" role="radio" aria-checked={s.start === m.page} onClick={() => setStart(m.page)}>
-              <span>{m.title}</span> <i>({m.page})</i>
-            </button>
-          ))}
-        </div>
-      </>))}
-      {(chips || pages.length > 1 || only) && (
-        <p className="hint">{only
+  /** What a page is for, in the words of its entry box(es). */
+  const entryText = (page: string) => clipT((g.bundle.roots[page] ?? []).slice(0, 2).map((id) => stripMarks(g.node(id)?.text ?? "").replace(/\s+/g, " ").trim()).filter(Boolean).join(" · "), 90);
+  return (<>
+    {disease && (
+      <fieldset className="fgroup section-pick" data-testid="disease">
+        <legend>Which disease or subtype?</legend>
+        <div className="pt-disease">{disease}</div>
+      </fieldset>
+    )}
+    {showMoments && (
+      <fieldset className="fgroup moment" data-testid="moment">
+        <legend>Where is the patient now?</legend>
+        {chips && (
+          <div className="moment-chips" role="group" aria-label="Where is the patient now?">
+            <button type="button" aria-pressed={s.start === "auto" && !pending} onClick={() => { setPending(null); setStart("auto"); }} title="Let your answers decide where the recommendation starts">Not sure</button>
+            {present.map((p) => (
+              <button key={p.id} type="button" aria-pressed={active === p.id} title={p.hint} onClick={() => pickPhase(p.id)}>{p.label}</button>
+            ))}
+          </div>
+        )}
+        {pages.length > 1 && (advanced ? (
+          <select className="sel small" aria-label="Which page" value={pages.some((m) => m.page === s.start) ? s.start : ""} onChange={(e) => e.target.value && setStart(e.target.value)}>
+            {choosing && <option value="">Choose a page…</option>}
+            {pages.map((m) => <option key={m.page} value={m.page}>{pageName(m.page, clipT(m.title))}</option>)}
+          </select>
+        ) : (<>
+          <p className="pt-sublabel" id="sit-l">Which situation?</p>
+          <div className="situations" role="radiogroup" aria-labelledby="sit-l" data-testid="situations">
+            {pages.map((m) => {
+              const what = entryText(m.page);
+              return (
+                <button key={m.page} type="button" role="radio" aria-checked={s.start === m.page} onClick={() => setStart(m.page)}>
+                  <span className="sit-t">{m.title} <i>({m.page})</i></span>
+                  {what && <span className="sit-h">{what}</span>}
+                </button>
+              );
+            })}
+          </div>
+        </>))}
+        <p className={`hint${choosing ? " prompt" : ""}`}>{only
           ? <>Starting at <b>{nameOf(only.page)}</b>.</>
+          : choosing ? "Choose the situation that fits."
           : s.start === "auto"
             ? `Your answers decide where the recommendation starts. Pick ${chips ? "a moment" : "a situation"} to see only the questions that matter then.`
-            : <>Starting at <b>{nameOf(s.start)}</b>. {count} {count === 1 ? "question applies" : "questions apply"} from here.</>}</p>
-      )}
-    </fieldset>
-  );
+            : <>Starting at <b>{nameOf(s.start)}</b>. {advanced ? `${count} ${count === 1 ? "question applies" : "questions apply"} from here.` : "Showing the questions that matter from here."}</>}</p>
+      </fieldset>
+    )}
+  </>);
 }
 
 /* ---------------- top bar, the More menu, saved patients ---------------- */
@@ -692,6 +723,21 @@ function PasteRecord({ schema }: { schema: Schema }) {
     window.addEventListener("oc-open-paste", f);
     return () => window.removeEventListener("oc-open-paste", f);
   }, []);
+  const applyBtn = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    // after "Read the note": bring what was found and the Apply button into view
+    if (!found || !found.length) return;
+    const t = window.setTimeout(() => {
+      const b = applyBtn.current, sc = b?.closest<HTMLElement>(".rp-body");
+      const list = box.current?.querySelector(".found");
+      if (!b || !sc || !list) return;
+      const over = list.getBoundingClientRect().bottom + b.offsetHeight + 24 - sc.getBoundingClientRect().bottom;   // the bar sticks, so measure the list
+      if (over <= 0) return;
+      const top = list.getBoundingClientRect().top - sc.getBoundingClientRect().top - 72;
+      sc.scrollTo({ top: sc.scrollTop + Math.min(over, Math.max(0, top)), behavior: "smooth" });
+    }, 60);
+    return () => window.clearTimeout(t);
+  }, [found]);
   const read = () => { const f = extractFacts(text, schema); setFound(f); setPick(new Set(f.map((_, i) => i))); };
   const apply = () => {
     if (!found) return;
@@ -705,7 +751,7 @@ function PasteRecord({ schema }: { schema: Schema }) {
   const shown = (f: Found) => (f.fact === "__age" ? `${f.value} years` : factValue(f.fact, f.value, schema));
   return (
     <details className="paste" ref={box} open={open} onToggle={(e) => setOpen((e.target as HTMLDetailsElement).open)}>
-      <summary><ClipboardPaste size={15} aria-hidden /> Paste from the note <span className="paste-sub">· fill in answers automatically</span></summary>
+      <summary><ClipboardPaste size={15} aria-hidden /> Paste a note <span className="paste-sub">· fill in answers automatically</span></summary>
       <p className="note">Paste a clinic note or report. Answers are read with simple rules for you to check. Nothing leaves this browser.</p>
       <textarea value={text} onChange={(e) => { setText(e.target.value); setFound(null); }} rows={5} aria-label="Note text"
         placeholder="e.g. 64-year-old man, cT1c, Gleason 3+3, PSA 5 ng/mL, life expectancy about 18 years…" />
@@ -730,7 +776,9 @@ function PasteRecord({ schema }: { schema: Schema }) {
             );
           })}
         </ul>
-        <button type="button" className="btn primary small" disabled={!pick.size} onClick={apply} data-testid="apply-found">Apply {pick.size} {pick.size === 1 ? "answer" : "answers"}</button>
+        <div className="apply-bar">
+          <button type="button" ref={applyBtn} className="btn primary small" disabled={!pick.size} onClick={apply} data-testid="apply-found">Apply {pick.size} {pick.size === 1 ? "answer" : "answers"}</button>
+        </div>
       </>)}
     </details>
   );
@@ -742,7 +790,7 @@ function Interview({ deciders, remaining, previews, subtype, answer, onPage, rou
   deciders: Decider[]; remaining: number; previews: Map<string, Preview[]>; subtype?: string; answer: (f: string, v: unknown) => void;
   onPage: (p: string) => void; routes: number; toPaths: () => void;
 }) {
-  const { bundle } = useApp();
+  const { bundle, s } = useApp();
   const vars = bundle.schema.variables;
   const [skipped, setSkipped] = useState<string[]>([]);
   const [asked, setAsked] = useState<string[]>([]);
@@ -763,7 +811,7 @@ function Interview({ deciders, remaining, previews, subtype, answer, onPage, rou
   const values = spec.type === "bool" ? [true, false] : (spec.values ?? []);
   const pv = previews.get(cur) ?? [];
   // answers that all lead to the same place say nothing: leave them out, as the form does
-  const sameLead = pv.every((p) => p.decides?.node === pv[0].decides?.node && p.routes === pv[0].routes);
+  const lead = informative(pv, [d?.page, s.start]);
   const go = (v: unknown) => { setAsked([...asked, cur]); answer(cur, v); };
   return (
     <div className="interview" aria-live="polite">
@@ -774,7 +822,7 @@ function Interview({ deciders, remaining, previews, subtype, answer, onPage, rou
       {spec.type === "number" ? (
         <IvNumber key={cur} unit={spec.unit} onDone={go} />
       ) : values.length > 9 ? (
-        <IvSearch key={cur} values={values} pv={sameLead ? [] : pv} subtype={subtype} onPick={go} />
+        <IvSearch key={cur} values={values} pv={lead} subtype={subtype} onPick={go} />
       ) : (<>
         <div className="iv-options" role="group" aria-labelledby="iv-q">
           {values.map((v, i) => {
@@ -783,7 +831,7 @@ function Interview({ deciders, remaining, previews, subtype, answer, onPage, rou
               <button key={String(v)} type="button" onClick={() => go(v)}>
                 <span className="iv-k" aria-hidden>{i + 1}</span>
                 <b>{valueLabel(v)}</b>
-                {p && !sameLead && <span className="iv-to"><Leads p={p} /></span>}
+                {p && lead.includes(p) && <span className="iv-to"><Leads p={p} /></span>}
               </button>
             );
           })}
