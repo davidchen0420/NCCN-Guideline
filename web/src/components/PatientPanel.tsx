@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { useApp, useAdvanced } from "../store";
 import type { Facts, Schema, VarSpec } from "../types";
 import { derive } from "../lib/predicates";
-import { GROUPS, factValue, fieldCount, filledCount, formatNumber, groupOf, label, meta, numberText, parseNumber, unitLabel, valueLabel } from "../lib/factMeta";
+import { GROUPS, factValue, filledCount, formatNumber, groupOf, label, meta, numberText, parseNumber, unitLabel, valueLabel } from "../lib/factMeta";
 import { contradictions, decidingFacts, plausibility, previewAnswer, previewValues, type Decider, type Preview } from "../lib/formAssist";
 import { applyFound, extractFacts, type Found } from "../lib/extract";
 import type { Graph } from "../lib/graph";
@@ -44,7 +44,7 @@ function Decides({ why, onPage }: { why: Decider; onPage?: (page: string) => voi
   const n = name(why.page);
   return (
     <p className="decides">
-      Decides: <button type="button" className="decides-page" onClick={() => onPage?.(why.page)} title="Show this page">
+      Changes the recommendation at: <button type="button" className="decides-page" onClick={() => onPage?.(why.page)} title="Show this page">
         {n.title ? <><span className="dp-title">{n.title}</span> <span className="dp-code">({n.code})</span></> : <span className="dp-title">{n.code}</span>}
       </button>
       {advanced && why.text && <> <q>{why.text}</q></>}
@@ -210,7 +210,7 @@ function LifeExpectancyHelper({ age, onApply }: { age: number | null; onApply: (
           <button type="button" className="btn" disabled={!est} onClick={() => est && onApply(+est.toFixed(1))}>Use estimate</button>
         </div>
         {principles && principles.pages[0].pdf !== undefined && (
-          <p className="src-line">Adjustment rule from <SrcChip t={{ page: principles.pages[0].pdf!, label: "PROS-A", excerpt: principles.pages[0].text.slice(0, 900) }} text="PROS-A · Principles of life expectancy estimation" /></p>
+          <p className="src-line">Adjustment rule from <SrcChip t={{ page: principles.pages[0].pdf!, label: "PROS-A", excerpt: principles.pages[0].text.slice(0, 900) }} text="Principles of life expectancy estimation (PROS-A)" /></p>
         )}
       </div>
     </details>
@@ -304,6 +304,33 @@ export function PatientPanel() {
   const sectionVar = bundle.sections?.variable && vars[bundle.sections.variable] ? bundle.sections.variable : null;
   const needDisease = sectionVar !== null && s.facts[sectionVar] === undefined;
   const deciders = useMemo(() => decidingFacts(g, ranking, s.facts).filter((d) => d.fact !== sectionVar && vars[d.fact] && !staleSet.has(d.fact) && inScope(d.fact)), [g, ranking, s.facts, sectionVar, vars, staleSet, inScope]);
+  // a question whose answer only restates the chosen subtype (a histology list that holds the
+  // subtype itself) is answered for it, so it is not asked; it shows in "Entered so far" and can be cleared
+  const secValue = sectionVar ? s.facts[sectionVar] : undefined;
+  const autoSet = useRef<Record<string, unknown>>({});
+  const autoFor = useRef<unknown>(undefined);
+  useEffect(() => {
+    if (!sectionVar) return;
+    if (autoFor.current !== secValue) {
+      // the subtype changed: take back what was filled in for the previous one
+      const f: Facts = { ...s.facts };
+      let changed = false;
+      for (const [k, v] of Object.entries(autoSet.current)) if (JSON.stringify(f[k]) === JSON.stringify(v)) { delete f[k]; changed = true; }
+      autoSet.current = {}; autoFor.current = secValue;
+      if (changed) { setFacts(f); return; }
+    }
+    if (secValue === undefined) return;
+    const norm = (x: unknown) => String(x).toLowerCase().replace(/[^a-z0-9]/g, "");
+    const f: Facts = { ...s.facts };
+    let changed = false;
+    for (const d of deciders) {
+      const spec = vars[d.fact];
+      if (spec.type !== "enum" || d.fact in autoSet.current) continue;
+      const hit = (spec.values ?? []).find((v) => norm(v) === norm(secValue));
+      if (hit !== undefined) { f[d.fact] = hit; autoSet.current[d.fact] = hit; changed = true; }
+    }
+    if (changed) setFacts(f);
+  }, [sectionVar, secValue, deciders, s.facts, vars, setFacts]);
   const previews = usePreviews(g, s.facts, deciders, ranking);
   const conflicts = useMemo(() => contradictions(s.facts, schema), [s.facts, schema]);
   const deciderSet = useMemo(() => new Set(deciders.map((d) => d.fact)), [deciders]);
@@ -333,7 +360,7 @@ export function PatientPanel() {
     if (other.length > 6) {
       m.delete("other");
       const byTime: [string, string, (n: string) => boolean][] = [
-        ["now", "Current Findings", (n) => !vars[n].time || vars[n].time === "current"],
+        ["now", "Current situation", (n) => !vars[n].time || vars[n].time === "current"],
         ["dx", "At diagnosis", (n) => vars[n].time === "at_diagnosis"],
         ["hx", "History", (n) => vars[n].time === "history"],
       ];
@@ -346,14 +373,14 @@ export function PatientPanel() {
 
   const statedOk = Object.entries(schema.derived ?? {}).filter(([, d]) => d.type === "enum" && !d.rules.some((r) => JSON.stringify(r.if).includes("_stated")));
   const computed = Object.entries(derived).filter(([k, v]) => schema.derived?.[k] && !(k in s.facts) && v !== undefined && v !== null && !k.startsWith("gt5y") && !k.includes("_or_"));
-  const filled = filledCount(s.facts, schema), total = fieldCount(schema);
+  const filled = filledCount(s.facts, schema);
   const examples = bundle.examples ?? [];
   const anyFacts = filled > 0;
   const moreCount = groups.reduce((n, gr) => n + (gr.key === "stated" ? 0 : gr.names.length), 0);
   const [moreOpen, setMoreOpen] = useState(false);
   const startTitle = g.bundle.pages[s.start]?.title;
 
-  if (!Object.keys(vars).length) return <p className="note">This guideline has no fact schema, so patient details cannot decide branches.</p>;
+  if (!Object.keys(vars).length) return <p className="note">This guideline has no patient questions, so nothing you enter can change the recommendation.</p>;
   const field = (n: string, extra: Partial<FieldProps> = {}) => (
     <div key={n}>
       <Field name={n} spec={vars[n]} value={s.facts[n]} onChange={(v) => set1(n, v)} needed={needed.has(n) && s.facts[n] === undefined} used={used.has(n)} onPage={onPage} now={past} {...extra} />
@@ -369,7 +396,7 @@ export function PatientPanel() {
 
   return (
     <div className="patient">
-      <Summary filled={filled} total={total} slug={slug ?? bundle.title} examples={examples} focus={focusFact} />
+      <Summary filled={filled} slug={slug ?? bundle.title} examples={examples} focus={focusFact} />
       {conflicts.length > 0 && (
         <div className="conflicts" role="status">
           {conflicts.map((c, i) => (
@@ -399,12 +426,12 @@ export function PatientPanel() {
               : <button type="button" onClick={() => setModeKeep("interview")} data-testid="mode-interview">One question at a time</button>}
           </div>
           {mode === "interview" ? (
-            <Interview deciders={deciders} previews={previews} answer={set1} onPage={onPage} routes={ranking.paths.length} toPaths={() => set({ rightTab: "paths" })} />
+            <Interview deciders={deciders} previews={previews} subtype={typeof secValue === "string" ? secValue : undefined} answer={set1} onPage={onPage} routes={ranking.paths.length} toPaths={() => set({ rightTab: "paths" })} />
           ) : (<>
             <p className="note" id="dec-note">{anyFacts
-              ? "Still unknown, and each changes the recommendation. Under each choice: where it leads."
+              ? "Answering any of these can change the recommendation. Under each choice you can see where it leads."
               : "These decide the first steps. Enter what the note says; leave the rest blank."}</p>
-            {deciders.length === 0 && <p className="note">{anyFacts ? "Nothing still open changes the recommendation: it is settled by what you entered." : "No questions decide the first steps here; open More details below."}</p>}
+            {deciders.length === 0 && <p className="note">{anyFacts ? "Nothing still open changes the recommendation: it is settled by what you entered." : "No questions decide the first steps here; open More questions below."}</p>}
             {deciders.map((d) => field(d.fact, { why: d, previews: previews.get(d.fact) ?? null }))}
           </>)}
         </>)}
@@ -414,8 +441,8 @@ export function PatientPanel() {
 
       {mode === "form" && (<>
         {computed.length > 0 && (
-          <section className="computed" aria-label="Worked out from your entries">
-            <h4>Worked out from your entries</h4>
+          <section className="computed" aria-label="Worked out from your answers">
+            <h4>Worked out from your answers</h4>
             <dl>
               {computed.map(([k, v]) => (
                 <div key={k}>
@@ -432,18 +459,18 @@ export function PatientPanel() {
         )}
 
         <details className="fgroup more-details" open={moreOpen || !!term} onToggle={(e) => setMoreOpen((e.target as HTMLDetailsElement).open)}>
-          <summary>More details<em>{moreCount}</em></summary>
+          <summary>More questions<em>{moreCount}</em></summary>
           {Object.keys(vars).length > 20 && (
             <div className="field find-fact">
               <SearchIcon size={14} aria-hidden />
-              <input type="search" value={find} onChange={(e) => setFind(e.target.value)} placeholder={`Find one of ${Object.keys(vars).length} details`} aria-label="Find a patient detail" />
+              <input type="search" value={find} onChange={(e) => setFind(e.target.value)} placeholder={`Find one of ${Object.keys(vars).length} questions`} aria-label="Find a question" />
             </div>
           )}
           {scope && Object.keys(vars).length > scoped && (
-            <p className="note scope-note">{showAll ? `Showing all ${Object.keys(vars).length} details.` : `Showing the ${scoped} details that apply from ${pageName(s.start, startTitle && startTitle !== s.start ? clipT(startTitle, 50) : null)}.`}{" "}
-              <button type="button" className="linkish" onClick={() => setShowAll((v) => !v)} data-testid="show-all">{showAll ? "Only those that apply from here" : "Show all details"}</button></p>
+            <p className="note scope-note">{showAll ? `Showing all ${Object.keys(vars).length} questions.` : `Showing the ${scoped} questions that matter from ${pageName(s.start, startTitle && startTitle !== s.start ? clipT(startTitle, 50) : null)}.`}{" "}
+              <button type="button" className="linkish" onClick={() => setShowAll((v) => !v)} data-testid="show-all">{showAll ? "Only those that matter from here" : "Show all questions"}</button></p>
           )}
-          {anyFacts && <p className="note">Dimmed details don't change any recommendation that is still possible.</p>}
+          {anyFacts && <p className="note">Dimmed questions don't change any recommendation that is still possible.</p>}
           {groups.map((gr) => {
             if (gr.key === "stated") return null;
             const legend = <>{gr.title}<em>{gr.names.filter((n) => s.facts[n] !== undefined).length}/{gr.names.length}</em></>;
@@ -488,49 +515,75 @@ const clipT = (t: string, n = 56) => (t.length > n ? t.slice(0, n).trimEnd() + "
 
 /** The moment the patient is at: a new diagnosis, follow-up, recurrence, advanced disease or a
  * later line. It starts the algorithm at that moment's page and limits the form to its details.
- * In a guideline that covers several diseases, the disease or subtype is chosen here too. */
+ * In a guideline that covers several diseases, the disease or subtype is chosen here too, and the
+ * moments offered are that subtype's. When a phase has several pages, they are listed by title. */
 function WhereNow({ count, disease }: { count: number; disease: ReactNode }) {
   const { s, g, setStart } = useApp();
   const advanced = useAdvanced();
   const all = useMemo(() => moments(g), [g]);
   const list = useMemo(() => momentsFor(g, all, s.facts), [g, all, s.facts]);
-  // a choice needs a diagnosis and a later moment, in a guideline that follows a disease course
-  const hasMoments = followsDisease(g.bundle.title) && list.some((m) => m.phase === "diagnosis") && list.some((m) => m.phase !== "diagnosis");
-  if (!hasMoments) {
-    return disease ? <fieldset className="fgroup section-pick"><legend>Where is the patient now?</legend>{disease}</fieldset> : null;
-  }
+  const sec = g.bundle.sections;
+  const secVal = sec ? s.facts[sec.variable] : undefined;
+  // a start page left over from another disease or subtype would leave nothing that fits
+  useEffect(() => {
+    if (s.start === "auto" || !sec || secVal === undefined) return;
+    const owner = sec.pages[s.start];
+    if (owner && owner !== secVal) setStart("auto");
+  }, [s.start, sec, secVal, setStart]);
+  const follows = followsDisease(g.bundle.title);
+  const present = PHASES.filter((p) => list.some((m) => m.phase === p.id));
+  // chips need two moments to choose between; a chosen subtype with one moment just says where it starts
+  const chips = follows && present.length >= 2;
+  const extra = follows && !chips && secVal !== undefined && list.length > 0;
   const phase = startPhase(g, s.start);
   const isMoment = list.some((m) => m.page === s.start);
-  const present = PHASES.filter((p) => list.some((m) => m.phase === p.id));
-  const pages = phase && isMoment ? list.filter((m) => m.phase === phase) : [];
-  const title = g.bundle.pages[s.start]?.title ?? "";
+  const pages = chips ? (phase && isMoment ? list.filter((m) => m.phase === phase) : []) : extra ? list : [];
+  const only = extra && list.length === 1 ? list[0] : null;
+  if (!disease && !chips && !only && pages.length < 2) return null;
+  const nameOf = (page: string, max = 70) => { const t = g.bundle.pages[page]?.title ?? ""; return pageName(page, t && t !== page ? clipT(t, max) : null); };
   return (
     <fieldset className="fgroup moment" data-testid="moment">
       <legend>Where is the patient now?</legend>
       {disease}
-      {disease && <p className="pt-sublabel" id="moment-l">Point in the patient's care</p>}
-      <div className="moment-chips" role="group" aria-label={disease ? undefined : "Where is the patient now?"} aria-labelledby={disease ? "moment-l" : undefined}>
-        <button type="button" aria-pressed={s.start === "auto"} onClick={() => setStart("auto")} title="Let your answers decide where the recommendation starts">Not sure</button>
-        {present.map((p) => (
-          <button key={p.id} type="button" aria-pressed={isMoment && phase === p.id} title={p.hint}
-            onClick={() => { if (!(isMoment && phase === p.id)) setStart(list.find((m) => m.phase === p.id)!.page); }}>{p.label}</button>
-        ))}
-      </div>
-      {advanced && pages.length > 1 && (
-        <select className="sel small" aria-label="Which page" value={s.start} onChange={(e) => setStart(e.target.value)}>
+      {disease && chips && <p className="pt-sublabel" id="moment-l">Point in the patient's care</p>}
+      {chips && (
+        <div className="moment-chips" role="group" aria-label={disease ? undefined : "Where is the patient now?"} aria-labelledby={disease ? "moment-l" : undefined}>
+          <button type="button" aria-pressed={s.start === "auto"} onClick={() => setStart("auto")} title="Let your answers decide where the recommendation starts">Not sure</button>
+          {present.map((p) => (
+            <button key={p.id} type="button" aria-pressed={isMoment && phase === p.id} title={p.hint}
+              onClick={() => { if (!(isMoment && phase === p.id)) setStart(list.find((m) => m.phase === p.id)!.page); }}>{p.label}</button>
+          ))}
+        </div>
+      )}
+      {pages.length > 1 && (advanced ? (
+        <select className="sel small" aria-label="Which page" value={pages.some((m) => m.page === s.start) ? s.start : ""} onChange={(e) => e.target.value && setStart(e.target.value)}>
+          {!pages.some((m) => m.page === s.start) && <option value="">Choose a page…</option>}
           {pages.map((m) => <option key={m.page} value={m.page}>{pageName(m.page, clipT(m.title))}</option>)}
         </select>
+      ) : (<>
+        <p className="pt-sublabel" id="sit-l">Which situation?</p>
+        <div className="situations" role="radiogroup" aria-labelledby="sit-l" data-testid="situations">
+          {pages.map((m) => (
+            <button key={m.page} type="button" role="radio" aria-checked={s.start === m.page} onClick={() => setStart(m.page)}>
+              <span>{m.title}</span> <i>({m.page})</i>
+            </button>
+          ))}
+        </div>
+      </>))}
+      {(chips || pages.length > 1 || only) && (
+        <p className="hint">{only
+          ? <>Starting at <b>{nameOf(only.page)}</b>.</>
+          : s.start === "auto"
+            ? `Your answers decide where the recommendation starts. Pick ${chips ? "a moment" : "a situation"} to see only the questions that matter then.`
+            : <>Starting at <b>{nameOf(s.start)}</b>. {count} {count === 1 ? "question applies" : "questions apply"} from here.</>}</p>
       )}
-      <p className="hint">{s.start === "auto"
-        ? "Your answers decide where the recommendation starts. Pick a moment to see only the questions that matter then."
-        : <>Starting at <b>{pageName(s.start, title && title !== s.start ? clipT(title, 70) : null)}</b>. {count} {count === 1 ? "question applies" : "questions apply"} from here.</>}</p>
     </fieldset>
   );
 }
 
 /* ---------------- top bar, the More menu, saved patients ---------------- */
 
-function Summary({ filled, total, slug, examples, focus }: { filled: number; total: number; slug: string; examples: { id: string; label: string; facts: Facts; age?: number }[]; focus: (f: string) => void }) {
+function Summary({ filled, slug, examples, focus }: { filled: number; slug: string; examples: { id: string; label: string; facts: Facts; age?: number }[]; focus: (f: string) => void }) {
   const { s, set, setFacts, bundle } = useApp();
   const schema = bundle.schema;
   const [saved, setSaved] = useState<Saved[]>(() => readSaved(slug));
@@ -556,17 +609,17 @@ function Summary({ filled, total, slug, examples, focus }: { filled: number; tot
   return (
     <div className="summary">
       <div className="patient-top">
-        <div>
-          <p className="filled"><b>{filled}</b> of {total} answered</p>
-          <span className="meter" aria-hidden><i style={{ width: `${(filled / Math.max(1, total)) * 100}%` }} /></span>
-        </div>
+        <p className="filled"><b>{filled}</b> answered</p>
+        <div className="pt-actions">
+        <button type="button" className="btn ghost pt-paste-btn" data-testid="paste-open" title="Fill in answers from a clinic note"
+          onClick={() => window.dispatchEvent(new CustomEvent("oc-open-paste"))}><ClipboardPaste size={15} aria-hidden /> Paste a note</button>
         <span className="pt-more" ref={menuRef}>
           <button type="button" ref={btnRef} className="btn ghost pt-more-btn" aria-expanded={menu} aria-haspopup="dialog" data-testid="patient-more" onClick={() => setMenu((o) => !o)}>
             More <ChevronDown size={15} aria-hidden />
           </button>
           {menu && (
             <div className="pt-menu" role="dialog" aria-label="More patient options">
-              <button type="button" className="pt-menu-item" disabled={!filled} onClick={() => { setNaming(""); setMenu(false); }}><Save size={15} aria-hidden /> Save this patient</button>
+              <button type="button" className="pt-menu-item" disabled={!filled} onClick={() => { setNaming(""); setMenu(false); }}><Save size={15} aria-hidden /> Save in this browser</button>
               {saved.length > 0 && (<>
                 <span className="pt-menu-label">Saved patients</span>
                 <ul className="pt-saved">{saved.map((x) => (
@@ -589,10 +642,11 @@ function Summary({ filled, total, slug, examples, focus }: { filled: number; tot
             </div>
           )}
         </span>
+        </div>
       </div>
       {naming !== null && (
         <form className="save-row" onSubmit={(e) => { e.preventDefault(); save(naming); }}>
-          <input autoFocus value={naming} onChange={(e) => setNaming(e.target.value)} placeholder="Name, e.g. clinic initials and date" aria-label="Name for this patient" />
+          <input autoFocus value={naming} onChange={(e) => setNaming(e.target.value)} placeholder="Label, e.g. Example A (don't use the patient's name)" aria-label="Label for this patient" />
           <button type="submit" className="btn small">Save</button>
           <button type="button" className="btn ghost small" onClick={() => setNaming(null)}>Cancel</button>
         </form>
@@ -621,6 +675,21 @@ function PasteRecord({ schema }: { schema: Schema }) {
   const [text, setText] = useState("");
   const [found, setFound] = useState<Found[] | null>(null);
   const [pick, setPick] = useState<Set<number>>(new Set());
+  const box = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    // "Paste a note" in the top bar: open the box, bring it into view and put the cursor in it
+    const f = () => {
+      setOpen(true);
+      window.setTimeout(() => {
+        const el = box.current; if (!el) return;
+        const sc = el.closest<HTMLElement>(".rp-body");
+        if (sc) sc.scrollTo({ top: sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top - 72, behavior: "smooth" });
+        el.querySelector("textarea")?.focus({ preventScroll: true });
+      }, 60);
+    };
+    window.addEventListener("oc-open-paste", f);
+    return () => window.removeEventListener("oc-open-paste", f);
+  }, []);
   const read = () => { const f = extractFacts(text, schema); setFound(f); setPick(new Set(f.map((_, i) => i))); };
   const apply = () => {
     if (!found) return;
@@ -633,14 +702,14 @@ function PasteRecord({ schema }: { schema: Schema }) {
   };
   const shown = (f: Found) => (f.fact === "__age" ? `${f.value} years` : factValue(f.fact, f.value, schema));
   return (
-    <details className="paste" open={open} onToggle={(e) => setOpen((e.target as HTMLDetailsElement).open)}>
-      <summary><ClipboardPaste size={15} aria-hidden /> Paste from the note <span className="paste-sub">· fill in details automatically</span></summary>
-      <p className="note">Paste a clinic note or report. Details are read with simple rules and shown for you to check; nothing leaves this browser.</p>
+    <details className="paste" ref={box} open={open} onToggle={(e) => setOpen((e.target as HTMLDetailsElement).open)}>
+      <summary><ClipboardPaste size={15} aria-hidden /> Paste from the note <span className="paste-sub">· fill in answers automatically</span></summary>
+      <p className="note">Paste a clinic note or report. Answers are read with simple rules for you to check. Nothing leaves this browser.</p>
       <textarea value={text} onChange={(e) => { setText(e.target.value); setFound(null); }} rows={5} aria-label="Note text"
         placeholder="e.g. 64-year-old man, cT1c, Gleason 3+3, PSA 5 ng/mL, life expectancy about 18 years…" />
       <div className="paste-actions">
-        <button type="button" className="btn small" disabled={!text.trim()} onClick={read}>Find details</button>
-        {found && <span className="note">{found.length ? `Found ${found.length}. Untick anything wrong.` : "Nothing recognised: answer the questions instead."}</span>}
+        <button type="button" className="btn small" disabled={!text.trim()} onClick={read}>Read the note</button>
+        {found && <span className="note">{found.length ? `Found ${found.length} ${found.length === 1 ? "answer" : "answers"}. Untick anything wrong.` : "Nothing recognised: answer the questions instead."}</span>}
       </div>
       {found && found.length > 0 && (<>
         <ul className="found">
@@ -659,7 +728,7 @@ function PasteRecord({ schema }: { schema: Schema }) {
             );
           })}
         </ul>
-        <button type="button" className="btn primary small" disabled={!pick.size} onClick={apply} data-testid="apply-found">Apply {pick.size} {pick.size === 1 ? "detail" : "details"}</button>
+        <button type="button" className="btn primary small" disabled={!pick.size} onClick={apply} data-testid="apply-found">Apply {pick.size} {pick.size === 1 ? "answer" : "answers"}</button>
       </>)}
     </details>
   );
@@ -667,8 +736,8 @@ function PasteRecord({ schema }: { schema: Schema }) {
 
 /* ---------------- one question at a time ---------------- */
 
-function Interview({ deciders, previews, answer, onPage, routes, toPaths }: {
-  deciders: Decider[]; previews: Map<string, Preview[]>; answer: (f: string, v: unknown) => void;
+function Interview({ deciders, previews, subtype, answer, onPage, routes, toPaths }: {
+  deciders: Decider[]; previews: Map<string, Preview[]>; subtype?: string; answer: (f: string, v: unknown) => void;
   onPage: (p: string) => void; routes: number; toPaths: () => void;
 }) {
   const { bundle } = useApp();
@@ -696,12 +765,14 @@ function Interview({ deciders, previews, answer, onPage, routes, toPaths }: {
   const go = (v: unknown) => { setAsked([...asked, cur]); answer(cur, v); };
   return (
     <div className="interview" aria-live="polite">
-      <p className="iv-n">Question {asked.length + 1}{queue.length > 1 ? ` · ${queue.length - 1} more may follow` : ""}</p>
+      <p className="iv-n">Question {asked.length + 1}{queue.length > 1 ? " · a few more may follow" : ""}</p>
       <p className="iv-q" id="iv-q">{m.label}{spec.time === "at_diagnosis" ? " (at diagnosis)" : spec.time === "history" ? " (history)" : ""}</p>
       {d?.node && <Decides why={d} onPage={onPage} />}
       {m.hint && <p className="hint">{m.hint}</p>}
       {spec.type === "number" ? (
         <IvNumber key={cur} unit={spec.unit} onDone={go} />
+      ) : values.length > 9 ? (
+        <IvSearch key={cur} values={values} pv={sameLead ? [] : pv} subtype={subtype} onPick={go} />
       ) : (<>
         <div className="iv-options" role="group" aria-labelledby="iv-q">
           {values.map((v, i) => {
@@ -723,6 +794,36 @@ function Interview({ deciders, previews, answer, onPage, routes, toPaths }: {
         <button type="button" className="btn ghost" onClick={() => setSkipped([...skipped, cur])}>Don't know — skip</button>
       </div>
       <IvKeys count={spec.type === "number" ? 0 : values.length} pick={(i) => go(values[i])} />
+    </div>
+  );
+}
+
+/** More than nine choices: type to narrow the list (number keys only reach 1 to 9). */
+const GENERIC = new Set(["lymphoma", "lymphomas", "cell", "large", "disorders", "related", "other", "type", "with", "cancer", "disease"]);
+const words = (x: unknown) => String(x).toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length >= 4 && !GENERIC.has(w));
+function IvSearch({ values, pv, subtype, onPick }: { values: unknown[]; pv: Preview[]; subtype?: string; onPick: (v: unknown) => void }) {
+  const [q, setQ] = useState("");
+  const t = q.trim().toLowerCase();
+  // answers that share a word with the chosen subtype come first
+  const sub = useMemo(() => new Set(subtype ? words(subtype) : []), [subtype]);
+  const ranked = useMemo(() => (sub.size ? values.map((v, i) => ({ v, i, n: words(v).filter((w) => sub.has(w)).length })).sort((a, b) => b.n - a.n || a.i - b.i).map((x) => x.v) : values), [values, sub]);
+  const shown = ranked.filter((v) => !t || valueLabel(v).toLowerCase().includes(t));
+  return (
+    <div className="iv-search">
+      <input type="search" autoFocus value={q} onChange={(e) => setQ(e.target.value)} aria-label={`Find an answer among ${values.length}`} placeholder={`Type to find one of ${values.length} answers`}
+        onKeyDown={(e) => { if (e.key === "Enter" && shown.length) { e.preventDefault(); onPick(shown[0]); } }} />
+      <ul className="iv-list" aria-label="Answers">
+        {shown.map((v) => {
+          const p = pv.find((x) => x.value === v);
+          return (
+            <li key={String(v)}>
+              <button type="button" onClick={() => onPick(v)}><b>{valueLabel(v)}</b>{p && <span className="iv-to"><Leads p={p} /></span>}</button>
+            </li>
+          );
+        })}
+        {shown.length === 0 && <li className="iv-none">No answer matches “{q}”.</li>}
+      </ul>
+      {shown.length > 0 && t && <p className="iv-tip">Press Enter to choose the first match.</p>}
     </div>
   );
 }

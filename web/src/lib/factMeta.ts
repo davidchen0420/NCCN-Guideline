@@ -58,11 +58,11 @@ const META: Record<string, Meta> = {
 
 export const GROUPS: { key: string; title: string; match: RegExp }[] = [
   { key: "patient", title: "Patient", match: /life_expectancy|age|ecog|comorb|symptom|performance|health/ },
-  { key: "staging", title: "Diagnosis and Staging", match: /category|stage|grade|cores|histology|gleason|psa_ng|dre|rectal/ },
-  { key: "treatment", title: "Treatment So Far", match: /treatment|therapy|adt|arpi|radiation|prostatectomy|prior|recurr|castrat|psa|testosterone|patholog/ },
-  { key: "metastatic", title: "Metastatic Disease", match: /metast|visceral|bone|nodal|oligo|volume/ },
-  { key: "molecular", title: "Genetics and Biomarkers", match: /brca|hrr|msi|mmr|tmb|pten|germline|somatic|mutation|biomarker/ },
-  { key: "stated", title: "Stated in the Record", match: /_stated$/ },
+  { key: "staging", title: "Diagnosis and staging", match: /category|stage|grade|cores|histology|gleason|psa_ng|dre|rectal/ },
+  { key: "treatment", title: "Treatment so far", match: /treatment|therapy|adt|arpi|radiation|prostatectomy|prior|recurr|castrat|psa|testosterone|patholog/ },
+  { key: "metastatic", title: "Metastatic disease", match: /metast|visceral|bone|nodal|oligo|volume/ },
+  { key: "molecular", title: "Genetics and biomarkers", match: /brca|hrr|msi|mmr|tmb|pten|germline|somatic|mutation|biomarker/ },
+  { key: "stated", title: "Stated in the record", match: /_stated$/ },
   { key: "other", title: "Other", match: /.*/ },
 ];
 

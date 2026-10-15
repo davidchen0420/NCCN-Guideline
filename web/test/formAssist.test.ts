@@ -89,7 +89,7 @@ describe("form assistance", () => {
     const c = contradictions({ m_category: "M0", visceral_metastases_present: true }, pros.schema);
     expect(c[0].message).toMatch(/M0/);
     const s = contradictions({ clinical_t_category: "T1c", grade_group: "1", psa_ng_ml: 5, risk_group: "high" }, pros.schema);
-    expect(s.some((x) => /states risk group “High”/.test(x.message))).toBe(true);
+    expect(s.some((x) => /You entered Risk Group as “High”/.test(x.message))).toBe(true);
     expect(contradictions({ m_category: "M1", visceral_metastases_present: true }, pros.schema)).toEqual([]);
   });
 });
