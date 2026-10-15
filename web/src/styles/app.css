@@ -2,7 +2,7 @@
    serif for guideline headings and recommendations, sans for interface text. */
 :root {
   --paper: #f3f1ec; --surface: #fdfcfa; --surface-2: #f6f4ef; --sunken: #ebe8e1;
-  --ink: #1d1c19; --ink-2: #45433d; --muted: #6b6860; --faint: #8f8b81;
+  --ink: #1d1c19; --ink-2: #45433d; --muted: #5f5c55; --faint: #6f6b63;   /* AA (4.5:1) on paper and surface */
   --line: #dedad1; --line-2: #e9e6df; --line-strong: #c7c2b6;
   --accent: #135c4d; --accent-ink: #ffffff; --accent-soft: #e2eeea; --accent-line: #8fbcb0;
   --route: #135c4d; --route-soft: #e2eeea;
@@ -15,12 +15,14 @@
   --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
   --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
   --r: 6px;
+  /* type scale: body 14, secondary 12.5, smallest label 12 */
+  --fs-xs: 12px; --fs-sm: 12.5px; --fs-md: 14px; --fs-lg: 16px;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --paper: #151513; --surface: #1c1c19; --surface-2: #22221e; --sunken: #2a2925;
-    --ink: #ecebe5; --ink-2: #cbc8bf; --muted: #9b978d; --faint: #7d7a71;
+    --ink: #ecebe5; --ink-2: #cbc8bf; --muted: #a9a59b; --faint: #949086;
     --line: #34332e; --line-2: #2b2a26; --line-strong: #4a4840;
     --accent: #6cc4ad; --accent-ink: #0d1d18; --accent-soft: #1b322c; --accent-line: #3f7f70;
     --route: #6cc4ad; --route-soft: #1b322c;

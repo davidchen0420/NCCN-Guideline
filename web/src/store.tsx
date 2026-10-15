@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useState, type ReactNode } from "react";
 import type { Bundle, Facts, LibraryEntry } from "./types";
 import { buildGraph, resolveRef, type Graph } from "./lib/graph";
 import { choose as walkChoose, startWalk, autoStep, type Walk } from "./lib/walk";
@@ -6,6 +6,7 @@ import type { Kind } from "./lib/search";
 import { rankPathways, type Pathway, type Ranking } from "./lib/pathways";
 import { patientKey, readPatient } from "./lib/patient";
 import { carryOver } from "./lib/moments";
+import { ADVANCED_EVENT, ADVANCED_KEY, readFlag, readPref, setAdvancedPref } from "./lib/prefs";
 
 export type Loc =
   | { kind: "flow"; page: string; node?: string }
@@ -25,6 +26,8 @@ export interface State {
   age: number | null; start: string; pathSel: string | null;
   /** details carried over from an earlier moment, left out of the ranking until confirmed */
   stale: string[];
+  /** Advanced tools: reviewer views (extraction, encoding, walk, scores); off for clinicians */
+  advanced: boolean;
 }
 
 type Action =
@@ -80,6 +83,17 @@ export interface Ctx {
 }
 
 const AppCtx = createContext<Ctx | null>(null);
+/** Whether Advanced tools are on (reviewer views); safe outside a guideline (atlas, library). */
+export const useAdvanced = (): boolean => {
+  const c = useContext(AppCtx);
+  const [v, setV] = useState(() => readFlag(ADVANCED_KEY));
+  useEffect(() => {
+    const f = (e: Event) => setV(!!(e as CustomEvent).detail);
+    window.addEventListener(ADVANCED_EVENT, f);
+    return () => window.removeEventListener(ADVANCED_EVENT, f);
+  }, []);
+  return c ? c.s.advanced : v;
+};
 export const useApp = () => { const c = useContext(AppCtx); if (!c) throw new Error("no store"); return c; };
 /** The store when inside one (the reader), else null (the atlas). */
 export const useAppMaybe = () => useContext(AppCtx);
@@ -123,8 +137,7 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
   const isPhone = usePhone();
   const init = useMemo<State>(() => {
     const fromHash = hashToLoc(location.hash, g, prefix);
-    let saved: string | null = null;
-    try { saved = localStorage.getItem("nav-help"); } catch { /* storage may be blocked */ }
+    const saved = readPref("nav-help");
     const patient = slug ? readPatient(slug) : null;   // carried over from the atlas, or entered earlier this session
     // "Enter a patient" in the atlas: open on the patient form, no welcome screen
     let intent: string | null = null;
@@ -136,7 +149,7 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
       query: "", kinds: [], tags: [], searchNon: false,
       dock: null, fn: null, fnIdx: 0, walk: null, facts: patient?.facts ?? {}, help: false, welcome: !saved && !(patient && Object.keys(patient.facts).length) && intent !== "patient",
       rightTab: "patient", age: patient?.age ?? null, start: patient?.start && g.bundle.pages[patient.start] ? patient.start : "auto", pathSel: null,
-      stale: patient?.stale ?? [],
+      stale: patient?.stale ?? [], advanced: readFlag(ADVANCED_KEY),
     };
   }, [g]);
   const [s, dispatch] = useReducer(reducer, init);
@@ -152,7 +165,14 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
     return () => window.removeEventListener("hashchange", f);
   }, [g, prefix]);
 
-  const set = useCallback((patch: Partial<State>) => dispatch({ type: "set", patch }), []);
+  const set = useCallback((patch: Partial<State>) => {
+    if (patch.advanced !== undefined) {
+      setAdvancedPref(patch.advanced);
+      // the reviewer views close with Advanced tools
+      if (!patch.advanced) patch = { conf: false, showNon: false, ...patch };
+    }
+    dispatch({ type: "set", patch });
+  }, []);
   const go = useCallback((loc: Loc) => {
     dispatch({ type: "go", loc });
     if (window.innerWidth <= 820) dispatch({ type: "set", patch: { left: null } });
