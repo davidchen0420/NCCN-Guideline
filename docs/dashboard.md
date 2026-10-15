@@ -43,6 +43,7 @@ The library opens on a map of every guideline (`web/src/atlas/`). Built from `bu
 
 ## What it does
 - **Readable cards.** Each box's flat PDF text is parsed into a lead-in, bulleted and nested lists, tier headings (Preferred / Other Recommended / Useful in Certain Circumstances), "or" dividers between alternative regimens, and category tags (`web/src/lib/parseBox.ts`).
+- **Click a box for its page.** Clicking a box selects it and opens the page it came from in a floating viewer, the box outlined (hover previews it). The PDF comes from the path recorded at build time when the page is served next to it, or from PDFs connected in this browser (a file, or a folder of NCCN PDFs matched by checksum); until then the viewer shows the page reconstructed from the extracted layout.
 - **Linked everywhere.** Page references such as `PROS-A`, `PROS-F 2 of 5`, `ST-1`, `MS-12` and "See Discussion" become links in cards, footnotes, principles pages and the discussion. A principles page lists every box and footnote that cites it.
 - **Answer selection.** Click a card to light up every pathway through it (across linked pages); other paths hide until "Non-active paths" is on.
 - **Footnote dock** (`*`), **evidence** (`E`) and **preference** (`P`) tabs; footnotes step through "i of N instances".

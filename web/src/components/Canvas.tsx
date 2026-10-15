@@ -7,6 +7,7 @@ import { cardWidth, edgePath, layoutPage } from "../lib/layout";
 import { pathSets } from "../lib/graph";
 import { matcher } from "../lib/search";
 import { boxSrc } from "./PathwaysPanel";
+import { useSource } from "../source";
 
 const n_entry = (g: { bundle: { roots: Record<string, string[]> } }, full: string) => (g.bundle.roots[full.split(":")[0]] ?? []).includes(full);
 
@@ -89,8 +90,12 @@ export function Canvas({ page }: { page: string }) {
     };
   };
 
+  const source = useSource();
   const select = (shortId: string) => {
     const full = `${page}:${shortId}`;
+    // choosing a box also opens its original page (the floating viewer follows each new choice)
+    const src = boxSrc(g, full);
+    if (src && !s.answers.includes(full)) source.open(src);
     dispatch({ type: "toggleAnswer", id: full });
     dispatch({ type: "go", loc: { kind: "flow", page, node: full }, push: false });
     set({ rightTab: "details", sheet: true, dock: s.dock === "fn" ? s.dock : null });

@@ -67,6 +67,14 @@ await step("the rail returns to the atlas at the page being read", async () => {
   await page.waitForFunction(() => location.hash === "#atlas/lung_screening/LCS-11");
   await page.locator(".atlas-panel .panel-title", { hasText: "LCS-11" }).waitFor();
 });
+await step("clicking a box opens its page from the guideline PDF", async () => {
+  await page.goto(base + "#prostate/flow/PROS-2");
+  await closeWelcome();
+  const card = page.locator(".canvas [data-testid=card]:visible").filter({ hasText: "Intermediate" }).first();
+  await card.click({ position: { x: 20, y: 40 } });
+  await page.locator(".viewer-bar", { hasText: "PROS-2" }).waitFor();
+  await page.getByRole("button", { name: "Close page viewer" }).click();
+});
 if (process.argv.includes("--all")) {
   // Every guideline: opens, renders its first algorithm page, the patient form and the pathways tab.
   const slugs = JSON.parse(await readFile(join(ROOT, "data/index.json"), "utf8")).guidelines.map((g) => g.slug);
