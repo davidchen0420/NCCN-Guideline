@@ -286,6 +286,26 @@ await step("opened from disk (file://): guidelines, Enter a patient and the list
   await p.locator("[data-testid=card]").first().waitFor({ timeout: 15000 });
   await p.close();
 });
+await step("a guideline that cannot be read says which file and offers Try again", async () => {
+  const p = await browser.newPage({ viewport: { width: 1200, height: 800 } });
+  let block = true;
+  await p.route(/guidelines\/kidney\.js|kidney\/guideline\.json/, (r) => (block ? r.abort("connectionreset") : r.continue()));
+  await p.goto(base + "#kidney/");
+  const box = p.locator(".load-error");
+  await box.waitFor({ timeout: 15000 });
+  assert.match(await box.innerText(), /guidelines\/kidney\.js[\s\S]*kidney\/guideline\.json/);
+  block = false;
+  await p.getByRole("button", { name: "Try again" }).click();
+  await p.locator("[data-testid=card]").first().waitFor({ timeout: 15000 });
+  await p.close();
+});
+await step("served on 0.0.0.0 (as python's server prints), the page moves to localhost", async () => {
+  const p = await browser.newPage();
+  await p.goto(base.replace("127.0.0.1", "0.0.0.0") + "#atlas");
+  await p.waitForFunction(() => location.hostname === "localhost");
+  await p.locator(".atlas-canvas").waitFor();
+  await p.close();
+});
 if (process.argv.includes("--all")) {
   // Every guideline: its map opens, and its first start page unfolds with its boxes.
   const p = await browser.newPage({ viewport: { width: 1440, height: 900 } });

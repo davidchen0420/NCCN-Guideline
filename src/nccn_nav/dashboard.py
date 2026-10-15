@@ -422,6 +422,14 @@ def build_library(data_dir="data", out_path="built/oncocarta.html", pdf_roots=No
     rel = lambda p: Path(os.path.relpath(Path(p).resolve(), out.parent.resolve())).as_posix()
     base = rel(data_dir).rstrip("/") + "/"
     pdfs = {slug: rel(p) for slug, p in sorted(find_pdfs(data_dir, pdf_roots).items())}
+    if not pdfs and out.exists():
+        # no PDFs on this machine: keep the paths a previous build recorded (made where they are)
+        m = re.search(r"window\.__LIBRARY__=(.*?);window\.__ATLAS__=", out.read_text())
+        if m:
+            try:
+                pdfs = json.loads(m.group(1).replace("<\\/", "</")).get("pdfs") or {}
+            except ValueError:
+                pdfs = {}
     write_packs(data_dir, out.parent / "guidelines")
     index = json.loads((Path(data_dir) / "index.json").read_text())["guidelines"]
     library = {"base": base, "pdfs": pdfs, "packs": "guidelines/", "index": index}

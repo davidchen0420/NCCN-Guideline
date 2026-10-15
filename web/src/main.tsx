@@ -28,6 +28,14 @@ const single = (bundle: Bundle) => {
  * the page (data/index.json, served over http); the dev sample; else ask for a file.
  */
 async function start() {
+  // Safari blocks a page's own requests when it is opened on 0.0.0.0 or [::] (as `python -m
+  // http.server` prints on macOS): the same server, as localhost.
+  if (["0.0.0.0", "[::]", "::"].includes(location.hostname)) {
+    const u = new URL(location.href);
+    u.hostname = "localhost";
+    location.replace(u.href);
+    return;
+  }
   if (window.__GUIDELINE__ && isGuidelineFile(window.__GUIDELINE__)) return single(adaptGuideline(window.__GUIDELINE__));
   if (window.__BUNDLE__) return single(window.__BUNDLE__);
   const lib = await findLibrary();

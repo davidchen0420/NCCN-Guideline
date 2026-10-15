@@ -46,6 +46,7 @@ export async function findLibrary(): Promise<Library | null> {
 }
 
 const cache = new Map<string, Promise<Bundle>>();
+const forget = (slug: string) => { cache.delete(slug); if (window.__OC_PACKS) delete window.__OC_PACKS[slug]; };
 /** A guideline, read once per page load (the atlas and the reader share it). */
 export function getGuideline(lib: Library, slug: string): Promise<Bundle> {
   let p = cache.get(slug);
@@ -74,7 +75,7 @@ function loadPack(lib: Library, slug: string): Promise<unknown> {
     el.src = `${lib.packs}${slug}.js`;
     el.async = true;
     el.onload = () => { const b64 = window.__OC_PACKS?.[slug]; if (b64) unpack(b64); else reject(new Error(`${el.src} did not contain the guideline`)); };
-    el.onerror = () => reject(new Error(`could not read ${el.src}`));
+    el.onerror = () => reject(new Error(`could not read ${new URL(el.src, location.href).href}`));
     document.head.appendChild(el);
   });
 }
@@ -86,11 +87,17 @@ async function loadGuideline(lib: Library, e: LibraryEntry): Promise<Bundle> {
     try { j = await loadPack(lib, e.slug); } catch (err) { errs.push(String((err as Error).message ?? err)); }
   }
   if (!j) {
-    try {
-      const r = await fetch(`${lib.base}${e.path}`);
-      if (!r.ok) throw new Error(`${e.path}: HTTP ${r.status}`);
-      j = await r.json();
-    } catch (err) { errs.push(String((err as Error).message ?? err)); }
+    const url = new URL(`${lib.base}${e.path}`, location.href).href;
+    for (let attempt = 0; attempt < 2 && !j; attempt++) {   // one retry: a dropped connection is often transient
+      try {
+        const r = await fetch(url, { cache: attempt ? "reload" : "default" });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        j = await r.json();
+      } catch (err) {
+        if (attempt) errs.push(`${url}: ${String((err as Error).message ?? err)}`);
+        else await new Promise((res) => setTimeout(res, 300));
+      }
+    }
   }
   if (!j) {
     const disk = location.protocol === "file:";
@@ -114,6 +121,7 @@ export function LibraryShell({ lib, atlas = null }: { lib: Library; atlas?: Atla
   const [slug, setSlug] = useState<string | null>(() => slugOf(location.hash));
   const [view, setView] = useState(() => homeView(location.hash));
   const [state, setState] = useState<{ slug: string; bundle: Bundle } | { slug: string; error: string } | null>(null);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     const f = () => { setSlug(slugOf(location.hash)); setView(homeView(location.hash)); };
@@ -133,7 +141,7 @@ export function LibraryShell({ lib, atlas = null }: { lib: Library; atlas?: Atla
       setState({ slug, bundle });
     }).catch((err) => { if (!off) setState({ slug, error: String(err.message ?? err) }); });
     return () => { off = true; };
-  }, [slug, lib]);
+  }, [slug, lib, attempt]);
 
   const nav = useMemo<LibraryNav>(() => ({
     entries: lib.guidelines,
@@ -154,9 +162,16 @@ export function LibraryShell({ lib, atlas = null }: { lib: Library; atlas?: Atla
   if (!state) return <div className="lib-loading" role="status">Loading {lib.guidelines.find((x) => x.slug === slug)?.title ?? slug}…</div>;
   if ("error" in state) {
     return (
-      <div className="lib-loading" role="alert">
-        <p>Could not open this guideline: {state.error}</p>
-        <button type="button" className="btn" onClick={() => nav.home()}>Back to all guidelines</button>
+      <div className="lib-loading load-error" role="alert">
+        <h2>Could not open this guideline</h2>
+        <p className="le-why">{state.error}</p>
+        <p className="note">{location.protocol === "file:"
+          ? "Opened from disk: keep built/oncocarta.html next to its built/guidelines/ folder."
+          : `Served from ${location.host}. If the address is 0.0.0.0 or [::], open it as localhost instead; check the server is still running.`}</p>
+        <div className="le-actions">
+          <button type="button" className="btn primary" onClick={() => { forget(state.slug); setAttempt((a) => a + 1); }}>Try again</button>
+          <button type="button" className="btn" onClick={() => nav.home()}>Back to all guidelines</button>
+        </div>
       </div>
     );
   }
