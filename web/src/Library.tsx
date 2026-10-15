@@ -4,14 +4,18 @@
  * ("#prostate/flow/PROS-3"), so links between guidelines and browser history work.
  */
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { BookOpen, Search as SearchIcon, ArrowRight } from "lucide-react";
+import { BookOpen, Search as SearchIcon, ArrowRight, Compass, List } from "lucide-react";
 import type { Bundle, Example, Library, LibraryEntry } from "./types";
 import { adaptGuideline, isGuidelineFile } from "./lib/adapt";
 import { Provider, type LibraryNav } from "./store";
 import { SourceProvider } from "./source";
 import { App } from "./App";
+import { Atlas } from "./atlas/Atlas";
+import type { AtlasRaw } from "./atlas/model";
 
-const slugOf = (hash: string) => { const m = hash.replace(/^#/, "").match(/^([a-z0-9_]+)(\/|$)/); return m ? m[1] : null; };
+/** The guideline the hash points into; "#atlas…" and "#list" are the home views. */
+const slugOf = (hash: string) => { const m = hash.replace(/^#/, "").match(/^([a-z0-9_]+)(\/|$)/); return m && m[1] !== "atlas" && m[1] !== "list" ? m[1] : null; };
+const homeView = (hash: string): "atlas" | "list" => (hash.replace(/^#/, "").startsWith("list") ? "list" : "atlas");
 const RECENT = "nav-recent";
 const recent = (): string[] => { try { return JSON.parse(localStorage.getItem(RECENT) ?? "[]"); } catch { return []; } };
 const remember = (slug: string) => { try { localStorage.setItem(RECENT, JSON.stringify([slug, ...recent().filter((s) => s !== slug)].slice(0, 6))); } catch { /* storage blocked */ } };
@@ -30,6 +34,19 @@ export async function findLibrary(): Promise<Library | null> {
   return null;
 }
 
+const cache = new Map<string, Promise<Bundle>>();
+/** A guideline, read once per page load (the atlas and the reader share it). */
+export function getGuideline(lib: Library, slug: string): Promise<Bundle> {
+  let p = cache.get(slug);
+  if (!p) {
+    const e = lib.guidelines.find((x) => x.slug === slug);
+    p = e ? loadGuideline(lib, e) : Promise.reject(new Error(`No guideline called “${slug}”.`));
+    p.catch(() => cache.delete(slug));
+    cache.set(slug, p);
+  }
+  return p;
+}
+
 async function loadGuideline(lib: Library, e: LibraryEntry): Promise<Bundle> {
   const r = await fetch(`${lib.base}${e.path}`);
   if (!r.ok) throw new Error(`${e.path}: HTTP ${r.status}`);
@@ -43,12 +60,13 @@ async function loadGuideline(lib: Library, e: LibraryEntry): Promise<Bundle> {
   return b;
 }
 
-export function LibraryShell({ lib }: { lib: Library }) {
+export function LibraryShell({ lib, atlas = null }: { lib: Library; atlas?: AtlasRaw | null }) {
   const [slug, setSlug] = useState<string | null>(() => slugOf(location.hash));
+  const [view, setView] = useState(() => homeView(location.hash));
   const [state, setState] = useState<{ slug: string; bundle: Bundle } | { slug: string; error: string } | null>(null);
 
   useEffect(() => {
-    const f = () => setSlug(slugOf(location.hash));
+    const f = () => { setSlug(slugOf(location.hash)); setView(homeView(location.hash)); };
     window.addEventListener("hashchange", f);
     return () => window.removeEventListener("hashchange", f);
   }, []);
@@ -58,7 +76,7 @@ export function LibraryShell({ lib }: { lib: Library }) {
     if (!e) { setState({ slug, error: `No guideline called “${slug}” in this library.` }); return; }
     let off = false;
     setState(null);
-    loadGuideline(lib, e).then((bundle) => {
+    getGuideline(lib, slug).then((bundle) => {
       if (off) return;
       remember(slug);
       document.title = `${e.title} · OncoCarta`;
@@ -70,16 +88,25 @@ export function LibraryShell({ lib }: { lib: Library }) {
   const nav = useMemo<LibraryNav>(() => ({
     entries: lib.guidelines,
     open: (s, code) => { location.hash = `#${s}/${code ? `ref/${code.split("/").map(encodeURIComponent).join("/")}` : ""}`; },
-    home: () => { location.hash = ""; },
-  }), [lib]);
+    home: (page?: string | null) => {
+      const at = slugOf(location.hash);
+      location.hash = atlas && at ? `#atlas/${at}${page ? `/${encodeURIComponent(page)}` : ""}` : atlas ? "#atlas" : "#list";
+    },
+  }), [lib, atlas]);
 
-  if (!slug) return <LibraryHome lib={lib} onOpen={(s) => nav.open(s)} />;
+  if (!slug) {
+    if (atlas && view === "atlas") {
+      return <Atlas lib={lib} raw={atlas} onList={() => { location.hash = "#list"; }}
+        onOpen={(s, page, node) => { location.hash = `#${s}/${page ? `flow/${encodeURIComponent(page)}${node ? `/${node.split(":")[1] ?? ""}` : ""}` : ""}`; }} />;
+    }
+    return <LibraryHome lib={lib} onOpen={(s) => nav.open(s)} onAtlas={atlas ? () => { location.hash = "#atlas"; } : undefined} />;
+  }
   if (!state) return <div className="lib-loading" role="status">Loading {lib.guidelines.find((x) => x.slug === slug)?.title ?? slug}…</div>;
   if ("error" in state) {
     return (
       <div className="lib-loading" role="alert">
         <p>Could not open this guideline: {state.error}</p>
-        <button type="button" className="btn" onClick={nav.home}>Back to all guidelines</button>
+        <button type="button" className="btn" onClick={() => nav.home()}>Back to all guidelines</button>
       </div>
     );
   }
@@ -100,7 +127,7 @@ function quality(e: LibraryEntry) {
   return { pages: q.algorithm_pages ?? 0, boxes: q.boxes ?? 0, encoded, rejected: st.rejected ?? 0 };
 }
 
-export function LibraryHome({ lib, onOpen }: { lib: Library; onOpen: (slug: string) => void }) {
+export function LibraryHome({ lib, onOpen, onAtlas }: { lib: Library; onOpen: (slug: string) => void; onAtlas?: () => void }) {
   const [q, setQ] = useState("");
   const [cat, setCat] = useState<string | null>(null);
   const term = q.trim().toLowerCase();
@@ -112,6 +139,12 @@ export function LibraryHome({ lib, onOpen }: { lib: Library; onOpen: (slug: stri
   return (
     <div className="lib">
       <header className="lib-head">
+        {onAtlas && (
+          <div className="view-switch lib-switch" role="group" aria-label="View">
+            <button type="button" aria-pressed="false" onClick={onAtlas} data-testid="to-atlas"><Compass size={14} aria-hidden /> Atlas</button>
+            <button type="button" className="on" aria-pressed="true"><List size={14} aria-hidden /> List</button>
+          </div>
+        )}
         <h1 className="brand">OncoCarta</h1>
         <p className="lib-count">{lib.guidelines.length} encoded NCCN Guidelines</p>
         <p className="lib-lead">Pick a guideline to enter a patient, see the routes through its algorithm that fit, and check each step against the source page.</p>

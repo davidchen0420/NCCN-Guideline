@@ -12,7 +12,7 @@ export function Rail() {
   );
   return (
     <nav className="rail" aria-label="OncoCarta">
-      {library && b("All guidelines", <LibraryIcon size={20} />, false, library.home, "rail-library")}
+      {library && b("All guidelines", <LibraryIcon size={20} />, false, () => library.home(s.loc.kind === "flow" ? s.loc.page : null), "rail-library")}
       {b("Whole guideline", <LayoutGrid size={20} />, s.loc.kind === "map", () => go({ kind: "map" }), "rail-map")}
       {b("Contents", <BookOpen size={20} />, s.left === "toc", () => toggle("toc"), "rail-toc")}
       {b("Search", <Search size={20} />, s.left === "search", () => toggle("search"), "rail-search")}

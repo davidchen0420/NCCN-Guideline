@@ -64,6 +64,43 @@ class CanonicalBuildTest(unittest.TestCase):
             self.assertIn("window.__GUIDELINE__=null", html)
 
 
+class AtlasBuildTest(unittest.TestCase):
+    DATA = ROOT / "data"
+
+    @unittest.skipUnless((DATA / "index.json").exists(), "canonical data not present")
+    def test_every_guideline_sits_in_one_site(self):
+        sites = json.loads((ROOT / "src" / "nccn_nav" / "atlas_sites.json").read_text())
+        index = [g["slug"] for g in json.loads((self.DATA / "index.json").read_text())["guidelines"]]
+        listed = [slug for s in sites["sites"] for slug in s["guidelines"]]
+        self.assertEqual(sorted(listed), sorted(index), "atlas_sites.json and data/index.json disagree")
+        self.assertEqual(len(listed), len(set(listed)))
+
+    @unittest.skipUnless((DATA / "prostate" / "guideline.json").exists(), "canonical data not present")
+    def test_atlas_pages_links_and_citations(self):
+        a = dashboard.build_atlas(self.DATA)
+        self.assertEqual(a["format"], "oncocarta-atlas/1")
+        site_ids = {s["id"] for s in a["sites"]}
+        for g in a["guidelines"]:
+            self.assertIn(g["site"], site_ids, g["slug"])
+            n = len(g["pages"])
+            for x, y in g["links"]:
+                self.assertTrue(0 <= x < n and 0 <= y < n and x != y, g["slug"])
+            for pages in g["ext"].values():
+                self.assertTrue(all(0 <= i < n for i in pages))
+        p = next(g for g in a["guidelines"] if g["slug"] == "prostate")
+        self.assertEqual(p["pages"][0]["id"], "PROS-1")
+        self.assertEqual(p["pages"][0].get("e"), 1, "PROS-1 is a start page")
+        self.assertIn("survivorship", p["ext"])
+        self.assertIn([0, 1], p["links"], "PROS-1 leads to PROS-2")
+
+    @unittest.skipUnless((DATA / "index.json").exists(), "canonical data not present")
+    def test_library_page_embeds_the_atlas(self):
+        with tempfile.TemporaryDirectory() as d:
+            html = dashboard.build_library(self.DATA, Path(d) / "built" / "oncocarta.html").read_text()
+            self.assertIn("window.__ATLAS__={", html)
+            self.assertNotIn("/*ATLAS*/null", html)
+
+
 class ParityFixtureTest(unittest.TestCase):
     def test_fixture_matches_python(self):
         fixture = json.loads((ROOT / "web" / "test" / "parity.json").read_text())

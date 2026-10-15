@@ -259,11 +259,12 @@ def _template():
     return (HERE / "dashboard.html").read_text()
 
 
-def _fill(template, bundle="null", guideline="null", library="null"):
+def _fill(template, bundle="null", guideline="null", library="null", atlas="null"):
     safe = lambda x: x.replace("</", "<\\/")
     return (template.replace("/*BUNDLE*/null", safe(bundle))
             .replace("/*GUIDELINE*/null", safe(guideline))
-            .replace("/*LIBRARY*/null", safe(library)))
+            .replace("/*LIBRARY*/null", safe(library))
+            .replace("/*ATLAS*/null", safe(atlas)))
 
 
 def build(private, out_dir=None, title=None):
@@ -297,13 +298,81 @@ def build(private, out_dir=None, title=None):
     return out, bundle
 
 
+def build_atlas(data_dir="data", sites_path=HERE / "atlas_sites.json"):
+    """The overview the atlas home page draws: every guideline in its site sector, its algorithm
+    pages (raw title lines; the viewer titles them the way the reader does), the links between
+    pages and the links to other guidelines. Small enough to embed in the library page; the
+    boxes of a page are read from guideline.json when the page is opened."""
+    data_dir = Path(data_dir)
+    sites = json.loads(Path(sites_path).read_text())
+    index = json.loads((data_dir / "index.json").read_text())["guidelines"]
+    site_of = {slug: s["id"] for s in sites["sites"] for slug in s["guidelines"]}
+    guidelines = []
+    for e in index:
+        g = json.loads((data_dir / e["path"]).read_text())
+        flow = [p for p in g["pages"] if p["kind"] == "algorithm"]
+        idx = {p["id"]: i for i, p in enumerate(flow)}
+        sec_names = []
+        for p in flow:
+            if p.get("section") and p["section"] not in sec_names:
+                sec_names.append(p["section"])
+        boxes, decisions = {}, {}
+        links, ext = set(), {}
+        for n in g["nodes"]:
+            if n["page"] not in idx:
+                continue
+            i = idx[n["page"]]
+            if n.get("role") not in ("page_heading", "column_header", "table_title", "note"):
+                boxes[i] = boxes.get(i, 0) + 1
+            if n.get("predicate"):
+                decisions[i] = decisions.get(i, 0) + 1
+            for ln in n.get("links") or []:
+                if ln["type"] == "page" and ln.get("page") in idx and idx[ln["page"]] != i:
+                    links.add((i, idx[ln["page"]]))
+                elif ln["type"] == "external_guideline" and ln.get("guideline") and ln["guideline"] != e["slug"]:
+                    ext.setdefault(ln["guideline"], set()).add(i)
+        for c in g.get("continuations") or []:
+            a, b = idx.get(c["src"].split(":")[0]), idx.get(c.get("page"))
+            if a is not None and b is not None and a != b:
+                links.add((a, b))
+        reached = {b for _, b in links}
+        pages = []
+        for i, p in enumerate(flow):
+            first = next((ln.strip() for ln in p.get("text", "").splitlines() if ln.strip()), "")
+            row = {"id": p["id"], "a": first[:160], "n": boxes.get(i, 0), "d": decisions.get(i, 0)}
+            if p.get("heading"):
+                row["h"] = p["heading"][:160]
+            if p.get("section"):
+                row["s"] = sec_names.index(p["section"])
+            if i not in reached:
+                row["e"] = 1
+            pages.append(row)
+        q = e.get("quality") or {}
+        st = q.get("predicate_status") or {}
+        guidelines.append({
+            "slug": e["slug"], "title": e["title"], "category": e["category"],
+            "version": e.get("version"), "date": e.get("version_date"),
+            "site": site_of.get(e["slug"], "other"),
+            "boxes": q.get("boxes", 0),
+            "encoded": sum(st.get(k, 0) for k in ("model_reviewed", "inherited_from_link", "section_only")),
+            "sections": sec_names, "pages": pages, "links": [list(x) for x in sorted(links)],
+            "ext": {k: sorted(v) for k, v in sorted(ext.items())},
+            "aliases": sites.get("aliases", {}).get(e["slug"], []),
+        })
+    return {"format": "oncocarta-atlas/1",
+            "sites": [{"id": s["id"], "label": s["label"]} for s in sites["sites"]],
+            "guidelines": guidelines}
+
+
 def build_library(data_dir="data", out_path="built/oncocarta.html"):
     """The library viewer: no guideline embedded; it reads <data_dir>/index.json and each
-    <slug>/guideline.json over http, relative to where the page is served."""
+    <slug>/guideline.json over http, relative to where the page is served. The atlas overview
+    (build_atlas) is embedded for the home page."""
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)
     base = Path(os.path.relpath(Path(data_dir).resolve(), out.parent.resolve())).as_posix().rstrip("/") + "/"
-    out.write_text(_fill(_template(), library=json.dumps({"base": base})))
+    atlas = json.dumps(build_atlas(data_dir), ensure_ascii=False, separators=(",", ":"))
+    out.write_text(_fill(_template(), library=json.dumps({"base": base}), atlas=atlas))
     return out
 
 

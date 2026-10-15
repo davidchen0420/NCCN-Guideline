@@ -1,0 +1,39 @@
+{
+  "_note": "Front-end grouping for the OncoCarta atlas home page: which ring sector each guideline sits in. Not guideline data; edit freely. Order = order around the ring, clockwise from 12 o'clock.",
+  "sites": [
+    {"id": "breast", "label": "Breast", "guidelines": ["breast", "breast_screening_and_diagnosis", "breast_risk_reduction"]},
+    {"id": "thoracic", "label": "Thoracic", "guidelines": ["nsclc", "sclc", "lung_screening", "mesothelioma_pleural", "mesothelioma_peritoneal", "thymomas_and_thymic_carcinomas"]},
+    {"id": "gi", "label": "Gastrointestinal", "guidelines": ["esophageal_and_esophagogastric_junction", "gastric", "small_bowel_adenocarcinoma", "appendiceal_neoplasms_and", "colon", "rectal", "anal_carcinoma", "colorectal_screening", "pancreatic_adenocarcinoma", "ampullary_adenocarcinoma", "biliary_tract", "hepatocellular_carcinoma", "gastrointestinal_stromal_tumors"]},
+    {"id": "hereditary", "label": "Hereditary Risk", "guidelines": ["genetic_familial_high_risk_assessment_colorectal", "genetic_familial_high_risk_assessment_breast_ova"]},
+    {"id": "gu", "label": "Genitourinary", "guidelines": ["prostate", "prostate_early_detection", "bladder", "kidney", "testicular", "penile"]},
+    {"id": "gyn", "label": "Gynecologic", "guidelines": ["ovarian_cancer_fallopian_tube_cancer_primary_per", "uterine_neoplasms", "cervical", "vulvar", "vaginal", "gestational_trophoblastic_neoplasia"]},
+    {"id": "skin", "label": "Skin", "guidelines": ["melanoma_cutaneous", "melanoma_uveal", "basal_cell_skin", "squamous_cell_skin", "merkel_cell_carcinoma", "dermatofibrosarcoma_protuberans"]},
+    {"id": "sarcoma", "label": "Sarcoma & Bone", "guidelines": ["soft_tissue_sarcoma", "bone", "kaposi_sarcoma"]},
+    {"id": "neuro", "label": "Head, Neck & CNS", "guidelines": ["head_and_neck", "central_nervous_system"]},
+    {"id": "endocrine", "label": "Endocrine", "guidelines": ["thyroid_carcinoma", "neuroendocrine_and_adrenal_tumors"]},
+    {"id": "lymphoma", "label": "Lymphoma & Plasma Cell", "guidelines": ["b_cell_lymphomas", "hodgkin_lymphoma", "t_cell_lymphomas", "cutaneous_lymphomas", "castleman_disease", "histiocytic_neoplasms", "multiple_myeloma", "systemic_light_chain_amyloidosis", "waldenstrom_macroglobulinemia_lymphoplasmacytic"]},
+    {"id": "leukemia", "label": "Leukemia & Myeloid", "guidelines": ["aml", "acute_lymphoblastic_leukemia", "chronic_lymphocytic_leukemia_small_lymphocytic_l", "chronic_myeloid_leukemia", "hairy_cell_leukemia", "myelodysplastic_syndromes", "myeloproliferative_neoplasms", "myeloid_lymphoid_neoplasms_with_eosinophilia_and", "systemic_mastocytosis"]},
+    {"id": "pediatric", "label": "Pediatric", "guidelines": ["pediatric_acute_lymphoblastic_leukemia", "pediatric_aggressive_mature_b_cell_lymphomas", "pediatric_hodgkin_lymphoma", "pediatric_central_nervous_system", "pediatric_soft_tissue_sarcoma", "neuroblastoma", "wilms_tumor_nephroblastoma"]},
+    {"id": "populations", "label": "Special Situations", "guidelines": ["occult_primary", "adolescent_and_young_adult_aya_oncology", "older_adult_oncology", "in_people_with_hiv"]},
+    {"id": "supportive", "label": "Supportive Care", "guidelines": ["survivorship", "palliative_care", "distress_management", "adult_pain", "related_fatigue", "antiemesis", "hematopoietic_growth_factors", "associated_venous_thromboembolic_disease", "prevention_and_treatment_of_related_infections", "management_of_immune_checkpoint_inhibitor_relate", "management_of_car_t_cell_and_lymphocyte_engager", "hematopoietic_cell_transplantation", "smoking_cessation"]}
+  ],
+  "aliases": {
+    "nsclc": ["NSCLC", "lung"], "sclc": ["SCLC", "lung"], "aml": ["AML"], "acute_lymphoblastic_leukemia": ["ALL"],
+    "chronic_lymphocytic_leukemia_small_lymphocytic_l": ["CLL", "SLL"], "chronic_myeloid_leukemia": ["CML"],
+    "myelodysplastic_syndromes": ["MDS"], "myeloproliferative_neoplasms": ["MPN", "polycythemia", "myelofibrosis"],
+    "hepatocellular_carcinoma": ["HCC", "liver"], "gastrointestinal_stromal_tumors": ["GIST"],
+    "dermatofibrosarcoma_protuberans": ["DFSP"], "adolescent_and_young_adult_aya_oncology": ["AYA"],
+    "in_people_with_hiv": ["HIV"], "management_of_car_t_cell_and_lymphocyte_engager": ["CAR T", "CRS", "ICANS"],
+    "management_of_immune_checkpoint_inhibitor_relate": ["irAE", "immunotherapy toxicity"],
+    "associated_venous_thromboembolic_disease": ["VTE", "DVT", "PE", "anticoagulation"],
+    "multiple_myeloma": ["myeloma"], "hodgkin_lymphoma": ["HL"], "b_cell_lymphomas": ["DLBCL", "follicular", "mantle cell"],
+    "t_cell_lymphomas": ["PTCL"], "cutaneous_lymphomas": ["mycosis fungoides", "Sézary"], "central_nervous_system": ["brain", "glioma", "glioblastoma"],
+    "head_and_neck": ["oral cavity", "larynx", "oropharynx"], "kidney": ["renal", "RCC"], "bladder": ["urothelial"],
+    "antiemesis": ["nausea", "vomiting"], "adult_pain": ["pain"], "related_fatigue": ["fatigue"],
+    "hematopoietic_growth_factors": ["G-CSF", "neutropenia", "anemia"], "hematopoietic_cell_transplantation": ["HCT", "GVHD", "transplant"],
+    "prevention_and_treatment_of_related_infections": ["infection", "neutropenic fever"],
+    "genetic_familial_high_risk_assessment_breast_ova": ["BRCA", "hereditary"], "genetic_familial_high_risk_assessment_colorectal": ["Lynch", "hereditary"],
+    "ovarian_cancer_fallopian_tube_cancer_primary_per": ["ovarian"], "uterine_neoplasms": ["endometrial", "uterine"],
+    "wilms_tumor_nephroblastoma": ["Wilms"], "occult_primary": ["unknown primary", "CUP"], "thyroid_carcinoma": ["thyroid"]
+  }
+}

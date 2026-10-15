@@ -4,6 +4,7 @@ import { buildGraph, resolveRef, type Graph } from "./lib/graph";
 import { choose as walkChoose, startWalk, autoStep, type Walk } from "./lib/walk";
 import type { Kind } from "./lib/search";
 import { rankPathways, type Pathway, type Ranking } from "./lib/pathways";
+import { patientKey, readPatient } from "./lib/patient";
 
 export type Loc =
   | { kind: "flow"; page: string; node?: string }
@@ -97,7 +98,8 @@ export function hashToLoc(h: string, g: Graph, prefix = ""): Loc | null {
 export interface LibraryNav {
   entries: LibraryEntry[];
   open: (slug: string, code?: string | null) => void;
-  home: () => void;
+  /** back to the atlas (at this guideline and page when given) */
+  home: (page?: string | null) => void;
 }
 
 const usePhone = () => {
@@ -116,18 +118,23 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
     const fromHash = hashToLoc(location.hash, g, prefix);
     let saved: string | null = null;
     try { saved = localStorage.getItem("nav-help"); } catch { /* storage may be blocked */ }
+    const patient = slug ? readPatient(slug) : null;   // carried over from the atlas, or entered earlier this session
     const loc = fromHash ?? ({ kind: "flow", page: g.flowPages.find((p) => (bundle.roots[p] ?? []).length) ?? g.flowPages[0] } as Loc);
     return {
       loc, hist: [loc], hpos: 0, answers: [], showNon: false, conf: false,
       left: window.innerWidth > 1180 ? "toc" : null, sheet: false,
       query: "", kinds: [], tags: [], searchNon: false,
-      dock: null, fn: null, fnIdx: 0, walk: null, facts: {}, help: false, welcome: !saved,
-      rightTab: "patient", age: null, start: "auto", pathSel: null,
+      dock: null, fn: null, fnIdx: 0, walk: null, facts: patient?.facts ?? {}, help: false, welcome: !saved && !(patient && Object.keys(patient.facts).length),
+      rightTab: "patient", age: patient?.age ?? null, start: "auto", pathSel: null,
     };
   }, [g]);
   const [s, dispatch] = useReducer(reducer, init);
 
   useEffect(() => { try { history.replaceState(null, "", locToHash(s.loc, prefix)); } catch { /* file:// may refuse */ } }, [s.loc, prefix]);
+  useEffect(() => {
+    if (!slug) return;
+    try { sessionStorage.setItem(patientKey(slug), JSON.stringify({ facts: s.facts, age: s.age })); } catch { /* storage blocked */ }
+  }, [slug, s.facts, s.age]);
   useEffect(() => {
     const f = () => { const l = hashToLoc(location.hash, g, prefix); if (l) dispatch({ type: "go", loc: l }); };
     window.addEventListener("hashchange", f);

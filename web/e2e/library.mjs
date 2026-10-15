@@ -26,7 +26,7 @@ let n = 0;
 const step = async (name, fn) => { await fn(); console.log(`ok ${++n} ${name}`); };
 const closeWelcome = async () => { if (await page.getByRole("dialog", { name: /Find where a patient sits/ }).count()) await page.getByRole("button", { name: /Browse the guideline/ }).click(); };
 
-await page.goto(base);
+await page.goto(base + "#list");
 await step("library lists every guideline by category", async () => {
   await page.locator(".lib-row").first().waitFor();
   assert.equal(await page.locator(".lib-row").count(), 91);
@@ -61,10 +61,11 @@ await step("a reference to another guideline opens it at that page", async () =>
   await page.waitForFunction(() => location.hash.startsWith("#lung_screening/"));
   assert.match(await page.getByTestId("title").textContent(), /LCS-11/);
 });
-await step("the rail returns to the library", async () => {
+await step("the rail returns to the atlas at the page being read", async () => {
   await closeWelcome();
   await page.getByTestId("rail-library").click();
-  await page.locator(".lib-row").first().waitFor();
+  await page.waitForFunction(() => location.hash === "#atlas/lung_screening/LCS-11");
+  await page.locator(".atlas-panel .panel-title", { hasText: "LCS-11" }).waitFor();
 });
 if (process.argv.includes("--all")) {
   // Every guideline: opens, renders its first algorithm page, the patient form and the pathways tab.

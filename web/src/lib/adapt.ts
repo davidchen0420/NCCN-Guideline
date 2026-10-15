@@ -85,10 +85,14 @@ function docTitle(kind: string, page: GPage): string {
 /** The page's own title: its first line (the printed title, footnote marks dropped), else the
  * extracted heading; skipping fragments and the guideline's running title. */
 function flowTitle(p: GPage, guideline: string): string {
-  const first = stripMarks(p.text.split("\n").find((l) => l.trim()) ?? "");
+  return pageTitle(p.text.split("\n").find((l) => l.trim()) ?? "", p.heading, p.title, guideline, p.id);
+}
+/** The title of an algorithm page from its first text line, extracted heading or running title. */
+export function pageTitle(firstLine: string, heading: string | null | undefined, title: string | null | undefined, guideline: string, id: string): string {
+  const first = stripMarks(firstLine);
   const ok = (t?: string | null) => !!t && t.trim().length >= 12 && !/[/:-]$/.test(t.trim()) && t.trim().toLowerCase() !== guideline.toLowerCase();
-  const pick = [first, p.heading ?? "", p.title ?? ""].find(ok) ?? first ?? p.id;
-  return smartTitle(pick || p.id);
+  const pick = [first, heading ?? "", title ?? ""].find(ok) ?? first ?? id;
+  return smartTitle(pick || id);
 }
 
 export function adaptGuideline(file: GuidelineFile): Bundle {

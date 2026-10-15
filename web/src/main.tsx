@@ -13,6 +13,7 @@ import type { Bundle } from "./types";
 
 import { LibraryShell, findLibrary } from "./Library";
 import { adaptGuideline, isGuidelineFile } from "./lib/adapt";
+import "./atlas/model";   // declares window.__ATLAS__
 
 const root = createRoot(document.getElementById("root")!);
 const single = (bundle: Bundle) => {
@@ -29,7 +30,14 @@ async function start() {
   if (window.__GUIDELINE__ && isGuidelineFile(window.__GUIDELINE__)) return single(adaptGuideline(window.__GUIDELINE__));
   if (window.__BUNDLE__) return single(window.__BUNDLE__);
   const lib = await findLibrary();
-  if (lib) { root.render(<LibraryShell lib={lib} />); return; }
+  const atlas = window.__ATLAS__ ?? null;
+  if (lib) { root.render(<LibraryShell lib={lib} atlas={atlas} />); return; }
+  if (atlas) {
+    // opened from disk: the map works, guidelines cannot be read (the panel says so)
+    const guidelines = atlas.guidelines.map((g) => ({ slug: g.slug, title: g.title, category: g.category, version: g.version ?? undefined, path: `${g.slug}/guideline.json` }));
+    root.render(<LibraryShell lib={{ base: window.__LIBRARY__?.base ?? "../data/", guidelines }} atlas={atlas} />);
+    return;
+  }
   try {
     const r = await fetch("./sample-bundle.json");   // dev server only
     if (r.ok) return single((await r.json()) as Bundle);
