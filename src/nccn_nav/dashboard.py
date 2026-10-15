@@ -367,13 +367,13 @@ def build_atlas(data_dir="data", sites_path=HERE / "atlas_sites.json"):
 def find_pdfs(data_dir="data", roots=None):
     """Local copies of the source PDFs: {slug: path}. A PDF belongs to the guideline whose
     recorded pdf_sha256 it matches; failing that, to the guideline its file name is (slug.pdf).
-    Searched: data/<slug>/, private/, pdf/, pdfs/ and any extra `roots`."""
+    Searched: data/<slug>/, Guideline/, private/, pdf/, pdfs/ and any extra `roots`."""
     import hashlib
     data_dir = Path(data_dir)
     index = json.loads((data_dir / "index.json").read_text())["guidelines"]
     by_sha = {g["pdf_sha256"]: g["slug"] for g in index if g.get("pdf_sha256")}
     slugs = {g["slug"] for g in index}
-    dirs = [data_dir, data_dir.parent / "private", data_dir.parent / "pdf", data_dir.parent / "pdfs", *map(Path, roots or [])]
+    dirs = [data_dir, data_dir.parent / "Guideline", data_dir.parent / "private", data_dir.parent / "pdf", data_dir.parent / "pdfs", *map(Path, roots or [])]
     found, by_name = {}, {}
     for d in dirs:
         if not d.is_dir():
