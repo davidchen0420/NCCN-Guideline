@@ -116,7 +116,7 @@ button.wl-choice.primary-choice:hover { filter: brightness(1.08); border-color: 
 /* ---------- one-line hint (the 3-step strip is opt-in) ---------- */
 .guide.hint-only { padding: 10px 40px 10px 14px; }
 .guide.hint-only .guide-next { margin: 0; }
-.guide-x { width: 28px; height: 28px; }
+.guide-x { width: 32px; height: 32px; top: 4px; }
 
 /* ---------- zoom controls: compact group at the bottom right of the diagram ---------- */
 @media (min-width: 821px) {
