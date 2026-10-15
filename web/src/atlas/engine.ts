@@ -109,6 +109,18 @@ const CARD_HEAD = 1.3;      // room for the page title above the boxes (world un
 const PAGE_W = 792;         // PDF points
 const REF_FONT = 10;        // box text is wrapped once at this size and scaled when drawn
 
+/** Short site names for annotations where the full name has no room. */
+const SITE_SHORT: Record<string, string> = {
+  gi: "GI", gu: "GU", gyn: "Gyn", hereditary: "Hereditary", lymphoma: "Lymphoma", leukemia: "Leukemia",
+  neuro: "H&N, CNS", sarcoma: "Sarcoma", populations: "Special", supportive: "Supportive", endocrine: "Endocrine",
+  pediatric: "Pediatric", thoracic: "Thoracic",
+};
+interface SiteLabel {
+  site: Site; kind: "arc" | "callout" | "bracket"; lines: string[]; fs: number; r: number; ruleR: number;
+  x0: number; y0: number; x1: number; y1: number;
+  /** bracket: the line beside the group's labels, and which side the text is on */
+  bx?: number; by0?: number; by1?: number; right?: boolean;
+}
 interface BoxGeom { n: BNode; x0: number; y0: number; x1: number; y1: number; lines: string[]; jumps: string[] }
 /** A page card: boxes in world units from the card's top-left corner below the title strip. */
 interface Card { boxes: BoxGeom[]; edges: { a: BoxGeom; b: BoxGeom; cls: string }[]; ph: number; pw: number; top: number; title: string }
@@ -241,9 +253,11 @@ export class Engine {
   }
   private md() { return Math.max(50, Math.min(this.safe.x1 - this.safe.x0, this.safe.y1 - this.safe.y0)); }
 
-  homeView(): View {
+  homeView(): View { this.decideSiteMode(); return this.homeViewFor(this.siteMode); }
+  private homeViewFor(sitesFirst: boolean): View {
     const md = this.md();
-    const pad = md < 600 ? 26 : clamp(md * 0.2, 40, 200);   // small screens: labels are hidden anyway
+    // room around the ring: for the guideline names, or (sites first, small screens) for site names
+    const pad = sitesFirst ? clamp(md * 0.11, 40, 96) : md < 600 ? 26 : clamp(md * 0.2, 40, 200);
     const k = Math.max(0.05, (md / 2 - pad) / (R_RING + 30));
     return [0, 0, md / k];
   }
@@ -318,18 +332,33 @@ export class Engine {
     this.focus = f;
     const slug = f.level >= 1 ? (f as { slug: string }).slug : null;
     this.springs.set("l0", f.level === 0 ? 1 : 0, false, 120);
-    for (const g of this.m.guidelines) {
-      const on = slug === g.slug;
-      if (on || this.springs.target(`lens:${g.slug}`)) this.springs.set(`lens:${g.slug}`, on ? 1 : 0, false, on ? 90 : 200);
-    }
+    // lenses that close do so at once; the one that opens waits until the camera is nearly there
+    for (const g of this.m.guidelines) if (g.slug !== slug && this.springs.target(`lens:${g.slug}`)) this.springs.set(`lens:${g.slug}`, 0, false, 200);
+    const opening = slug && this.springs.target(`lens:${slug}`) !== 1 ? slug : null;
+    this.pendingLens = null;
     for (const key of this.cards.keys()) this.springs.set(`card:${key}`, 0, false, 220);
     if (f.level === 2) this.springs.set(`card:${f.slug}/${f.page}`, 1, false, 110);
     for (const s of this.m.sites) this.springs.set(`site:${s.id}`, f.level === 0 && f.site === s.id ? 1 : 0);
     this.springs.set("site-focus", f.level === 0 && f.site ? 1 : 0);
     const view = this.focusView(f);
-    if (opts.animate === false || !this.w) { this.jump(view); this.springs.set("l0", f.level === 0 ? 1 : 0, true); }
-    else this.fly(view, undefined, prev.level === f.level ? 1.2 : 1);
+    if (opts.animate === false || !this.w) {
+      this.jump(view); this.springs.set("l0", f.level === 0 ? 1 : 0, true);
+      if (opening) this.springs.set(`lens:${opening}`, 1, false, 90);
+    } else {
+      this.fly(view, undefined, prev.level === f.level ? 1.2 : 1);
+      if (opening) {
+        if (this.flight) this.pendingLens = { slug: opening, at: this.flight.t0 + this.flight.dur * 0.42 };
+        else this.springs.set(`lens:${opening}`, 1, false, 90);
+      }
+    }
     this.request();
+  }
+  private pendingLens: { slug: string; at: number } | null = null;
+  private waiters: (() => void)[] = [];
+  /** Resolves when the camera has stopped (for work that would stutter a flight). */
+  settled(): Promise<void> {
+    if (!this.flight) return Promise.resolve();
+    return new Promise((r) => this.waiters.push(r));
   }
   setRoute(r: Route | null) {
     this.route = r;
@@ -372,6 +401,15 @@ export class Engine {
       this.sel.call(this.zb.transform, this.transformOf(f.i(e) as View));
       if (u >= 1) { this.flight = null; f.done?.(); } else moving = true;
     }
+    if (this.pendingLens && (now >= this.pendingLens.at || !this.flight)) {
+      this.springs.set(`lens:${this.pendingLens.slug}`, 1, false, 90);
+      this.pendingLens = null;
+      moving = true;
+    }
+    if (!this.flight && this.waiters.length) {
+      const w = this.waiters; this.waiters = [];
+      setTimeout(() => w.forEach((f) => f()), 0);
+    }
     if (this.introT0 >= 0) {
       if (now - this.introT0 > 2600) this.introT0 = -1; else moving = true;
     }
@@ -401,7 +439,7 @@ export class Engine {
   /** Screen position of the hub and the size its search box may take. */
   hubScreen(t = this.t) { return { x: t.x, y: t.y, r: R_HUB * t.k }; }
   /** The hub is drawn at least big enough to hold the search box (unless it is docked). */
-  private hubR() { const r = R_HUB * this.t.k; return this.docked ? r : Math.max(r, Math.min(190, 150 + r * 0.1)); }
+  private hubR() { const r = R_HUB * this.t.k; return this.docked ? r : Math.max(r, Math.min(180, 134 + r * 0.1)); }
   hubScreenFor(f: Focus) { return this.hubScreen(this.transformOf(this.focusView(f))); }
 
   card(slug: string, page: string) {
@@ -498,6 +536,9 @@ export class Engine {
         if (d < half && rad >= g.rad && rad <= this.labelRadius() + lw) return { kind: "guideline", slug: g.slug };
       }
     }
+    if (this.focus.level === 0 && this.siteLabelCache) {
+      for (const L of this.siteLabelCache.labels) if (L.kind !== "arc" && sx >= L.x0 - 3 && sx <= L.x1 + 3 && sy >= L.y0 - 3 && sy <= L.y1 + 3) return { kind: "site", site: L.site.id };
+    }
     if (rad > R_SITE - 10 && rad < R_RING - 30) {
       for (const s of this.m.sites) if (ang >= s.a0 && ang <= s.a1) return { kind: "site", site: s.id };
     }
@@ -513,7 +554,11 @@ export class Engine {
   /** Guideline labels all start on one circle, outside the largest marker. */
   private labelRadius() { const k = this.t.k; return R_RING + 26 + (clamp(this.maxR * k * 1.05, 2.4, 30) + 8) / k; }
   private maxR = 0;
-  private showLabels() { return this.labelSpace() >= 11; }
+  private showLabels() {
+    if (this.labelSpace() < 11) return false;
+    // sites first: guideline names come back once the map is zoomed in past the home view
+    return !(this.siteMode && this.focus.level === 0 && !(this.focus as { site?: string | null }).site && this.t.k < this.siteModeK * 1.3);
+  }
 
   private onMove = (e: PointerEvent) => {
     if (e.pointerType === "touch") return;
@@ -571,6 +616,7 @@ export class Engine {
     this.drawGraticule(dim);
     this.drawSites(dim);
     this.drawLinks(dim);
+    this.drawSiteLabels(dim);
     this.drawGuidelines(dim, l0);
     this.drawHub(l0);
     for (const g of this.m.guidelines) {
@@ -626,6 +672,216 @@ export class Engine {
       ctx.stroke();
     }
     ctx.restore();
+  }
+
+  private drawSiteLabels(dim: number) {
+    const { ctx, theme: th } = this;
+    const [cx, cy] = this.S(0, 0);
+    const k = this.t.k;
+    const hs = this.hoverSite();
+    ctx.save();
+    // every site is named: along its arc when the name fits there, else as a callout inside the
+    // ring with a leader to its arc
+    for (const L of this.siteLabels(cx, cy, k)) {
+      const s = L.site, col = this.color(s), hov = hs === s.id;
+      ctx.globalAlpha = this.siteAlpha(s) * dim * this.ip(0.3 + (s.a0 / TAU) * 0.3, 0.3);
+      ctx.font = `600 ${L.fs}px ${SANS}`;
+      if (L.kind === "arc") {
+        ctx.fillStyle = hov ? th.ink : mix(col, th.ink, 0.35);
+        arcText(ctx, L.lines[0], cx, cy, L.r, s.angle, L.fs * 0.16);
+        continue;
+      }
+      if (L.kind === "bracket") {
+        // a bracket grouping the guideline names, with the site's name beside it
+        const x = L.bx!, d = L.right ? -5 : 5;
+        ctx.strokeStyle = col; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(x + d, L.by0!); ctx.lineTo(x, L.by0!); ctx.lineTo(x, L.by1!); ctx.lineTo(x + d, L.by1!);
+        const ym = (L.by0! + L.by1!) / 2;
+        ctx.moveTo(x, ym); ctx.lineTo(x - d, ym);
+        ctx.stroke();
+        ctx.textAlign = L.right ? "left" : "right"; ctx.textBaseline = "middle";
+        ctx.fillStyle = hov ? th.ink : mix(col, th.ink, 0.35);
+        L.lines.forEach((ln, i) => ctx.fillText(ln, L.right ? L.x0 : L.x1, L.y0 + L.fs * 0.62 + i * L.fs * 1.18));
+        continue;
+      }
+      // leader from the callout to its sector rule
+      const [ax, ay] = [cx + Math.sin(s.angle) * (L.ruleR - 3), cy - Math.cos(s.angle) * (L.ruleR - 3)];
+      const bx = clamp(ax, L.x0, L.x1), by = clamp(ay, L.y0, L.y1);
+      ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.setLineDash([1.5, 2.5]);
+      ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(ax, ay); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(ax, ay, 2, 0, TAU); ctx.fill();
+      // text on a paper halo so the curves beneath do not cut through it
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.lineJoin = "round"; ctx.lineWidth = 4; ctx.strokeStyle = rgba(th.paper, 0.92);
+      const mx = (L.x0 + L.x1) / 2;
+      L.lines.forEach((ln, i) => {
+        const y = L.y0 + L.fs * 0.62 + i * L.fs * 1.18;
+        ctx.strokeText(ln, mx, y);
+        ctx.fillStyle = hov ? th.ink : mix(col, th.ink, 0.35);
+        ctx.fillText(ln, mx, y);
+      });
+    }
+    ctx.restore();
+  }
+
+  /** screen rectangles (CSS px) the annotations keep clear of: the legend, the zoom buttons */
+  obstacles: [number, number, number, number][] = [];
+  setObstacles(r: [number, number, number, number][]) {
+    if (JSON.stringify(r) === JSON.stringify(this.obstacles)) return;
+    this.obstacles = r; this.siteLabelCache = null; this.request();
+  }
+  private siteLabelCache: { key: string; labels: SiteLabel[] } | null = null;
+  /** Where each site's name goes at this zoom (cached until the zoom or size changes). */
+  private siteLabels(cx: number, cy: number, k: number): SiteLabel[] {
+    const key = `${k.toFixed(4)}|${Math.round(cx)}|${Math.round(cy)}|${this.w}|${this.h}|${this.docked}`;
+    if (this.siteLabelCache?.key === key) return this.siteLabelCache.labels;
+    this.decideSiteMode();
+    const r = this.siteLabelsPass(cx, cy, k);
+    this.siteLabelCache = { key, labels: r.out };
+    // which sites are named, and how (read by tests and handy when debugging layouts)
+    this.canvas.dataset.siteLabels = r.out.map((L) => `${L.site.id}:${L.kind}`).join(" ");
+    this.canvas.dataset.siteMode = String(this.siteMode);
+    return r.out;
+  }
+  /** guideline names hidden at the home zoom so the site names can show */
+  private siteMode = false;
+  private siteModeK = 0;
+  private modeKey = "";
+  /** Sites are the landmarks. When their names cannot all sit cleanly beside the guideline names
+   * at this screen size, the home view puts sites first (bigger ring, site names outside it) and
+   * guideline names wait for a hover or a zoom. Decided once per size, so it never flickers. */
+  private decideSiteMode() {
+    const key = `${this.w}|${this.h}|${JSON.stringify(this.safe)}|${this.docked}|${JSON.stringify(this.obstacles)}`;
+    if (key === this.modeKey) return;
+    this.modeKey = key;
+    this.siteMode = false;
+    const save = this.t;
+    this.t = this.transformOf(this.homeViewFor(false));
+    const r = this.siteLabelsPass(this.t.x, this.t.y, this.t.k);
+    this.siteMode = r.margin && this.labelSpace() >= 11;
+    this.t = this.transformOf(this.homeViewFor(this.siteMode));
+    this.siteModeK = this.t.k;
+    this.t = save;
+    this.siteLabelCache = null;
+  }
+  private siteLabelsPass(cx: number, cy: number, k: number): { out: SiteLabel[]; margin: boolean } {
+    let margin = false;
+    const ctx = this.ctx;
+    const fs = clamp(7 + k * 9, 9, 13);
+    const ruleR = (R_RING - 52) * k;
+    const arcR = ruleR - fs - 4;
+    const hubR = this.hubR();
+    const out: SiteLabel[] = [];
+    const boxes: [number, number, number, number][] = [];
+    ctx.save();
+    ctx.font = `600 ${fs}px ${SANS}`;
+    const pending: Site[] = [];
+    for (const s of this.m.sites) {
+      if (!s.members.length) continue;
+      const text = s.label.toUpperCase();
+      const need = [...text].reduce((n, ch) => n + ctx.measureText(ch).width + fs * 0.16, 0) + 8;
+      if ((s.a1 - s.a0) * arcR >= need) out.push({ site: s, kind: "arc", lines: [text], fs, r: arcR, ruleR, x0: 0, y0: 0, x1: 0, y1: 0 });
+      else pending.push(s);
+    }
+    // callouts: one or two lines, placed as far out as they fit without touching each other,
+    // the arc labels or the hub
+    const cfs = Math.max(9, fs - 1);
+    ctx.font = `600 ${cfs}px ${SANS}`;
+    const inner = arcR - fs - 6;
+    const hit = (b: number[], o: number[]) => b[0] < o[2] + 4 && b[2] > o[0] - 4 && b[1] < o[3] + 3 && b[3] > o[1] - 3;
+    const overlaps = (b: number[]) => boxes.some((o) => hit(b, o)) || this.obstacles.some((o) => hit(b, o));
+    const split = (text: string) => {
+      const words = text.toUpperCase().split(" ");
+      if (words.length < 2 || ctx.measureText(text.toUpperCase()).width <= 80) return [words.join(" ")];
+      let best = 1, bw = Infinity;
+      for (let i = 1; i < words.length; i++) {
+        const w = Math.max(ctx.measureText(words.slice(0, i).join(" ")).width, ctx.measureText(words.slice(i).join(" ")).width);
+        if (w < bw) { bw = w; best = i; }
+      }
+      return [words.slice(0, best).join(" "), words.slice(best).join(" ")];
+    };
+    for (const s of pending) {
+      let done = false;
+      for (const text of [s.label, SITE_SHORT[s.id] ?? s.label]) {
+        if (done) break;
+        const lines = split(text);
+        const w = Math.max(...lines.map((l) => ctx.measureText(l).width)) + 6;
+        const h = lines.length * cfs * 1.18 + 2;
+        let placed: [number, number, number, number] | null = null;
+        // 1. inside the ring, between the hub and the arc labels
+        search: for (let r = inner; r > hubR + 4; r -= 4) {
+          for (const da of [0, 0.03, -0.03, 0.06, -0.06, 0.1, -0.1, 0.14, -0.14, 0.19, -0.19, 0.24, -0.24]) {
+            const a = s.angle + da;
+            const px = cx + Math.sin(a) * r, py = cy - Math.cos(a) * r;
+            const bx = px - Math.sin(a) * (w / 2) - w / 2, by = py + Math.cos(a) * (h / 2) - h / 2;
+            const b: [number, number, number, number] = [bx, by, bx + w, by + h];
+            const nx = clamp(cx, b[0], b[2]), ny = clamp(cy, b[1], b[3]);
+            if (Math.hypot(nx - cx, ny - cy) < hubR + 6) continue;
+            const far = Math.max(...[[b[0], b[1]], [b[2], b[1]], [b[0], b[3]], [b[2], b[3]]].map(([x, y]) => Math.hypot(x - cx, y - cy)));
+            if (far > arcR - fs * 0.6 || overlaps(b)) continue;
+            placed = b;
+            break search;
+          }
+        }
+        // 2. guideline names hidden (small screens): the room outside the ring is free
+        if (!placed && !this.showLabels()) {
+          for (let r = (R_RING + 40) * k + clamp(this.maxR * k * 1.05, 2.4, 30) + 4; r < Math.max(this.w, this.h) && !placed; r += 5) {
+            for (const da of [0, 0.04, -0.04, 0.08, -0.08, 0.13, -0.13]) {
+              const a = s.angle + da;
+              const px = cx + Math.sin(a) * r, py = cy - Math.cos(a) * r;
+              const bx = px + Math.sin(a) * (w / 2) - w / 2, by = py - Math.cos(a) * (h / 2) - h / 2;
+              const b: [number, number, number, number] = [bx, by, bx + w, by + h];
+              if (b[0] < 4 || b[1] < this.safe.y0 + 4 || b[2] > this.w - 4 || b[3] > this.h - 4 || overlaps(b)) continue;
+              placed = b;
+              break;
+            }
+          }
+        }
+        if (placed) {
+          boxes.push(placed);
+          out.push({ site: s, kind: "callout", lines, fs: cfs, r: 0, ruleR, x0: placed[0], y0: placed[1], x1: placed[2], y1: placed[3] });
+          done = true;
+          continue;
+        }
+        // 3. on the left and right: a bracket beside the group's guideline names, the site's name beyond it
+        if (!this.showLabels() || Math.abs(Math.cos(s.angle)) > 0.6) continue;
+        const right = Math.sin(s.angle) >= 0;
+        const lr = this.labelRadius() * k;
+        const ends = s.members.map((g) => {
+          const L = lr + this.labelW(g);
+          return [cx + Math.sin(g.angle) * L, cy - Math.cos(g.angle) * L] as const;
+        });
+        const xEdge = right ? Math.max(...ends.map((e) => e[0])) + 10 : Math.min(...ends.map((e) => e[0])) - 10;
+        const yA = Math.min(...ends.map((e) => e[1])) - 4, yB = Math.max(...ends.map((e) => e[1])) + 4;
+        const tw = Math.max(...lines.map((l) => ctx.measureText(l).width));
+        const x0 = right ? xEdge + 8 : xEdge - 8 - tw, x1 = x0 + tw;
+        const ym = (yA + yB) / 2, b: [number, number, number, number] = [x0, ym - h / 2, x1, ym + h / 2];
+        if (b[0] < 6 || b[2] > this.w - 6 || b[1] < this.safe.y0 || b[3] > this.h - 6 || overlaps(b)) continue;
+        boxes.push(b);
+        out.push({ site: s, kind: "bracket", lines, fs: cfs, r: 0, ruleR, x0: b[0], y0: b[1], x1: b[2], y1: b[3], bx: xEdge, by0: yA, by1: yB, right });
+        done = true;
+      }
+      if (done) continue;
+      margin = true;
+      // last resort, so every site is named: in the margin on its side, with a leader to its arc
+      const lines = split(s.label);
+      const w = Math.max(...lines.map((l) => ctx.measureText(l).width)) + 6;
+      const h = lines.length * cfs * 1.18 + 2;
+      const right = Math.sin(s.angle) >= 0;
+      const x0 = right ? this.w - 14 - w : 14;
+      const want = clamp(cy - Math.cos(s.angle) * ruleR - h / 2, this.safe.y0 + 4, this.h - h - 6);
+      for (let i = 0; i < 80; i++) {
+        const y = want + (i % 2 ? 1 : -1) * Math.ceil(i / 2) * 6;
+        if (y < this.safe.y0 + 4 || y > this.h - h - 6) continue;
+        const b: [number, number, number, number] = [x0, y, x0 + w, y + h];
+        if (overlaps(b)) continue;
+        boxes.push(b);
+        out.push({ site: s, kind: "callout", lines, fs: cfs, r: 0, ruleR, x0: b[0], y0: b[1], x1: b[2], y1: b[3] });
+        break;
+      }
+    }
+    ctx.restore();
+    return { out, margin };
   }
 
   private siteAlpha(s: Site) {
@@ -684,15 +940,6 @@ export class Engine {
         ctx.lineTo(cx + g.x * k, cy + g.y * k);
       }
       ctx.stroke();
-      // label set along the arc, inside the rule
-      const fs = clamp(7 + k * 9, 9, 13);
-      const lr = (R_RING - 52) * k - fs - 4;
-      if ((s.a1 - s.a0) * lr > s.label.length * fs * 0.62 + 6) {
-        ctx.globalAlpha = sa * this.ip(0.3 + (s.a0 / TAU) * 0.3, 0.3);
-        ctx.fillStyle = hov ? th.ink : mix(col, th.ink, 0.35);
-        ctx.font = `600 ${fs}px ${SANS}`;
-        arcText(ctx, s.label.toUpperCase(), cx, cy, lr, s.angle, fs * 0.16);
-      }
     }
     ctx.restore();
   }
@@ -765,7 +1012,7 @@ export class Engine {
       g.citedBy.forEach((s) => neigh.add(s));
     }
     const space = this.labelSpace();
-    const showAll = space >= 11;
+    const showAll = this.showLabels();
     const fs = this.labelFont();
     ctx.save();
     for (const g of this.m.guidelines) {
@@ -794,7 +1041,8 @@ export class Engine {
       }
       // radial label
       const big = g.pages.length >= 30;
-      if ((showAll || big && space >= 5 || isKey || (isN && key)) && l0 > 0.05 || isKey && this.focus.level === 0) {
+      const inSite = !!hsite && g.site.id === hsite && space >= 6;   // pointing at a site names its guidelines
+      if ((showAll || big && space >= 5 && !this.siteMode || isKey || (isN && key) || inSite) && l0 > 0.05 || isKey && this.focus.level === 0) {
         ctx.globalAlpha = alpha * this.ip(start + 0.12, 0.25) * (showAll || isKey || isN ? 1 : 0.85);
         const ang = g.angle - Math.PI / 2;
         const left = Math.sin(g.angle) < -0.0001;
@@ -895,6 +1143,7 @@ export class Engine {
 
   private pageR(p: L1Page) { return clamp((1.1 + Math.sqrt(p.p.boxes) * 0.55) * this.t.k * 0.9, 3, 15); }
 
+  private stubW = new Map<string, number>();
   private citeStubs(g: GNode, l: L1Layout) {
     const out: { to: string; x: number; y: number; ang: number; label: string; wpx: number; color: string; from: L1Page[] }[] = [];
     const k = this.t.k;
@@ -907,7 +1156,9 @@ export class Engine {
       // the stub sits on the side where the cited guideline lies on the map
       let ang = Math.atan2(t.x - g.x, -(t.y - g.y)); if (ang < 0) ang += TAU;
       const label = `→ ${t.short}`;
-      out.push({ to: t.slug, x: 0, y: 0, ang, label, wpx: this.ctx.measureText(label).width + 16, color: this.color(t.site), from });
+      let wpx = this.stubW.get(label);
+      if (wpx === undefined) { wpx = this.ctx.measureText(label).width + 16; this.stubW.set(label, wpx); }
+      out.push({ to: t.slug, x: 0, y: 0, ang, label, wpx, color: this.color(t.site), from });
     }
     // keep neighbouring stubs apart
     out.sort((a, b) => a.ang - b.ang);
@@ -1326,7 +1577,19 @@ function wrap(ctx: CanvasRenderingContext2D, text: string, width: number): strin
   if (line) out.push(line);
   return out;
 }
+const ellCache = new Map<string, string>();
+/** Text cut to fit `max` pixels (cached: labels are fitted every frame while things move). */
 function ellipsize(ctx: CanvasRenderingContext2D, s: string, max: number) {
+  const key = `${ctx.font}|${Math.round(max / 2)}|${s}`;
+  let hit = ellCache.get(key);
+  if (hit === undefined) {
+    hit = fit(ctx, s, Math.round(max / 2) * 2);
+    if (ellCache.size > 4000) ellCache.clear();
+    ellCache.set(key, hit);
+  }
+  return hit;
+}
+function fit(ctx: CanvasRenderingContext2D, s: string, max: number) {
   if (ctx.measureText(s).width <= max) return s;
   let lo = 0, hi = s.length;
   while (lo < hi) { const m = (lo + hi + 1) >> 1; if (ctx.measureText(s.slice(0, m) + "…").width <= max) lo = m; else hi = m - 1; }

@@ -139,6 +139,7 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
   const [panelHidden, setPanelHidden] = useState(false);
   const [legend, setLegend] = useState(true);
   const srcRef = useRef<SourceApi | null>(null);
+  const prefetch = useRef(0);
   const [pdfReady, setPdfReady] = useState(false);
   const [showOriginal, setShowOriginal] = useState(true);
   useEffect(() => { engineRef.current?.setShowOriginal(showOriginal); }, [showOriginal]);
@@ -157,7 +158,10 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
     focusRef.current = f;   // a second key press may come before React renders
     setFocus(f);
     setPanelHidden(false);
-    engineRef.current?.setFocus(f);
+    // frame the target with the panel it will have, so the camera flies once
+    const e = engineRef.current;
+    e?.setSafe(safeArea(f.level > 0 || (f.level === 0 && !!f.site), innerWidth >= 900), false);
+    e?.setFocus(f);
     try { if (push) history.pushState(null, "", atlasHash(f)); else history.replaceState(null, "", atlasHash(f)); } catch { /* file:// */ }
   }, []);
   const up = useCallback(() => {
@@ -182,7 +186,11 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
     const f = () => {
       if (!location.hash.startsWith("#atlas") && location.hash !== "" && location.hash !== "#") return;
       const n = parseAtlasHash(location.hash, model);
-      if (!sameFocus(n, focusRef.current)) { focusRef.current = n; setFocus(n); engineRef.current?.setFocus(n); }
+      if (!sameFocus(n, focusRef.current)) {
+        focusRef.current = n; setFocus(n);
+        engineRef.current?.setSafe(safeArea(n.level > 0 || (n.level === 0 && !!n.site), innerWidth >= 900), false);
+        engineRef.current?.setFocus(n);
+      }
     };
     window.addEventListener("hashchange", f);
     window.addEventListener("popstate", f);
@@ -193,7 +201,15 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
   useEffect(() => {
     const c = canvasRef.current!;
     const e = new Engine(c, model, {
-      hover: (hit, x, y) => setTip(hit ? { hit, x, y } : null),
+      hover: (hit, x, y) => {
+        setTip(hit ? { hit, x, y } : null);
+        // read a guideline while the pointer rests on it: opening it is then instant
+        window.clearTimeout(prefetch.current);
+        if (hit?.kind === "guideline" || hit?.kind === "cite") {
+          const s = hit.kind === "cite" ? hit.to : hit.slug;
+          prefetch.current = window.setTimeout(() => { void getGuideline(lib, s).catch(() => {}); }, 160);
+        }
+      },
       click: (hit, rect) => {
         if (!hit) return;
         const f = focusRef.current;
@@ -220,6 +236,18 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
     return () => { e.destroy(); engineRef.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model]);
+
+  // site annotations keep clear of the legend and the zoom buttons
+  useEffect(() => {
+    const f = () => {
+      const r = [...document.querySelectorAll(".atlas .legend, .atlas .zoom, .atlas .atlas-hint")].map((el) => { const b = el.getBoundingClientRect(); return [b.left, b.top, b.right, b.bottom] as [number, number, number, number]; });
+      engineRef.current?.setObstacles(r);
+    };
+    f();
+    const t = window.setTimeout(f, 50);
+    window.addEventListener("resize", f);
+    return () => { window.clearTimeout(t); window.removeEventListener("resize", f); };
+  }, [legend, focus, panel]);
 
   // the camera frames what the panel leaves free
   useEffect(() => {
@@ -251,7 +279,8 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
   useEffect(() => {
     if (!slug || bundles[slug]) return;
     let off = false;
-    getGuideline(lib, slug).then((b) => {
+    // read (or take the prefetched copy) once the camera has arrived, so the flight never stutters
+    (engineRef.current?.settled() ?? Promise.resolve()).then(() => (off ? Promise.reject(new Error("moved on")) : getGuideline(lib, slug))).then((b) => {
       if (off) return;
       engineRef.current?.addBundle(slug, b);
       setBundles((x) => ({ ...x, [slug]: b }));
@@ -270,7 +299,9 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
   bundlesRef.current = bundles;
   const bundle = slug && typeof bundles[slug] === "object" ? (bundles[slug] as Bundle) : null;
   const loadError = slug && typeof bundles[slug] === "string" ? (bundles[slug] as string) : null;
-  const graph = useMemo<Graph | null>(() => (bundle ? buildGraph(bundle) : null), [bundle]);
+  // building the graph is the heavy part: only when a patient's route is asked for
+  const wantGraph = !!patient && patient.slug === slug;
+  const graph = useMemo<Graph | null>(() => (bundle && wantGraph ? buildGraph(bundle) : null), [bundle, wantGraph]);
 
   /* ----- patient route ----- */
   const patients = useMemo(() => {
@@ -304,7 +335,12 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
     else if (h.kind === "section") go({ level: 1, slug: h.slug, section: h.section });
     else go({ level: 2, slug: h.slug, page: h.page });
   };
-  useEffect(() => { engineRef.current?.setPreview(searchOpen && hits[active] ? hitOf(hits[active]) : null); }, [hits, active, searchOpen]);
+  useEffect(() => {
+    const h = searchOpen ? hits[active] : undefined;
+    engineRef.current?.setPreview(h ? hitOf(h) : null);
+    if (h && h.kind !== "site") { const t = window.setTimeout(() => { void getGuideline(lib, h.slug).catch(() => {}); }, 200); return () => window.clearTimeout(t); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hits, active, searchOpen, lib]);
 
   /* ----- keyboard ----- */
   useEffect(() => {
@@ -389,7 +425,7 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
           </ul>
         )}
         </div>
-        {!docked && <p className="hub-meta">{fmt(model.guidelines.length)} guidelines · {fmt(model.totalPages)} algorithm pages · {fmt(model.links.length)} cross-references</p>}
+        {!docked && <p className="hub-meta">{fmt(model.guidelines.length)} guidelines · {fmt(model.totalPages)} pages<br />{fmt(model.links.length)} cross-references</p>}
         {!docked && <p className="hub-hint">or follow a branch of the map</p>}
       </div>
 
@@ -404,6 +440,7 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
               patients={patients} chosen={chosen?.id ?? null} best={best} graph={graph}
               choosePatient={(id) => setPatient(id && slug ? { slug, id } : null)}
               open={(page) => openReader(g.slug, page)}
+              enterPatient={() => { try { sessionStorage.setItem("oc-intent", "patient"); } catch { /* blocked */ } openReader(g.slug, g.pages.find((p) => p.start)?.id); }}
               openWithPatient={() => { if (chosen && route) { writePatient(g.slug, chosen.facts, chosen.age); openReader(g.slug, route.pages[0]); } }}
               preview={(h) => engineRef.current?.setPreview(h)} />
           )}
@@ -423,6 +460,7 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
       )}
 
       {focus.level === 0 && !site && legend && <Legend onClose={() => setLegend(false)} />}
+      <AtlasHint level={focus.level} />
 
       <div className="zoom" role="group" aria-label="Zoom">
         <button type="button" aria-label="Zoom in" title="Zoom in (+)" onClick={() => engineRef.current?.zoomBy(1.6)}><Plus size={16} /></button>
@@ -553,8 +591,9 @@ interface GPProps {
   g: GNode; model: Model; focus: Focus; go: (f: Focus) => void; bundle: Bundle | null; loadError: string | null;
   patients: { id: string; label: string; note?: string }[]; chosen: string | null; best: Pathway | null; graph: Graph | null;
   choosePatient: (id: string | null) => void; open: (page?: string) => void; openWithPatient: () => void; preview: (h: Hit) => void;
+  enterPatient: () => void;
 }
-function GuidelinePanel({ g, model, focus, go, bundle, loadError, patients, chosen, best, graph, choosePatient, open, openWithPatient, preview }: GPProps) {
+function GuidelinePanel({ g, model, focus, go, bundle, loadError, patients, chosen, best, graph, choosePatient, open, openWithPatient, preview, enterPatient }: GPProps) {
   const starts = g.pages.filter((p) => p.start);
   const section = focus.level === 1 ? focus.section ?? null : null;
   const last = best && graph ? graph.node(best.steps[best.steps.length - 1]?.node ?? "") : null;
@@ -577,7 +616,11 @@ function GuidelinePanel({ g, model, focus, go, bundle, loadError, patients, chos
         <div><dt>Boxes</dt><dd>{fmt(g.boxes)}</dd></div>
         <div><dt>Decision boxes encoded</dt><dd>{pct(g.encoded, g.decisions)}%<span className="bar" aria-hidden><i style={{ width: `${pct(g.encoded, g.decisions)}%` }} /></span></dd></div>
       </dl>
-      <button type="button" className="btn primary wide" onClick={() => open(starts[0]?.id)}>Open the guideline <ArrowRight size={15} aria-hidden /></button>
+      <div className="pp-actions">
+        <button type="button" className="btn primary" onClick={() => enterPatient()} data-testid="enter-patient"><UserRound size={15} aria-hidden /> Enter a patient</button>
+        <button type="button" className="btn" onClick={() => open(starts[0]?.id)}>Read the guideline <ArrowRight size={15} aria-hidden /></button>
+      </div>
+      <p className="panel-how">Enter what the record says and OncoCarta ranks the routes through these pages that fit; or read the pages yourself.</p>
 
       <section className="psec">
         <h3><UserRound size={14} aria-hidden /> A patient's route</h3>
@@ -713,6 +756,25 @@ function BoxRow({ text, cond, onRoute, t, hover, read }: { text: string; cond: b
       </button>
       <button type="button" className="bl-read" aria-label="Open this box in the reader" title="Open in the reader" onClick={read}><ArrowRight size={13} /></button>
     </li>
+  );
+}
+
+/* ---------------- first visit ---------------- */
+
+/** How to move around the map, once, until dismissed or a guideline is opened. */
+function AtlasHint({ level }: { level: number }) {
+  const [show, setShow] = useState(() => { try { return localStorage.getItem("oc-atlas-hint") !== "1"; } catch { return true; } });
+  const close = useCallback(() => { setShow(false); try { localStorage.setItem("oc-atlas-hint", "1"); } catch { /* blocked */ } }, []);
+  useEffect(() => { if (level > 0 && show) close(); }, [level, show, close]);
+  if (!show || level > 0) return null;
+  return (
+    <div className="atlas-hint" role="note">
+      <span><b>Click</b> a site or a guideline to go in</span>
+      <span><b>Scroll</b> or pinch to zoom</span>
+      <span><kbd>Esc</kbd> back out</span>
+      <span><kbd>/</kbd> search</span>
+      <button type="button" aria-label="Dismiss" onClick={close}><X size={13} /></button>
+    </div>
   );
 }
 

@@ -44,7 +44,31 @@ await step("the atlas is the home page and draws the map", async () => {
   await page.getByRole("combobox", { name: /Search guidelines/ }).waitFor();
   await page.waitForTimeout(3000);   // intro
   assert.ok(await ink(300, 100, 840, 700) > 0.02, "map is drawn");
-  assert.match(await page.locator(".hub-meta").innerText(), /91 guidelines · [\d,]+ algorithm pages · \d+ cross-references/);
+  assert.match(await page.locator(".hub-meta").innerText(), /91 guidelines · [\d,]+ pages\s+\d+ cross-references/);
+});
+await step("every organ site is named on the home page, at every screen size", async () => {
+  for (const [w, h] of [[1440, 900], [1280, 800], [1024, 768], [768, 1024], [390, 844]]) {
+    const p = await browser.newPage({ viewport: { width: w, height: h }, reducedMotion: "reduce" });
+    await p.goto(base + "#atlas");
+    await p.waitForFunction(() => (document.querySelector(".atlas-canvas")?.dataset.siteLabels ?? "").split(" ").length >= 15);
+    const named = await p.evaluate(() => document.querySelector(".atlas-canvas").dataset.siteLabels.split(" ").map((x) => x.split(":")[0]));
+    assert.equal(new Set(named).size, 15, `${w}x${h}: ${named.join(", ")}`);
+    await p.close();
+  }
+  assert.ok(await page.locator(".atlas-hint").count(), "first visit: how to move around");
+});
+await step("clicking into a guideline is one smooth flight", async () => {
+  const p = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await p.goto(base + "#atlas/@gu");
+  await p.waitForTimeout(1500);
+  await p.evaluate(() => { window.__f = []; let last = performance.now(); const loop = (t) => { window.__f.push(t - last); last = t; if (window.__f.length < 90) requestAnimationFrame(loop); }; requestAnimationFrame(loop); });
+  await p.locator(".panel-list button", { hasText: "Prostate Cancer" }).first().click();
+  await p.waitForTimeout(1800);
+  const f = await p.evaluate(() => window.__f);
+  const long = f.filter((x) => x > 70).length;
+  assert.ok(long <= 1, `frames over 70 ms during the transition: ${long} (${f.map(Math.round).join(",")})`);
+  await p.locator(".atlas-panel .panel-title", { hasText: "Prostate Cancer" }).waitFor();
+  await p.close();
 });
 await step("search finds a guideline and opens its map", async () => {
   await page.getByRole("combobox").fill("prostate");
@@ -72,6 +96,29 @@ await step("an example patient's route is shown and opens in the reader", async 
   const saved = await page.evaluate(() => JSON.parse(sessionStorage.getItem("oc-patient:prostate")));
   assert.ok(Object.keys(saved.facts).length > 0, "patient carried into the reader");
   assert.equal(await page.getByRole("dialog", { name: /Find where a patient sits/ }).count(), 0, "no welcome when a patient is loaded");
+});
+await step("Enter a patient: the reader opens on the form, with steps saying what to do next", async () => {
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const p = await ctx.newPage();
+  p.on("pageerror", (e) => errors.push("enter: " + e.message));
+  await p.goto(base + "#atlas/prostate");
+  await p.getByTestId("enter-patient").click();
+  await p.locator("[data-testid=card]").first().waitFor();
+  assert.equal(await p.getByRole("dialog", { name: /Find where a patient sits/ }).count(), 0, "straight to the form");
+  assert.equal(await p.getByRole("tab", { name: "Patient" }).getAttribute("aria-selected"), "true");
+  const guide = p.getByRole("region", { name: "Steps" });
+  assert.match(await guide.innerText(), /Patient details[\s\S]*start here[\s\S]*Start with/);
+  // a suggested field is one click away and gets focus
+  await guide.locator(".need").first().click();
+  await p.waitForFunction(() => !!document.activeElement?.closest(".pf.flash"));
+  await p.waitForTimeout(600);
+  assert.equal(await p.evaluate(() => document.scrollingElement.scrollTop), 0, "only the panel scrolls");
+  const hint = await p.locator(".canvas-hint").boundingBox(), view = await p.locator(".view").boundingBox();
+  assert.ok(hint && view && hint.x >= view.x && hint.x + hint.width <= view.x + view.width + 1, "canvas hint stays over the canvas");
+  // with an example loaded the steps move on: see the routes, then pick one
+  await guide.getByRole("button", { name: /load an example patient/ }).click().catch(() => {});
+  await p.waitForFunction(() => /Pick a route|Most useful next|See \d+ route/.test(document.querySelector(".guide")?.textContent ?? ""));
+  await ctx.close();
 });
 await step("the reader returns to the atlas at its page", async () => {
   await page.getByTestId("rail-library").click();

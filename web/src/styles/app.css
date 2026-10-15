@@ -600,3 +600,33 @@ button.wl-choice:hover { border-color: var(--ink-2); }
 .page-crop .hl, .page-img .hl { position: absolute; }
 .page-loading.crop { aspect-ratio: 2 / 1; }
 .viewer-tools .viewer-act { border: 1px solid var(--accent-line); background: var(--accent-soft); color: var(--accent); border-radius: 6px; padding: 0 9px; height: 26px; font-size: 12px; display: inline-flex; align-items: center; gap: 4px; width: auto; margin-right: 4px; white-space: nowrap; }
+
+/* ---------- wayfinding: steps and the next thing to do ---------- */
+.guide { position: relative; padding: 10px 14px 10px; border-bottom: 1px solid var(--line); background: var(--surface-2); }
+.guide-steps { list-style: none; margin: 0 22px 6px 0; padding: 0; display: flex; gap: 4px; }
+.guide-steps li { flex: 1; min-width: 0; position: relative; }
+.guide-steps li + li::before { content: ""; position: absolute; left: -4px; right: calc(100% - 2px); top: 11px; border-top: 1px solid var(--line-strong); }
+.guide-steps button { width: 100%; border: 0; background: none; padding: 2px 2px; display: grid; grid-template-columns: auto 1fr; column-gap: 6px; text-align: left; border-radius: 6px; }
+.guide-steps button:hover { background: var(--sunken); }
+.gs-n { grid-row: span 2; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--line-strong); display: grid; place-items: center; font: 600 11px var(--mono); color: var(--muted); background: var(--surface); margin-top: 1px; }
+.gs-t { font-size: 12px; font-weight: 600; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gs-s { font-size: 11px; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.guide-steps li.on .gs-n { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); box-shadow: 0 0 0 3px var(--accent-soft); }
+.guide-steps li.on .gs-t { color: var(--ink); }
+.guide-steps li.done .gs-n { border-color: var(--accent); color: var(--accent); }
+.guide-steps li.done .gs-t { color: var(--ink-2); }
+.guide-next { font-size: 12.5px; line-height: 1.5; color: var(--ink-2); animation: guide-in .3s ease both; }
+.guide-next .need { font-size: 12.5px; }
+.guide-go { border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); border-radius: 999px; padding: 1px 9px; font-size: 12px; display: inline-flex; align-items: center; gap: 3px; vertical-align: 1px; }
+.guide-x { position: absolute; top: 8px; right: 8px; border: 0; background: none; color: var(--faint); width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; }
+.guide-x:hover { background: var(--sunken); color: var(--ink); }
+.guide-show { border: 0; background: none; color: var(--muted); font-size: 11.5px; padding: 4px 14px; text-align: left; text-decoration: underline; text-underline-offset: 3px; }
+@keyframes guide-in { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: none; } }
+.canvas-hint { position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 6; display: flex; align-items: center; gap: 14px; padding: 8px 10px 8px 16px; border-radius: 999px; background: var(--ink); color: var(--paper); font-size: 12px; box-shadow: var(--shadow-lg); white-space: nowrap; animation: hint-in .5s ease both .6s; max-width: calc(100% - 24px); overflow: hidden; }
+@keyframes hint-in { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
+.canvas-hint b { font-weight: 600; }
+.canvas-hint span { opacity: .85; }
+.canvas-hint kbd { font: 11px var(--mono); border: 1px solid currentColor; border-radius: 4px; padding: 0 4px; opacity: .8; }
+.canvas-hint button { border: 0; background: none; color: inherit; opacity: .7; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; }
+.canvas-hint button:hover { opacity: 1; background: rgba(255, 255, 255, .12); }
+@media (max-width: 820px) { .canvas-hint span:nth-child(3), .canvas-hint span:nth-child(4) { display: none; } }

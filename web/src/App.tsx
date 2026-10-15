@@ -6,6 +6,7 @@ import { MapView } from "./components/MapView";
 import { Help, Rail, TitleBar, Welcome } from "./components/Chrome";
 import { HistoryPanel, SearchPanel, Toc } from "./components/LeftPanel";
 import { RightPanel } from "./components/RightPanel";
+import { CanvasHint } from "./components/Guide";
 
 export function App() {
   const { s, bundle, set, isPhone } = useApp();
@@ -25,6 +26,7 @@ export function App() {
           {l.kind === "flow" && <Canvas key={l.page} page={l.page} />}
           {l.kind === "doc" && <DocView code={l.code} sub={l.sub} />}
           {l.kind === "map" && <MapView />}
+          <CanvasHint />
         </div>
         <Dock />
       </main>

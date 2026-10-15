@@ -5,6 +5,7 @@ import { Blocks, Linked } from "./Rich";
 import { conditionTree } from "../lib/humanize";
 import { derive } from "../lib/predicates";
 import { PatientPanel } from "./PatientPanel";
+import { GuideBar } from "./Guide";
 import { PathwaysPanel, boxSrc } from "./PathwaysPanel";
 import { SrcChip } from "../source";
 import { verdicts } from "../lib/walk";
@@ -35,6 +36,7 @@ export function RightPanel() {
         ))}
         <button className="sheet-close" aria-label="Close panel" onClick={() => set({ sheet: false })}>×</button>
       </div>
+      <GuideBar />
       <div className="rp-body" id="rp-panel" role="tabpanel" aria-labelledby={`tab-${s.rightTab}`}>
         {s.rightTab === "patient" && <PatientPanel />}
         {s.rightTab === "paths" && <PathwaysPanel />}

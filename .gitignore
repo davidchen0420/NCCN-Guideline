@@ -1,5 +1,7 @@
-# Licensed NCCN content: never commit (repo is public)
+# Licensed NCCN content. Source PDFs may be committed only at data/<slug>/pdf/<slug>.pdf
+# (approved by the repository owner, who will make the repository private).
 *.pdf
+!data/*/pdf/*.pdf
 .DS_Store
 # Derived from licensed NCCN content: keep local
 research_notes/Prostate benchmark planning/prostate_pdf_profile.md

@@ -121,12 +121,15 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
     let saved: string | null = null;
     try { saved = localStorage.getItem("nav-help"); } catch { /* storage may be blocked */ }
     const patient = slug ? readPatient(slug) : null;   // carried over from the atlas, or entered earlier this session
+    // "Enter a patient" in the atlas: open on the patient form, no welcome screen
+    let intent: string | null = null;
+    try { intent = sessionStorage.getItem("oc-intent"); sessionStorage.removeItem("oc-intent"); } catch { /* blocked */ }
     const loc = fromHash ?? ({ kind: "flow", page: g.flowPages.find((p) => (bundle.roots[p] ?? []).length) ?? g.flowPages[0] } as Loc);
     return {
       loc, hist: [loc], hpos: 0, answers: [], showNon: false, conf: false,
-      left: window.innerWidth > 1180 ? "toc" : null, sheet: false,
+      left: window.innerWidth > 1180 ? "toc" : null, sheet: intent === "patient",
       query: "", kinds: [], tags: [], searchNon: false,
-      dock: null, fn: null, fnIdx: 0, walk: null, facts: patient?.facts ?? {}, help: false, welcome: !saved && !(patient && Object.keys(patient.facts).length),
+      dock: null, fn: null, fnIdx: 0, walk: null, facts: patient?.facts ?? {}, help: false, welcome: !saved && !(patient && Object.keys(patient.facts).length) && intent !== "patient",
       rightTab: "patient", age: patient?.age ?? null, start: "auto", pathSel: null,
     };
   }, [g]);
@@ -192,9 +195,13 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
       const el = document.getElementById(`fact-${name}`);
       const row = el?.closest(".pf");
       el?.closest("details")?.setAttribute("open", "");
-      row?.scrollIntoView({ block: "center", behavior: "smooth" });
+      // scroll the panel only (scrollIntoView would also shift the page, which must not move)
+      const sc = row?.closest<HTMLElement>(".rp-body");
+      if (row && sc) sc.scrollTo({ top: sc.scrollTop + row.getBoundingClientRect().top - sc.getBoundingClientRect().top - sc.clientHeight / 3, behavior: "smooth" });
       row?.classList.remove("flash"); void (row as HTMLElement | undefined)?.offsetWidth; row?.classList.add("flash");
-      (el as HTMLElement | null)?.focus({ preventScroll: true });
+      // a choice group is not focusable itself: focus its chosen (or first) option
+      const target = el?.matches("input, select, button, textarea") ? el : el?.querySelector<HTMLElement>("[aria-checked=true], [aria-pressed=true], button, input, select");
+      (target as HTMLElement | null | undefined)?.focus({ preventScroll: true });
     }, 60);
   }, []);
 
