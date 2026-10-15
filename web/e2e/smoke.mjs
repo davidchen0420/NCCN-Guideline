@@ -1,5 +1,12 @@
-// Browser smoke test: node e2e/smoke.mjs <path/to/dashboard.html>
-// Uses the synthetic sample guideline (SAMPLE-1, SAMPLE-2). Set CHROMIUM_PATH to use a specific browser.
+// Browser smoke test for the reader, against the synthetic sample guideline (SAMPLE-1, SAMPLE-2).
+//
+//   cd web && npm run build                                  # writes src/nccn_nav/dashboard.html
+//   cd src && python -m nccn_nav.dashboard --sample ../sample_out    # builds sample_out/dashboard.html
+//   cd web && node e2e/smoke.mjs ../sample_out/dashboard.html
+//
+// Most checks exercise Advanced tools (scores, trail, summary), so the first browser context turns
+// them on through localStorage ("oc-advanced"). The last section runs in default mode and checks
+// that the reviewer controls stay out of the way. Set CHROMIUM_PATH to use a specific browser.
 import { chromium } from "playwright-core";
 import { strict as assert } from "node:assert";
 
@@ -14,7 +21,9 @@ let n = 0;
 const step = async (name, fn) => { await fn(); console.log(`ok ${++n} ${name}`); };
 
 // ------------------------------------------------------------------ desktop
-const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+const advancedCtx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+await advancedCtx.addInitScript(() => { try { localStorage.setItem("oc-advanced", "1"); } catch { /* blocked */ } });
+const page = await advancedCtx.newPage();
 watch(page);
 await page.goto(url);
 await step("first visit shows the start screen; browsing closes it and opens contents", async () => {
@@ -68,14 +77,19 @@ await step("search: quotes, filters and graying", async () => {
   await page.getByTestId("rail-search").click();
   await page.getByRole("searchbox", { name: "Search" }).fill('"Category 1"');
   assert.ok(await page.locator(".res").count() >= 1);
+  assert.equal(await page.getByRole("button", { name: "Preferred", exact: true }).count(), 0, "filters start closed");
+  await page.getByRole("button", { name: /^Filters/ }).click();
   await page.getByRole("button", { name: "Preferred", exact: true }).click();
   assert.ok(await page.locator(".card.hit").count() >= 1);
   assert.ok(await page.locator(".card.gray").count() >= 1);
   await page.getByRole("searchbox", { name: "Search" }).fill("");
   await page.getByRole("button", { name: "Preferred", exact: true }).click();
 });
-await step("whole-guideline overview links to pages", async () => {
+await step("overview (in Contents) links to pages", async () => {
+  await page.getByTestId("rail-toc").click();
+  if (!(await page.getByTestId("rail-map").isVisible())) await page.getByTestId("rail-toc").click();
   await page.getByTestId("rail-map").click();
+  await page.locator(".map").waitFor();
   await page.locator(".tile-main").first().click();
   assert.match(await page.getByTestId("title").innerText(), /SAMPLE-1/);
 });
@@ -85,13 +99,13 @@ await step("patient details rank pathways across pages", async () => {
   if (!(await page.locator("#fact-score").isVisible())) await page.locator(".more-details > summary").click();
   await page.locator("#fact-score").fill("12");
   await page.locator("#fact-score").press("Tab");
-  await page.getByRole("tab", { name: /Pathways/ }).click();
+  await page.getByRole("tab", { name: /Recommendation/ }).click();
   assert.equal(await page.locator(".pcard").count(), 2, "age unknown: two routes");
   assert.match(await page.locator(".nudge").innerText(), /Age/);
   await page.locator(".nudge .need").click();
   await page.locator("#fact-age").fill("70");
   await page.locator("#fact-age").press("Tab");
-  await page.getByRole("tab", { name: /Pathways/ }).click();
+  await page.getByRole("tab", { name: /Recommendation/ }).click();
   assert.equal(await page.locator(".pcard").count(), 1);
   assert.match(await page.locator(".pcard").innerText(), /100%/);
   assert.equal(await page.locator(".trail .step").count(), 6);
@@ -108,17 +122,87 @@ await step("route summary lists details, recommendation and source pages", async
   assert.match(doc, /SAMPLE-2, PDF p\.7/);
   await page.getByRole("button", { name: "Close summary" }).click();
 });
-await step("hovering a step previews its source page; clicking opens the page viewer", async () => {
+await step("hovering a step previews its source page; clicking opens the page in its own window", async () => {
   await page.locator(".trail .step.met .st-text").first().hover();
   await page.locator(".peek").waitFor();
   assert.match(await page.locator(".peek").innerText(), /SAMPLE-1/);
   await page.mouse.move(2, 2);
-  await page.locator(".reco .src-chip").first().click();
-  await page.getByRole("dialog", { name: /Guideline page/ }).waitFor();
-  await page.getByRole("button", { name: "Close page viewer" }).click();
-  assert.equal(await page.locator(".viewer").count(), 0);
+  // earlier steps may have opened the page window already (it is reused), so take any window besides the reader
+  const known = advancedCtx.pages().find((w) => w !== page && !w.isClosed());
+  const [opened] = await Promise.all([known ? Promise.resolve(known) : advancedCtx.waitForEvent("page"), page.locator(".reco .src-chip").first().click()]);
+  const win = opened;
+  await win.locator(".viewer-bar").waitFor();
+  assert.equal(await page.locator(".viewer").count(), 0, "not over the diagram");
+  await win.getByRole("button", { name: "Close page viewer" }).click().catch(() => { /* the window closes under the click */ });
+  await page.waitForTimeout(300);
+  assert.ok(win.isClosed(), "Close shuts the window");
 });
 await page.close();
+
+// ------------------------------------------------------------------ default mode (Advanced tools off)
+const plain = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
+watch(plain);
+await plain.goto(url);
+await plain.getByRole("button", { name: /Browse the guideline/ }).click();
+await step("default mode: help is a 5-step list without the technical section", async () => {
+  await plain.getByRole("button", { name: "Help" }).click();
+  const help = plain.getByRole("dialog", { name: "How to use OncoCarta" });
+  assert.equal(await help.locator("ol.help-steps > li").count(), 5);
+  assert.equal(await help.locator(".help-data").count(), 0, "About the data is an Advanced section");
+  await plain.getByRole("button", { name: "Got it" }).click();
+});
+await step("default mode: reviewer controls are hidden", async () => {
+  await cards(plain).first().waitFor();
+  assert.equal(await plain.getByLabel("Arrow certainty").count(), 0, "arrow certainty switch hidden");
+  assert.equal(await plain.getByTestId("non-active").count(), 0, "other paths switch hidden");
+  assert.equal(await plain.locator("#tab-walk").count(), 0, "walk tab hidden");
+  assert.equal(await plain.locator("#tab-details").count(), 0, "step tab hidden until a step is chosen");
+  assert.equal(await plain.locator("#tab-patient").innerText(), "Patient");
+  assert.match(await plain.locator("#tab-paths").innerText(), /Recommendation/);
+  assert.equal(await plain.getByTestId("rail-map").count(), 1, "overview lives in Contents");
+  assert.equal(await plain.getByTestId("rail-hist").count(), 0, "history is an Advanced view");
+  assert.equal(await plain.getByTestId("clear").count(), 0, "nothing to clear yet");
+});
+await step("default mode: choosing a step shows the Step tab and a Clear selection chip", async () => {
+  await plain.locator('[data-id="SAMPLE-1:n3"]').click();
+  await plain.locator("#tab-details").waitFor();
+  assert.match(await plain.getByTestId("clear").innerText(), /Clear selection/);
+  await plain.getByTestId("clear").click();
+  assert.equal(await plain.getByTestId("clear").count(), 0);
+});
+await step("default mode: search has no AI segment, filters start closed, no other-paths switch", async () => {
+  await plain.getByTestId("rail-search").click();
+  assert.equal(await plain.getByRole("button", { name: "AI search" }).count(), 0);
+  assert.equal(await plain.getByText("Include results on other paths").count(), 0);
+  assert.equal(await plain.getByRole("button", { name: "Preferred", exact: true }).count(), 0);
+  await plain.getByRole("button", { name: /^Filters/ }).click();
+  assert.equal(await plain.getByRole("button", { name: "Preferred", exact: true }).count(), 1);
+});
+await step("default mode: the dock names its tabs in full", async () => {
+  for (const name of ["Footnotes", "Evidence", "Preference"]) assert.ok(await plain.getByRole("tab", { name }).isVisible(), name);
+});
+await step("Settings: Advanced tools reveals the reviewer views, and the guide can be hidden", async () => {
+  await plain.getByTestId("rail-settings").click();
+  await plain.getByTestId("advanced-toggle").check();
+  await plain.keyboard.press("Escape");
+  assert.equal(await plain.getByLabel("Arrow certainty").count(), 1);
+  assert.equal(await plain.getByTestId("non-active").count(), 1);
+  assert.equal(await plain.locator("#tab-walk").count(), 1);
+  assert.equal(await plain.getByTestId("rail-hist").count(), 0, "History shows with the Contents panel");
+  await plain.getByTestId("rail-toc").click();
+  await plain.getByTestId("rail-hist").waitFor();
+  await plain.getByTestId("rail-settings").click();
+  await plain.getByTestId("advanced-toggle").uncheck();
+  await plain.getByTestId("guide-toggle").uncheck();
+  await plain.keyboard.press("Escape");
+  assert.equal(await plain.getByLabel("Arrow certainty").count(), 0);
+  assert.equal(await plain.locator(".guide").count(), 0, "guide hidden");
+  await plain.getByTestId("rail-settings").click();
+  await plain.getByTestId("guide-toggle").check();
+  await plain.keyboard.press("Escape");
+  assert.equal(await plain.locator(".guide").count(), 1);
+});
+await plain.close();
 
 // ------------------------------------------------------------------ phone
 const phone = await (await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 })).newPage();

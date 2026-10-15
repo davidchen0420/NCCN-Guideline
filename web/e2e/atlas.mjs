@@ -136,7 +136,7 @@ await step("Enter a patient: the reader opens on the form, with steps saying wha
   assert.equal(await p.getByRole("dialog", { name: /Find where a patient sits/ }).count(), 0, "straight to the form");
   assert.equal(await p.getByRole("tab", { name: "Patient" }).getAttribute("aria-selected"), "true");
   const guide = p.getByRole("region", { name: "Steps" });
-  assert.match(await guide.innerText(), /Patient details[\s\S]*start here[\s\S]*Start with/);
+  assert.match(await guide.innerText(), /Patient[\s\S]*start here[\s\S]*Start with/);
   // a suggested field is one click away and gets focus
   await guide.locator(".need").first().click();
   await p.waitForFunction(() => !!document.activeElement?.closest(".pf.flash"));
@@ -146,7 +146,7 @@ await step("Enter a patient: the reader opens on the form, with steps saying wha
   assert.ok(hint && view && hint.x >= view.x && hint.x + hint.width <= view.x + view.width + 1, "canvas hint stays over the canvas");
   // with an example loaded the steps move on: see the routes, then pick one
   await guide.getByRole("button", { name: /load an example patient/ }).click().catch(() => {});
-  await p.waitForFunction(() => /Pick a route|Most useful next|See \d+ route/.test(document.querySelector(".guide")?.textContent ?? ""));
+  await p.waitForFunction(() => /Pick an option|Best next question|See \d+ possible/.test(document.querySelector(".guide")?.textContent ?? ""));
   await ctx.close();
 });
 await step("the reader returns to the atlas at its page", async () => {
