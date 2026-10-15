@@ -86,3 +86,69 @@ export function renderPage(doc: PDFDocumentProxy, index: number, width: number):
   }
   return p;
 }
+
+// ---- finding the PDFs ----
+
+export async function sha256(data: ArrayBuffer): Promise<string | null> {
+  if (!crypto?.subtle) return null;
+  return [...new Uint8Array(await crypto.subtle.digest("SHA-256", data))].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/** Guidelines whose PDF this browser has kept. */
+export async function savedPdfSlugs(): Promise<Set<string>> {
+  try {
+    const d = await db();
+    return await new Promise((res) => {
+      const r = d.transaction(STORE).objectStore(STORE).getAllKeys();
+      r.onsuccess = () => res(new Set((r.result as string[]).filter((k) => typeof k === "string" && k.startsWith("pdf:")).map((k) => k.slice(4))));
+      r.onerror = () => res(new Set());
+    });
+  } catch { return new Set(); }
+}
+
+/** Fired when PDFs are connected or forgotten, so open views pick them up. */
+export const PDFS_CHANGED = "oc-pdfs-changed";
+
+const norm = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\.pdf$/, "").replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+
+export interface PdfGuideline { slug: string; title: string; pdf_sha256?: string }
+export interface FolderResult { matched: { slug: string; file: string; by: "checksum" | "name" }[]; unmatched: string[] }
+
+/** Match a folder of PDFs to guidelines: by SHA-256 (the data records the checksum of the PDF each
+ * guideline was encoded from), else by file name (slug or title). Matches are kept in this browser. */
+let known: PdfGuideline[] = [];
+/** The library's guidelines, for matching a folder of PDFs. */
+export const registerGuidelines = (g: PdfGuideline[]) => { known = g; };
+export const knownGuidelines = () => known;
+
+export async function connectFolder(files: File[], guidelines: PdfGuideline[] = known, progress?: (done: number, total: number) => void): Promise<FolderResult> {
+  const pdfs = files.filter((f) => f.name.toLowerCase().endsWith(".pdf"));
+  const bySha = new Map(guidelines.filter((g) => g.pdf_sha256).map((g) => [g.pdf_sha256!, g.slug]));
+  const byName = new Map<string, string>();
+  for (const g of guidelines) { byName.set(norm(g.slug), g.slug); byName.set(norm(g.title), g.slug); }
+  const out: FolderResult = { matched: [], unmatched: [] };
+  const taken = new Set<string>();
+  let done = 0;
+  for (const f of pdfs) {
+    const data = await f.arrayBuffer();
+    const sum = await sha256(data);
+    let slug = sum ? bySha.get(sum) : undefined;
+    let by: "checksum" | "name" = "checksum";
+    if (!slug) { slug = byName.get(norm(f.name)); by = "name"; }
+    if (slug && !taken.has(slug)) {
+      taken.add(slug);
+      await savePdf(`pdf:${slug}`, f.name, data);
+      out.matched.push({ slug, file: f.name, by });
+    } else out.unmatched.push(f.name);
+    progress?.(++done, pdfs.length);
+  }
+  window.dispatchEvent(new CustomEvent(PDFS_CHANGED));
+  return out;
+}
+
+/** Where a served copy of a guideline's PDF may sit, relative to the data folder. */
+export function pdfCandidates(base: string, slug: string, manifest?: Record<string, string>): string[] {
+  const out = manifest?.[slug] ? [manifest[slug]] : [];
+  out.push(`${base}${slug}/pdf/${slug}.pdf`, `${base}${slug}/${slug}.pdf`, `${base}../private/${slug}/pdf/${slug}.pdf`, `${base}../pdf/${slug}.pdf`);
+  return [...new Set(out)];
+}

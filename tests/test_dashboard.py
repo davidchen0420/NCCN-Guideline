@@ -94,6 +94,19 @@ class AtlasBuildTest(unittest.TestCase):
         self.assertIn([0, 1], p["links"], "PROS-1 leads to PROS-2")
 
     @unittest.skipUnless((DATA / "index.json").exists(), "canonical data not present")
+    def test_local_pdfs_are_found_by_name_and_listed_by_path(self):
+        with tempfile.TemporaryDirectory() as d:
+            pdfs = Path(d) / "nccn"
+            pdfs.mkdir()
+            (pdfs / "prostate.pdf").write_bytes(b"%PDF-1.4\n%%EOF\n")
+            (pdfs / "unrelated.pdf").write_bytes(b"%PDF-1.4\n%%EOF\n")
+            found = dashboard.find_pdfs(self.DATA, [pdfs])
+            self.assertEqual(found.get("prostate"), pdfs / "prostate.pdf")
+            self.assertNotIn("unrelated", found)
+            out = dashboard.build_library(self.DATA, Path(d) / "built" / "oncocarta.html", pdf_roots=[pdfs])
+            self.assertIn('"prostate": "../nccn/prostate.pdf"', out.read_text())
+
+    @unittest.skipUnless((DATA / "index.json").exists(), "canonical data not present")
     def test_library_page_embeds_the_atlas(self):
         with tempfile.TemporaryDirectory() as d:
             html = dashboard.build_library(self.DATA, Path(d) / "built" / "oncocarta.html").read_text()

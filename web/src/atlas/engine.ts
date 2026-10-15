@@ -74,7 +74,7 @@ class Springs {
 
 interface Theme {
   paper: string; surface: string; ink: string; ink2: string; muted: string; faint: string;
-  line: string; strong: string; accent: string; dark: boolean;
+  line: string; strong: string; accent: string; hl: string; dark: boolean;
 }
 function readTheme(): Theme {
   const cs = getComputedStyle(document.documentElement);
@@ -82,7 +82,7 @@ function readTheme(): Theme {
   return {
     paper: v("--paper", "#f3f1ec"), surface: v("--surface", "#fdfcfa"), ink: v("--ink", "#1d1c19"), ink2: v("--ink-2", "#45433d"),
     muted: v("--muted", "#6b6860"), faint: v("--faint", "#8f8b81"), line: v("--line", "#dedad1"), strong: v("--line-strong", "#c7c2b6"),
-    accent: v("--accent", "#135c4d"), dark: matchMedia("(prefers-color-scheme: dark)").matches,
+    accent: v("--accent", "#135c4d"), hl: v("--hl-line", "#b88600"), dark: matchMedia("(prefers-color-scheme: dark)").matches,
   };
 }
 const rgbCache = new Map<string, [number, number, number]>();
@@ -111,7 +111,7 @@ const REF_FONT = 10;        // box text is wrapped once at this size and scaled 
 
 interface BoxGeom { n: BNode; x0: number; y0: number; x1: number; y1: number; lines: string[]; jumps: string[] }
 /** A page card: boxes in world units from the card's top-left corner below the title strip. */
-interface Card { boxes: BoxGeom[]; edges: { a: BoxGeom; b: BoxGeom; cls: string }[]; ph: number; pw: number; title: string }
+interface Card { boxes: BoxGeom[]; edges: { a: BoxGeom; b: BoxGeom; cls: string }[]; ph: number; pw: number; top: number; title: string }
 
 export class Engine {
   private ctx: CanvasRenderingContext2D;
@@ -128,6 +128,10 @@ export class Engine {
   private l1 = new Map<string, L1Layout>();
   private cards = new Map<string, Card>();
   private bundles = new Map<string, Bundle>();
+  /** rendered original PDF pages for page cards, keyed "slug/page" */
+  private pageImages = new Map<string, { img: CanvasImageSource; w: number; h: number }>();
+  /** draw page cards from the original PDF page when it is available */
+  showOriginal = true;
   private time = 0;
   focus: Focus = { level: 0 };
   hover: Hit = null;
@@ -212,6 +216,14 @@ export class Engine {
   }
 
   addBundle(slug: string, b: Bundle) { this.bundles.set(slug, b); this.request(); }
+  setPageImage(slug: string, page: string, img: { img: CanvasImageSource; w: number; h: number } | null) {
+    const key = `${slug}/${page}`;
+    if (img) this.pageImages.set(key, img); else this.pageImages.delete(key);
+    this.springs.set(`img:${key}`, img ? 1 : 0, false, 120);
+    this.request();
+  }
+  hasPageImage(slug: string, page: string) { return this.pageImages.has(`${slug}/${page}`); }
+  setShowOriginal(v: boolean) { this.showOriginal = v; this.request(); }
   hasBundle(slug: string) { return this.bundles.has(slug); }
 
   /* ---------------- camera ---------------- */
@@ -415,7 +427,7 @@ export class Engine {
     const byId = new Map(boxes.map((x) => [x.n.id, x]));
     const edges = fp.edges.flatMap((e) => { const a = byId.get(e.src), d = byId.get(e.dst); return a && d ? [{ a, b: d, cls: e.cls }] : []; });
     const g = this.m.bySlug.get(slug)!;
-    const c: Card = { boxes, edges, ph, pw, title: g.pages.find((p) => p.id === page)?.title ?? page };
+    const c: Card = { boxes, edges, ph, pw, top: band[0] - 4, title: g.pages.find((p) => p.id === page)?.title ?? page };
     this.cards.set(key, c);
     return c;
   }
@@ -1182,12 +1194,27 @@ export class Engine {
     const route = this.route?.slug === g.slug ? this.route : null;
     const rp = this.springs.get("route");
     const hovId = this.hover?.kind === "box" ? this.hover.node : this.kbd?.kind === "box" ? this.kbd.node : null;
+    // the original PDF page, when connected: printed exactly as NCCN laid it out
+    const pimg = this.showOriginal ? this.pageImages.get(`${g.slug}/${f.page}`) : undefined;
+    const orig = pimg ? this.springs.get(`img:${g.slug}/${f.page}`) * inner : 0;
+    if (pimg && orig > 0.01) {
+      const sy = (c.top / pimg.h), sh = ((c.ph / CARD_W) * c.pw) / pimg.h;
+      const iw = (pimg.img as HTMLImageElement).naturalWidth || (pimg.img as HTMLCanvasElement).width;
+      const ih = (pimg.img as HTMLImageElement).naturalHeight || (pimg.img as HTMLCanvasElement).height;
+      ctx.save();
+      ctx.globalAlpha = orig;
+      ctx.beginPath(); ctx.rect(ox, oy, W, c.ph * k); ctx.clip();
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(pimg.img, 0, Math.max(0, sy * ih), iw, Math.min(ih, sh * ih), ox, oy, W, c.ph * k);
+      ctx.restore();
+    }
+    const extracted = 1 - orig;
     // edges draw on left to right, the way the page is read
-    for (const ed of c.edges) {
+    if (extracted > 0.01) for (const ed of c.edges) {
       const t = clamp(inner * 1.6 - (ed.a.x0 / CARD_W) * 0.6, 0, 1);
       if (t <= 0) continue;
       const onRoute = !!route && route.nodes.has(`${f.page}:${ed.a.n.id}`) && route.nodes.has(`${f.page}:${ed.b.n.id}`) && rp > 0.1;
-      ctx.globalAlpha = t;
+      ctx.globalAlpha = t * extracted;
       ctx.strokeStyle = onRoute ? th.accent : ed.cls === "unsure" ? th.faint : th.muted;
       ctx.lineWidth = onRoute ? clamp(s * 2.4, 2, 3.5) : clamp(s * 1.1, 1, 2);
       if (ed.cls === "unsure") ctx.setLineDash([3, 3]);
@@ -1216,9 +1243,17 @@ export class Engine {
       const full = `${f.page}:${b.n.id}`;
       const onRoute = !!route?.nodes.has(full) && rp > 0.1;
       const hovered = hovId === full;
-      const by = by0 - (hovered ? 2 : 0) + (1 - ease(t)) * 6;
-      ctx.globalAlpha = t;
-      if (!header) {
+      const by = by0 - (hovered ? 2 : 0) * extracted + (1 - ease(t)) * 6 * extracted;
+      if (orig > 0.01 && !header && (onRoute || hovered)) {
+        // over the original page only the route and the box under the pointer are marked
+        ctx.globalAlpha = t * orig;
+        ctx.fillStyle = rgba(onRoute ? th.accent : th.hl, onRoute ? 0.12 : 0.18);
+        ctx.strokeStyle = onRoute ? th.accent : th.ink2; ctx.lineWidth = 2;
+        ctx.beginPath(); roundRect(ctx, bx - 2, by0 - 2, bw + 4, bh + 4, 4); ctx.fill(); ctx.stroke();
+      }
+      ctx.globalAlpha = t * extracted;
+      if (extracted <= 0.01) { /* original page shown: no extracted boxes */ }
+      else if (!header) {
         if (hovered) { ctx.shadowColor = th.dark ? "rgba(0,0,0,.5)" : "rgba(30,28,22,.18)"; ctx.shadowBlur = 14; ctx.shadowOffsetY = 4; }
         ctx.fillStyle = onRoute ? mix(th.surface, th.accent, th.dark ? 0.22 : 0.1) : th.surface;
         ctx.beginPath(); roundRect(ctx, bx, by, bw, bh, clamp(s * 3, 2, 6)); ctx.fill();
@@ -1229,6 +1264,7 @@ export class Engine {
         if (b.n.pred) { ctx.fillStyle = onRoute ? th.accent : col; ctx.fillRect(bx + 1, by + 3, clamp(s * 2.5, 2, 4), Math.max(0, bh - 6)); }
       }
       const pad = clamp(s * 6, 2, 9);
+      if (extracted <= 0.01) { this.drawJumps(b, t, ox, oy, k); continue; }
       ctx.save();
       ctx.beginPath(); ctx.rect(bx, by, bw, bh); ctx.clip();
       if (font < 5.6) {
@@ -1249,22 +1285,26 @@ export class Engine {
         b.lines.forEach((ln, i) => ctx.fillText(ln, 0, i * REF_FONT * 1.22));
       }
       ctx.restore();
-      // links to other pages: chips in the box's corner that fly there
-      if (b.jumps.length && t > 0.8 && k * 0.44 >= 7) {
-        b.jumps.forEach((to, j) => {
-          const qd = chip(b, j);
-          const cx = ox + qd.x * k, cy = oy + qd.y * k, cw = qd.w * k, chh = qd.h * k;
-          const on = this.hover?.kind === "jump" && this.hover.to === to;
-          ctx.globalAlpha = t;
-          ctx.fillStyle = on ? th.accent : th.surface; ctx.strokeStyle = th.accent; ctx.lineWidth = 1;
-          ctx.beginPath(); roundRect(ctx, cx, cy, cw, chh, chh / 2); ctx.fill(); ctx.stroke();
-          ctx.fillStyle = on ? th.surface : th.accent; ctx.font = `500 ${clamp(chh * 0.6, 8, 12)}px ${MONO}`;
-          ctx.textAlign = "center"; ctx.textBaseline = "middle";
-          ctx.fillText(ellipsize(ctx, `→ ${to}`, cw - 6), cx + cw / 2, cy + chh / 2 + 0.5);
-        });
-      }
+      this.drawJumps(b, t, ox, oy, k);
     }
     ctx.restore();
+  }
+
+  /** Links to other pages: chips in the box's corner that fly there. */
+  private drawJumps(b: BoxGeom, t: number, ox: number, oy: number, k: number) {
+    if (!b.jumps.length || t <= 0.8 || k * 0.44 < 7) return;
+    const { ctx, theme: th } = this;
+    b.jumps.forEach((to, j) => {
+      const qd = chip(b, j);
+      const cx = ox + qd.x * k, cy = oy + qd.y * k, cw = qd.w * k, chh = qd.h * k;
+      const on = this.hover?.kind === "jump" && this.hover.to === to;
+      ctx.globalAlpha = t;
+      ctx.fillStyle = on ? th.accent : th.surface; ctx.strokeStyle = th.accent; ctx.lineWidth = 1;
+      ctx.beginPath(); roundRect(ctx, cx, cy, cw, chh, chh / 2); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = on ? th.surface : th.accent; ctx.font = `500 ${clamp(chh * 0.6, 8, 12)}px ${MONO}`;
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText(ellipsize(ctx, `→ ${to}`, cw - 6), cx + cw / 2, cy + chh / 2 + 0.5);
+    });
   }
 }
 

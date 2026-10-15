@@ -3,9 +3,11 @@
 import { chromium } from "playwright-core";
 import { strict as assert } from "node:assert";
 import { createServer } from "node:http";
-import { readFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
+import { makeGuidelinePdf } from "./testpdf.mjs";
 
 const ROOT = fileURLToPath(new URL("../../", import.meta.url));
 const TYPES = { ".html": "text/html", ".json": "application/json", ".js": "text/javascript" };
@@ -163,6 +165,64 @@ await step("reduced motion: no intro, the map is drawn at once", async () => {
   });
   assert.ok(v > 0.02, "drawn without waiting for the intro");
   await p.close();
+});
+await step("source PDF: found next to the data, shown on hover, opened on click", async () => {
+  const pdf = await makeGuidelinePdf(join(ROOT, "data/prostate/guideline.json"));
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const p = await ctx.newPage();
+  p.on("pageerror", (e) => errors.push("pdf: " + e.message));
+  let served = 0;
+  await p.route("**/data/prostate/pdf/prostate.pdf", (r) => { served++; r.fulfill({ status: 200, contentType: "application/pdf", body: pdf }); });
+  await p.goto(base + "#atlas/prostate/PROS-3");
+  await p.locator(".atlas .pdf-btn.ready").waitFor({ timeout: 20000 });
+  assert.ok(served >= 1, "the served copy was fetched");
+  // the page card is drawn from the original page (its red banner is cropped away, the blue box outlines are not)
+  await p.waitForTimeout(1500);
+  const blue = await p.evaluate(() => {
+    const c = document.querySelector(".atlas-canvas"), d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data;
+    let n = 0; for (let i = 0; i < d.length; i += 4) if (d[i + 2] > 150 && d[i] < 90 && d[i + 1] < 90) n++; return n;
+  });
+  assert.ok(blue > 500, `card shows the original page (${blue} blue pixels)`);
+  // hover a box in the panel: the preview is the rendered PDF page with the box outlined
+  const row = p.locator(".box-list .bl-main").nth(2);
+  await row.hover();
+  await p.locator(".peek .page-img img").waitFor();
+  const hl = await p.locator(".peek .hl").boundingBox(), img = await p.locator(".peek .page-img img").boundingBox();
+  assert.ok(hl && img && hl.x >= img.x && hl.y >= img.y && hl.x + hl.width <= img.x + img.width + 1, "box outlined inside the page");
+  assert.equal(await p.locator(".peek .recon").count(), 0, "not the reconstruction");
+  // click: the original page opens in the floating viewer, one click from the reader
+  await row.click();
+  await p.locator(".viewer .page-img img").waitFor();
+  assert.match(await p.locator(".viewer-title").innerText(), /PROS-3 · PDF page \d+ of 222/);
+  await p.locator(".viewer-act").click();
+  await p.waitForFunction(() => /^#prostate\/flow\/PROS-3\/.+/.test(location.hash));
+  // the reader finds the same PDF: its card previews are original pages too
+  if (await p.getByRole("dialog", { name: /Find where a patient sits/ }).count()) await p.getByRole("button", { name: /Browse the guideline/ }).click();
+  await p.locator(".pdf-btn.ready").first().waitFor({ timeout: 20000 });
+  await ctx.close();
+});
+await step("source PDF: a folder is matched to guidelines and kept in the browser", async () => {
+  const pdf = await makeGuidelinePdf(join(ROOT, "data/prostate/guideline.json"));
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const p = await ctx.newPage();
+  p.on("pageerror", (e) => errors.push("folder: " + e.message));
+  await p.goto(base + "#atlas");
+  await p.getByTestId("pdf-btn").click();
+  const dir = await mkdtemp(join(tmpdir(), "oc-pdfs-"));
+  await writeFile(join(dir, "prostate.pdf"), pdf);
+  await writeFile(join(dir, "notes.pdf"), "%PDF-1.4\n%%EOF\n");
+  await p.getByTestId("pdf-folder-input").setInputFiles(dir);
+  await p.locator(".pdf-menu .pm-note", { hasText: /Connected 1 guideline PDF/ }).waitFor();
+  assert.match(await p.locator(".pdf-menu").innerText(), /1 by file name[\s\S]*1 file matched no guideline: notes\.pdf/);
+  assert.match(await p.getByTestId("pdf-btn").innerText(), /Source PDFs · 1 of 91/);
+  // kept: a fresh visit (nothing served) still shows the original page
+  await p.goto(base + "#atlas/prostate/PROS-1");
+  await p.reload();
+  await p.locator(".atlas .pdf-btn.ready").waitFor({ timeout: 20000 });
+  await p.locator(".box-list .bl-main").first().hover();
+  await p.locator(".peek .page-img img").waitFor();
+  await ctx.close();
+  await rm(dir, { recursive: true, force: true });
 });
 if (process.argv.includes("--all")) {
   // Every guideline: its map opens, and its first start page unfolds with its boxes.

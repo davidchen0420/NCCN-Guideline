@@ -10,10 +10,10 @@
 Rebuild:
 ```
 cd web && npm run build && cd ..                                   # the app -> src/nccn_nav/dashboard.html
-PYTHONPATH=src python -m nccn_nav.dashboard --library               # -> built/oncocarta.html (with the atlas)
+PYTHONPATH=src python -m nccn_nav.dashboard --library [--pdfs DIR]  # -> built/oncocarta.html (with the atlas and local PDF paths)
 PYTHONPATH=src python -m nccn_nav.dashboard data/prostate built     # -> built/prostate-oncocarta.html (any data/<slug>)
 ```
 
-The source PDFs are never included. Connect your copy in OncoCarta (title bar, or drop it on the page) to preview original pages; it stays in your browser, and its SHA-256 is checked against the one the guideline was encoded from.
+The source PDFs are never included. To preview original pages, either put your copies where the library build finds them (`data/<slug>/`, `private/`, `pdf/`, `pdfs/`, or pass `--pdfs DIR`) and rebuild with `--library` (it records their paths, matched by SHA-256), or in OncoCarta use "Source PDF" → "Connect a folder of NCCN PDFs" once (matched to all guidelines by SHA-256 and kept in your browser), or choose or drop a single guideline's PDF.
 
 **Licensing note.** The offline file and the data it reads contain processed NCCN guideline text. NCCN's PDF header says the content may not be distributed or used with an AI model or tool; make sure your agreement with NCCN allows publishing this before keeping the repository public.

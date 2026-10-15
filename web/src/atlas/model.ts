@@ -13,7 +13,7 @@ import { pageTitle } from "../lib/adapt";
 
 export interface AtlasPageRaw { id: string; a: string; h?: string; s?: number; n: number; d: number; e?: 1 }
 export interface AtlasGuidelineRaw {
-  slug: string; title: string; category: string; version?: string | null; date?: string | null; site: string;
+  slug: string; title: string; category: string; version?: string | null; date?: string | null; site: string; sha?: string | null;
   boxes: number; encoded: number; sections: string[]; pages: AtlasPageRaw[]; links: [number, number][];
   ext: Record<string, number[]>; aliases?: string[];
 }

@@ -76,6 +76,8 @@ export interface Ctx {
 
 const AppCtx = createContext<Ctx | null>(null);
 export const useApp = () => { const c = useContext(AppCtx); if (!c) throw new Error("no store"); return c; };
+/** The store when inside one (the reader), else null (the atlas). */
+export const useAppMaybe = () => useContext(AppCtx);
 
 /** In the library the hash starts with the guideline slug: "#prostate/flow/PROS-3". */
 export const locToHash = (l: Loc, prefix = "") => "#" + prefix + (l.kind === "flow" ? `flow/${encodeURIComponent(l.page)}${l.node ? "/" + l.node.split(":")[1] : ""}` : l.kind === "doc" ? `doc/${encodeURIComponent(l.code)}${l.sub ? "/" + l.sub : ""}` : "map");

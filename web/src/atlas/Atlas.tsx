@@ -5,7 +5,7 @@
  * so Back goes up a level and links can point at any place on the map.
  */
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight, ChevronRight, Compass, List, Minus, Plus, Search as SearchIcon, UserRound, X } from "lucide-react";
+import { ArrowRight, ChevronRight, Compass, FileText, List, Minus, Plus, Search as SearchIcon, UserRound, X } from "lucide-react";
 import type { Bundle, Example, Facts, Library } from "../types";
 import { buildGraph, type Graph } from "../lib/graph";
 import { rankPathways, likelihoodWord, confidenceWord, hasFacts, type Pathway } from "../lib/pathways";
@@ -14,6 +14,8 @@ import { buildModel, searchIndex, CATEGORY_LABEL, type AtlasRaw, type GNode, typ
 import { Engine, type Focus, type Hit, type Route } from "./engine";
 import { getGuideline } from "../Library";
 import { readPatient, writePatient } from "../lib/patient";
+import { renderPage } from "../lib/pdf";
+import { PageCrop, PageImage, PdfButton, SourceProvider, useSource, type SrcTarget } from "../source";
 import "./atlas.css";
 
 /* ---------------- hash <-> focus ---------------- */
@@ -68,6 +70,45 @@ function morph(rect: DOMRect | null, then: () => void) {
   };
 }
 
+/* ---------------- source PDF ---------------- */
+
+type SourceApi = ReturnType<typeof useSource>;
+/** Lets the atlas (which renders the SourceProvider) reach it from its event handlers. */
+function SourceBridge({ to, onReady }: { to: React.MutableRefObject<SourceApi | null>; onReady: (ready: boolean) => void }) {
+  const s = useSource();
+  to.current = s;
+  const ready = s.pdf.status === "ready";
+  useEffect(() => onReady(ready), [ready, onReady]);
+  return null;
+}
+
+/** The original PDF page (and box) behind a page or box of the atlas. */
+function sourceTarget(bundle: Bundle | null, page: string, node?: string, action?: SrcTarget["action"]): SrcTarget | null {
+  const fp = bundle?.pages[page];
+  if (!fp || fp.pdf === undefined) return null;
+  const n = node ? fp.nodes.find((x) => `${page}:${x.id}` === node) : undefined;
+  return { page: fp.pdf, bbox: n?.bbox, label: page, excerpt: n ? stripMarks(n.text) : undefined, action };
+}
+
+/** Renders the open page card's original PDF page and hands it to the engine. */
+function CardImage({ engine, slug, page, bundle }: { engine: React.RefObject<Engine | null>; slug: string; page: string; bundle: Bundle | null }) {
+  const { pdf } = useSource();
+  const fp = bundle?.pages[page];
+  useEffect(() => {
+    const e = engine.current;
+    if (!e || pdf.status !== "ready" || !pdf.doc || !fp || fp.pdf === undefined) return;
+    let off = false;
+    renderPage(pdf.doc, fp.pdf, Math.min(2400, Math.round(innerWidth * Math.min(2, devicePixelRatio || 1)))).then((r) => {
+      const img = new Image();
+      img.onload = () => { if (!off) e.setPageImage(slug, page, { img, w: r.w, h: r.h }); };
+      img.src = r.url;
+    }).catch(() => { /* the extracted boxes stay */ });
+    return () => { off = true; };
+  }, [engine, pdf, fp, slug, page]);
+  useEffect(() => { if (pdf.status !== "ready") engine.current?.setPageImage(slug, page, null); }, [engine, pdf.status, slug, page]);
+  return null;
+}
+
 /* ---------------- component ---------------- */
 
 interface Props {
@@ -97,6 +138,10 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
   const [patient, setPatient] = useState<{ slug: string; id: string } | null>(null);
   const [panelHidden, setPanelHidden] = useState(false);
   const [legend, setLegend] = useState(true);
+  const srcRef = useRef<SourceApi | null>(null);
+  const [pdfReady, setPdfReady] = useState(false);
+  const [showOriginal, setShowOriginal] = useState(true);
+  useEffect(() => { engineRef.current?.setShowOriginal(showOriginal); }, [showOriginal]);
   const narrow = useMedia("(max-width: 640px)");
   const wide = useMedia("(min-width: 900px)");
   const docked = narrow || focus.level > 0 || (focus.level === 0 && !!focus.site);
@@ -124,6 +169,13 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
   const openReader = useCallback((s: string, page?: string, node?: string, rect: DOMRect | null = null) => {
     morph(rect, () => onOpen(s, page, node));
   }, [onOpen]);
+  const bundlesRef = useRef<Record<string, Bundle | string>>({});
+  /** The original PDF page of a page or box, in the floating viewer (the reader one click on). */
+  const openSource = useCallback((s: string, page: string, node?: string, rect: DOMRect | null = null) => {
+    const b = bundlesRef.current[s];
+    const t = sourceTarget(typeof b === "object" ? b : null, page, node, { label: "Open in the reader", run: () => onOpen(s, page, node) });
+    if (t && srcRef.current) srcRef.current.open(t); else openReader(s, page, node, rect);
+  }, [onOpen, openReader]);
 
   // back / forward
   useEffect(() => {
@@ -148,7 +200,7 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
         if (hit.kind === "site") go({ level: 0, site: hit.site });
         else if (hit.kind === "guideline") go(f.level === 2 && f.slug === hit.slug ? { level: 1, slug: hit.slug } : { level: 1, slug: hit.slug });
         else if (hit.kind === "page") go({ level: 2, slug: hit.slug, page: hit.page });
-        else if (hit.kind === "box") openReader(hit.slug, hit.page, hit.node, rect);
+        else if (hit.kind === "box") openSource(hit.slug, hit.page, hit.node, rect);
         else if (hit.kind === "jump") go({ level: 2, slug: hit.slug, page: hit.to });
         else if (hit.kind === "cite") go({ level: 1, slug: hit.to });
         else if (hit.kind === "lens" && f.level === 2) go({ level: 1, slug: hit.slug });
@@ -215,6 +267,7 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
     if (!e) return;
     for (const [s, b] of Object.entries(bundles)) if (typeof b !== "string" && !e.hasBundle(s)) e.addBundle(s, b);
   }, [bundles]);
+  bundlesRef.current = bundles;
   const bundle = slug && typeof bundles[slug] === "object" ? (bundles[slug] as Bundle) : null;
   const loadError = slug && typeof bundles[slug] === "string" ? (bundles[slug] as string) : null;
   const graph = useMemo<Graph | null>(() => (bundle ? buildGraph(bundle) : null), [bundle]);
@@ -279,6 +332,9 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
   const canvasLabel = focus.level === 2 ? `${g!.title}, page ${focus.page}: its boxes as printed` : g ? `${g.title}: ${g.pages.length} algorithm pages and the links between them` : site ? `${site.label}: ${site.members.length} guidelines` : `Map of ${model.guidelines.length} guidelines in ${model.sites.length} sites, with ${model.links.length} references between them`;
 
   return (
+    <SourceProvider bundle={bundle}>
+    <SourceBridge to={srcRef} onReady={setPdfReady} />
+    {g && focus.level === 2 && <CardImage engine={engineRef} slug={g.slug} page={focus.page} bundle={bundle} />}
     <div className={`atlas${docked ? " is-docked" : ""}${panel ? " has-panel" : ""}`}>
       <canvas ref={canvasRef} className="atlas-canvas" role="img" aria-label={canvasLabel} />
 
@@ -292,9 +348,12 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
             </span>
           ))}
         </nav>
+        <div className="top-right">
+        <PdfButton total={model.guidelines.length} />
         <div className="view-switch" role="group" aria-label="View">
           <button type="button" className="on" aria-pressed="true"><Compass size={14} aria-hidden /> Atlas</button>
           <button type="button" aria-pressed="false" onClick={onList} data-testid="to-list"><List size={14} aria-hidden /> List</button>
+        </div>
         </div>
       </header>
 
@@ -350,6 +409,9 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
           )}
           {g && focus.level === 2 && (
             <PagePanel g={g} page={focus.page} go={go} bundle={bundle} loadError={loadError} route={route}
+              pdfReady={pdfReady} showOriginal={showOriginal} setShowOriginal={setShowOriginal}
+              readBox={(node) => openReader(g.slug, focus.page, node)}
+              source={(node) => sourceTarget(bundle, focus.page, node, { label: "Open in the reader", run: () => onOpen(g.slug, focus.page, node) })}
               open={(node) => openReader(g.slug, focus.page, node, node ? engineRef.current?.boxRect(g.slug, focus.page, node) ?? null : null)}
               hoverBox={(node) => engineRef.current?.setKbd(node ? { kind: "box", slug: g.slug, page: focus.page, node } : null)}
               preview={(h) => engineRef.current?.setPreview(h)} />
@@ -371,6 +433,7 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
       <MapTree ref={treeRef} model={model} focus={focus} go={go} engine={engineRef} openReader={(s, p) => openReader(s, p)}
         setTip={(hit) => { const pt = hit && engineRef.current?.screenOf(hit); setTip(hit && pt ? { hit, x: pt[0], y: pt[1] } : null); }} />
     </div>
+    </SourceProvider>
   );
 }
 
@@ -385,6 +448,8 @@ function safeArea(panel: boolean, wide: boolean) {
 /* ---------------- tooltip ---------------- */
 
 function Tip({ tip, model, bundle }: { tip: { hit: Hit; x: number; y: number }; model: Model; bundle: Bundle | null }) {
+  const { pdf } = useSource();
+  const ready = pdf.status === "ready";
   const ref = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<{ left: number; top: number }>({ left: tip.x + 16, top: tip.y + 16 });
   useEffect(() => {
@@ -428,6 +493,9 @@ function Tip({ tip, model, bundle }: { tip: { hit: Hit; x: number; y: number }; 
       <p className="tip-eyebrow"><code>{p.id}</code>{p.start ? " · Start page" : ""}{p.section !== null ? ` · ${g.sections[p.section]}` : ""}</p>
       <p className="tip-title">{p.title}</p>
       <p className="tip-meta">{p.boxes} boxes · {p.decisions} with an encoded condition · reached from {inn}, leads to {out} pages</p>
+      {ready && bundle?.guideline?.slug === h.slug && bundle.pages[h.page]?.pdf !== undefined && (
+        <div className="tip-page"><PageImage t={{ page: bundle.pages[h.page].pdf!, label: h.page }} width={560} /><span>Original PDF page {bundle.pages[h.page].pdf! + 1}</span></div>
+      )}
     </>);
   } else if (h.kind === "box") {
     const n = bundle?.pages[h.page]?.nodes.find((x) => `${h.page}:${x.id}` === h.node);
@@ -435,7 +503,9 @@ function Tip({ tip, model, bundle }: { tip: { hit: Hit; x: number; y: number }; 
     const text = stripMarks(n.text);
     body = (<>
       <p className="tip-eyebrow"><code>{h.page}</code> · {n.pred ? "Condition" : n.role === "leaf" ? "Next step" : "Box"}</p>
-      <p className="tip-box">{text.length > 320 ? text.slice(0, 320) + "…" : text}</p>
+      {ready && n.bbox && bundle?.pages[h.page]?.pdf !== undefined
+        ? <div className="tip-page"><PageCrop t={{ page: bundle.pages[h.page].pdf!, bbox: n.bbox, label: h.page }} width={276} /><span>Original PDF · page {bundle.pages[h.page].pdf! + 1}</span></div>
+        : <p className="tip-box">{text.length > 320 ? text.slice(0, 320) + "…" : text}</p>}
     </>);
   } else if (h.kind === "jump") {
     const g = model.bySlug.get(h.slug)!;
@@ -446,7 +516,7 @@ function Tip({ tip, model, bundle }: { tip: { hit: Hit; x: number; y: number }; 
     const from = g.cites.find((c) => c.slug === h.to)?.pages.map((i) => g.pages[i]?.id).filter(Boolean) ?? [];
     body = (<><p className="tip-eyebrow" style={{ color: t.site.color }}>Cited guideline</p><p className="tip-title">{t.title}</p><p className="tip-meta">Cited on {from.join(", ")}</p></>);
   }
-  const hint = h.kind === "box" ? "Click to read it in the guideline" : h.kind === "page" ? "Click to open the page" : h.kind === "guideline" ? "Click to open its map" : h.kind === "site" ? "Click to zoom to this site" : "Click to go there";
+  const hint = h.kind === "box" ? (ready ? "Click to open the original PDF page" : "Click to open the page (connect the PDF to see the original)") : h.kind === "page" ? "Click to open the page" : h.kind === "guideline" ? "Click to open its map" : h.kind === "site" ? "Click to zoom to this site" : "Click to go there";
   return (
     <div ref={ref} className="tip" style={pos} role="tooltip">
       {body}
@@ -572,8 +642,12 @@ function GuidelinePanel({ g, model, focus, go, bundle, loadError, patients, chos
 interface PPProps {
   g: GNode; page: string; go: (f: Focus) => void; bundle: Bundle | null; loadError: string | null; route: Route | null;
   open: (node?: string) => void; hoverBox: (node: string | null) => void; preview: (h: Hit) => void;
+  pdfReady: boolean; showOriginal: boolean; setShowOriginal: (v: boolean) => void;
+  readBox: (node: string) => void; source: (node?: string) => SrcTarget | null;
 }
-function PagePanel({ g, page, go, bundle, loadError, route, open, hoverBox, preview }: PPProps) {
+function PagePanel({ g, page, go, bundle, loadError, route, open, hoverBox, preview, pdfReady, showOriginal, setShowOriginal, readBox, source }: PPProps) {
+  const src = useSource();
+  const pageSrc = source();
   const p = g.pages.find((x) => x.id === page)!;
   const fp = bundle?.pages[page];
   const from = g.links.filter(([, b]) => b === p.index).map(([a]) => g.pages[a]);
@@ -591,7 +665,16 @@ function PagePanel({ g, page, go, bundle, loadError, route, open, hoverBox, prev
       <p className="eyebrow"><button type="button" className="linkish" onClick={() => go({ level: 1, slug: g.slug })} style={{ color: g.site.color }}>{g.short}</button>{p.section !== null ? ` · ${g.sections[p.section]}` : ""}</p>
       <h2 className="panel-title"><code className="ptid">{p.id}</code> {p.title}</h2>
       <p className="panel-meta">{p.boxes} boxes · {p.decisions} with an encoded condition{p.start ? " · a start page" : ""}</p>
-      <button type="button" className="btn primary wide" onClick={() => open()}>Read this page <ArrowRight size={15} aria-hidden /></button>
+      <div className="pp-actions">
+        <button type="button" className="btn primary" onClick={() => open()}>Read this page <ArrowRight size={15} aria-hidden /></button>
+        <button type="button" className="btn" disabled={!pageSrc} onClick={() => pageSrc && src.open(pageSrc)} data-testid="open-pdf-page"><FileText size={15} aria-hidden /> Original PDF page</button>
+      </div>
+      {pdfReady ? (
+        <div className="seg" role="group" aria-label="The card shows">
+          <button type="button" className={showOriginal ? "on" : ""} aria-pressed={showOriginal} onClick={() => setShowOriginal(true)}>Original page</button>
+          <button type="button" className={!showOriginal ? "on" : ""} aria-pressed={!showOriginal} onClick={() => setShowOriginal(false)}>Extracted boxes</button>
+        </div>
+      ) : bundle && <p className="note">The card shows the boxes as extracted. <button type="button" className="linkish" onClick={src.pick}>Connect this guideline's PDF</button> or <button type="button" className="linkish" onClick={src.pickFolder}>a folder of NCCN PDFs</button> to see the original page here.</p>}
       {route && route.pages.includes(page) && <p className="note route-note">The selected patient's route passes through this page (highlighted).</p>}
       {(from.length > 0 || to.length > 0) && (
         <section className="psec two">
@@ -604,17 +687,32 @@ function PagePanel({ g, page, go, bundle, loadError, route, open, hoverBox, prev
         {loadError ? <p className="note">Could not read this guideline: {loadError}</p> : !bundle ? <p className="note shimmer">Reading the page…</p> : !boxes.length ? <p className="note no-boxes">No boxes were extracted from this page. Read it in the guideline, or check the source PDF.</p> : (
           <ol className="box-list">
             {boxes.map((n) => { const full = `${page}:${n.id}`; return (
-              <li key={n.id} className={route?.nodes.has(full) ? "on-route" : ""}>
-                <button type="button" onClick={() => open(full)} onMouseEnter={() => hoverBox(full)} onMouseLeave={() => hoverBox(null)} onFocus={() => hoverBox(full)} onBlur={() => hoverBox(null)}>
-                  {n.pred && <span className="bl-cond" title="Has an encoded condition" />}
-                  <span>{stripMarks(n.text).slice(0, 140)}</span>
-                </button>
-              </li>
+              <BoxRow key={n.id} text={stripMarks(n.text)} cond={!!n.pred} onRoute={!!route?.nodes.has(full)} t={source(full)}
+                hover={(on) => hoverBox(on ? full : null)} read={() => readBox(full)} />
             ); })}
           </ol>
         )}
       </section>
     </div>
+  );
+}
+
+/** A box in the page panel: hover previews the original PDF page around it, click opens that page,
+ * the arrow opens the box in the reader. */
+function BoxRow({ text, cond, onRoute, t, hover, read }: { text: string; cond: boolean; onRoute: boolean; t: SrcTarget | null; hover: (on: boolean) => void; read: () => void }) {
+  const src = useSource();
+  return (
+    <li className={onRoute ? "on-route" : ""}>
+      <button type="button" className="bl-main"
+        onClick={() => { src.unpeek(); if (t) src.open(t); else read(); }}
+        onMouseEnter={(e) => { hover(true); if (t && matchMedia("(hover: hover)").matches) src.peek(t, e.currentTarget); }}
+        onMouseLeave={() => { hover(false); src.unpeek(); }}
+        onFocus={(e) => { hover(true); if (t) src.peek(t, e.currentTarget); }} onBlur={() => { hover(false); src.unpeek(); }}>
+        {cond && <span className="bl-cond" title="Has an encoded condition" />}
+        <span>{text.slice(0, 140)}</span>
+      </button>
+      <button type="button" className="bl-read" aria-label="Open this box in the reader" title="Open in the reader" onClick={read}><ArrowRight size={13} /></button>
+    </li>
   );
 }
 

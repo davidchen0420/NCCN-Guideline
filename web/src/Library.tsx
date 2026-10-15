@@ -11,6 +11,7 @@ import { Provider, type LibraryNav } from "./store";
 import { SourceProvider } from "./source";
 import { App } from "./App";
 import { Atlas } from "./atlas/Atlas";
+import { pdfCandidates, registerGuidelines } from "./lib/pdf";
 import type { AtlasRaw } from "./atlas/model";
 
 /** The guideline the hash points into; "#atlas…" and "#list" are the home views. */
@@ -28,7 +29,11 @@ export async function findLibrary(): Promise<Library | null> {
       const r = await fetch(`${base}index.json`);
       if (!r.ok) continue;
       const j = await r.json();
-      if (Array.isArray(j?.guidelines)) return { base, guidelines: j.guidelines as LibraryEntry[] };
+      if (Array.isArray(j?.guidelines)) {
+        const guidelines = j.guidelines as LibraryEntry[];
+        registerGuidelines(guidelines);
+        return { base, guidelines, pdfs: window.__LIBRARY__?.pdfs };
+      }
     } catch { /* file:// or not there */ }
   }
   return null;
@@ -53,6 +58,7 @@ async function loadGuideline(lib: Library, e: LibraryEntry): Promise<Bundle> {
   const j = await r.json();
   if (!isGuidelineFile(j)) throw new Error(`${e.path} is not a guideline.json file`);
   const b = adaptGuideline(j);
+  b.pdf_candidates = pdfCandidates(lib.base, e.slug, lib.pdfs);   // a served copy of the source PDF, if any
   try {   // hand-encoded example patients, when the guideline has them
     const x = await fetch(`${lib.base}${e.slug}/vignettes/examples.json`);
     if (x.ok) b.examples = (await x.json()) as Example[];

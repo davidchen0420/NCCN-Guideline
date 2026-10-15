@@ -6,23 +6,34 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import type { PDFDocumentProxy } from "pdfjs-dist";
-import { ChevronLeft, ChevronRight, FileText, Minus, Plus, X, PictureInPicture2 } from "lucide-react";
-import { useApp } from "./store";
-import { forgetPdf, loadSavedPdf, openPdf, renderPage, savePdf, type Rendered } from "./lib/pdf";
+import { ArrowRight, ChevronLeft, ChevronRight, FileText, FolderOpen, Minus, Plus, X, PictureInPicture2 } from "lucide-react";
+import { useAppMaybe } from "./store";
+import type { Bundle } from "./types";
+import { connectFolder, forgetPdf, knownGuidelines, loadSavedPdf, openPdf, PDFS_CHANGED, renderPage, savedPdfSlugs, savePdf, sha256, type FolderResult, type Rendered } from "./lib/pdf";
 
 export interface SrcTarget {
   page: number;                       // 0-based PDF page index
   bbox?: number[];                    // PDF points, top-left origin
   label: string;                      // e.g. "PROS-3" or "Footnote o · PROS-7A"
   excerpt?: string;                   // text to show when the PDF is not connected
+  /** an extra action offered with the page (e.g. open the box in the reader) */
+  action?: { label: string; run: () => void };
 }
 type PdfState = { status: "none" | "loading" | "ready" | "error"; doc?: PDFDocumentProxy; name?: string; note?: string; verified?: boolean };
 
+type FolderState = { status: "idle" | "working" | "done"; done?: number; total?: number; result?: FolderResult };
+
 interface SourceCtx {
+  bundle: Bundle | null;
   pdf: PdfState;
+  /** guidelines whose PDF this browser keeps */
+  saved: Set<string>;
+  folder: FolderState;
   connect: (file: File) => void;
+  connectFiles: (files: File[]) => void;
   disconnect: () => void;
   pick: () => void;
+  pickFolder: () => void;
   peek: (t: SrcTarget, el: HTMLElement) => void;
   unpeek: () => void;
   open: (t: SrcTarget) => void;
@@ -59,21 +70,28 @@ export function SrcChip({ t, text }: { t: SrcTarget; text?: string }) {
   );
 }
 
-export function SourceProvider({ children }: { children: ReactNode }) {
-  const { bundle } = useApp();
-  const key = `pdf:${bundle.guideline?.slug ?? bundle.title}`;
+/** Source pages for one guideline: the reader's (from its store) or the one the atlas has open
+ * (`bundle` prop; null when none is). */
+export function SourceProvider({ children, bundle: given }: { children: ReactNode; bundle?: Bundle | null }) {
+  const app = useAppMaybe();
+  const bundle = given !== undefined ? given : app?.bundle ?? null;
+  const key = bundle ? `pdf:${bundle.guideline?.slug ?? bundle.title}` : null;
   const [pdf, setPdf] = useState<PdfState>({ status: "none" });
+  const [saved, setSaved] = useState<Set<string>>(new Set());
+  const [folder, setFolder] = useState<FolderState>({ status: "idle" });
+  const [tick, setTick] = useState(0);
+  const folderRef = useRef<HTMLInputElement>(null);
   const [peekT, setPeek] = useState<{ t: SrcTarget; rect: DOMRect } | null>(null);
   const [view, setView] = useState<SrcTarget | null>(null);
   const timer = useRef<number>(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const check = useCallback((doc: PDFDocumentProxy) => {
-    const want = bundle.pdf_pages;
+    const want = bundle?.pdf_pages;
     return want && doc.numPages !== want
       ? `This PDF has ${doc.numPages} pages but the encoded guideline has ${want}. Previews may show the wrong page.`
       : undefined;
-  }, [bundle.pdf_pages]);
+  }, [bundle?.pdf_pages]);
 
   const use = useCallback(async (data: ArrayBuffer, name: string, save: boolean) => {
     setPdf({ status: "loading", name });
@@ -81,41 +99,73 @@ export function SourceProvider({ children }: { children: ReactNode }) {
       const copy = data.slice(0);   // pdf.js transfers the buffer to its worker
       // The data records the SHA-256 of the PDF it was built from: a different file (another
       // version or a re-saved copy) may have boxes in other places.
-      const want = bundle.guideline?.pdf_sha256;
+      const want = bundle?.guideline?.pdf_sha256;
       let mismatch: string | undefined;
-      if (want && crypto?.subtle) {
-        const got = [...new Uint8Array(await crypto.subtle.digest("SHA-256", copy))].map((b) => b.toString(16).padStart(2, "0")).join("");
-        if (got !== want) mismatch = `This PDF is not the file the guideline was encoded from${bundle.guideline?.version ? ` (version ${bundle.guideline.version})` : ""}. Page previews and box outlines may point at the wrong place.`;
-      }
+      const got = want ? await sha256(copy) : null;
+      if (want && got && got !== want) mismatch = `This PDF is not the file the guideline was encoded from${bundle?.guideline?.version ? ` (version ${bundle.guideline.version})` : ""}. Page previews and box outlines may point at the wrong place.`;
       const doc = await openPdf(data);
-      setPdf({ status: "ready", doc, name, note: mismatch ?? check(doc), verified: !!want && !mismatch });
-      if (save) void savePdf(key, name, copy);
+      setPdf({ status: "ready", doc, name, note: mismatch ?? check(doc), verified: !!want && !!got && !mismatch });
+      if (save && key) { await savePdf(key, name, copy); window.dispatchEvent(new CustomEvent(PDFS_CHANGED)); }
     } catch (e) {
       setPdf({ status: "error", name, note: `Could not open ${name}: ${String((e as Error).message ?? e)}` });
     }
-  }, [check, key, bundle.guideline]);
+  }, [check, key, bundle?.guideline, bundle?.pdf_pages]);
 
-  // On load: a PDF remembered in this browser, else one next to the data (http only).
+  // Which guidelines have a PDF kept in this browser; refreshed when PDFs are connected anywhere.
+  useEffect(() => {
+    const f = () => { void savedPdfSlugs().then(setSaved); setTick((t) => t + 1); };
+    f();
+    window.addEventListener(PDFS_CHANGED, f);
+    return () => window.removeEventListener(PDFS_CHANGED, f);
+  }, []);
+
+  // A PDF remembered in this browser, else a served copy next to the data (http only).
+  const candidates = bundle?.pdf_candidates;
+  const loadedFor = useRef<string | null>(null);
   useEffect(() => {
     let off = false;
+    if (!key) { setPdf({ status: "none" }); loadedFor.current = null; return; }
     (async () => {
-      const saved = await loadSavedPdf(key);
+      const kept = await loadSavedPdf(key);
       if (off) return;
-      if (saved) return use(saved.data, saved.name, false);
+      if (kept) { if (loadedFor.current !== `${key}|${kept.name}`) { loadedFor.current = `${key}|${kept.name}`; await use(kept.data, kept.name, false); } return; }
+      if (loadedFor.current?.startsWith(`${key}|`)) return;
+      setPdf({ status: "none" });
       if (!location.protocol.startsWith("http")) return;
-      for (const url of bundle.pdf_candidates ?? []) {
+      for (const url of candidates ?? []) {
         try {
           const r = await fetch(url);
-          if (r.ok && (r.headers.get("content-type") ?? "").includes("pdf")) { if (!off) await use(await r.arrayBuffer(), url.split("/").pop()!, false); return; }
+          if (r.ok && (r.headers.get("content-type") ?? "").includes("pdf")) {
+            if (off) return;
+            loadedFor.current = `${key}|${url}`;
+            await use(await r.arrayBuffer(), url.split("/").pop()!, false);
+            return;
+          }
         } catch { /* try the next one */ }
       }
     })();
     return () => { off = true; };
-  }, [bundle.pdf_candidates, key, use]);
+  }, [candidates, key, use, tick]);
 
-  const connect = useCallback((file: File) => { void file.arrayBuffer().then((b) => use(b, file.name, true)); }, [use]);
-  const disconnect = useCallback(() => { void forgetPdf(key); setPdf({ status: "none" }); }, [key]);
+  const connect = useCallback((file: File) => { loadedFor.current = null; void file.arrayBuffer().then((b) => use(b, file.name, true)); }, [use]);
+  const connectFiles = useCallback((files: File[]) => {
+    const pdfs = files.filter((f) => f.name.toLowerCase().endsWith(".pdf"));
+    if (!pdfs.length) return;
+    // one PDF with a guideline open: that guideline's; otherwise match each file to its guideline
+    if (pdfs.length === 1 && key && files.length === 1) { connect(pdfs[0]); return; }
+    setFolder({ status: "working", done: 0, total: pdfs.length });
+    loadedFor.current = null;
+    void connectFolder(pdfs, knownGuidelines(), (done, total) => setFolder({ status: "working", done, total }))
+      .then((result) => setFolder({ status: "done", result }));
+  }, [connect, key]);
+  const disconnect = useCallback(() => {
+    if (!key) return;
+    loadedFor.current = null;
+    void forgetPdf(key).then(() => window.dispatchEvent(new CustomEvent(PDFS_CHANGED)));
+    setPdf({ status: "none" });
+  }, [key]);
   const pick = useCallback(() => inputRef.current?.click(), []);
+  const pickFolder = useCallback(() => folderRef.current?.click(), []);
 
   // Drop a PDF anywhere on the page.
   const [drag, setDrag] = useState(false);
@@ -126,12 +176,11 @@ export function SourceProvider({ children }: { children: ReactNode }) {
     const drop = (e: DragEvent) => {
       if (!isFile(e)) return;
       e.preventDefault(); setDrag(false);
-      const f = [...(e.dataTransfer?.files ?? [])].find((x) => x.type === "application/pdf" || x.name.toLowerCase().endsWith(".pdf"));
-      if (f) connect(f);
+      connectFiles([...(e.dataTransfer?.files ?? [])]);
     };
     window.addEventListener("dragover", over); window.addEventListener("dragleave", leave); window.addEventListener("drop", drop);
     return () => { window.removeEventListener("dragover", over); window.removeEventListener("dragleave", leave); window.removeEventListener("drop", drop); };
-  }, [connect]);
+  }, [connectFiles]);
 
   const peek = useCallback((t: SrcTarget, el: HTMLElement) => {
     window.clearTimeout(timer.current);
@@ -151,20 +200,23 @@ export function SourceProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("keydown", esc);
   }, []);
 
-  const value = useMemo(() => ({ pdf, connect, disconnect, pick, peek, unpeek, open }), [pdf, connect, disconnect, pick, peek, unpeek, open]);
+  const value = useMemo(() => ({ bundle, pdf, saved, folder, connect, connectFiles, disconnect, pick, pickFolder, peek, unpeek, open }),
+    [bundle, pdf, saved, folder, connect, connectFiles, disconnect, pick, pickFolder, peek, unpeek, open]);
   return (
     <Ctx.Provider value={value}>
       {children}
       <input ref={inputRef} type="file" accept="application/pdf,.pdf" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) connect(f); e.target.value = ""; }} />
+      <input ref={folderRef} type="file" hidden multiple {...{ webkitdirectory: "", directory: "" }} data-testid="pdf-folder-input"
+        onChange={(e) => { connectFiles([...(e.target.files ?? [])]); e.target.value = ""; }} />
       {peekT && createPortal(<Peek t={peekT.t} rect={peekT.rect} onEnter={holdPeek} onLeave={unpeek} onOpen={() => open(peekT.t)} />, document.body)}
-      {view && <Viewer t={view} onClose={() => setView(null)} onNav={(page) => setView({ page, label: pageLabel(bundle, page) })} />}
-      {drag && createPortal(<div className="drop"><p><FileText size={18} /> Drop the guideline PDF to connect it</p></div>, document.body)}
+      {view && bundle && <Viewer t={view} onClose={() => setView(null)} onNav={(page) => setView({ page, label: pageLabel(bundle, page) })} />}
+      {drag && createPortal(<div className="drop"><p><FileText size={18} /> {key ? "Drop the guideline PDF (or a folder of NCCN PDFs) to connect it" : "Drop NCCN guideline PDFs to connect them"}</p></div>, document.body)}
     </Ctx.Provider>
   );
 }
 
 /** The guideline's own page code for a PDF page, when known. */
-export function pageLabel(bundle: ReturnType<typeof useApp>["bundle"], index: number): string {
+export function pageLabel(bundle: Bundle, index: number): string {
   for (const [code, p] of Object.entries(bundle.pages)) if (p.pdf === index) return code;
   for (const d of Object.values(bundle.docs)) {
     const i = d.pages.findIndex((p) => p.pdf === index);
@@ -175,7 +227,7 @@ export function pageLabel(bundle: ReturnType<typeof useApp>["bundle"], index: nu
 
 // ---------------------------------------------------------------- page images
 
-function useRendered(page: number, width: number): Rendered | null | "none" {
+export function useRendered(page: number, width: number): Rendered | null | "none" {
   const { pdf } = useSource();
   const [img, setImg] = useState<Rendered | null>(null);
   useEffect(() => {
@@ -190,7 +242,8 @@ function useRendered(page: number, width: number): Rendered | null | "none" {
 
 /** The page from the extracted layout: every box drawn where it sits, the target outlined. */
 function Reconstructed({ page, bbox, big }: { page: number; bbox?: number[]; big?: boolean }) {
-  const { bundle } = useApp();
+  const { bundle } = useSource();
+  if (!bundle) return null;
   const flow = Object.entries(bundle.pages).find(([, p]) => p.pdf === page);
   const W = flow?.[1].size?.[0] ?? bundle.w ?? 792, H = flow?.[1].size?.[1] ?? bundle.h ?? 612;
   if (flow) {
@@ -216,7 +269,7 @@ function Reconstructed({ page, bbox, big }: { page: number; bbox?: number[]; big
   return <div className="recon-text">{text ? text.slice(0, big ? 6000 : 700) : "This page is not in the extracted text."}</div>;
 }
 
-function PageImage({ t, width, big }: { t: SrcTarget; width: number; big?: boolean }) {
+export function PageImage({ t, width, big }: { t: SrcTarget; width: number; big?: boolean }) {
   const r = useRendered(t.page, width);
   if (r === "none") return <Reconstructed page={t.page} bbox={t.bbox} big={big} />;
   if (!r) return <div className="page-loading" style={{ aspectRatio: "792 / 612" }}>Rendering page…</div>;
@@ -248,7 +301,34 @@ function Peek({ t, rect, onEnter, onLeave, onOpen }: { t: SrcTarget; rect: DOMRe
         <span><b>{t.label}</b> · PDF page {t.page + 1}</span>
         <button type="button" className="linkish" onClick={onOpen}>Open page</button>
       </div>
-      {pdf.status !== "ready" && <p className="peek-note">{showText ? "Text as extracted." : "Reconstructed from the extracted layout."} Connect the PDF to see the original page.</p>}
+      {t.action && <div className="peek-cap"><span /><button type="button" className="linkish" onClick={t.action.run}>{t.action.label} <ArrowRight size={12} aria-hidden /></button></div>}
+      {pdf.status !== "ready" && <PeekConnect showText={showText} />}
+    </div>
+  );
+}
+
+function PeekConnect({ showText }: { showText: boolean }) {
+  const { pdf, pick, pickFolder } = useSource();
+  return (
+    <p className="peek-note">
+      {pdf.status === "loading" ? "Opening the PDF…" : <>{showText ? "Text as extracted." : "Reconstructed from the extracted layout."} To see the original page, <button type="button" className="linkish" onClick={pick}>connect this guideline's PDF</button> or <button type="button" className="linkish" onClick={pickFolder}>a folder of NCCN PDFs</button>.</>}
+    </p>
+  );
+}
+
+/** A window of the original page around a box (falls back to nothing when the PDF is not here). */
+export function PageCrop({ t, width = 300 }: { t: SrcTarget; width?: number }) {
+  const r = useRendered(t.page, 1400);
+  if (r === "none") return null;
+  if (!r) return <div className="page-loading crop" style={{ width }}>Rendering page…</div>;
+  const b = t.bbox ?? [0, 0, r.w, r.h];
+  const cw = Math.min(r.w, Math.max(b[2] - b[0] + 90, 320)), ch = Math.min(r.h, Math.max(b[3] - b[1] + 60, cw * 0.5));
+  const x0 = Math.min(Math.max(0, (b[0] + b[2]) / 2 - cw / 2), r.w - cw), y0 = Math.min(Math.max(0, (b[1] + b[3]) / 2 - ch / 2), r.h - ch);
+  const pct = (v: number, d: number) => `${(v / d) * 100}%`;
+  return (
+    <div className="page-crop" style={{ width, aspectRatio: `${cw} / ${ch}` }}>
+      <img src={r.url} alt={`PDF page ${t.page + 1} (${t.label})`} style={{ width: pct(r.w, cw), left: pct(-x0, cw), top: pct(-y0, ch) }} />
+      {t.bbox && <span className="hl" style={{ left: pct(b[0] - 3 - x0, cw), top: pct(b[1] - 3 - y0, ch), width: pct(b[2] - b[0] + 6, cw), height: pct(b[3] - b[1] + 6, ch) }} />}
     </div>
   );
 }
@@ -258,8 +338,7 @@ function Peek({ t, rect, onEnter, onLeave, onOpen }: { t: SrcTarget; rect: DOMRe
 declare global { interface Window { documentPictureInPicture?: { requestWindow: (o: { width: number; height: number }) => Promise<Window> } } }
 
 function Viewer({ t, onClose, onNav }: { t: SrcTarget; onClose: () => void; onNav: (page: number) => void }) {
-  const { pdf, pick } = useSource();
-  const { bundle } = useApp();
+  const { pdf, pick, pickFolder, bundle } = useSource();
   const [zoom, setZoom] = useState(1);
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
   const [pip, setPip] = useState<Window | null>(null);
@@ -300,7 +379,7 @@ function Viewer({ t, onClose, onNav }: { t: SrcTarget; onClose: () => void; onNa
   };
   useEffect(() => () => { pip?.close(); }, [pip]);
 
-  const total = bundle.pdf_pages ?? pdf.doc?.numPages ?? 0;
+  const total = bundle?.pdf_pages ?? pdf.doc?.numPages ?? 0;
   const width = Math.round(Math.max(320, bw) * zoom * (window.devicePixelRatio > 1 ? 2 : 1));
   const content = (
     <>
@@ -312,13 +391,14 @@ function Viewer({ t, onClose, onNav }: { t: SrcTarget; onClose: () => void; onNa
           <button type="button" aria-label="Zoom out" disabled={zoom <= 0.6} onClick={() => setZoom((z) => Math.max(0.6, z - 0.25))}><Minus size={15} /></button>
           <span className="zoom-v" aria-live="polite">{Math.round(zoom * 100)}%</span>
           <button type="button" aria-label="Zoom in" disabled={zoom >= 3} onClick={() => setZoom((z) => Math.min(3, z + 0.25))}><Plus size={15} /></button>
+          {t.action && <button type="button" className="viewer-act" onClick={() => { pip?.close(); onClose(); t.action!.run(); }}>{t.action.label} <ArrowRight size={13} aria-hidden /></button>}
           {window.documentPictureInPicture && !pip && <button type="button" aria-label="Pop out into its own window" title="Pop out into its own window" onClick={() => void popOut()}><PictureInPicture2 size={15} /></button>}
           <button type="button" aria-label="Close page viewer" onClick={() => { pip?.close(); onClose(); }}><X size={16} /></button>
         </span>
       </div>
       <div className="viewer-body" ref={body}>
         {pdf.status !== "ready" && (
-          <p className="viewer-msg">Showing the page as extracted. <button type="button" className="linkish" onClick={pick}>Connect the PDF</button> to see the original.</p>
+          <p className="viewer-msg">{pdf.status === "loading" ? "Opening the PDF…" : <>Showing the page as extracted. <button type="button" className="linkish" onClick={pick}>Connect this guideline's PDF</button> or <button type="button" className="linkish" onClick={pickFolder}>a folder of NCCN PDFs</button> to see the original.</>}</p>
         )}
         <div className="viewer-page" style={{ width: `${zoom * 100}%` }}><PageImage t={t} width={width} big /></div>
       </div>
@@ -333,19 +413,48 @@ function Viewer({ t, onClose, onNav }: { t: SrcTarget; onClose: () => void; onNa
     </section>, document.body);
 }
 
-/** Title-bar control: shows whether the source PDF is connected and connects it. */
-export function PdfButton() {
-  const { pdf, pick, disconnect } = useSource();
+/** Title-bar control: whether the source PDF is here, and ways to connect it (this guideline's
+ * file, or a whole folder matched to every guideline by checksum). */
+export function PdfButton({ total }: { total?: number }) {
+  const { bundle, pdf, saved, folder, pick, pickFolder, disconnect } = useSource();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const f = (e: MouseEvent) => { if (!ref.current?.contains(e.target as Node)) setOpen(false); };
+    const k = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("mousedown", f); document.addEventListener("keydown", k);
+    return () => { document.removeEventListener("mousedown", f); document.removeEventListener("keydown", k); };
+  }, [open]);
+  useEffect(() => { if (folder.status !== "idle") setOpen(true); }, [folder.status]);
   const ready = pdf.status === "ready";
+  const n = total ?? knownGuidelines().length;
+  const label = bundle
+    ? (ready ? (pdf.verified ? "Source PDF ✓" : "Source PDF") : pdf.status === "loading" ? "Opening PDF…" : "Connect PDF")
+    : `Source PDFs${saved.size ? ` · ${saved.size}${n ? ` of ${n}` : ""}` : ""}`;
+  const st = bundle ? pdf.status : saved.size ? "ready" : "none";
   return (
-    <span className="pdf-ctl">
-      <button type="button" className={`pdf-btn ${pdf.status}`} onClick={pick}
-        title={ready ? `${pdf.name}${pdf.verified ? " — matches the encoded guideline" : ""} — click to choose a different file` : "Connect the guideline PDF to preview original pages. It stays in this browser."}>
-        <span className="dot" aria-hidden />{ready ? (pdf.verified ? "Source PDF ✓" : "Source PDF") : pdf.status === "loading" ? "Opening PDF…" : "Connect PDF"}
+    <span className="pdf-ctl" ref={ref}>
+      <button type="button" className={`pdf-btn ${st}`} aria-expanded={open} aria-haspopup="dialog" data-testid="pdf-btn" onClick={() => setOpen((o) => !o)}
+        title={ready ? `${pdf.name}${pdf.verified ? " — matches the encoded guideline" : ""}` : "Connect the original NCCN PDFs to preview their pages. They stay in this browser."}>
+        <span className="dot" aria-hidden />{label}
       </button>
-      {ready && <button type="button" className="ib sm" aria-label="Forget the connected PDF" title="Forget the connected PDF" onClick={disconnect}><X size={14} /></button>}
-      {pdf.note && <span className="pdf-note" role="status">{pdf.note}</span>}
+      {open && (
+        <div className="pdf-menu" role="dialog" aria-label="Source PDFs">
+          {bundle && (
+            <p className="pm-status">{ready ? <><b>{pdf.name}</b>{pdf.verified ? " — the file this guideline was encoded from." : "."}</> : pdf.status === "loading" ? "Opening the PDF…" : <>The original PDF of <b>{bundle.guideline?.title ?? bundle.title}</b> is not connected: previews show the page rebuilt from the extracted boxes.</>}</p>
+          )}
+          {pdf.note && bundle && <p className="pm-note" role="status">{pdf.note}</p>}
+          {bundle && <button type="button" className="pm-btn" onClick={() => { setOpen(false); pick(); }}><FileText size={15} aria-hidden /> {ready ? "Choose a different PDF…" : "Choose this guideline's PDF…"}</button>}
+          <button type="button" className="pm-btn" onClick={pickFolder} disabled={folder.status === "working"}><FolderOpen size={15} aria-hidden /> Connect a folder of NCCN PDFs…</button>
+          {folder.status === "working" && <p className="pm-note" role="status">Matching {folder.done} of {folder.total} PDFs…<span className="pm-bar"><i style={{ width: `${((folder.done ?? 0) / Math.max(1, folder.total ?? 1)) * 100}%` }} /></span></p>}
+          {folder.status === "done" && folder.result && (
+            <p className="pm-note" role="status">Connected {folder.result.matched.length} guideline PDF{folder.result.matched.length === 1 ? "" : "s"}{folder.result.matched.some((m) => m.by === "name") ? ` (${folder.result.matched.filter((m) => m.by === "name").length} by file name, not checksum)` : ""}.{folder.result.unmatched.length ? ` ${folder.result.unmatched.length} file${folder.result.unmatched.length === 1 ? "" : "s"} matched no guideline: ${folder.result.unmatched.slice(0, 3).join(", ")}${folder.result.unmatched.length > 3 ? "…" : ""}.` : ""}</p>
+          )}
+          <p className="pm-fine">{saved.size ? `${saved.size}${n ? ` of ${n}` : ""} guideline PDFs are kept in this browser. ` : ""}Files are matched by the checksum recorded when each guideline was encoded, and never leave this browser.</p>
+          {bundle && ready && <button type="button" className="pm-btn subtle" onClick={() => { disconnect(); setOpen(false); }}><X size={14} aria-hidden /> Forget this guideline's PDF</button>}
+        </div>
+      )}
     </span>
   );
 }
-

@@ -8,7 +8,7 @@ Outputs that embed guideline text are licensed-derived content.
 
   python -m nccn_nav.dashboard data/<slug> [out_dir]  ->  <out_dir or private/viz>/<slug>-oncocarta.html
                                                          (offline, one guideline embedded)
-  python -m nccn_nav.dashboard --library [data_dir] [out.html]  ->  built/oncocarta.html
+  python -m nccn_nav.dashboard --library [data_dir] [out.html] [--pdfs DIR]  ->  built/oncocarta.html
                                                          (all guidelines; serve the repo over http)
   python -m nccn_nav.dashboard --sample                ->  ./sample_out/dashboard.html
 """
@@ -351,7 +351,7 @@ def build_atlas(data_dir="data", sites_path=HERE / "atlas_sites.json"):
         st = q.get("predicate_status") or {}
         guidelines.append({
             "slug": e["slug"], "title": e["title"], "category": e["category"],
-            "version": e.get("version"), "date": e.get("version_date"),
+            "version": e.get("version"), "date": e.get("version_date"), "sha": e.get("pdf_sha256"),
             "site": site_of.get(e["slug"], "other"),
             "boxes": q.get("boxes", 0),
             "encoded": sum(st.get(k, 0) for k in ("model_reviewed", "inherited_from_link", "section_only")),
@@ -364,15 +364,41 @@ def build_atlas(data_dir="data", sites_path=HERE / "atlas_sites.json"):
             "guidelines": guidelines}
 
 
-def build_library(data_dir="data", out_path="built/oncocarta.html"):
+def find_pdfs(data_dir="data", roots=None):
+    """Local copies of the source PDFs: {slug: path}. A PDF belongs to the guideline whose
+    recorded pdf_sha256 it matches; failing that, to the guideline its file name is (slug.pdf).
+    Searched: data/<slug>/, private/, pdf/, pdfs/ and any extra `roots`."""
+    import hashlib
+    data_dir = Path(data_dir)
+    index = json.loads((data_dir / "index.json").read_text())["guidelines"]
+    by_sha = {g["pdf_sha256"]: g["slug"] for g in index if g.get("pdf_sha256")}
+    slugs = {g["slug"] for g in index}
+    dirs = [data_dir, data_dir.parent / "private", data_dir.parent / "pdf", data_dir.parent / "pdfs", *map(Path, roots or [])]
+    found, by_name = {}, {}
+    for d in dirs:
+        if not d.is_dir():
+            continue
+        for f in sorted(d.rglob("*.pdf")):
+            sha = hashlib.sha256(f.read_bytes()).hexdigest()
+            if sha in by_sha:
+                found.setdefault(by_sha[sha], f)
+            elif f.stem in slugs:
+                by_name.setdefault(f.stem, f)
+    return {**by_name, **found}
+
+
+def build_library(data_dir="data", out_path="built/oncocarta.html", pdf_roots=None):
     """The library viewer: no guideline embedded; it reads <data_dir>/index.json and each
     <slug>/guideline.json over http, relative to where the page is served. The atlas overview
-    (build_atlas) is embedded for the home page."""
+    (build_atlas) is embedded for the home page, and the paths of any local source PDFs
+    (find_pdfs; never the PDFs themselves) so previews show the original pages."""
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)
-    base = Path(os.path.relpath(Path(data_dir).resolve(), out.parent.resolve())).as_posix().rstrip("/") + "/"
+    rel = lambda p: Path(os.path.relpath(Path(p).resolve(), out.parent.resolve())).as_posix()
+    base = rel(data_dir).rstrip("/") + "/"
+    pdfs = {slug: rel(p) for slug, p in sorted(find_pdfs(data_dir, pdf_roots).items())}
     atlas = json.dumps(build_atlas(data_dir), ensure_ascii=False, separators=(",", ":"))
-    out.write_text(_fill(_template(), library=json.dumps({"base": base}), atlas=atlas))
+    out.write_text(_fill(_template(), library=json.dumps({"base": base, "pdfs": pdfs}), atlas=atlas))
     return out
 
 
@@ -383,7 +409,15 @@ if __name__ == "__main__":
         path, b = build(HERE / "sample", out_dir, "Sample guideline (synthetic demo data)")
         print(path, len(b["pages"]), "flow pages", sum(len(p["nodes"]) for p in b["pages"].values()), "boxes")
     elif args and args[0] == "--library":
-        print(build_library(*(args[1:3] or [])))
+        rest = args[1:]
+        roots = []
+        while "--pdfs" in rest:
+            i = rest.index("--pdfs")
+            roots.append(rest[i + 1])
+            rest = rest[:i] + rest[i + 2:]
+        out = build_library(*(rest[:2] or []), pdf_roots=roots)
+        lib = json.loads(re.search(r"window\.__LIBRARY__=(.*?);window\.__ATLAS__=", out.read_text()).group(1))
+        print(out, f"({len(lib['pdfs'])} source PDFs found)")
     else:
         path, b = build(args[0] if args else "data/prostate", args[1] if len(args) > 1 else None)
         print(path)
