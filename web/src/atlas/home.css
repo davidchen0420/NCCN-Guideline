@@ -29,14 +29,14 @@
 }
 
 /* ---------- top bar targets ---------- */
-.crumb button, .crumb > span[aria-current] { min-height: 30px; display: inline-flex; align-items: center; }
+.crumb button, .crumb > span[aria-current] { min-height: 32px; display: inline-flex; align-items: center; }
 .crumbs { font-size: 14px; }
 .view-switch button { min-height: 32px; font-size: 13px; padding: 4px 12px; }
 .panel-x { width: 32px; height: 32px; top: 8px; right: 8px; }
 .zoom button { height: 34px; width: 36px; }
 
 /* ---------- results, tooltip ---------- */
-.res-kind { font-size: 11.5px; }
+.res-kind { font-size: 12px; }
 .res-label { font-size: 14.5px; }
 .res-sub { font-size: 12.5px; }
 .results li { min-height: 40px; align-content: center; }
@@ -110,3 +110,10 @@
 .edition-note { margin: 0; padding: 8px 11px; font-size: 12.5px; line-height: 1.4; color: var(--warn); background: color-mix(in srgb, var(--warn) 8%, var(--surface)); border-top: 1px solid color-mix(in srgb, var(--warn) 30%, var(--line)); }
 .viewer-body .edition-note { border: 1px solid color-mix(in srgb, var(--warn) 30%, var(--line)); border-radius: 8px; margin-bottom: 10px; }
 .viewer-msg { font-size: 13px; }
+
+/* text in a site's colour: the colour is mixed toward the ink, so it reads as text on light and dark paper alike */
+.site-ink, .eyebrow .linkish.site-ink { color: color-mix(in srgb, var(--c) 62%, var(--ink)); }
+
+/* the small page chip on cards and steps */
+.src-chip { font-size: 12.5px; min-height: 28px; }
+.peek-cap .linkish { white-space: nowrap; flex: none; }

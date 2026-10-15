@@ -335,11 +335,23 @@ function Peek({ t, rect, onEnter, onLeave, onOpen }: { t: SrcTarget; rect: DOMRe
   const estH = Math.round(W * 612 / 792) + 130;
   const fitsLeft = rect.left - gap - W >= 8, fitsRight = rect.right + gap + W <= innerWidth - 8;
   const left = fitsLeft ? rect.left - gap - W : fitsRight ? rect.right + gap : Math.max(8, Math.min(innerWidth - W - 8, rect.left));
-  const top = Math.min(Math.max(8, rect.top - 20), Math.max(8, innerHeight - estH - 8));
+  const top0 = Math.min(Math.max(8, rect.top - 20), Math.max(8, innerHeight - estH - 8));
+  // the card's real height is known once the page image and notes have laid out: keep all of it on screen
+  const ref = useRef<HTMLDivElement>(null);
+  const [top, setTop] = useState(top0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const fit = () => setTop(Math.max(8, Math.min(top0, innerHeight - 8 - el.offsetHeight)));
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [top0]);
   // Without the PDF, a box is best shown in its reconstructed page; footnotes and prose as text.
   const showText = pdf.status !== "ready" && !!t.excerpt && !t.bbox;
   return (
-    <div className="peek" role="dialog" aria-label={`Source preview: ${t.label}`} style={{ left, top, width: W }} onMouseEnter={onEnter} onMouseLeave={onLeave}>
+    <div ref={ref} className="peek" role="dialog" aria-label={`Source preview: ${t.label}`} style={{ left, top, width: W }} onMouseEnter={onEnter} onMouseLeave={onLeave}>
       <button type="button" className="peek-page" onClick={onOpen} aria-label="Open NCCN page">
         {showText ? <div className="recon-text">{t.excerpt}</div> : <PageImage t={t} width={W * 2} />}
       </button>

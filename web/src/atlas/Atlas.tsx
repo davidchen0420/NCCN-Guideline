@@ -517,7 +517,7 @@ function Tip({ tip, model, bundle }: { tip: { hit: Hit; x: number; y: number }; 
   if (h.kind === "guideline") {
     const g = model.bySlug.get(h.slug)!;
     body = (<>
-      <p className="tip-eyebrow" style={{ color: g.site.color }}>{g.site.label} · {CATEGORY_LABEL[g.category] ?? g.category}</p>
+      <p className="tip-eyebrow site-ink" style={{ "--c": g.site.color } as React.CSSProperties}>{g.site.label} · {CATEGORY_LABEL[g.category] ?? g.category}</p>
       <p className="tip-title">{g.title}</p>
       <p className="tip-meta">{[g.version ? `Version ${g.version}` : "", g.date, `${g.pages.length} pages`].filter(Boolean).join(" · ")}</p>
       {advanced && <dl className="tip-stats">
@@ -530,7 +530,7 @@ function Tip({ tip, model, bundle }: { tip: { hit: Hit; x: number; y: number }; 
   } else if (h.kind === "site") {
     const s = model.sites.find((x) => x.id === h.site)!;
     body = (<>
-      <p className="tip-eyebrow" style={{ color: s.color }}>Site</p>
+      <p className="tip-eyebrow site-ink" style={{ "--c": s.color } as React.CSSProperties}>Site</p>
       <p className="tip-title">{s.label}</p>
       <p className="tip-meta">{s.members.length} guidelines: {s.members.slice(0, 4).map((x) => x.short).join(", ")}{s.members.length > 4 ? "…" : ""}</p>
     </>);
@@ -564,7 +564,7 @@ function Tip({ tip, model, bundle }: { tip: { hit: Hit; x: number; y: number }; 
   } else if (h.kind === "cite") {
     const g = model.bySlug.get(h.slug)!, t = model.bySlug.get(h.to)!;
     const from = g.cites.find((c) => c.slug === h.to)?.pages.map((i) => g.pages[i]?.id).filter(Boolean) ?? [];
-    body = (<><p className="tip-eyebrow" style={{ color: t.site.color }}>Related guideline</p><p className="tip-title">{t.title}</p><p className="tip-meta">Referred to on {from.join(", ")}</p></>);
+    body = (<><p className="tip-eyebrow site-ink" style={{ "--c": t.site.color } as React.CSSProperties}>Related guideline</p><p className="tip-title">{t.title}</p><p className="tip-meta">Referred to on {from.join(", ")}</p></>);
   }
   const hint = h.kind === "box" ? (ready ? "Click to open the NCCN page in its own window" : "Click to see this step on the page") : h.kind === "page" ? "Click to open this page" : h.kind === "guideline" ? "Click to open this guideline" : h.kind === "site" ? "Click to see its guidelines" : "Click to go there";
   return (
@@ -580,7 +580,7 @@ function Tip({ tip, model, bundle }: { tip: { hit: Hit; x: number; y: number }; 
 function SitePanel({ site, go, preview }: { site: Model["sites"][number]; go: (f: Focus) => void; preview: (h: Hit) => void }) {
   return (
     <div className="panel-body">
-      <p className="eyebrow" style={{ color: site.color }}>Site</p>
+      <p className="eyebrow site-ink" style={{ "--c": site.color } as React.CSSProperties}>Site</p>
       <h2 className="panel-title">{site.label}</h2>
       <p className="panel-meta">{site.members.length} guidelines · {fmt(site.members.reduce((n, g) => n + g.pages.length, 0))} pages</p>
       <p className="panel-how">Pick a guideline to find the NCCN recommendation for a patient, or read its pages.</p>
@@ -628,7 +628,7 @@ function GuidelinePanel({ g, model, focus, go, bundle, loadError, patients, chos
   const recText = last ? stripMarks(last.text) : "";
   return (
     <div className="panel-body">
-      <p className="eyebrow" style={{ color: g.site.color }}>{g.site.label} · {CATEGORY_LABEL[g.category] ?? g.category}</p>
+      <p className="eyebrow site-ink" style={{ "--c": g.site.color } as React.CSSProperties}>{g.site.label} · {CATEGORY_LABEL[g.category] ?? g.category}</p>
       <h2 className="panel-title">{g.title}</h2>
       <p className="panel-meta">{g.version ? `Version ${g.version}` : ""}{g.date ? ` · ${g.date}` : ""}</p>
       <div className="pp-actions stack">
@@ -737,7 +737,7 @@ function PagePanel({ g, page, go, bundle, loadError, route, open, hoverBox, prev
   );
   return (
     <div className="panel-body">
-      <p className="eyebrow"><button type="button" className="linkish" onClick={() => go({ level: 1, slug: g.slug })} style={{ color: g.site.color }}>{g.short}</button>{p.section !== null ? ` · ${g.sections[p.section]}` : ""}</p>
+      <p className="eyebrow"><button type="button" className="linkish site-ink" onClick={() => go({ level: 1, slug: g.slug })} style={{ "--c": g.site.color } as React.CSSProperties}>{g.short}</button>{p.section !== null ? ` · ${g.sections[p.section]}` : ""}</p>
       <h2 className="panel-title">{p.title} <code className="ptid">{p.id}</code></h2>
       <p className="panel-meta">{advanced ? `${p.boxes} boxes · ${p.decisions} with an encoded condition` : `${p.boxes} ${p.boxes === 1 ? T.step : T.steps}`}{p.start ? " · a good place to start" : ""}</p>
       <div className="pp-actions">

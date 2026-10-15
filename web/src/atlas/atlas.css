@@ -231,7 +231,4 @@
 .panel-body p, .panel-body li { max-width: 75ch; }
 .crumbs { min-height: 36px; }
 .atlas-canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
-@media (prefers-color-scheme: dark) {
-  /* the site colours are tuned for the light map; lift them to read as text on the dark panel */
-  .eyebrow[style*="color"], .tip-eyebrow[style*="color"], .eyebrow [style*="color"] { filter: brightness(1.55); }
-}
+/* site-coloured text derives its colour from --c in home.css (.site-ink) */
