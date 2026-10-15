@@ -87,7 +87,7 @@
 .det .by { font-size: var(--fs-xs); }
 .det .pill { font-size: var(--fs-xs); }
 .det-nav { margin-top: 14px; }
-.det .src-chip { min-height: 28px; font-size: var(--fs-xs); font-family: var(--sans); }
+.det .src-chip { min-height: 32px; font-size: var(--fs-xs); font-family: var(--sans); }
 
 /* summary dialog (also printed) */
 .sum-doc .sum-src { white-space: normal; }
@@ -101,3 +101,8 @@
   .rc-thumb { width: 100%; }
   .rc-thumb .page-crop { width: 100% !important; }
 }
+
+/* honest support: a route that used none of the answers */
+.rc-start { display: grid; gap: 8px; justify-items: start; }
+.rc-start .btn { min-height: 32px; font-size: var(--fs-sm); }
+.gets-judge { display: block; font-size: var(--fs-xs); font-weight: 500; color: var(--open); }

@@ -46,11 +46,14 @@ await step("an example patient gets one recommendation to verify on the NCCN pag
   const card = page.locator(".reco-card");
   await card.waitFor();
   const text = await card.innerText();
-  assert.match(text, /Best match|Also possible/);
+  assert.match(text, /Best match|Also possible|One of \d+ possible recommendations|Possible starting point/);
+  // the support line is honest: "Matches your answers" only when answers were used and none are missing
+  if (/Possible starting point/.test(text)) assert.match(text, /Not based on your answers yet/);
+  else assert.doesNotMatch(text, /Not based on your answers yet/);
   assert.match(text, /NCCN recommends/i);
   assert.match(text, /Why/i);
   assert.match(text, /Research prototype/i);
-  assert.match(text, /Shown on[\s\S]*NCCN PDF page \d+/i);
+  assert.match(text, /Shown on[\s\S]*NCCN page, PDF p\.\d+/i);
   assert.equal(await card.locator(".reco-box a, .reco-box button").count(), 0, "the headline is plain text, not a link");
   assert.doesNotMatch(await page.locator(".paths").innerText(), /possible recommendations? for this patient/, "the count lives in the other-recommendations heading");
   assert.match(await page.locator(".rc-others h3").innerText(), /^Other possible recommendations \(\d+\)$/);
@@ -93,6 +96,12 @@ await step("multi-disease guidelines ask for the disease first", async () => {
   await page.locator("#fact-guideline_section").selectOption({ index: 1 });
   await recoTab();
   assert.ok(await page.locator(".reco-card").count() === 1, "one recommendation card");
+  const eyebrow = await page.locator(".reco-card .rc-match").innerText();
+  assert.doesNotMatch(eyebrow, /^Best match$/, "no 'Best match' without answers");
+  if (/Possible starting point/.test(eyebrow)) {
+    assert.match(await page.locator(".reco-card").innerText(), /Not based on your answers yet/);
+    assert.equal(await page.locator(".reco-card").getByRole("button", { name: /patient questions/ }).count(), 1);
+  }
 });
 await step("a reference to another guideline opens it at that page", async () => {
   await page.goto(base + "#nsclc/flow/NSCL-12");
