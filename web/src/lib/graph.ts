@@ -105,6 +105,47 @@ export function resolveRef(g: Graph, code: string): Target {
   return { type: "none" };
 }
 
+/** The later state a page title names ("Recurrence", "Surveillance After Completion"); null for an ordinary page. */
+export type PageState = "diagnosis" | "followup" | "recurrence" | "advanced" | "later";
+export function stateOfTitle(title: string): PageState | null {
+  const t = title.toLowerCase();
+  if (/recurren|relaps|refractor|progress|persist|second biochemical|bcr2|transformation/.test(t)) return "recurrence";
+  if (/metasta|stage iv|\badvanced\b|castration|crpc|\bm1\b|unresectable/.test(t)) return "advanced";
+  if (/surveillance|follow-?up|post-?treatment|survivorship/.test(t)) return "followup";
+  if (/subsequent|second-line|later line/.test(t)) return "later";
+  return null;
+}
+
+/**
+ * The state a page belongs to by what its entry boxes say, when its title does not: a page titled
+ * "Radical Prostatectomy PSA" opens on "PSA persistence/recurrence". Only short entry boxes count
+ * (a long box describing a state says more than the moment), and only the recurrence words: other
+ * states are named in titles.
+ */
+export function stateOfEntries(g: Graph, page: string): PageState | null {
+  for (const r of g.bundle.roots[page] ?? []) {
+    const t = (g.node(r)?.text ?? "").replace(/\s+/g, " ").trim();
+    if (t.length <= 70 && /recurren|relaps|refractor|progress|persist/i.test(t)) return "recurrence";
+  }
+  return null;
+}
+
+/**
+ * Where a disease of a multi-disease guideline starts: its own algorithm pages (the section map)
+ * that have entry boxes and are not led to by another of its pages. The shared pages ahead of them
+ * (a diagnostic-testing page listing every disease) belong to no disease and are not starts.
+ */
+export function sectionStartPages(g: Graph, section: string): string[] {
+  const sec = g.bundle.sections;
+  if (!sec) return [];
+  const own = g.flowPages.filter((p) => (sec.pages?.[p] ?? null) === section && (g.bundle.roots[p] ?? []).length);
+  const leadsTo = new Map<string, Set<string>>();
+  const link = (q: string, p: string) => { if (p !== q) (leadsTo.get(q) ?? leadsTo.set(q, new Set()).get(q)!).add(p); };
+  for (const [id, ks] of Object.entries(g.bundle.children)) ks.forEach((k) => link(id.split(":")[0], k.split(":")[0]));
+  g.bundle.links.forEach(([q, p]) => link(q, p));
+  return own.filter((p) => !own.some((q) => q !== p && leadsTo.get(q)?.has(p)));
+}
+
 /** Ancestors and descendants of the selected answers (across linked pages). */
 export function pathSets(g: Graph, answers: Iterable<string>) {
   const nodes = new Set<string>(), edges = new Set<string>();

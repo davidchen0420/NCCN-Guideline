@@ -5,7 +5,7 @@
  * Picking a moment starts the algorithm there and limits the form to the details its branches use.
  */
 import type { Facts, Pred } from "../types";
-import type { Graph } from "./graph";
+import { sectionStartPages, stateOfEntries, stateOfTitle, type Graph } from "./graph";
 import { missingFacts } from "./pathways";
 
 export type Phase = "diagnosis" | "followup" | "recurrence" | "advanced" | "later";
@@ -20,16 +20,13 @@ export const PHASES: { id: Phase; label: string; hint: string }[] = [
 export interface Moment { page: string; title: string; phase: Phase }
 
 /** The phase a later-state page belongs to, from its title; null for an ordinary page. */
-export function phaseOf(title: string): Phase | null {
-  const t = title.toLowerCase();
-  if (/recurren|relaps|refractor|progress|persist|second biochemical|bcr2|transformation/.test(t)) return "recurrence";
-  if (/metasta|stage iv|\badvanced\b|castration|crpc|\bm1\b|unresectable/.test(t)) return "advanced";
-  if (/surveillance|follow-?up|post-?treatment|survivorship/.test(t)) return "followup";
-  if (/subsequent|second-line|later line/.test(t)) return "later";
-  return null;
-}
+export const phaseOf = (title: string): Phase | null => stateOfTitle(title);
 
 const order = (a: string, b: string) => a.localeCompare(b, undefined, { numeric: true });
+
+/** The phase a page belongs to by what its entry boxes say, when its title does not: a page
+ * titled "Radical Prostatectomy PSA" opens on "PSA persistence/recurrence". */
+export const entryPhase = (g: Graph, page: string): Phase | null => stateOfEntries(g, page);
 
 /** The moments a guideline's algorithm starts from: its start pages (new diagnosis, unless the
  * title says otherwise) and the later-state pages that have entry boxes. */
@@ -44,7 +41,7 @@ export function moments(g: Graph): Moment[] {
     const title = b.pages[p].title || p;
     const ph = phaseOf(title);
     if (!linked.has(p)) out.push({ page: p, title, phase: ph ?? "diagnosis" });
-    else if (ph) out.push({ page: p, title, phase: ph });
+    else if (ph ?? entryPhase(g, p)) out.push({ page: p, title, phase: (ph ?? entryPhase(g, p))! });
   }
   // every start page is linked from elsewhere (a loop back from later pages): the first ordinary one starts a diagnosis
   if (!out.some((m) => m.phase === "diagnosis")) {
@@ -61,9 +58,26 @@ export const followsDisease = (title: string) =>
 /** Moments for the patient's disease, in multi-disease guidelines (the section variable). */
 export function momentsFor(g: Graph, all: Moment[], facts: Facts): Moment[] {
   const sec = g.bundle.sections;
-  const v = sec && facts[sec.variable];
-  if (!sec || v === undefined) return all;
-  const mine = all.filter((m) => !sec.pages[m.page] || sec.pages[m.page] === v);
+  if (!sec) return all;
+  const v = facts[sec.variable];
+  const secOf = (p: string) => sec.pages?.[p] ?? null;
+  if (v === undefined || v === null || v === "") {
+    // No disease chosen yet: a page that belongs to one disease (a mantle cell follow-up page) is
+    // not a moment of the patient's course; only what all diseases share is offered.
+    const shared = all.filter((m) => secOf(m.page) === null);
+    if (shared.length) return shared;
+    const dx = all.filter((m) => m.phase === "diagnosis");
+    return dx.length ? dx : all;
+  }
+  const mine = all.filter((m) => !secOf(m.page) || secOf(m.page) === v);
+  // The disease's own pages begin its new-diagnosis moment; the shared diagnostic-testing page
+  // that lists every disease does not.
+  const starts = typeof v === "string" ? sectionStartPages(g, v) : [];
+  const own = starts.filter((p) => !mine.some((m) => m.page === p));
+  if (own.length && !mine.some((m) => m.phase === "diagnosis" && secOf(m.page) === v)) {
+    const dx = own.map((p): Moment => ({ page: p, title: g.bundle.pages[p].title || p, phase: phaseOf(g.bundle.pages[p].title || "") ?? "diagnosis" }));
+    return [...mine.filter((m) => !(m.phase === "diagnosis" && secOf(m.page) === null)), ...dx].sort((x, y) => order(x.page, y.page));
+  }
   return mine.length ? mine : all;
 }
 
@@ -97,7 +111,7 @@ export const phaseLabel = (p: Phase) => PHASES.find((x) => x.id === p)!.label;
 /** The phase of a start setting ("auto" and ordinary pages: none). */
 export function startPhase(g: Graph, start: string): Phase | null {
   if (start === "auto" || !g.bundle.pages[start]) return null;
-  return phaseOf(g.bundle.pages[start].title || "") ?? (moments(g).some((m) => m.page === start) ? "diagnosis" : null);
+  return phaseOf(g.bundle.pages[start].title || "") ?? moments(g).find((m) => m.page === start)?.phase ?? null;
 }
 
 const isLater = (p: Phase | null) => p !== null && p !== "diagnosis";

@@ -5,7 +5,7 @@
  */
 import type { Facts, Schema, VarSpec } from "../types";
 import type { Graph } from "./graph";
-import { derive } from "./predicates";
+import { derive, evaluate } from "./predicates";
 import { missingFacts, rankPathways, startingFacts, type Ranking } from "./pathways";
 import { stripMarks } from "./adapt";
 import { label, valueLabel } from "./factMeta";
@@ -41,7 +41,14 @@ export function decidingFacts(g: Graph, ranking: Ranking, facts: Facts, limit = 
           out.set(f, { fact: f, share: 0, node: st.node, page: st.node.split(":")[0], text: boxText(g, st.node) });
         }
       }
-      for (const f of p.missing) { const d = out.get(f); if (d) d.share += p.likelihood; }
+      // What decides the later event a route stops before (PSA persistence vs recurrence) is
+      // asked about too: the clinician may know it already.
+      const end = p.steps[p.steps.length - 1]?.node;
+      for (const f of p.laterMissing ?? []) {
+        if (!vars[f] || known(f) || out.has(f) || !end) continue;
+        out.set(f, { fact: f, share: 0, node: end, page: end.split(":")[0], text: boxText(g, end) });
+      }
+      for (const f of new Set([...p.missing, ...(p.laterMissing ?? [])])) { const d = out.get(f); if (d) d.share += p.likelihood; }
     }
   } else {
     // nothing entered: the details the first branches turn on
@@ -81,18 +88,52 @@ export function previewValues(spec: VarSpec): unknown[] {
   return [];
 }
 
-/** Rank the routes as if `fact` were `value`, and name the branch that answer settles. */
-export function previewAnswer(g: Graph, facts: Facts, fact: string, value: unknown, base: Ranking): Preview {
-  const r = rankPathways(g, { ...facts, [fact]: value });
+/**
+ * Rank the routes as if `fact` were `value`, and name where that answer leads: the first branch
+ * the resulting best route newly settles that the current best route has not (the preview is of
+ * the new best route, not of every route the facts left open); else the first step on a page the
+ * current best route does not reach; else, when that route stops before arms still open, the arm
+ * this answer supports. None when the answer only keeps the same routes open. `start` is the
+ * start setting the ranking `base` was made with.
+ */
+export function previewAnswer(g: Graph, facts: Facts, fact: string, value: unknown, base: Ranking, start: string = "auto"): Preview {
+  const r = rankPathways(g, { ...facts, [fact]: value }, start);
   const top = r.paths[0];
   if (!top) return { value, routes: 0 };
-  const metBefore = new Set(base.paths.flatMap((p) => p.steps.filter((s) => s.kind === "met").map((s) => s.node)));
-  // the branch this answer settles; none when it only keeps routes open
-  const step = top.steps.find((s) => s.kind === "met" && !metBefore.has(s.node));
+  const before = base.paths[0];
+  const pageOf = (n: string) => n.split(":")[0];
+  const seenPages = new Set((before?.steps ?? []).map((s) => pageOf(s.node)));
+  const settled = (s: { kind: string }) => s.kind === "met" || s.kind === "otherwise" || s.kind === "inferred";
+  const seenNodes = new Set((before?.steps ?? []).filter(settled).map((s) => s.node));
+  let at: string | undefined = (top.steps.find((s) => settled(s) && !seenNodes.has(s.node))
+    ?? (before ? top.steps.find((s) => s.kind !== "flow" && !seenPages.has(pageOf(s.node))) : undefined))?.node;
+  let page = at && pageOf(at);
+  // The best route stops before arms whose conditions are still open; one that this answer
+  // supports (and does not rule out) is where the answer leads ("N1" -> the regional page).
+  if (!at && before && top.id !== before.id && top.end === "later") {
+    const now = derive({ ...facts, [fact]: value }, g.bundle.schema);
+    const arm = top.next.find((k) => g.preds[k] && missingFacts(g, g.preds[k], {}).includes(fact) && evaluate(g.preds[k], now) !== false);
+    if (arm) {
+      at = arm;
+      page = (g.node(arm)?.links ?? []).find((l) => g.bundle.pages[l] && l !== pageOf(arm)) ?? pageOf(arm);
+    }
+  }
   return {
     value, routes: r.paths.length, share: top.likelihood,
-    decides: step ? { node: step.node, page: step.node.split(":")[0], text: boxText(g, step.node) } : undefined,
+    decides: at ? { node: at, page: page!, text: boxText(g, at) } : undefined,
   };
+}
+
+/**
+ * The details still to ask about, counted on the routes that could be the answer: the best route
+ * and those about as likely (at least half its likelihood, at most five), each detail once. The
+ * form's "N more may follow" should count these, not every detail any route might ever need.
+ */
+export function remainingQuestions(g: Graph, ranking: Ranking, facts: Facts, limit = 12): Decider[] {
+  const top = ranking.paths[0];
+  if (!top) return decidingFacts(g, ranking, facts, limit);
+  const near = ranking.paths.filter((p, i) => i < 5 && (i === 0 || p.likelihood >= top.likelihood * 0.5));
+  return decidingFacts(g, { ...ranking, paths: near }, facts, limit);
 }
 
 /* ---------------- plausibility ---------------- */
