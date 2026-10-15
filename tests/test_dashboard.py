@@ -94,17 +94,35 @@ class AtlasBuildTest(unittest.TestCase):
         self.assertIn([0, 1], p["links"], "PROS-1 leads to PROS-2")
 
     @unittest.skipUnless((DATA / "index.json").exists(), "canonical data not present")
+    def _isolated_data(self, d):
+        """A copy of data/ (symlinked) with no real PDFs beside it, e.g. in Guideline/."""
+        data = Path(d) / "data"
+        data.mkdir()
+        for c in self.DATA.iterdir():
+            (data / c.name).symlink_to(c)
+        return data
+
     def test_local_pdfs_are_found_by_name_and_listed_by_path(self):
         with tempfile.TemporaryDirectory() as d:
+            data = self._isolated_data(d)
             pdfs = Path(d) / "nccn"
             pdfs.mkdir()
             (pdfs / "prostate.pdf").write_bytes(b"%PDF-1.4\n%%EOF\n")
             (pdfs / "unrelated.pdf").write_bytes(b"%PDF-1.4\n%%EOF\n")
-            found = dashboard.find_pdfs(self.DATA, [pdfs])
+            found = dashboard.find_pdfs(data, [pdfs])
             self.assertEqual(found.get("prostate"), pdfs / "prostate.pdf")
             self.assertNotIn("unrelated", found)
-            out = dashboard.build_library(self.DATA, Path(d) / "built" / "oncocarta.html", pdf_roots=[pdfs])
+            out = dashboard.build_library(data, Path(d) / "built" / "oncocarta.html", pdf_roots=[pdfs])
             self.assertIn('"prostate": "../nccn/prostate.pdf"', out.read_text())
+
+    @unittest.skipUnless((DATA / "index.json").exists(), "canonical data not present")
+    def test_guideline_folder_next_to_data_is_searched(self):
+        with tempfile.TemporaryDirectory() as d:
+            data = self._isolated_data(d)
+            pdf = Path(d) / "Guideline" / "Treatment" / "prostate.pdf"
+            pdf.parent.mkdir(parents=True)
+            pdf.write_bytes(b"%PDF-1.4\n%%EOF\n")
+            self.assertEqual(dashboard.find_pdfs(data).get("prostate"), pdf)
 
     @unittest.skipUnless((DATA / "index.json").exists(), "canonical data not present")
     def test_library_page_embeds_the_atlas(self):
