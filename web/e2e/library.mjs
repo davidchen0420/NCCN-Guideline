@@ -39,7 +39,7 @@ await step("search narrows the list and opens a guideline", async () => {
   await closeWelcome();
 });
 await step("an example patient is routed with the data's option conditions", async () => {
-  await page.locator('select[aria-label="Load an example patient"]').selectOption("V1");
+  await page.locator('select[aria-label="Load a patient"]').selectOption("ex:V1");
   await page.getByRole("tab", { name: /Pathways/ }).click();
   assert.match(await page.locator(".pcard").first().innerText(), /Most likely/);
   assert.match(await page.locator(".trail").innerText(), /Matches treatment received/);

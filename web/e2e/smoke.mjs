@@ -81,6 +81,8 @@ await step("whole-guideline overview links to pages", async () => {
 });
 await step("patient details rank pathways across pages", async () => {
   await page.getByRole("tab", { name: "Patient" }).click();
+  // the details that decide the first branches come first; the rest sit under More details
+  if (!(await page.locator("#fact-score").isVisible())) await page.locator(".more-details > summary").click();
   await page.locator("#fact-score").fill("12");
   await page.locator("#fact-score").press("Tab");
   await page.getByRole("tab", { name: /Pathways/ }).click();

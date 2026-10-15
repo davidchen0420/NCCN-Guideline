@@ -191,6 +191,7 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
   const showPath = useCallback((id: string | null) => dispatch({ type: "set", patch: { pathSel: id } }), []);
   const focusFact = useCallback((name: string) => {
     dispatch({ type: "set", patch: { rightTab: "patient", sheet: true } });
+    window.dispatchEvent(new CustomEvent("oc-focus-fact", { detail: name }));   // the form switches to its full view
     window.setTimeout(() => {
       const el = document.getElementById(`fact-${name}`);
       const row = el?.closest(".pf");
