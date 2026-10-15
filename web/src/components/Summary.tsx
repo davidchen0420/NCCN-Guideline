@@ -9,7 +9,7 @@ import { derive } from "../lib/predicates";
 import { factValue, label, valueLabel } from "../lib/factMeta";
 import type { Block, Inline, Item } from "../lib/parseBox";
 import { Blocks } from "./Rich";
-import { clip, conditionText, dataWord, extractionWord, gotoPage, pct, plain, routeFocus, usedCount } from "./PathwaysPanel";
+import { clip, conditionText, dataWord, extractionWord, gotoPage, pct, plain, routeFocus, usedCount, cleanText, tidyBlocks } from "./PathwaysPanel";
 
 /** A box's structure as plain text: tiers as headings, bullets kept, "or" on its own line. */
 function inlineText(xs: Inline[]): string {
@@ -56,22 +56,24 @@ export function Summary({ p, onClose }: { p: Pathway; onClose: () => void }) {
     const worked = Object.entries(facts).filter(([k, v]) => schema.derived?.[k] && !(k in s.facts) && v !== null && v !== undefined && !k.includes("_or_") && !k.startsWith("gt5y"))
       .map(([k, v]) => [label(k), valueLabel(v)] as [string, string]);
     const f = routeFocus(g, p);
+    const pl = (id: string) => (adv ? plain(g, id) : cleanText(g, id, plain(g, id)));   // clinicians see text without glued footnote marks
+    const blocksOf = (id: string) => (adv ? g.parsed.get(id)?.blocks ?? [] : tidyBlocks(g, id, g.parsed.get(id)?.blocks ?? []));
     const page = (id: string) => {
       const n = g.node(id)!; const pdf = bundle.pages[n.page]?.pdf;
       return `${adv ? n.page : pageName(n.page, bundle.pages[n.page]?.title)}${pdf !== undefined && pdf !== null ? `${adv ? "" : ", NCCN page"}, PDF p.${pdf + 1}` : ""}`;
     };
     const steps = p.steps.map((st) => ({
-      text: clip(plain(g, st.node), 220), where: page(st.node), kind: (adv ? KIND_WORD : KIND_PLAIN)[st.kind] ?? "",
+      text: clip(pl(st.node), 220), where: page(st.node), kind: (adv ? KIND_WORD : KIND_PLAIN)[st.kind] ?? "",
       cond: g.preds[st.node] ? conditionText(g, st.node, facts) : "",
     }));
     const goto = f.follow ? gotoPage(g, f.follow.node) : null;
     return {
       entered, worked, steps,
-      reco: plain(g, f.key.node), recoLines: blocksText(g.parsed.get(f.key.node)?.blocks ?? []), recoBlocks: g.parsed.get(f.key.node)?.blocks ?? [], recoWhere: page(f.key.node),
-      then: f.follow ? plain(g, f.follow.node) + (goto ? ` (continues on ${adv ? goto : pageName(goto, bundle.pages[goto]?.title)})` : "") : "",
-      next: p.end === "later" ? p.next.map((id) => clip(plain(g, id), 140)) : [],
+      reco: pl(f.key.node), recoLines: blocksText(blocksOf(f.key.node)), recoBlocks: blocksOf(f.key.node), recoWhere: page(f.key.node),
+      then: f.follow ? pl(f.follow.node) + (goto ? ` (continues on ${adv ? goto : pageName(goto, bundle.pages[goto]?.title)})` : "") : "",
+      next: p.end === "later" ? p.next.map((id) => clip(pl(id), 140)) : [],
       missing: p.missing.map(label),
-      match: usedCount(g, p, facts) === 0 ? "Possible starting point · Not based on your answers yet" : `${matchWord(p.likelihood)} · ${supportPhrase(p.missing.length)}`,
+      match: usedCount(p) === 0 ? "Possible starting point · Not based on your answers yet" : `${matchWord(p.likelihood)} · ${supportPhrase(p.missing.length)}`,
       scores: `${likelihoodWord(p.likelihood)} (${pct(p.likelihood)} of open routes) · patient data ${dataWord(p).toLowerCase()} (${p.met} of ${p.met + p.open} criteria) · extraction ${extractionWord(p).toLowerCase()} (${Math.round(p.encoding * 100)}%)`,
     };
   }, [g, s.facts, s.age, p, bundle, adv]);

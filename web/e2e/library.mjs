@@ -50,13 +50,21 @@ await step("an example patient gets one recommendation to verify on the NCCN pag
   // the support line is honest: "Matches your answers" only when answers were used and none are missing
   if (/Possible starting point/.test(text)) assert.match(text, /Not based on your answers yet/);
   else assert.doesNotMatch(text, /Not based on your answers yet/);
-  assert.match(text, /NCCN recommends/i);
+  assert.match(text, /NCCN (recommends|also lists|lists)/i);
+  assert.doesNotMatch(text, /Matches your answers[\s\S]*Less likely|Less likely[\s\S]*Matches your answers/);
+  if (/Notes \(/.test(text)) assert.match(text, /Notes \(\d+\)/);
+  assert.doesNotMatch(await page.locator(".paths").innerText(), /imagingg|CSPCh\b|ADTaa/, "no footnote letters glued to words");
+  assert.equal(await card.getByRole("button", { name: "Verify on the NCCN page" }).getAttribute("title"), "Opens the NCCN page in a new window");
+  assert.equal(await card.getByRole("button", { name: /Show this page in the diagram/ }).count(), 1);
+  assert.equal(await page.getByRole("button", { name: /other possible recommendations? below/ }).count(), 1);
+  // alternatives never claim "Matches your answers": that is the top card's phrase
+  assert.doesNotMatch(await page.locator(".rc-others").innerText(), /Matches your answers/);
   assert.match(text, /Why/i);
   assert.match(text, /Research prototype/i);
   assert.match(text, /Shown on[\s\S]*NCCN page, PDF p\.\d+/i);
   assert.equal(await card.locator(".reco-box a, .reco-box button").count(), 0, "the headline is plain text, not a link");
   assert.doesNotMatch(await page.locator(".paths").innerText(), /possible recommendations? for this patient/, "the count lives in the other-recommendations heading");
-  assert.match(await page.locator(".rc-others h3").innerText(), /^Other possible recommendations \(\d+\)$/);
+  assert.match(await page.locator(".rc-others h3").innerText(), /^Other possible recommendations \(\d+\)/);
   const more = card.getByRole("button", { name: /^Show all \d+$/ });
   if (await more.count()) assert.ok((await more.boundingBox()).height >= 32, "Show all is a 32px target");
   assert.equal(await card.getByRole("button", { name: "Verify on the NCCN page" }).count(), 1);

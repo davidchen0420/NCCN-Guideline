@@ -106,3 +106,7 @@
 .rc-start { display: grid; gap: 8px; justify-items: start; }
 .rc-start .btn { min-height: 32px; font-size: var(--fs-sm); }
 .gets-judge { display: block; font-size: var(--fs-xs); font-weight: 500; color: var(--open); }
+
+.rc-needs-h { margin: 0; font-family: var(--serif); font-size: 18px; font-weight: 600; line-height: 1.4; }
+.rc-below { margin: 8px 0 0; }
+.pcard.other .pc-end { font-size: var(--fs-md); line-height: 1.4; }
