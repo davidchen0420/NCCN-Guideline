@@ -4,10 +4,13 @@ import type { Facts } from "../types";
 
 export const patientKey = (slug: string) => `oc-patient:${slug}`;
 
-export function readPatient(slug: string): { facts: Facts; age: number | null } | null {
+export interface StoredPatient { facts: Facts; age: number | null; start?: string; stale?: string[] }
+export function readPatient(slug: string): StoredPatient | null {
   try {
     const j = JSON.parse(sessionStorage.getItem(patientKey(slug)) ?? "null");
-    return j && typeof j === "object" && j.facts && typeof j.facts === "object" ? { facts: j.facts, age: typeof j.age === "number" ? j.age : null } : null;
+    return j && typeof j === "object" && j.facts && typeof j.facts === "object"
+      ? { facts: j.facts, age: typeof j.age === "number" ? j.age : null, start: typeof j.start === "string" ? j.start : undefined, stale: Array.isArray(j.stale) ? j.stale : undefined }
+      : null;
   } catch { return null; }
 }
 

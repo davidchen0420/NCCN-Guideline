@@ -324,7 +324,7 @@ export function conditionText(g: Graph, id: string, facts: Record<string, unknow
 }
 
 export function PathwaysPanel() {
-  const { s, g, set, ranking, selected, showPath, focusFact } = useApp();
+  const { s, g, set, setStart, ranking, selected, showPath, focusFact } = useApp();
   const [all, setAll] = useState(false);
   const r = ranking;
   const shown = all ? r.paths : r.paths.slice(0, 5);
@@ -333,7 +333,7 @@ export function PathwaysPanel() {
     <div className="paths">
       <div className="start">
         <label htmlFor="start">Start from</label>
-        <select id="start" className="sel" value={s.start} onChange={(e) => set({ start: e.target.value, pathSel: null })}>
+        <select id="start" className="sel" value={s.start} onChange={(e) => setStart(e.target.value)}>
           <option value="auto">Wherever the patient's details point</option>
           {g.flowPages.filter((p) => (g.bundle.roots[p] ?? []).length).map((p) => <option key={p} value={p}>{p} · {clip(g.bundle.pages[p].title ?? "", 52)}</option>)}
         </select>

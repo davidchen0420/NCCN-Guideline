@@ -581,6 +581,27 @@ button.wl-choice:hover { border-color: var(--ink-2); }
 .section-pick { border-top: 0; margin-top: 8px; padding-top: 4px; }
 .section-pick .pf { margin-bottom: 4px; }
 .find-fact { margin-top: 12px; }
+/* where the patient is now */
+.moment { border-top: 0; margin-top: 10px; padding-top: 2px; }
+.moment-chips { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0 2px; }
+.moment-chips button { border: 1px solid var(--line-strong); background: var(--surface); border-radius: 999px; padding: 4px 11px; font-size: 12.5px; min-height: 30px; color: var(--ink-2); }
+.moment-chips button:hover { border-color: var(--ink-2); color: var(--ink); }
+.moment-chips button[aria-pressed=true] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.moment-chips button:first-child[aria-pressed=false] { border-style: dashed; }
+.moment .sel { margin-top: 6px; max-width: 100%; }
+.moment .hint { margin-top: 6px; }
+.time-tag.now { color: var(--accent); border-color: var(--accent-line); }
+.carried { border: 1px solid var(--hl-line); background: var(--hl); border-radius: var(--r); padding: 8px 10px 10px; margin-top: 12px; }
+.carried legend { padding: 0 4px; }
+.carried > .btn { margin-top: 6px; }
+.pf.stale .seg-row button[aria-checked=true], .pf.stale .num input, .pf.stale select { border-style: dashed; }
+.stale-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 5px; font-size: 12px; color: var(--ink-2); }
+.stale-row span { margin-right: auto; }
+.scope-note { margin: 10px 0 4px; }
+.chips-strip li.held { border-style: dashed; opacity: .75; }
+.dx-group > summary { cursor: pointer; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 500; padding: 4px 0; }
+.dx-group > summary em { font-style: normal; letter-spacing: 0; margin-left: 6px; }
+.dx-group[open] > summary { margin-bottom: 6px; }
 @media (max-width: 820px) {
   .lib { padding: 24px 16px 48px; } .lib-head h1 { font-size: 24px; }
   .lib-row { grid-template-columns: 0 minmax(0, 1fr) 16px; grid-template-areas: "i t g" "i m g" "i q g"; padding: 10px 4px; }

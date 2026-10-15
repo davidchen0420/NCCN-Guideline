@@ -5,6 +5,7 @@ import { choose as walkChoose, startWalk, autoStep, type Walk } from "./lib/walk
 import type { Kind } from "./lib/search";
 import { rankPathways, type Pathway, type Ranking } from "./lib/pathways";
 import { patientKey, readPatient } from "./lib/patient";
+import { carryOver } from "./lib/moments";
 
 export type Loc =
   | { kind: "flow"; page: string; node?: string }
@@ -22,6 +23,8 @@ export interface State {
   dock: DockTab; fn: string | null; fnIdx: number;
   walk: Walk | null; facts: Facts; help: boolean; welcome: boolean;
   age: number | null; start: string; pathSel: string | null;
+  /** details carried over from an earlier moment, left out of the ranking until confirmed */
+  stale: string[];
 }
 
 type Action =
@@ -65,6 +68,8 @@ export interface Ctx {
   startWalkAt: (page: string, node: string | null) => void;
   chooseStep: (child: string) => void;
   setFacts: (f: Facts) => void;
+  /** start the algorithm at a moment (a page, or "auto"); details that may have changed since are carried over for confirmation */
+  setStart: (page: string) => void;
   isPhone: boolean;
   ranking: Ranking;
   selected: Pathway | null;
@@ -130,7 +135,8 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
       left: window.innerWidth > 1180 ? "toc" : null, sheet: intent === "patient",
       query: "", kinds: [], tags: [], searchNon: false,
       dock: null, fn: null, fnIdx: 0, walk: null, facts: patient?.facts ?? {}, help: false, welcome: !saved && !(patient && Object.keys(patient.facts).length) && intent !== "patient",
-      rightTab: "patient", age: patient?.age ?? null, start: "auto", pathSel: null,
+      rightTab: "patient", age: patient?.age ?? null, start: patient?.start && g.bundle.pages[patient.start] ? patient.start : "auto", pathSel: null,
+      stale: patient?.stale ?? [],
     };
   }, [g]);
   const [s, dispatch] = useReducer(reducer, init);
@@ -138,8 +144,8 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
   useEffect(() => { try { history.replaceState(null, "", locToHash(s.loc, prefix)); } catch { /* file:// may refuse */ } }, [s.loc, prefix]);
   useEffect(() => {
     if (!slug) return;
-    try { sessionStorage.setItem(patientKey(slug), JSON.stringify({ facts: s.facts, age: s.age })); } catch { /* storage blocked */ }
-  }, [slug, s.facts, s.age]);
+    try { sessionStorage.setItem(patientKey(slug), JSON.stringify({ facts: s.facts, age: s.age, start: s.start, stale: s.stale })); } catch { /* storage blocked */ }
+  }, [slug, s.facts, s.age, s.start, s.stale]);
   useEffect(() => {
     const f = () => { const l = hashToLoc(location.hash, g, prefix); if (l) dispatch({ type: "go", loc: l }); };
     window.addEventListener("hashchange", f);
@@ -180,10 +186,23 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
     dispatch({ type: "go", loc: { kind: "flow", page: w.at.split(":")[0], node: w.at.endsWith(":START") ? undefined : w.at } });
   }, [g, s.walk, s.facts]);
   const setFacts = useCallback((facts: Facts) => {
-    dispatch({ type: "set", patch: { facts, walk: s.walk ? autoStep(g, { path: s.walk.path.slice(0, 1), at: s.walk.path[0].node }, facts) : null } });
-  }, [g, s.walk]);
+    // a carried-over detail that is changed or cleared no longer needs confirming
+    const stale = s.stale.filter((k) => facts[k] !== undefined && JSON.stringify(facts[k]) === JSON.stringify(s.facts[k]));
+    dispatch({ type: "set", patch: { facts, stale, walk: s.walk ? autoStep(g, { path: s.walk.path.slice(0, 1), at: s.walk.path[0].node }, facts) : null } });
+  }, [g, s.walk, s.stale, s.facts]);
 
-  const ranking = useMemo(() => rankPathways(g, s.facts, s.start), [g, s.facts, s.start]);
+  const setStart = useCallback((start: string) => {
+    dispatch({ type: "set", patch: { start, pathSel: null, stale: carryOver(g, s.start, start, s.facts, s.stale) } });
+  }, [g, s.start, s.facts, s.stale]);
+
+  // details awaiting confirmation (carried over from an earlier moment) do not steer the routes
+  const live = useMemo(() => {
+    if (!s.stale.length) return s.facts;
+    const f = { ...s.facts };
+    for (const k of s.stale) delete f[k];
+    return f;
+  }, [s.facts, s.stale]);
+  const ranking = useMemo(() => rankPathways(g, live, s.start), [g, live, s.start]);
   const selected = useMemo(() => {
     if (!ranking.paths.length) return null;
     return ranking.paths.find((p) => p.id === s.pathSel) ?? ranking.paths[0];
@@ -206,6 +225,6 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
     }, 60);
   }, []);
 
-  const value: Ctx = { s, g, bundle, dispatch, go, goRef, set, openFootnote, startWalkAt, chooseStep, setFacts, isPhone, ranking, selected, showPath, focusFact, library, slug };
+  const value: Ctx = { s, g, bundle, dispatch, go, goRef, set, openFootnote, startWalkAt, chooseStep, setFacts, setStart, isPhone, ranking, selected, showPath, focusFact, library, slug };
   return <AppCtx.Provider value={value}>{children}</AppCtx.Provider>;
 }

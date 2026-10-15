@@ -103,6 +103,55 @@ await step("one question at a time: the next deciding detail, answered with a nu
   await page.waitForFunction(() => !document.querySelector(".interview"));
   await panel.locator(".mode-switch button").first().click();
 });
+await step("where is the patient now: a later moment starts there, holds details that may have changed, and leads with the current situation", async () => {
+  await page.goto(base + "#prostate/");
+  await page.locator("[data-testid=card]").first().waitFor();
+  const clear = panel.getByRole("button", { name: "Clear", exact: true });
+  if (await clear.isEnabled()) await clear.click();
+  const moment = panel.getByTestId("moment");
+  assert.equal(await moment.getByRole("button", { name: "Not sure" }).getAttribute("aria-pressed"), "true");
+  // details at diagnosis: life expectancy describes the patient then; the T category is recorded at diagnosis
+  await panel.getByText("Paste from the record").click();
+  await panel.locator(".paste textarea").fill("64-year-old man, cT2a, Gleason 3+4, PSA 8 ng/mL, life expectancy 15 years.");
+  await panel.getByRole("button", { name: "Find details" }).click();
+  await panel.getByTestId("apply-found").click();
+  await moment.getByRole("button", { name: "Recurrence or relapse" }).click();
+  assert.match(await moment.innerText(), /Starting at PROS-8/);
+  await page.locator("#tab-paths").click();
+  assert.equal(await page.locator("#start").inputValue(), "PROS-8", "the routes start from the same page");
+  await page.locator("#tab-patient").click();
+  const carried = panel.getByTestId("carried");
+  assert.match(await carried.innerText(), /Life Expectancy/);
+  assert.doesNotMatch(await carried.innerText(), /T Category/, "a detail recorded at diagnosis stays as it is");
+  assert.equal(await panel.locator(".chips-strip li.held").count(), 1);
+  // the rest of the form: now, treatment so far, and the original diagnosis folded away
+  await panel.locator(".more-details > summary").click();
+  const heads = (await panel.locator(".more-details legend, .more-details > details > summary").allInnerTexts()).join(" | ");
+  assert.match(heads, /CURRENT SITUATION[\s\S]*TREATMENT SO FAR[\s\S]*ORIGINAL DIAGNOSIS/i, heads);
+  assert.match(await panel.locator(".scope-note").innerText(), /used from PROS-8/);
+  const before = await panel.locator(".more-details .pf").count();
+  await panel.getByTestId("show-all").click();
+  assert.ok(await panel.locator(".more-details .pf").count() > before, "show all widens the form");
+  await panel.getByTestId("show-all").click();
+  // confirming releases the hold
+  await carried.getByRole("button", { name: "Still true", exact: true }).click();
+  assert.equal(await panel.getByTestId("carried").count(), 0);
+  assert.equal(await panel.locator(".chips-strip li.held").count(), 0);
+  // a later moment held again, then back to diagnosis: nothing is held
+  await moment.getByRole("button", { name: "New diagnosis" }).click();
+  await moment.getByRole("button", { name: "Advanced or metastatic" }).click();
+  assert.equal(await panel.getByTestId("carried").count(), 1);
+  await moment.getByRole("button", { name: "New diagnosis" }).click();
+  assert.equal(await panel.getByTestId("carried").count(), 0);
+  assert.match(await moment.innerText(), /Starting at PROS-1/);
+  // kept across a reload
+  await moment.getByRole("button", { name: "Recurrence or relapse" }).click();
+  await page.reload();
+  await page.locator("[data-testid=card]").first().waitFor();
+  assert.match(await panel.getByTestId("moment").innerText(), /Starting at PROS-8/);
+  assert.equal(await panel.getByTestId("carried").count(), 1);
+  await panel.getByTestId("moment").getByRole("button", { name: "Not sure" }).click();
+});
 await step("works across guidelines: multi-disease guideline asks the disease first", async () => {
   await page.goto(base + "#b_cell_lymphomas/");
   await page.locator("[data-testid=card]").first().waitFor();

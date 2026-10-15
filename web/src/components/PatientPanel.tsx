@@ -9,6 +9,7 @@ import type { Graph } from "../lib/graph";
 import type { Ranking } from "../lib/pathways";
 import { resolveRef } from "../lib/graph";
 import { SrcChip } from "../source";
+import { PHASES, followsDisease, moments, momentsFor, reachableFacts, startPhase } from "../lib/moments";
 import { ArrowRight, ClipboardPaste, MessageCircleQuestion, Save, Search as SearchIcon, Trash2, X } from "lucide-react";
 
 /** Enum options that fit on one row as buttons; longer lists use a menu. */
@@ -77,17 +78,21 @@ interface FieldProps {
   /** shown dimmed: changes none of the routes that are open */
   quiet?: boolean;
   onPage?: (page: string) => void;
+  /** label current-state details "now" (the patient is past diagnosis) */
+  now?: boolean;
+  /** carried over from diagnosis: confirm or clear */
+  stale?: { keep: () => void; clear: () => void } | null;
 }
 
-function Field({ name, spec, value, onChange, needed, used, why, previews, quiet, onPage }: FieldProps) {
+function Field({ name, spec, value, onChange, needed, used, why, previews, quiet, onPage, now, stale }: FieldProps) {
   const id = `fact-${name}`;
   const m = meta(name);
   const values = spec.type === "bool" ? [true, false] : spec.values ?? [];
   const check = value !== undefined ? plausibility(name, spec, value) : null;
   return (
-    <div className={`pf${needed ? " needed" : ""}${value !== undefined ? " set" : ""}${quiet ? " quiet" : ""}${why ? " decider" : ""}`}>
+    <div className={`pf${needed ? " needed" : ""}${value !== undefined ? " set" : ""}${quiet ? " quiet" : ""}${why ? " decider" : ""}${stale ? " stale" : ""}`}>
       <label id={`${id}-l`} htmlFor={id} className="flabel">
-        <span>{m.label}{spec.time && spec.time !== "current" && <em className="time-tag">{spec.time === "at_diagnosis" ? "at diagnosis" : "history"}</em>}{spec.judgment && <em className="time-tag">judgment</em>}</span>
+        <span>{m.label}{spec.time && spec.time !== "current" ? <em className="time-tag">{spec.time === "at_diagnosis" ? "at diagnosis" : "history"}</em> : now && <em className="time-tag now">now</em>}{spec.judgment && <em className="time-tag">judgment</em>}</span>
         {needed && !why && <span className="need-tag">helps rank pathways</span>}
         {!needed && used && value === undefined && <span className="sr">used by the pathways shown</span>}
       </label>
@@ -106,6 +111,13 @@ function Field({ name, spec, value, onChange, needed, used, why, previews, quiet
               {values.map((v) => <option key={String(v)} value={String(v)}>{valueLabel(v)}</option>)}
             </select>
           )}
+      {stale && (
+        <div className="stale-row">
+          <span>As of diagnosis: still true?</span>
+          <button type="button" className="btn ghost small" onClick={stale.keep}>Still true</button>
+          <button type="button" className="btn ghost small" onClick={stale.clear}>Clear</button>
+        </div>
+      )}
       {check && <span className={`check ${check.level}`} role={check.level === "error" ? "alert" : "status"}>{check.message}</span>}
       {m.hint && <span className="hint">{m.hint}</span>}
       {previews && previews.length > 0 && value === undefined && <Previews previews={previews} onPick={onChange} />}
@@ -216,7 +228,20 @@ export function PatientPanel() {
   const { s, g, bundle, set, setFacts, ranking, go, focusFact, slug } = useApp();
   const schema = bundle.schema;
   const vars = schema.variables;
-  const derived = useMemo(() => derive(s.facts, schema), [s.facts, schema]);
+  // the moment the patient is at: past a diagnosis, the form leads with the current situation
+  const phase = useMemo(() => startPhase(g, s.start), [g, s.start]);
+  const past = phase !== null && phase !== "diagnosis";
+  const scope = useMemo(() => (s.start !== "auto" && g.bundle.pages[s.start] ? reachableFacts(g, [s.start]) : null), [g, s.start]);
+  const [showAll, setShowAll] = useState(false);
+  const staleSet = useMemo(() => new Set(s.stale), [s.stale]);
+  const inScope = useCallback((n: string) => !scope || showAll || scope.has(n) || s.facts[n] !== undefined, [scope, showAll, s.facts]);
+  const scoped = scope ? Object.keys(vars).filter((n) => scope.has(n) || s.facts[n] !== undefined).length : 0;
+  // held (carried-over) details are left out until confirmed, as in the ranking
+  const derived = useMemo(() => {
+    const f = { ...s.facts };
+    for (const k of s.stale) delete f[k];
+    return derive(f, schema);
+  }, [s.facts, s.stale, schema]);
   const [mode, setMode] = useState<"form" | "interview">(() => { try { return localStorage.getItem("oc-form-mode") === "interview" ? "interview" : "form"; } catch { return "form"; } });
   const setModeKeep = (m: "form" | "interview") => { setMode(m); try { localStorage.setItem("oc-form-mode", m); } catch { /* blocked */ } };
   useEffect(() => {
@@ -238,7 +263,7 @@ export function PatientPanel() {
   }, [s.facts, setFacts, set]);
 
   const sectionVar = bundle.sections?.variable && vars[bundle.sections.variable] ? bundle.sections.variable : null;
-  const deciders = useMemo(() => decidingFacts(g, ranking, s.facts).filter((d) => d.fact !== sectionVar && vars[d.fact]), [g, ranking, s.facts, sectionVar, vars]);
+  const deciders = useMemo(() => decidingFacts(g, ranking, s.facts).filter((d) => d.fact !== sectionVar && vars[d.fact] && !staleSet.has(d.fact) && inScope(d.fact)), [g, ranking, s.facts, sectionVar, vars, staleSet, inScope]);
   const previews = usePreviews(g, s.facts, deciders, ranking);
   const conflicts = useMemo(() => contradictions(s.facts, schema), [s.facts, schema]);
   const deciderSet = useMemo(() => new Set(deciders.map((d) => d.fact)), [deciders]);
@@ -248,9 +273,22 @@ export function PatientPanel() {
   const term = find.trim().toLowerCase();
   const groups = useMemo(() => {
     const m = new Map<string, string[]>();
-    Object.keys(vars).filter((n) => n !== sectionVar && !deciderSet.has(n))
+    Object.keys(vars).filter((n) => n !== sectionVar && !deciderSet.has(n) && !staleSet.has(n) && (groupOf(n) === "stated" || inScope(n)))
       .filter((n) => !term || `${label(n)} ${n} ${vars[n].definition ?? ""}`.toLowerCase().includes(term))
       .forEach((n) => { const k = groupOf(n); m.set(k, [...(m.get(k) ?? []), n]); });
+    if (past && !term) {
+      // past diagnosis: what is true now, what has been done, and (rarely needed) how it began
+      const order = (n: string) => GROUPS.findIndex((gr) => gr.key === groupOf(n));
+      const names = [...m.entries()].filter(([k]) => k !== "stated").flatMap(([, v]) => v).sort((a, b) => order(a) - order(b));
+      const when = (n: string) => vars[n].time ?? "current";
+      const stated = m.get("stated");
+      return [
+        { key: "now", title: "Current situation", match: /$^/, names: names.filter((n) => when(n) === "current") },
+        { key: "hx", title: "Treatment so far", match: /$^/, names: names.filter((n) => when(n) === "history") },
+        { key: "dx", title: "Original diagnosis", match: /$^/, names: names.filter((n) => when(n) === "at_diagnosis"), collapsed: true },
+        ...(stated ? [{ key: "stated", title: "", match: /$^/, names: stated }] : []),
+      ].filter((x) => x.names.length);
+    }
     const other = m.get("other") ?? [];
     if (other.length > 6) {
       m.delete("other");
@@ -263,7 +301,7 @@ export function PatientPanel() {
       return [...GROUPS.filter((gr) => m.has(gr.key)).map((gr) => ({ ...gr, names: m.get(gr.key)! })), ...extra];
     }
     return GROUPS.filter((gr) => m.has(gr.key)).map((gr) => ({ ...gr, names: m.get(gr.key)! }));
-  }, [vars, sectionVar, term, deciderSet]);
+  }, [vars, sectionVar, term, deciderSet, staleSet, inScope, past]);
   const hasLE = Object.keys(vars).some((n) => n.startsWith("life_expectancy"));
 
   const statedOk = Object.entries(schema.derived ?? {}).filter(([, d]) => d.type === "enum" && !d.rules.some((r) => JSON.stringify(r.if).includes("_stated")));
@@ -277,7 +315,7 @@ export function PatientPanel() {
   if (!Object.keys(vars).length) return <p className="note">This guideline has no fact schema, so patient details cannot decide branches.</p>;
   const field = (n: string, extra: Partial<FieldProps> = {}) => (
     <div key={n}>
-      <Field name={n} spec={vars[n]} value={s.facts[n]} onChange={(v) => set1(n, v)} needed={needed.has(n) && s.facts[n] === undefined} used={used.has(n)} onPage={onPage} {...extra} />
+      <Field name={n} spec={vars[n]} value={s.facts[n]} onChange={(v) => set1(n, v)} needed={needed.has(n) && s.facts[n] === undefined} used={used.has(n)} onPage={onPage} now={past} {...extra} />
       {n === "life_expectancy_years" && <LifeExpectancyHelper age={s.age} onApply={(y) => set1(n, y)} />}
     </div>
   );
@@ -292,6 +330,16 @@ export function PatientPanel() {
             <p key={i}>{c.message} {c.facts.map((f) => <button key={f} type="button" className="linkish" onClick={() => focusFact(f)}>{label(f)}</button>)}</p>
           ))}
         </div>
+      )}
+
+      <MomentPicker count={scoped} />
+      {s.stale.length > 0 && (
+        <fieldset className="fgroup carried" data-testid="carried">
+          <legend>Carried over from diagnosis<em>{s.stale.length}</em></legend>
+          <p className="note">These described the patient at diagnosis and may have changed. They do not steer the routes until you confirm or update them.</p>
+          {s.stale.filter((k) => vars[k]).map((k) => field(k, { now: false, stale: { keep: () => set({ stale: s.stale.filter((x) => x !== k) }), clear: () => set1(k, undefined) } }))}
+          <button type="button" className="btn ghost small" onClick={() => set({ stale: [] })}>All still true</button>
+        </fieldset>
       )}
 
       <div className="mode-switch" role="group" aria-label="How to enter details">
@@ -344,12 +392,16 @@ export function PatientPanel() {
               <input type="search" value={find} onChange={(e) => setFind(e.target.value)} placeholder={`Find one of ${Object.keys(vars).length} details`} aria-label="Find a patient detail" />
             </div>
           )}
+          {scope && Object.keys(vars).length > scoped && (
+            <p className="note scope-note">{showAll ? `Showing all ${Object.keys(vars).length} details.` : `Showing the ${scoped} details used from ${s.start} on.`}{" "}
+              <button type="button" className="linkish" onClick={() => setShowAll((v) => !v)} data-testid="show-all">{showAll ? `Only those used from ${s.start}` : "Show all details"}</button></p>
+          )}
           {anyFacts && <p className="note">Dimmed details change none of the routes open now.</p>}
-          {groups.map((gr) => (
-            gr.key === "stated" ? null : (
-              <fieldset key={gr.key} className="fgroup">
-                <legend>{gr.title}<em>{gr.names.filter((n) => s.facts[n] !== undefined).length}/{gr.names.length}</em></legend>
-                {gr.key === "patient" && !vars.age && hasLE && !term && (
+          {groups.map((gr) => {
+            if (gr.key === "stated") return null;
+            const legend = <>{gr.title}<em>{gr.names.filter((n) => s.facts[n] !== undefined).length}/{gr.names.length}</em></>;
+            const body = (<>
+                {(gr.key === "patient" || gr.key === "now") && !vars.age && hasLE && !term && (
                   <div className="pf">
                     <label htmlFor="patient-age" className="flabel"><span>Age</span></label>
                     <NumberInput id="patient-age" value={s.age ?? undefined} unit="years" onChange={(v) => set({ age: typeof v === "number" ? v : null })} />
@@ -357,9 +409,15 @@ export function PatientPanel() {
                   </div>
                 )}
                 {gr.names.map((n) => field(n, { quiet: anyFacts && !used.has(n) && s.facts[n] === undefined }))}
-              </fieldset>
-            )
-          ))}
+            </>);
+            return "collapsed" in gr && gr.collapsed ? (
+              <details key={gr.key} className="fgroup dx-group">
+                <summary>{legend}</summary>
+                <p className="note">Recorded when the disease was first diagnosed. Few branches past diagnosis use them.</p>
+                {body}
+              </details>
+            ) : <fieldset key={gr.key} className="fgroup"><legend>{legend}</legend>{body}</fieldset>;
+          })}
           <details className="fgroup more">
             <summary>Stated in the record</summary>
             <p className="note">Use these when the record states a classification (for example “low-risk”) without the details behind it. A stated value replaces the computed one.</p>
@@ -372,6 +430,45 @@ export function PatientPanel() {
         </details>
       </>)}
     </div>
+  );
+}
+
+/* ---------------- where the patient is now ---------------- */
+
+const clipT = (t: string, n = 56) => (t.length > n ? t.slice(0, n).trimEnd() + "…" : t);
+
+/** The moment the patient is at: a new diagnosis, follow-up, recurrence, advanced disease or a
+ * later line. It starts the algorithm at that moment's page and limits the form to its details. */
+function MomentPicker({ count }: { count: number }) {
+  const { s, g, setStart } = useApp();
+  const all = useMemo(() => moments(g), [g]);
+  const list = useMemo(() => momentsFor(g, all, s.facts), [g, all, s.facts]);
+  // a choice needs a diagnosis and a later moment, in a guideline that follows a disease course
+  if (!followsDisease(g.bundle.title) || !list.some((m) => m.phase === "diagnosis") || !list.some((m) => m.phase !== "diagnosis")) return null;
+  const phase = startPhase(g, s.start);
+  const isMoment = list.some((m) => m.page === s.start);
+  const present = PHASES.filter((p) => list.some((m) => m.phase === p.id));
+  const pages = phase && isMoment ? list.filter((m) => m.phase === phase) : [];
+  const title = g.bundle.pages[s.start]?.title ?? "";
+  return (
+    <fieldset className="fgroup moment" data-testid="moment">
+      <legend>Where is the patient now?</legend>
+      <div className="moment-chips" role="group" aria-label="Where is the patient now?">
+        <button type="button" aria-pressed={s.start === "auto"} onClick={() => setStart("auto")} title="Let the details entered decide where the algorithm starts">Not sure</button>
+        {present.map((p) => (
+          <button key={p.id} type="button" aria-pressed={isMoment && phase === p.id} title={p.hint}
+            onClick={() => { if (!(isMoment && phase === p.id)) setStart(list.find((m) => m.phase === p.id)!.page); }}>{p.label}</button>
+        ))}
+      </div>
+      {pages.length > 1 && (
+        <select className="sel small" aria-label="Which page" value={s.start} onChange={(e) => setStart(e.target.value)}>
+          {pages.map((m) => <option key={m.page} value={m.page}>{m.page} · {clipT(m.title)}</option>)}
+        </select>
+      )}
+      <p className="hint">{s.start === "auto"
+        ? "The details you enter decide where the algorithm starts. Pick a moment to see only the details that matter then."
+        : <>Starting at <b>{s.start}</b>{title && <> · {clipT(title, 70)}</>}. {count} {count === 1 ? "detail decides" : "details decide"} the branches from here.</>}</p>
+    </fieldset>
   );
 }
 
@@ -388,7 +485,7 @@ function Summary({ filled, total, slug, examples, focus }: { filled: number; tot
     const list = [{ id: String(Date.now()), name: name.trim() || `Patient ${saved.length + 1}`, facts: s.facts, age: s.age, at: new Date().toISOString() }, ...saved].slice(0, 30);
     setSaved(list); writeSaved(slug, list); setNaming(null);
   };
-  const load = (p: { facts: Facts; age?: number | null }) => { setFacts({ ...p.facts }); set({ age: p.age ?? null, pathSel: null, start: "auto" }); };
+  const load = (p: { facts: Facts; age?: number | null }) => { setFacts({ ...p.facts }); set({ age: p.age ?? null, pathSel: null, start: "auto", stale: [] }); };
   return (
     <div className="summary">
       <div className="patient-top">
@@ -436,8 +533,8 @@ function Summary({ filled, total, slug, examples, focus }: { filled: number; tot
         <ul className="chips-strip" aria-label="Entered so far">
           {s.age !== null && <li><span>Age {s.age}</span></li>}
           {chips.map((k) => (
-            <li key={k}>
-              <button type="button" onClick={() => focus(k)} title="Go to this detail">{(meta(k).short ?? label(k))}: <b>{factValue(k, s.facts[k], schema)}</b></button>
+            <li key={k} className={s.stale.includes(k) ? "held" : undefined}>
+              <button type="button" onClick={() => focus(k)} title={s.stale.includes(k) ? "Carried over from diagnosis: confirm or update" : "Go to this detail"}>{(meta(k).short ?? label(k))}: <b>{factValue(k, s.facts[k], schema)}</b></button>
               <button type="button" className="chip-x" aria-label={`Clear ${label(k)}`} onClick={() => clear1(k)}><X size={11} /></button>
             </li>
           ))}
@@ -461,7 +558,8 @@ function PasteRecord({ schema }: { schema: Schema }) {
     const chosen = found.filter((_, i) => pick.has(i));
     const { facts, age } = applyFound(s.facts, chosen);
     setFacts(facts);
-    set({ pathSel: null, ...(age !== null ? { age } : {}) });
+    const fresh = new Set(chosen.map((f) => f.fact));
+    set({ pathSel: null, stale: s.stale.filter((k) => !fresh.has(k) && JSON.stringify(facts[k]) === JSON.stringify(s.facts[k])), ...(age !== null ? { age } : {}) });
     setFound(null); setText(""); setOpen(false);
   };
   const shown = (f: Found) => (f.fact === "__age" ? `${f.value} years` : factValue(f.fact, f.value, schema));

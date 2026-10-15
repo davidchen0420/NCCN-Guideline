@@ -104,7 +104,7 @@ export function Welcome() {
               <span>Hand-encoded from public vignettes.</span>
               <div className="wl-ex">
                 {examples.map((x) => (
-                  <button key={x.id} type="button" className="linkish" onClick={() => { setFacts({ ...x.facts }); close({ age: x.age ?? null, pathSel: null, start: "auto", rightTab: "paths", sheet: true }); }}>{x.label}</button>
+                  <button key={x.id} type="button" className="linkish" onClick={() => { setFacts({ ...x.facts }); close({ age: x.age ?? null, pathSel: null, start: "auto", stale: [], rightTab: "paths", sheet: true }); }}>{x.label}</button>
                 ))}
               </div>
             </div>
