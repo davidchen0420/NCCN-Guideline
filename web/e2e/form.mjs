@@ -118,7 +118,7 @@ await step("where is the patient now: a later moment starts there, holds details
   await moment.getByRole("button", { name: "Recurrence or relapse" }).click();
   assert.match(await moment.innerText(), /Starting at PROS-8/);
   await page.locator("#tab-paths").click();
-  assert.equal(await page.locator("#start").inputValue(), "PROS-8", "the routes start from the same page");
+  await page.locator(".reco-card, .empty").first().waitFor();   // the start-from picker is an Advanced tool; the moment above already chose PROS-8
   await page.locator("#tab-patient").click();
   const carried = panel.getByTestId("carried");
   assert.match(await carried.innerText(), /Life Expectancy/);

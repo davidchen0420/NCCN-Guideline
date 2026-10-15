@@ -38,20 +38,54 @@ await step("search narrows the list and opens a guideline", async () => {
   assert.match(await page.evaluate(() => location.hash), /^#prostate\//);
   await closeWelcome();
 });
-await step("an example patient is routed with the data's option conditions", async () => {
+const recoTab = () => page.getByRole("tab", { name: /Pathways|Recommendation/ }).click();
+await step("an example patient gets one recommendation to verify on the NCCN page", async () => {
   await page.locator('select[aria-label="Load a patient"]').selectOption("ex:V1");
-  await page.getByRole("tab", { name: /Pathways/ }).click();
+  await recoTab();
+  const card = page.locator(".reco-card");
+  await card.waitFor();
+  const text = await card.innerText();
+  assert.match(text, /Best match|Also possible/);
+  assert.match(text, /NCCN recommends/i);
+  assert.match(text, /Why/i);
+  assert.match(text, /Research prototype/i);
+  assert.equal(await card.getByRole("button", { name: "Verify on the NCCN page" }).count(), 1);
+  assert.equal(await card.getByRole("button", { name: /Summary to copy or print/ }).count(), 1);
+  // the reviewer views stay behind Advanced tools
+  for (const sel of [".scores", ".trail", "#start", ".nudge"]) assert.equal(await page.locator(sel).count(), 0, `${sel} is Advanced-only`);
+  assert.doesNotMatch(await page.locator(".paths").innerText(), /extraction|judgment call|arms ruled out|routes fit/i);
+});
+await step("Verify on the NCCN page opens the recommended box's page in its own window", async () => {
+  const [win] = await Promise.all([page.context().waitForEvent("page"), page.locator(".reco-card").getByRole("button", { name: "Verify on the NCCN page" }).click()]);
+  await win.locator(".viewer-bar").waitFor();
+  await win.getByRole("button", { name: "Close page viewer" }).click();
+  await page.waitForTimeout(300);
+  assert.ok(win.isClosed(), "Close shuts the window");
+});
+await step("Advanced tools show the scores, the full trail and the start-from picker", async () => {
+  await page.evaluate(() => localStorage.setItem("oc-advanced", "1"));
+  await page.reload();
+  await page.locator("[data-testid=card]").first().waitFor();
+  await closeWelcome();
+  await recoTab();
   assert.match(await page.locator(".pcard").first().innerText(), /Most likely/);
+  assert.match(await page.locator(".reco").innerText(), /Recommended at this point/i);
+  assert.match(await page.locator(".scores").innerText(), /Most likely/);
   assert.match(await page.locator(".trail").innerText(), /Matches treatment received/);
+  assert.ok(await page.locator("#start option").count() > 1, "start-from picker");
+  await page.evaluate(() => localStorage.removeItem("oc-advanced"));
 });
 await step("multi-disease guidelines ask for the disease first", async () => {
   await page.goto(base + "#aml/");
   await page.locator("[data-testid=card]").first().waitFor();
   await closeWelcome();
-  await page.getByRole("tab", { name: "Patient" }).click();
+  await recoTab();
+  assert.match(await page.locator(".empty").innerText(), /Answer a few questions to see the recommendation/);
+  await page.locator(".empty").getByRole("button").click();
+  await page.locator("#fact-guideline_section").waitFor();
   await page.locator("#fact-guideline_section").selectOption({ index: 1 });
-  await page.getByRole("tab", { name: /Pathways/ }).click();
-  assert.ok(await page.locator(".pcard").count() >= 1);
+  await recoTab();
+  assert.ok(await page.locator(".reco-card").count() === 1, "one recommendation card");
 });
 await step("a reference to another guideline opens it at that page", async () => {
   await page.goto(base + "#nsclc/flow/NSCL-12");
@@ -81,6 +115,7 @@ if (process.argv.includes("--all")) {
   // Every guideline: opens, renders its first algorithm page, the patient form and the pathways tab.
   const slugs = JSON.parse(await readFile(join(ROOT, "data/index.json"), "utf8")).guidelines.map((g) => g.slug);
   const p = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await p.addInitScript(() => { try { localStorage.setItem("oc-advanced", "1"); } catch { /* blocked */ } });   // the start-from picker is an Advanced tool
   const fails = [];
   for (const slug of slugs) {
     const errs = [];
@@ -95,10 +130,10 @@ if (process.argv.includes("--all")) {
       const lower = labels.filter((l) => /\b(Ecog|Psa|Mri|Pet|Hiv|Covid|Ldh|Egfr|Her2)\b/.test(l) || /_/.test(l));
       if (lower.length) errs.push("labels: " + lower.slice(0, 3).join(", "));
       if (!labels.length) errs.push("no patient fields");
-      await p.getByRole("tab", { name: /Pathways/ }).click();
+      await p.getByRole("tab", { name: /Pathways|Recommendation/ }).click();
       const start = p.locator("#start");
       const opts = await start.locator("option").count();
-      if (opts > 1) { await start.selectOption({ index: 1 }); await p.locator(".pcard, .empty").first().waitFor({ timeout: 10000 }); }
+      if (opts > 1) { await start.selectOption({ index: 1 }); await p.locator(".pcard, .reco-card, .empty").first().waitFor({ timeout: 10000 }); }
     } catch (e) { errs.push(String(e.message ?? e).split("\n")[0]); }
     p.off("pageerror", onErr);
     if (errs.length) fails.push(`${slug}: ${errs.join("; ")}`);

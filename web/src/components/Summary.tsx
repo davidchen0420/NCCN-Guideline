@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Copy, Printer, X } from "lucide-react";
-import { useApp } from "../store";
+import { useApp, useAdvanced } from "../store";
 import type { Pathway } from "../lib/pathways";
 import { likelihoodWord } from "../lib/pathways";
+import { matchWord, pageName, supportPhrase } from "../lib/terms";
 import { derive } from "../lib/predicates";
 import { factValue, label, valueLabel } from "../lib/factMeta";
 import type { Block, Inline, Item } from "../lib/parseBox";
@@ -30,10 +31,13 @@ const KIND_WORD: Record<string, string> = {
   met: "criteria met", otherwise: "other arms ruled out", unknown: "needs details", uncoded: "condition not encoded (judgment)",
   option: "one of several options", inferred: "matches treatment received", flow: "",
 };
+/** The same markers in clinical words: only what a reader needs to act on. */
+const KIND_PLAIN: Record<string, string> = { unknown: "needs more answers", uncoded: "your clinical judgment", option: "one of several options" };
 
 /** A one-page record of the route for a note or a case discussion: copy as text, or print. */
 export function Summary({ p, onClose }: { p: Pathway; onClose: () => void }) {
   const { g, s, bundle } = useApp();
+  const adv = useAdvanced();
   const [copied, setCopied] = useState(false);
   const box = useRef<HTMLDivElement>(null);
   useEffect(() => { box.current?.focus(); }, []);
@@ -52,39 +56,42 @@ export function Summary({ p, onClose }: { p: Pathway; onClose: () => void }) {
     const worked = Object.entries(facts).filter(([k, v]) => schema.derived?.[k] && !(k in s.facts) && v !== null && v !== undefined && !k.includes("_or_") && !k.startsWith("gt5y"))
       .map(([k, v]) => [label(k), valueLabel(v)] as [string, string]);
     const f = routeFocus(g, p);
-    const page = (id: string) => { const n = g.node(id)!; const pdf = bundle.pages[n.page]?.pdf; return `${n.page}${pdf !== undefined && pdf !== null ? `, PDF p.${pdf + 1}` : ""}`; };
+    const page = (id: string) => {
+      const n = g.node(id)!; const pdf = bundle.pages[n.page]?.pdf;
+      return `${adv ? n.page : pageName(n.page, bundle.pages[n.page]?.title)}${pdf !== undefined && pdf !== null ? `, PDF p.${pdf + 1}` : ""}`;
+    };
     const steps = p.steps.map((st) => ({
-      text: clip(plain(g, st.node), 220), where: page(st.node), kind: KIND_WORD[st.kind],
+      text: clip(plain(g, st.node), 220), where: page(st.node), kind: (adv ? KIND_WORD : KIND_PLAIN)[st.kind] ?? "",
       cond: g.preds[st.node] ? conditionText(g, st.node, facts) : "",
     }));
     const goto = f.follow ? gotoPage(g, f.follow.node) : null;
     return {
       entered, worked, steps,
       reco: plain(g, f.key.node), recoLines: blocksText(g.parsed.get(f.key.node)?.blocks ?? []), recoBlocks: g.parsed.get(f.key.node)?.blocks ?? [], recoWhere: page(f.key.node),
-      then: f.follow ? plain(g, f.follow.node) + (goto ? ` (continues on ${goto})` : "") : "",
+      then: f.follow ? plain(g, f.follow.node) + (goto ? ` (continues on ${adv ? goto : pageName(goto, bundle.pages[goto]?.title)})` : "") : "",
       next: p.end === "later" ? p.next.map((id) => clip(plain(g, id), 140)) : [],
       missing: p.missing.map(label),
+      match: `${matchWord(p.likelihood)} · ${supportPhrase(p.missing.length)}`,
       scores: `${likelihoodWord(p.likelihood)} (${pct(p.likelihood)} of open routes) · patient data ${dataWord(p).toLowerCase()} (${p.met} of ${p.met + p.open} criteria) · extraction ${extractionWord(p).toLowerCase()} (${Math.round(p.encoding * 100)}%)`,
     };
-  }, [g, s.facts, s.age, p, bundle]);
+  }, [g, s.facts, s.age, p, bundle, adv]);
 
   const date = new Date().toISOString().slice(0, 10);
   const text = [
-    `${bundle.title} — route summary (${date})`,
+    `${bundle.title} — ${adv ? "route summary" : "recommendation summary"} (${date})`,
     "",
-    "PATIENT DETAILS ENTERED",
+    adv ? "PATIENT DETAILS ENTERED" : "PATIENT DETAILS",
     ...(data.entered.length ? data.entered.map(([k, v]) => `- ${k}: ${v}`) : ["- none"]),
-    ...(data.worked.length ? ["", "WORKED OUT FROM THE ENTRIES", ...data.worked.map(([k, v]) => `- ${k}: ${v}`)] : []),
+    ...(data.worked.length ? ["", adv ? "WORKED OUT FROM THE ENTRIES" : "WORKED OUT FROM THE DETAILS", ...data.worked.map(([k, v]) => `- ${k}: ${v}`)] : []),
     "",
-    `RECOMMENDED AT THIS POINT [${data.recoWhere}]`,
+    adv ? `RECOMMENDED AT THIS POINT [${data.recoWhere}]` : `RECOMMENDATION [${data.recoWhere}]`,
     ...data.recoLines,
     ...(data.then ? [`Then: ${data.then}`] : []),
+    ...(adv ? ["", `FIT: ${data.scores}`] : [data.match]),
+    ...(data.missing.length ? ["", adv ? `OPEN QUESTIONS: ${data.missing.join("; ")}` : `STILL UNKNOWN: ${data.missing.join("; ")}`] : []),
+    ...(p.uncoded ? [adv ? `JUDGMENT CALLS: ${p.uncoded} step(s) without an encoded condition` : `${p.uncoded} step(s) rely on your clinical judgment`] : []),
     "",
-    `FIT: ${data.scores}`,
-    ...(data.missing.length ? ["", `OPEN QUESTIONS: ${data.missing.join("; ")}`] : []),
-    ...(p.uncoded ? [`JUDGMENT CALLS: ${p.uncoded} step(s) without an encoded condition`] : []),
-    "",
-    "ROUTE",
+    adv ? "ROUTE" : "HOW THE PATIENT GETS HERE",
     ...data.steps.map((st, i) => `${i + 1}. ${st.text} [${st.where}]${st.kind ? ` — ${st.kind}` : ""}${st.cond ? ` (${st.cond})` : ""}`),
     ...(data.next.length ? ["", "WHAT COMES NEXT DEPENDS ON", ...data.next.map((x) => `- ${x}`)] : []),
     "",
@@ -100,7 +107,7 @@ export function Summary({ p, onClose }: { p: Pathway; onClose: () => void }) {
     <div className="modal summary-modal" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="modal-box summary-box" role="dialog" aria-modal="true" aria-labelledby="sum-h" tabIndex={-1} ref={box}>
         <div className="sum-bar no-print">
-          <h2 id="sum-h">Route summary</h2>
+          <h2 id="sum-h">{adv ? "Route summary" : "Summary"}</h2>
           <span className="grow" />
           <button type="button" className="btn small" onClick={() => void copy()}><Copy size={13} /> {copied ? "Copied" : "Copy as text"}</button>
           <button type="button" className="btn small" onClick={() => window.print()}><Printer size={13} /> Print</button>
@@ -108,20 +115,20 @@ export function Summary({ p, onClose }: { p: Pathway; onClose: () => void }) {
         </div>
         <div className="sum-doc print-area">
           <p className="sum-meta">{bundle.title} · {date}</p>
-          <h3>Recommended at this point</h3>
+          <h3>{adv ? "Recommended at this point" : "Recommendation"}</h3>
           <div className="sum-reco"><Blocks blocks={data.recoBlocks} /><span className="sum-src">{data.recoWhere}</span></div>
           {data.then && <p><b>Then:</b> {data.then}</p>}
-          <p className="sum-scores">{data.scores}</p>
-          <h3>Patient details entered</h3>
+          {adv ? <p className="sum-scores">{data.scores}</p> : <p className="sum-match">{data.match}</p>}
+          <h3>{adv ? "Patient details entered" : "Patient details"}</h3>
           <dl className="sum-dl">{data.entered.map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
-          {data.worked.length > 0 && <><h3>Worked out from the entries</h3><dl className="sum-dl">{data.worked.map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl></>}
+          {data.worked.length > 0 && <><h3>{adv ? "Worked out from the entries" : "Worked out from the details"}</h3><dl className="sum-dl">{data.worked.map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl></>}
           {(data.missing.length > 0 || p.uncoded > 0) && (
-            <><h3>Open questions</h3><ul>
-              {data.missing.map((m) => <li key={m}>{m} not entered</li>)}
-              {p.uncoded > 0 && <li>{p.uncoded} step{p.uncoded > 1 ? "s" : ""} without an encoded condition (clinician judgment)</li>}
+            <><h3>{adv ? "Open questions" : "Still unknown"}</h3><ul>
+              {data.missing.map((m) => <li key={m}>{m}{adv ? " not entered" : ""}</li>)}
+              {p.uncoded > 0 && <li>{adv ? `${p.uncoded} step${p.uncoded > 1 ? "s" : ""} without an encoded condition (clinician judgment)` : `${p.uncoded} step${p.uncoded > 1 ? "s rely" : " relies"} on your clinical judgment`}</li>}
             </ul></>
           )}
-          <h3>Route</h3>
+          <h3>{adv ? "Route" : "How the patient gets here"}</h3>
           <ol className="sum-route">
             {data.steps.map((st, i) => <li key={i}>{st.text} <span className="sum-src">{st.where}</span>{st.kind && <em> — {st.kind}</em>}{st.cond && <div className="sum-cond">{st.cond}</div>}</li>)}
           </ol>

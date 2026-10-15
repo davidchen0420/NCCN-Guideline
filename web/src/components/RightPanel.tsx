@@ -47,6 +47,10 @@ export function RightPanel() {
   );
 }
 
+// Step details and the walk (imports kept here so the tab bar above stays untouched).
+import { useAdvanced } from "../store";
+import { pageName } from "../lib/terms";
+
 function RefCard({ code }: { code: string }) {
   const { g, goRef, library } = useApp();
   const t = resolveRef(g, code);
@@ -55,8 +59,8 @@ function RefCard({ code }: { code: string }) {
     const e = library!.entries.find((x) => x.slug === t.slug);
     return (
       <button className="ref-card" onClick={() => goRef(code)}>
-        <span className="ref-top"><code>{code}</code><ArrowRight size={13} /></span>
-        <b>{e?.title ?? t.slug}</b><span className="ex">Another guideline in the library</span>
+        <span className="ref-top"><b>{e?.title ?? t.slug}</b><ArrowRight size={13} /></span>
+        <code>{code}</code><span className="ex">Another guideline in the library</span>
       </button>
     );
   }
@@ -64,8 +68,8 @@ function RefCard({ code }: { code: string }) {
   const excerpt = t.type === "doc" ? splitParagraphs(g.bundle.docs[t.code].pages[0].text).find((p) => p.length > 60) : undefined;
   return (
     <button className="ref-card" onClick={() => goRef(code)}>
-      <span className="ref-top"><code>{code}</code><ArrowRight size={13} /></span>
-      <b>{title}</b>
+      <span className="ref-top"><b>{title}</b><ArrowRight size={13} /></span>
+      <code>{code}</code>
       {excerpt && <span className="ex">{clip(excerpt, 130)}</span>}
     </button>
   );
@@ -73,6 +77,7 @@ function RefCard({ code }: { code: string }) {
 
 function Details() {
   const { s, g, go, startWalkAt, library } = useApp();
+  const adv = useAdvanced();
   const facts = useMemo(() => derive(s.facts, g.bundle.schema), [s.facts, g]);
   const loc = s.loc;
   const hits = loc.kind === "doc" ? g.refIndex.get(loc.code) ?? [] : [];
@@ -98,8 +103,8 @@ function Details() {
         {hits.length === 0 && <p className="note">No algorithm box or footnote refers to this page.</p>}
         {[...byPage.entries()].map(([page, hs]) => (
           <div key={page} className="usage">
-            <button className="link" onClick={() => go({ kind: "flow", page })}><code>{page}</code> {g.bundle.pages[page].title}</button>
-            {hs.slice(0, 6).map((h, i) => <button key={i} className="usage-item" onClick={() => go({ kind: "flow", page, node: h.node })}>{clip(plainOf(g, h.node!), 70)}<em>{h.via === "footnote" ? "in a footnote" : "in a box"}</em></button>)}
+            <button className="link" onClick={() => go({ kind: "flow", page })}>{pageName(page, g.bundle.pages[page].title)}</button>
+            {hs.slice(0, 6).map((h, i) => <button key={i} className="usage-item" onClick={() => go({ kind: "flow", page, node: h.node })}>{clip(plainOf(g, h.node!), 70)}<em>{h.via === "footnote" ? "in a footnote" : "in a step"}</em></button>)}
           </div>
         ))}
       </div>
@@ -110,9 +115,9 @@ function Details() {
     return (
       <div className="det">
         <h3>{g.bundle.pages[loc.page].title || loc.page}</h3>
-        <p className="note">{loc.page} · {g.bundle.pages[loc.page].nodes.filter((x) => x.kind === "box").length} boxes</p>
-        <p>Click a card to select it as an answer. Its pathway lights up, and the other paths hide until you switch on “Other paths”.</p>
-        {entries.length > 0 && <button className="primary" onClick={() => startWalkAt(loc.page, null)}><Footprints size={15} /> Start guided walk</button>}
+        <p className="note">{loc.page} · {g.bundle.pages[loc.page].nodes.filter((x) => x.kind === "box").length} steps</p>
+        <p>Click a step in the diagram to see its details here and open the NCCN page it came from.</p>
+        {adv && entries.length > 0 && <button className="primary" onClick={() => startWalkAt(loc.page, null)}><Footprints size={15} /> Start guided walk</button>}
       </div>
     );
   }
@@ -120,9 +125,9 @@ function Details() {
   const nav = (id: string) => go({ kind: "flow", page: id.split(":")[0], node: id });
   return (
     <div className="det">
-      <div className="det-head"><code>{n.page}</code>{s.answers.includes(n.full) && <span className="pill">Selected answer</span>}<span className="grow" />{boxSrc(g, n.full) && <SrcChip t={boxSrc(g, n.full)!} text="View on the PDF page" />}</div>
+      <div className="det-head"><b className="det-page">{pageName(n.page, g.bundle.pages[n.page]?.title)}</b>{s.answers.includes(n.full) && <span className="pill">Selected answer</span>}<span className="grow" />{boxSrc(g, n.full) && <SrcChip t={boxSrc(g, n.full)!} text="View on the NCCN page" />}</div>
       <div className="det-card"><Blocks blocks={parsed.blocks} /></div>
-      {n.pred && (
+      {adv && n.pred && (
         <>
           <h4>Branch condition<span className="draft">{n.review === "reviewed" ? "machine-drafted, model-reviewed" : "machine-drafted, not reviewed"} · not clinician-reviewed</span></h4>
           <div className="cond-box"><CondView id={n.full} facts={facts} /></div>
@@ -150,23 +155,36 @@ function Details() {
           })}
         </div></>
       )}
-      {out.length > 0 && <><h4>Leads to</h4>{out.map((id) => <button key={id} className="usage-item" onClick={() => nav(id)}><code>{id.split(":")[0] !== n.page ? id.split(":")[0] : ""}</code>{clip(plainOf(g, id))}</button>)}</>}
-      {inc.length > 0 && <><h4>Reached from</h4>{inc.map((id) => <button key={id} className="usage-item" onClick={() => nav(id)}><code>{id.split(":")[0] !== n.page ? id.split(":")[0] : ""}</code>{clip(plainOf(g, id))}</button>)}</>}
-      <button className="primary" onClick={() => startWalkAt(n.page, n.full)}><Footprints size={15} /> Start guided walk here</button>
+      {out.length > 0 && <><h4>Leads to</h4>{out.map((id) => <StepLink key={id} id={id} here={n.page} onClick={() => nav(id)} />)}</>}
+      {inc.length > 0 && <><h4>Reached from</h4>{inc.map((id) => <StepLink key={id} id={id} here={n.page} onClick={() => nav(id)} />)}</>}
+      {adv && <button className="primary" onClick={() => startWalkAt(n.page, n.full)}><Footprints size={15} /> Start guided walk here</button>}
     </div>
+  );
+}
+
+/** A neighbouring step; when it sits on another page, that page's title comes first. */
+function StepLink({ id, here, onClick }: { id: string; here: string; onClick: () => void }) {
+  const { g } = useApp();
+  const page = id.split(":")[0];
+  return (
+    <button type="button" className="usage-item" onClick={onClick}>
+      {clip(plainOf(g, id))}
+      {page !== here && <em>On {pageName(page, g.bundle.pages[page]?.title)}</em>}
+    </button>
   );
 }
 
 function WalkPanel() {
   const { s, g, set, go, chooseStep, startWalkAt } = useApp();
+  const adv = useAdvanced();
   const w = s.walk;
   const [copied, setCopied] = useState(false);
   if (!w) {
     return (
       <div className="det">
-        <p>Walk the algorithm step by step. At each step, choose the branch that fits the patient. If you have entered patient facts, branches they decide are followed for you.</p>
-        <h4>Start from</h4>
-        <div className="chips">{g.flowPages.map((p) => <button key={p} className="chip" title={g.bundle.pages[p].title} onClick={() => startWalkAt(p, null)}>{p}</button>)}</div>
+        <p>Walk through the guideline one step at a time. At each step, choose the branch that fits the patient; branches the patient's answers decide are followed for you.</p>
+        <h4>Start at</h4>
+        <div className="chips">{g.flowPages.map((p) => <button key={p} className="chip" title={pageName(p, g.bundle.pages[p].title)} onClick={() => startWalkAt(p, null)}>{p}</button>)}</div>
       </div>
     );
   }
@@ -185,25 +203,25 @@ function WalkPanel() {
       <div className="btn-row">
         <button onClick={undo} disabled={w.path.length < 2}><Undo2 size={14} /> Undo</button>
         <button onClick={() => set({ walk: null })}><RotateCcw size={14} /> Reset</button>
-        <button onClick={() => { void navigator.clipboard?.writeText(JSON.stringify(w.path.map((p) => p.node))); setCopied(true); setTimeout(() => setCopied(false), 1500); }}><Copy size={14} /> {copied ? "Copied" : "Copy path"}</button>
+        {adv && <button onClick={() => { void navigator.clipboard?.writeText(JSON.stringify(w.path.map((p) => p.node))); setCopied(true); setTimeout(() => setCopied(false), 1500); }}><Copy size={14} /> {copied ? "Copied" : "Copy path"}</button>}
       </div>
-      <h4>Path so far</h4>
+      <h4>Steps so far</h4>
       <ol className="steps">
         {w.path.map((st, i) => (
           <li key={i}><button onClick={() => go({ kind: "flow", page: st.node.split(":")[0], node: st.node.endsWith(":START") ? undefined : st.node })}>
-            <span className="by">{st.by === "predicate" ? "from facts" : st.by === "single-arrow" ? "next" : st.by === "reconverge" ? "skipped undecided branch" : st.by}</span>
-            <span>{clip(st.node.endsWith(":START") ? "Page entry" : plainOf(g, st.node), 80)}</span></button></li>
+            <span className="by">{st.by === "predicate" ? "from answers" : st.by === "single-arrow" ? "next" : st.by === "reconverge" ? "skipped an undecided branch" : st.by}</span>
+            <span>{clip(st.node.endsWith(":START") ? "Start of page" : plainOf(g, st.node), 80)}</span></button></li>
         ))}
       </ol>
       <h4>Next step</h4>
-      {kids.length === 0 && <p className="note">This is the end of the encoded pathway for this box.</p>}
+      {kids.length === 0 && <p className="note">This is the last step on this path.</p>}
       {kids.length > 1 && hasFacts && (kids.every((c) => !g.preds[c])
-        ? <p className="note">These branches have no encoded condition yet, so they need your choice.</p>
-        : <p className="note">The facts you entered do not decide this branch. Choose below.</p>)}
+        ? <p className="note">The guideline does not say how to choose between these, so it is your call.</p>
+        : <p className="note">The patient’s answers do not decide this branch. Choose below.</p>)}
       {kids.map((c) => (
         <button key={c} className={`choice${v[c] === false ? " off" : ""}`} onClick={() => chooseStep(c)}>
           <span>{clip(plainOf(g, c), 130)}</span>
-          {v[c] === true && <em className="ok">matches facts</em>}{v[c] === false && <em>excluded by facts</em>}
+          {v[c] === true && <em className="ok">matches the answers</em>}{v[c] === false && <em>ruled out by the answers</em>}
         </button>
       ))}
     </div>
