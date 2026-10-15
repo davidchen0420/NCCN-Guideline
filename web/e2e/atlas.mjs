@@ -146,7 +146,7 @@ await step("Enter a patient: the reader opens on the form, with steps saying wha
   assert.ok(hint && view && hint.x >= view.x && hint.x + hint.width <= view.x + view.width + 1, "canvas hint stays over the canvas");
   // with an example loaded the steps move on: see the routes, then pick one
   await guide.getByRole("button", { name: /load an example patient/ }).click().catch(() => {});
-  await p.waitForFunction(() => /best match is shown first|Best next question|See \d+ possible/.test(document.querySelector(".guide")?.textContent ?? ""));
+  await p.waitForFunction(() => /best match is shown below|Best next question|See \d+ possible/.test(document.querySelector(".guide")?.textContent ?? ""));
   await ctx.close();
 });
 await step("the reader returns to the atlas at its page", async () => {
@@ -292,7 +292,7 @@ await step("source PDF: found next to the data, shown on hover, opened on click"
   await p.evaluate(() => localStorage.setItem("oc-advanced", "1"));
   await p.goto(base + "#prostate/flow/PROS-3");
   await p.reload();
-  if (await p.getByRole("dialog", { name: /Find where a patient sits/ }).count()) await p.getByRole("button", { name: /Browse the guideline/ }).click();
+  if (await p.getByRole("dialog", { name: /Find where a patient sits/ }).count()) await p.getByRole("button", { name: /Read the guideline/ }).click();
   await p.locator(".pdf-btn.ready").first().waitFor({ timeout: 20000 });
   await ctx.close();
 });
@@ -304,7 +304,7 @@ await step("hosted copy: the PDF published next to the page; clicking a box show
   await p.addInitScript(() => { try { localStorage.setItem("nav-help", "1"); localStorage.setItem("oc-canvas-hint", "1"); localStorage.setItem("oc-advanced", "1"); } catch { /* */ } });
   await p.route("**/built/pdfs/prostate.pdf", (r) => r.fulfill({ status: 200, contentType: "application/pdf", body: pdf }));
   await p.goto(base + "#prostate/flow/PROS-2");
-  if (await p.getByRole("dialog", { name: /Find where a patient sits/ }).count()) await p.getByRole("button", { name: /Browse the guideline/ }).click();
+  if (await p.getByRole("dialog", { name: /Find where a patient sits/ }).count()) await p.getByRole("button", { name: /Read the guideline/ }).click();
   await p.locator(".pdf-btn.ready").first().waitFor({ timeout: 20000 });
   const card = p.locator(".canvas [data-testid=card]:visible").filter({ hasText: "Intermediate" }).first();
   // hover: the page with the box highlighted

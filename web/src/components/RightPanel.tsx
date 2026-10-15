@@ -32,6 +32,8 @@ export function RightPanel() {
   const keys = tabs.map((t) => t[0]);
   // the guided walk is an Advanced view: leave it when Advanced tools are switched off
   useEffect(() => { if (!s.advanced && s.rightTab === "walk") set({ rightTab: "paths" }); }, [s.advanced, s.rightTab, set]);
+  // a new tab starts at its top (the previous tab's scroll position would hide its first card under the strip)
+  useEffect(() => { document.getElementById("rp-panel")?.scrollTo({ top: 0 }); }, [s.rightTab]);
   return (
     <div className="rp">
       <div className="rp-tabs" role="tablist" aria-label="Panel"
@@ -112,7 +114,7 @@ function Details() {
         <h3>{g.bundle.docs[loc.code].title}</h3>
         <p className="note">{g.bundle.docs[loc.code].pages.length} page{g.bundle.docs[loc.code].pages.length > 1 ? "s" : ""}</p>
         <h4>Referenced from</h4>
-        {hits.length === 0 && <p className="note">No algorithm box or footnote refers to this page.</p>}
+        {hits.length === 0 && <p className="note">No step or footnote refers to this page.</p>}
         {[...byPage.entries()].map(([page, hs]) => (
           <div key={page} className="usage">
             <button className="link" onClick={() => go({ kind: "flow", page })}>{pageName(page, g.bundle.pages[page].title)}</button>
@@ -127,7 +129,7 @@ function Details() {
     return (
       <div className="det">
         <h3>{g.bundle.pages[loc.page].title || loc.page}</h3>
-        <p className="note">{loc.page} · {g.bundle.pages[loc.page].nodes.filter((x) => x.kind === "box").length} steps</p>
+        <p className="note">{g.bundle.pages[loc.page].nodes.filter((x) => x.kind === "box").length} steps on this page</p>
         <p>Click a step in the diagram to see its details here and open the NCCN page it came from.</p>
         {adv && entries.length > 0 && <button className="primary" onClick={() => startWalkAt(loc.page, null)}><Footprints size={15} /> Start guided walk</button>}
       </div>
@@ -137,7 +139,7 @@ function Details() {
   const nav = (id: string) => go({ kind: "flow", page: id.split(":")[0], node: id });
   return (
     <div className="det">
-      <div className="det-head"><b className="det-page">{pageName(n.page, g.bundle.pages[n.page]?.title)}</b>{s.answers.includes(n.full) && <span className="pill">Selected answer</span>}<span className="grow" />{boxSrc(g, n.full) && <SrcChip t={boxSrc(g, n.full)!} text="View on the NCCN page" />}</div>
+      <div className="det-head"><b className="det-page">{pageName(n.page, g.bundle.pages[n.page]?.title)}</b>{s.answers.includes(n.full) && <span className="pill">Highlighted step</span>}<span className="grow" />{boxSrc(g, n.full) && <SrcChip t={boxSrc(g, n.full)!} text="View on the NCCN page" />}</div>
       <div className="det-card"><Blocks blocks={parsed.blocks} /></div>
       {adv && n.pred && (
         <>
@@ -149,7 +151,7 @@ function Details() {
         <>
           <h4>Footnotes</h4>
           {n.footnotes.map(([l, t, pg]) => (
-            <div key={l} className="fn-line"><span className="fb big">{l}</span><p><Linked text={t} />{pg !== undefined && pg !== null && <> <SrcChip t={{ page: pg, label: `Footnote ${l}`, excerpt: t }} text={`p.${pg + 1}`} /></>}</p></div>
+            <div key={l} className="fn-line"><span className="fb big">{l}</span><p><Linked text={t} />{pg !== undefined && pg !== null && <> <SrcChip t={{ page: pg, label: `Footnote ${l}`, excerpt: t }} text={`NCCN page (PDF p.${pg + 1})`} /></>}</p></div>
           ))}
         </>
       )}

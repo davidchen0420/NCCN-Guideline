@@ -4,6 +4,7 @@ import { formatDoc, parseTable } from "../lib/docFormat";
 import { Linked } from "./Rich";
 import { terms } from "../lib/search";
 import { SrcChip } from "../source";
+import { pageName } from "../lib/terms";
 
 function Hl({ text, q }: { text: string; q: string }) {
   const ts = terms(q).map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
@@ -30,7 +31,7 @@ export function DocView({ code, sub }: { code: string; sub?: number }) {
         <span className="eyebrow">{doc.kind === "principles" ? "Principles" : doc.kind === "staging" ? "Staging" : doc.kind === "discussion" ? "Discussion" : "Reference"} · {code}</span>
         <h1>{doc.title}</h1>
         {pages.length > 0 && (
-          <p className="cited">Cited from {pages.map((p) => <button key={p} className="xref" onClick={() => go({ kind: "flow", page: p })}>{p}</button>)}</p>
+          <p className="cited">Cited from {pages.map((p) => <button key={p} className="xref" onClick={() => go({ kind: "flow", page: p })}>{pageName(p, g.bundle.pages[p]?.title)}</button>)}</p>
         )}
       </header>
       {doc.pages.map((pg, i) => {

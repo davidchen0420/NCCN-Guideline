@@ -45,12 +45,12 @@ function SettingsMenu() {
           <label className="set-row">
             <input type="checkbox" className="sw" checked={s.advanced} onChange={(e) => set({ advanced: e.target.checked })} data-testid="advanced-toggle" />
             <span className="set-t"><b>Advanced tools</b>
-              <small>Reviewer views: arrow certainty, other paths, scores, guided walk, encoding details</small></span>
+              <small>Extra views for people checking how the guideline was encoded.</small></span>
           </label>
           <label className="set-row">
             <input type="checkbox" className="sw" checked={guideSteps} onChange={(e) => setGuideSteps(e.target.checked)} data-testid="guide-toggle" />
             <span className="set-t"><b>Show the 3-step guide</b>
-              <small>Patient, Recommendation, Check the NCCN page: a progress strip above the panel</small></span>
+              <small>A strip above the panel showing Patient, Recommendation and Check the NCCN page.</small></span>
           </label>
           <button type="button" className="set-help" onClick={() => { setOpen(false); set({ help: true }); }}><CircleHelp size={16} aria-hidden />Help</button>
         </div>, document.body)}
@@ -107,8 +107,8 @@ export function TitleBar() {
       <button className="ib" aria-label="Forward" title="Forward" disabled={s.hpos >= s.hist.length - 1} onClick={() => dispatch({ type: "hist", delta: 1 })}><ArrowRight size={18} /></button>
       <h1 className="tb-title" data-testid="title"><span>{title}</span>{code && code !== title && <code>{code}</code>}</h1>
       {flow && s.answers.length > 0 && (
-        <button type="button" className="clear-chip" onClick={() => dispatch({ type: "clear" })} data-testid="clear" title="Clear the selected answers and show the whole diagram">
-          <RotateCcw size={14} aria-hidden /><span className="cc-t">Clear selection</span><b className="cc-n">{s.answers.length}</b>
+        <button type="button" className="clear-chip" onClick={() => dispatch({ type: "clear" })} data-testid="clear" title="Remove the highlighted steps. Your patient's answers are kept.">
+          <RotateCcw size={14} aria-hidden /><span className="cc-t">Show whole diagram</span>
         </button>
       )}
       {flow && adv && (
@@ -136,7 +136,7 @@ export function Help() {
           <li><b>Say where the patient is, and answer the questions.</b> In the <i>Patient</i> tab, choose the point in care, then answer what you know. Leave anything unknown blank.</li>
           <li><b>Read the recommendation.</b> The <i>Recommendation</i> tab lists the options that fit this patient, best match first, and says what is still missing. Pick one to light it up on the diagram.</li>
           <li><b>Check the NCCN page.</b> Hover a step on the diagram to preview its NCCN page with the step highlighted. Click a step to open that page in its own window.</li>
-          <li><b>Save or print.</b> Open the summary from the <i>Recommendation</i> tab to copy it or print it for the record.</li>
+          <li><b>Save or print.</b> Use <i>Summary to copy or print</i> on the <i>Recommendation</i> tab to save it for the record.</li>
         </ol>
         <p className="help-tip">Press <kbd>?</kbd> any time to open this help. <i>Settings</i> (the gear) has the reviewer tools, under <i>Advanced tools</i>.</p>
         <p className="help-fine">{T.prototype}</p>
@@ -169,7 +169,7 @@ export function Welcome() {
         <p className="wl-lead">Tell OncoCarta about your patient. It shows the NCCN recommendations that fit, and each step links to the original NCCN page so you can check it.</p>
         <div className="wl-choices">
           <button type="button" className="wl-choice primary-choice" onClick={() => close({ rightTab: "patient", sheet: true })} autoFocus>
-            <UserRound size={20} aria-hidden /><b>Enter a patient</b><span>Find the NCCN recommendation for them</span>
+            <UserRound size={20} aria-hidden /><b>Find a recommendation for a patient</b><span>Enter what you know and see the NCCN options</span>
           </button>
           {examples.length > 0 && (
             <div className="wl-choice as-div">
@@ -183,7 +183,7 @@ export function Welcome() {
             </div>
           )}
           <button type="button" className="wl-choice" onClick={() => close({ left: "toc" })}>
-            <BookOpen size={20} aria-hidden /><b>Browse the guideline</b><span>Read the pages one by one, with every reference linked.</span>
+            <BookOpen size={20} aria-hidden /><b>Read the guideline</b><span>Read the pages one by one, with every reference linked.</span>
           </button>
         </div>
         <p className="wl-fine">{T.prototype} <button type="button" className="linkish" onClick={() => close({ help: true })}>How to use it</button></p>

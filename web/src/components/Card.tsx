@@ -35,7 +35,7 @@ function CardImpl({ node, parsed, flags, style, measure, onSelect, onFootnote, s
                 onClick={(e) => { e.stopPropagation(); onFootnote?.(l); }}>{l}</button>
             ))}
           </span>
-          {src && <button type="button" className="card-src" aria-label={`Open ${node.page} on the PDF page`} title="Open the source page" {...openSrc} onMouseEnter={undefined} onMouseLeave={undefined}><FileText size={12} /></button>}
+          {src && <button type="button" className="card-src" aria-label="Open the NCCN page for this step" title="Open the NCCN page" {...openSrc} onMouseEnter={undefined} onMouseLeave={undefined}><FileText size={12} /></button>}
         </div>
       )}
       {flags.answer && <span className="check" aria-hidden><Check size={12} strokeWidth={3} /></span>}

@@ -4,7 +4,7 @@ import { useApp, type Loc } from "../store";
 import { buildIndex, matcher, snippet, terms, vocab, type Kind, type SearchDoc } from "../lib/search";
 import { pathSets } from "../lib/graph";
 
-const KIND_LABEL: Record<Kind, string> = { box: "Algorithm", footnote: "Footnotes", principles: "Principles", staging: "Staging", discussion: "Discussion", reference: "Reference" };
+const KIND_LABEL: Record<Kind, string> = { box: "Step", footnote: "Footnotes", principles: "Principles", staging: "Staging", discussion: "Discussion", reference: "Reference" };
 const TAGS = ["Category 1", "Category 2A", "Category 2B", "Category 3", "Preferred", "Other Recommended", "Useful In Certain Circumstances"];
 
 function Mark({ text, q }: { text: string; q: string }) {
@@ -56,7 +56,7 @@ export function Toc() {
       <LeftTabs cur="toc" />
       {g.bundle.guideline && <p className="toc-gl">{g.bundle.guideline.title}{g.bundle.guideline.version ? ` · v${g.bundle.guideline.version}` : ""}{g.bundle.guideline.version_date ? ` · ${g.bundle.guideline.version_date}` : ""}</p>}
       <div className="field"><SearchIcon size={14} /><input type="search" value={f} onChange={(e) => setF(e.target.value)} placeholder="Filter contents" aria-label="Filter contents" /></div>
-      <Group title="Algorithm" count={flows.length} open={t("alg")} onToggle={() => setOpen({ ...open, alg: !open.alg })}>
+      <Group title="Algorithm pages" count={flows.length} open={t("alg")} onToggle={() => setOpen({ ...open, alg: !open.alg })}>
         {flows.map((p) => (
           <button key={p} className={`toc-item alg${isCur({ kind: "flow", page: p }) ? " on" : ""}`} onClick={() => go({ kind: "flow", page: p })}>
             <span>{g.bundle.pages[p].title || "Algorithm page"}</span><code>{p}</code>

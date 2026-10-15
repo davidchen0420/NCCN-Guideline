@@ -24,7 +24,7 @@ page.on("pageerror", (e) => errors.push(e.message));
 page.on("console", (m) => { if (m.type() === "error" && !/404/.test(m.text())) errors.push(m.text()); });   // optional examples.json 404s
 let n = 0;
 const step = async (name, fn) => { await fn(); console.log(`ok ${++n} ${name}`); };
-const closeWelcome = async () => { if (await page.getByRole("dialog", { name: /Find where a patient sits/ }).count()) await page.getByRole("button", { name: /Browse the guideline/ }).click(); };
+const closeWelcome = async () => { if (await page.getByRole("dialog", { name: /Find where a patient sits/ }).count()) await page.getByRole("button", { name: /Read the guideline/ }).click(); };
 
 await page.goto(base + "#list");
 await step("library lists every guideline by category", async () => {
@@ -132,7 +132,7 @@ if (process.argv.includes("--all")) {
     try {
       await p.goto(`${base}#${slug}/`);
       await p.locator("[data-testid=card]").first().waitFor({ timeout: 15000 });
-      if (await p.getByRole("dialog", { name: /Find where a patient sits/ }).count()) await p.getByRole("button", { name: /Enter a patient/ }).click();
+      if (await p.getByRole("dialog", { name: /Find where a patient sits/ }).count()) await p.getByRole("button", { name: /Find a recommendation for a patient/ }).click();
       await p.getByRole("tab", { name: "Patient" }).click();
       const labels = await p.locator(".patient .flabel > span:first-child").allTextContents();
       const lower = labels.filter((l) => /\b(Ecog|Psa|Mri|Pet|Hiv|Covid|Ldh|Egfr|Her2)\b/.test(l) || /_/.test(l));

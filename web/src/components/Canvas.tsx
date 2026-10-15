@@ -12,7 +12,7 @@ import { useSource } from "../source";
 const n_entry = (g: { bundle: { roots: Record<string, string[]> } }, full: string) => (g.bundle.roots[full.split(":")[0]] ?? []).includes(full);
 
 export function Canvas({ page }: { page: string }) {
-  const { s, g, set, dispatch, openFootnote, selected: route } = useApp();
+  const { s, g, set, dispatch, openFootnote, selected: route, isPhone } = useApp();
   const flow = g.bundle.pages[page];
   const boxes = useMemo(() => flow.nodes.filter((n) => n.kind === "box"), [flow]);
   const parsedByShort = useMemo(() => Object.fromEntries(boxes.map((n) => [n.id, g.parsed.get(`${page}:${n.id}`)!])), [boxes, g, page]);
@@ -23,6 +23,8 @@ export function Canvas({ page }: { page: string }) {
   const [heights, setHeights] = useState<Record<string, number> | null>(null);
   const [scale, setScale] = useState(1);
   const moved = useRef(false);
+  /** a card the reader just clicked is already where they are looking: do not re-centre on it */
+  const clicked = useRef<string | null>(null);
 
   const measure = useCallback(() => {
     const root = measureRef.current;
@@ -53,6 +55,7 @@ export function Canvas({ page }: { page: string }) {
   useEffect(() => {
     const el = wrapRef.current, t = tx.current;
     if (!selected || !layout || !el || !t) return;
+    if (clicked.current === selected) { clicked.current = null; return; }
     const p = layout.cards[selected.split(":")[1]];
     if (!p) return;
     const sc = t.instance.state.scale;
@@ -97,8 +100,11 @@ export function Canvas({ page }: { page: string }) {
     const src = boxSrc(g, full);
     if (src && !s.answers.includes(full)) source.open(src);
     dispatch({ type: "toggleAnswer", id: full });
+    clicked.current = full;
     dispatch({ type: "go", loc: { kind: "flow", page, node: full }, push: false });
-    set({ rightTab: "details", sheet: true, dock: s.dock === "fn" ? s.dock : null });
+    // the panel keeps the tab the reader is on; it moves to Step only when already there, or when the phone sheet was closed
+    const toStep = s.rightTab === "details" || (isPhone && !s.sheet);
+    set({ ...(toStep ? { rightTab: "details" as const } : {}), ...(isPhone ? { sheet: true } : {}), dock: s.dock === "fn" ? s.dock : null });
   };
 
   const byId = layout?.cards;
