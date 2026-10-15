@@ -42,7 +42,7 @@ describe("clinical moments", () => {
         }
       }
     }
-  });
+  }, 60_000);   // loads all 91 guidelines
 
   it("a later moment's form holds fewer details than the whole schema, and those its branches use", () => {
     const all = Object.keys(pros.bundle.schema.variables);
