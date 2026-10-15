@@ -313,7 +313,8 @@ await step("opened from disk (file://): guidelines, Enter a patient and the list
   await p.goto(url + "#atlas/prostate");
   await p.getByTestId("enter-patient").click();
   await p.locator("[data-testid=card]").first().waitFor({ timeout: 15000 });
-  assert.ok(await p.locator('select[aria-label="Load a patient"] option').count() > 1, "example patients come with the guideline");
+  await p.getByTestId("patient-more").click();
+  assert.ok(await p.locator('select[aria-label="Load an example"] option').count() > 1, "example patients come with the guideline");
   await p.goto(url + "#atlas/prostate/PROS-3");
   await p.locator(".box-list .bl-main").first().waitFor({ timeout: 15000 });
   await p.goto(url + "#list");

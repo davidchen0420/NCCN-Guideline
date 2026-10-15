@@ -39,7 +39,8 @@ await step("search narrows the list and opens a guideline", async () => {
   await closeWelcome();
 });
 await step("an example patient is routed with the data's option conditions", async () => {
-  await page.locator('select[aria-label="Load a patient"]').selectOption("ex:V1");
+  await page.getByTestId("patient-more").click();
+  await page.locator('select[aria-label="Load an example"]').selectOption("V1");
   await page.getByRole("tab", { name: /Pathways/ }).click();
   assert.match(await page.locator(".pcard").first().innerText(), /Most likely/);
   assert.match(await page.locator(".trail").innerText(), /Matches treatment received/);
@@ -82,6 +83,7 @@ if (process.argv.includes("--all")) {
   const slugs = JSON.parse(await readFile(join(ROOT, "data/index.json"), "utf8")).guidelines.map((g) => g.slug);
   const p = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   const fails = [];
+  await p.addInitScript(() => { try { localStorage.setItem("oc-form-mode", "form"); } catch { /* */ } });   // the full form lists every field
   for (const slug of slugs) {
     const errs = [];
     const onErr = (e) => errs.push(String(e.message ?? e));

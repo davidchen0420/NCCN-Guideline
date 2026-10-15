@@ -1,0 +1,160 @@
+/* The patient panel, read top to bottom: top bar, where the patient is now, the questions that
+   change the recommendation, paste from the note, then the rest. Every rule is scoped under
+   .patient so it wins over the older rules in app.css without touching them. Text sizes use the
+   type scale (--fs-xs 12, --fs-sm 12.5, --fs-md 14, --fs-lg 16); targets are at least 32px. */
+
+/* ---------- top bar ---------- */
+.patient .patient-top { align-items: center; flex-wrap: nowrap; }
+.patient .filled { font-size: var(--fs-md); color: var(--ink-2); }
+.patient .meter { width: 160px; height: 4px; }
+.pt-more { position: relative; flex: none; }
+.pt-more-btn { min-height: 34px; padding: 4px 12px; font-size: var(--fs-md); }
+.pt-more-btn svg { transition: transform .15s; }
+.pt-more-btn[aria-expanded=true] svg { transform: rotate(180deg); }
+.pt-menu { position: absolute; z-index: 30; right: 0; top: calc(100% + 6px); width: min(320px, calc(100vw - 32px)); max-height: min(70vh, 520px); overflow: auto;
+  background: var(--surface); border: 1px solid var(--line-strong); border-radius: 10px; box-shadow: var(--shadow-lg); padding: 6px; display: grid; gap: 2px; }
+.pt-menu-item { display: flex; align-items: center; gap: 9px; width: 100%; min-height: 36px; text-align: left; border: 0; background: none; border-radius: var(--r); padding: 6px 10px; font-size: var(--fs-md); color: var(--ink); }
+.pt-menu-item:hover:not(:disabled) { background: var(--sunken); }
+.pt-menu-item:disabled { color: var(--faint); opacity: .7; }
+.pt-menu-item.danger { color: var(--warn); }
+.pt-menu-sep { border: 0; border-top: 1px solid var(--line); margin: 4px 2px; }
+.pt-menu-label { display: block; padding: 6px 10px 2px; font-size: var(--fs-xs); color: var(--muted); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.patient .pt-menu .sel { margin: 2px 10px 6px; width: calc(100% - 20px); max-width: none; min-height: 34px; font-size: var(--fs-md); }
+.pt-saved { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
+.pt-saved li { display: flex; align-items: center; gap: 6px; border-radius: var(--r); }
+.pt-saved li:hover { background: var(--sunken); }
+.pt-saved .pt-menu-item { flex: 1; min-width: 0; }
+.pt-saved .pt-menu-item:hover { background: none; }
+.pt-saved-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pt-saved time { color: var(--muted); font-size: var(--fs-xs); flex: none; }
+.pt-saved .ib { width: 34px; height: 34px; flex: none; display: grid; place-items: center; border: 0; background: none; color: var(--muted); border-radius: var(--r); }
+.pt-saved .ib:hover { color: var(--warn); background: var(--warn-soft); }
+
+.patient .save-row { align-items: center; }
+.patient .save-row input { min-height: 34px; font-size: var(--fs-md); padding: 4px 10px; }
+.patient .save-row .btn { min-height: 34px; font-size: var(--fs-md); }
+
+/* ---------- what is entered so far ---------- */
+.chips-label { font-size: var(--fs-xs); color: var(--muted); margin: 2px 0 -2px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.patient .chips-strip { gap: 6px; }
+.patient .chips-strip li { font-size: var(--fs-sm); min-height: 32px; }
+.patient .chips-strip li > span { padding: 5px 11px; }
+.patient .chips-strip li > button:first-child { padding: 5px 4px 5px 11px; min-height: 32px; }
+.patient .chip-x { min-width: 32px; min-height: 32px; padding: 0 10px 0 4px; }
+
+/* ---------- sections ---------- */
+.patient .fgroup legend { font-size: var(--fs-xs); }
+.patient .fgroup.moment, .patient .fgroup.deciders, .patient .fgroup.section-pick { border-top: 1px solid var(--line); margin-top: 18px; padding-top: 14px; }
+.patient .fgroup.moment legend, .patient .fgroup.deciders legend, .patient .fgroup.section-pick legend {
+  font-size: var(--fs-lg); font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--ink); margin-bottom: 8px; }
+.patient .fgroup.deciders { border-top-color: var(--accent-line); }
+.patient .fgroup.deciders legend em { font-size: var(--fs-sm); color: var(--muted); font-weight: 400; }
+.patient .fgroup.deciders > .note { margin: 0 0 10px; font-size: var(--fs-sm); }
+.patient .note { font-size: var(--fs-sm); }
+.patient .hint { font-size: var(--fs-sm); }
+.pt-sublabel { font-size: var(--fs-sm); color: var(--ink-2); margin: 10px 0 2px; font-weight: 500; }
+
+/* where is the patient now */
+.patient .moment-chips { gap: 6px; margin: 6px 0 4px; }
+.patient .moment-chips button { min-height: 36px; padding: 5px 14px; font-size: var(--fs-md); }
+.patient .moment .hint { margin-top: 8px; color: var(--ink-2); }
+.patient .moment .sel { min-height: 34px; font-size: var(--fs-md); }
+.patient .section-pick .pf, .patient .moment .pf { margin-bottom: 4px; }
+.patient .moment .pf .sel, .patient .section-pick .pf .sel { min-height: 36px; font-size: var(--fs-md); }
+
+/* carried over from diagnosis */
+.patient .carried { padding: 10px 12px 12px; }
+.patient .carried legend { font-size: var(--fs-sm); font-weight: 600; color: var(--ink); text-transform: none; letter-spacing: 0; padding: 0 4px; }
+.patient .stale-row { gap: 8px; margin-top: 8px; font-size: var(--fs-sm); color: var(--ink); }
+.patient .stale-row span { font-weight: 500; }
+.patient .stale-row .btn, .patient .carried > .btn { min-height: 34px; padding: 5px 14px; font-size: var(--fs-md); font-weight: 500; border-color: var(--line-strong); background: var(--surface); color: var(--ink); }
+.patient .stale-row .btn.keep, .patient .carried > .btn { border-color: var(--accent); color: var(--accent); }
+.patient .stale-row .btn:hover:not(:disabled), .patient .carried > .btn:hover:not(:disabled) { background: var(--sunken); border-color: var(--ink-2); }
+.patient .stale-row .btn.keep:hover:not(:disabled), .patient .carried > .btn:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+.patient .carried > .btn { margin-top: 4px; }
+
+/* one question at a time, or the whole form */
+.patient .mode-switch { display: flex; justify-content: flex-end; margin: -2px 0 8px; padding: 0; background: none; border-radius: 0; }
+.patient .mode-switch button { border: 0; background: none; padding: 6px 4px; min-height: 32px; font-size: var(--fs-sm); color: var(--accent); text-decoration: underline; text-underline-offset: 3px; display: inline-flex; align-items: center; gap: 6px; border-radius: var(--r); }
+.patient .mode-switch button:hover { color: var(--ink); }
+
+/* time tags and small labels */
+.patient .time-tag { font-size: var(--fs-xs); padding: 0 5px; }
+.patient .need-tag { font-size: var(--fs-xs); }
+.patient .flabel { font-size: var(--fs-md); }
+.patient .check, .patient .err { font-size: var(--fs-sm); }
+.patient .seg-row { gap: 6px; }
+.patient .seg-row button { min-height: 34px; padding: 5px 12px; font-size: var(--fs-md); }
+.patient .num input { padding: 7px 10px; font-size: var(--fs-md); }
+.patient .sel { min-height: 34px; font-size: var(--fs-md); }
+.patient .pf.decider { padding: 10px 12px 12px; margin: 0 -12px 10px; }
+
+/* the page a question decides, and where each answer leads */
+.patient .decides { font-size: var(--fs-sm); color: var(--ink-2); margin: 0 0 2px; line-height: 1.4; }
+.patient .decides q { font-family: var(--serif); color: var(--muted); }
+.patient .decides-page { border: 0; background: none; border-radius: 0; font: inherit; padding: 0; color: var(--accent); text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 3px; text-align: left; }
+.patient .decides-page:hover { text-decoration-style: solid; }
+.patient .dp-title { font-weight: 600; }
+.patient .dp-code { color: var(--muted); font-weight: 400; }
+.patient .decides-share { color: var(--muted); }
+.patient .previews { margin-top: 6px; gap: 2px; }
+.patient .previews button { font-size: var(--fs-sm); padding: 4px 8px; min-height: 32px; flex-wrap: nowrap; align-items: baseline; gap: 6px; overflow: visible; }
+.patient .previews li { overflow: visible; }
+.patient .previews b { font-size: var(--fs-sm); }
+.patient .pv-to, .patient .pv-open, .patient .pv-none { overflow: visible; white-space: normal; min-width: 0; flex: 1 1 0; }
+.patient .pv-to { color: var(--ink-2); }
+.patient .iv-to .pv-to, .patient .iv-to .pv-open, .patient .iv-to .pv-none { flex: none; }
+.patient .pv-page { font-weight: 600; color: var(--accent); }
+.patient .pv-page i { font-style: normal; font-weight: 400; color: var(--muted); }
+.patient .pv-open { color: var(--muted); font-style: normal; }
+.patient .pv-none { color: var(--warn); }
+
+/* the interview */
+.patient .interview { margin-top: 4px; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); gap: 10px; }
+.patient .iv-n { font: 600 var(--fs-sm) var(--sans); color: var(--muted); letter-spacing: .02em; }
+.patient .iv-q { font-size: 20px; }
+.patient .interview .hint { color: var(--ink-2); }
+.patient .iv-options button { border-radius: 10px; padding: 10px 14px; min-height: 44px; column-gap: 10px; grid-template-columns: 24px 1fr; }
+.patient .iv-options b { font-size: var(--fs-md); }
+.patient .iv-k { width: 22px; height: 22px; font: 600 var(--fs-xs) var(--mono); }
+.patient .iv-to { font-size: var(--fs-sm); white-space: normal; overflow: visible; color: var(--ink-2); }
+.patient .iv-to .pv-page { font-weight: 600; color: var(--accent); }
+.patient .iv-to .pv-open { color: var(--muted); }
+.patient .iv-tip { font-size: var(--fs-sm); color: var(--muted); }
+.patient .iv-actions { gap: 8px; align-items: center; }
+.patient .iv-actions .btn { min-height: 34px; padding: 5px 12px; font-size: var(--fs-md); }
+.patient .iv-actions .spacer { flex: 1; }
+.patient .iv-num .btn { min-height: 38px; font-size: var(--fs-md); margin-top: 0; }
+.patient .interview.done .iv-q { font-size: var(--fs-lg); }
+.patient .interview.done .btn.primary { justify-self: start; margin-top: 4px; min-height: 38px; font-size: var(--fs-md); }
+.patient .interview.wait { color: var(--ink-2); }
+
+/* paste from the note: a quiet shortcut */
+.patient .paste { margin-top: 18px; padding: 6px 12px; }
+.patient .paste summary { font-size: var(--fs-md); min-height: 32px; color: var(--ink-2); }
+.patient .paste summary .paste-sub { color: var(--muted); font-size: var(--fs-sm); }
+.patient .paste textarea { font-size: var(--fs-md); }
+.patient .paste .btn { min-height: 34px; font-size: var(--fs-md); }
+.patient .paste .btn.primary { margin-top: 4px; }
+.patient .found label { font-size: var(--fs-md); }
+.patient .found q { font-size: var(--fs-sm); }
+.patient .fd-was { font-size: var(--fs-xs); }
+
+/* the rest of the details */
+.patient .computed h4, .patient .more-details > summary, .patient .fgroup.more summary { font-size: var(--fs-xs); }
+.patient .more-details > summary { min-height: 32px; align-items: center; }
+.patient .computed dl div { font-size: var(--fs-md); }
+.patient .computed .ovr { font-size: var(--fs-sm); }
+.patient .conflicts { font-size: var(--fs-sm); }
+.patient .conflicts .linkish { font-size: var(--fs-sm); }
+.patient .helper summary { font-size: var(--fs-sm); min-height: 32px; display: flex; align-items: center; }
+.patient .linkish { min-height: 32px; display: inline-flex; align-items: center; }
+.patient .helper .btn { min-height: 34px; font-size: var(--fs-md); }
+.patient .src-chip { font-size: var(--fs-xs); min-height: 32px; display: inline-flex; align-items: center; }
+.patient .fgroup.more summary { min-height: 32px; display: flex; align-items: center; }
+
+@media (max-width: 520px) {
+  .patient .meter { width: 100px; }
+  .patient .iv-q { font-size: 18px; }
+  .patient .interview { padding: 12px; }
+}

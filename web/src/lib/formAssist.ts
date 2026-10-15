@@ -149,7 +149,7 @@ export function contradictions(facts: Facts, schema: Schema): Conflict[] {
     delete rest[name];
     const computed = derive(rest, schema)[name];
     if (computed !== undefined && computed !== null && computed !== facts[name]) {
-      out.push({ facts: [name], message: `The record states ${label(name).toLowerCase()} “${valueLabel(facts[name])}”, but the details entered work out as “${valueLabel(computed)}”. The stated value is used.` });
+      out.push({ facts: [name], message: `The record states ${label(name).toLowerCase()} “${valueLabel(facts[name])}”, but the answers entered work out as “${valueLabel(computed)}”. The stated value is used.` });
     }
   }
   const val = (re: RegExp) => Object.keys(facts).filter((k) => re.test(k) && vars[k]);
