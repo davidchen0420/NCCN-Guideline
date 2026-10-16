@@ -63,7 +63,8 @@ export function Canvas({ page }: { page: string }) {
     const reading = phone ? 0.82 : Math.min(1, Math.max(0.9, cw / layout.width));
     if (mode === "reading") { t.setTransform(left, 12, reading, 0); return; }
     if (mode === "open") {
-      const sc = Math.min(phone ? 0.82 : 1, Math.max(FLOOR, (cw - left - 16) / layout.width));
+      // on a phone the width never fits at a legible size: open at the reading size and pan
+      const sc = phone ? reading : Math.min(1, Math.max(FLOOR, (cw - left - 16) / layout.width));
       t.setTransform(left, 12, sc, 0);
       return;
     }
