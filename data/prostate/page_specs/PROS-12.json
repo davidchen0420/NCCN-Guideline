@@ -1,0 +1,5 @@
+{
+ "page": "PROS-12",
+ "entries": ["PROS-12:n226_15"],
+ "note": "Patients enter PROS-12 at 'Second Biochemical Recurrence (M0)' (risk stratification into low-risk and high-risk BCR, then monitoring and progression). The only arrow into that box is the loop back from 'N0M0' (progression to N0M0 returns to the start of the page), so the box had a parent and no entry was recorded."
+}

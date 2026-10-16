@@ -1,0 +1,53 @@
+{
+ "page": "GALL-5",
+ "note": "Gallbladder cancer, jaundice or metastatic disease (PDF page 11): the page was empty because three pages shared the code GALL-4 (see GALL-3.json). Two entries: jaundice (workup, resectable or unresectable) and metastatic disease (biopsy and biomarker testing); options, best supportive care, adjuvant treatment (GALL-6).",
+ "section": "Gallbladder Cancer",
+ "footnotes": {
+  "b": "Principles of Imaging (BIL-A).",
+  "d": "Principles of Surgery (GALL-A).",
+  "e": "Principles of Pathology (GALL-B).",
+  "f": "Core biopsy is preferred over FNA.",
+  "g": "For patients with dMMR/MSI-H tumors or a family history suggestive of BRCA1/2 PVs, consider germline testing and/or referral to a genetic counselor.",
+  "h": "Principles of Biomarker Testing (BIL-B).",
+  "i": "Order does not indicate preference. The choice of treatment modality may depend on extent/location of disease and institutional capabilities.",
+  "j": "Principles of Systemic Therapy (BIL-C).",
+  "k": "Principles of Radiation Therapy (BIL-D).",
+  "l": "NCCN Guidelines for Palliative Care.",
+  "m": "For locoregionally advanced disease, consider neoadjuvant systemic therapy to rule out rapid progression and avoid futile surgery. There are limited clinical trial data to define a standard regimen or definitive benefit. See Principles of Systemic Therapy (BIL-C).",
+  "p": "CEA and CA 19-9 are baseline tests and should not be done to confirm diagnosis.",
+  "q": "Magnetic resonance cholangiopancreatography (MRCP) is preferred. Endoscopic retrograde cholangiopancreatography/percutaneous transhepatic cholangiography (ERCP/PTC) are used more for therapeutic intervention.",
+  "r": "Consult with a multidisciplinary team.",
+  "s": "Consider biliary drainage for patients with jaundice prior to resection and systemic therapy. Consider baseline CA 19-9 after biliary decompression."
+ },
+ "boxes": [
+  {"key": "h_work", "header": true, "region": [20, 84, 200, 104]},
+  {"key": "h_treat", "header": true, "region": [492, 84, 630, 104]},
+  {"key": "jaundice", "region": [20, 188, 76, 214], "decision_type": "condition",
+   "predicate": {"fact": "presentation_type", "op": "==", "value": "symptomatic_presentation"}},
+  {"key": "workup", "region": [82, 116, 214, 285]},
+  {"key": "resect", "region": [220, 146, 300, 170], "decision_type": "condition",
+   "predicate": {"fact": "resectability_category", "op": "==", "value": "resectable"}},
+  {"key": "unres", "region": [220, 232, 300, 256], "decision_type": "condition",
+   "predicate": {"fact": "resectability_category", "op": "==", "value": "unresectable"}},
+  {"key": "neo", "region": [304, 126, 442, 190]},
+  {"key": "chole", "region": [492, 118, 640, 196]},
+  {"key": "adj", "region": [670, 128, 762, 190]},
+  {"key": "biopsy1", "region": [304, 226, 430, 262]},
+  {"key": "opts1", "region": [492, 206, 640, 281], "decision_type": "condition",
+   "predicate": {"fact": "candidate_for_systemic_therapy", "op": "==", "value": true}},
+  {"key": "bsc", "region": [498, 282, 640, 298], "decision_type": "condition",
+   "predicate": {"fact": "candidate_for_systemic_therapy", "op": "==", "value": false}},
+  {"key": "meta", "region": [20, 312, 126, 338], "decision_type": "condition",
+   "predicate": {"fact": "resectability_category", "op": "==", "value": "metastatic"}},
+  {"key": "biopsy2", "region": [304, 306, 430, 344]},
+  {"key": "opts2", "region": [492, 296, 640, 358], "decision_type": "condition",
+   "predicate": {"fact": "candidate_for_systemic_therapy", "op": "==", "value": true}},
+  {"key": "assess", "region": [668, 200, 764, 372]}
+ ],
+ "edges": [
+  ["jaundice", "workup"], ["workup", "resect"], ["workup", "unres"],
+  ["resect", "neo"], ["neo", "chole"], ["chole", "adj"],
+  ["unres", "biopsy1"], ["biopsy1", "opts1"], ["biopsy1", "bsc"], ["opts1", "assess"],
+  ["meta", "biopsy2"], ["biopsy2", "opts2"], ["biopsy2", "bsc"], ["opts2", "assess"]
+ ]
+}

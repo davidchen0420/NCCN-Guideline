@@ -1,0 +1,5 @@
+{
+ "page": "ONC-4",
+ "entries": ["ONC-4:n315_31"],
+ "note": "Patients enter ONC-4 (RAI planning after total thyroidectomy, oncocytic carcinoma) at 'RAI planned' (no gross residual disease, gross unresectable or distant disease suspected, gross resectable disease). The only arrow into that box is the loop back from 'Resect clinically significant structural disease if possible', so the box had a parent and no entry was recorded."
+}

@@ -616,35 +616,36 @@
    "version_date": "March 10, 2026",
    "pdf_sha256": "236904a1312c99d0b8216364047bf1b5f6d5e8d759943ac53d6e9c02279714fc",
    "path": "biliary_tract/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 108,
-    "algorithm_pages": 8,
-    "boxes": 60,
-    "boxes_text_found_in_pdf_at_bbox": "45/60",
+    "algorithm_pages": 10,
+    "boxes": 84,
+    "boxes_text_found_in_pdf_at_bbox": "84/84",
     "edges_by_evidence": {
      "two_methods": 55,
-     "image_checked": 3,
+     "image_checked": 26,
      "table_text_checked": 37
     },
-    "decision_boxes": 43,
+    "decision_boxes": 55,
     "predicate_status": {
-     "model_reviewed": 40,
-     "inherited_from_link": 3
+     "model_reviewed": 51,
+     "inherited_from_link": 3,
+     "none": 1
     },
     "decision_types": {
-     "condition": 41,
-     "other": 2
+     "condition": 52,
+     "other": 3
     },
-    "entries": 8,
-    "entries_with_predicate": 8,
-    "entries_reached_by_link": 7,
+    "entries": 11,
+    "entries_with_predicate": 10,
+    "entries_reached_by_link": 11,
     "roles": {
-     "page_heading": 11,
-     "step": 29,
-     "leaf": 15,
-     "decision": 9,
-     "entry": 5,
+     "page_heading": 15,
+     "step": 39,
+     "leaf": 21,
+     "decision": 14,
+     "entry": 8,
      "table_root": 3,
      "table_condition": 15,
      "table_rec": 17,
@@ -652,13 +653,18 @@
      "note": 2
     },
     "links": {
-     "page": 14,
+     "page": 18,
      "external_guideline": 1
     },
     "footnote_refs_by_resolution": {
-     "own_page": 104
+     "own_page": 144
     },
-    "clinician_validated": false
+    "clinician_validated": false,
+    "reextracted_pages": [
+     "GALL-3",
+     "GALL-4",
+     "GALL-5"
+    ]
    }
   },
   {
@@ -1656,7 +1662,7 @@
    "version_date": "February 19, 2026",
    "pdf_sha256": "dd838d37560b4218811cc87baf343c4c84f75699f6ac2dec9e689b909fdba0c4",
    "path": "genetic_familial_high_risk_assessment_breast_ova/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 178,
     "algorithm_pages": 16,
@@ -1713,55 +1719,59 @@
    "version_date": "June 16, 2026",
    "pdf_sha256": "dad3c09a5104a216353381042c0b9d697cca27ad364279ffded657107c3ab15a",
    "path": "genetic_familial_high_risk_assessment_colorectal/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 213,
-    "algorithm_pages": 46,
-    "boxes": 148,
-    "boxes_text_found_in_pdf_at_bbox": "138/148",
+    "algorithm_pages": 47,
+    "boxes": 154,
+    "boxes_text_found_in_pdf_at_bbox": "154/154",
     "edges_by_evidence": {
      "table_text_checked": 374,
      "two_methods": 79,
-     "image_checked": 7
+     "image_checked": 13
     },
-    "decision_boxes": 335,
+    "decision_boxes": 338,
     "predicate_status": {
-     "inherited_from_link": 6,
-     "none": 202,
-     "model_reviewed": 120,
+     "inherited_from_link": 8,
+     "none": 200,
+     "model_reviewed": 123,
      "rejected": 4,
      "section_only": 3
     },
     "decision_types": {
-     "condition": 191,
+     "condition": 194,
      "other": 144
     },
-    "entries": 45,
-    "entries_with_predicate": 37,
-    "entries_reached_by_link": 19,
+    "entries": 46,
+    "entries_with_predicate": 40,
+    "entries_reached_by_link": 28,
     "roles": {
-     "page_heading": 46,
+     "page_heading": 50,
      "table_root": 31,
      "table_title": 25,
      "table_condition": 125,
      "note": 51,
      "table_rec": 69,
-     "step": 41,
-     "leaf": 32,
-     "entry": 14,
+     "step": 45,
+     "leaf": 33,
+     "entry": 15,
      "decision": 10,
      "table_ref": 4,
      "table_value": 151
     },
     "links": {
-     "page": 145,
+     "page": 146,
      "external_guideline": 9
     },
     "footnote_refs_by_resolution": {
      "printed_pointer": 2,
-     "own_page": 62
+     "own_page": 72
     },
-    "clinician_validated": false
+    "clinician_validated": false,
+    "reextracted_pages": [
+     "AFAP-1",
+     "FAP/AFAP-1"
+    ]
    }
   },
   {
@@ -3281,7 +3291,7 @@
    "version_date": "April 10, 2026",
    "pdf_sha256": "c104daa0b6af67d2dd5b3f600e448b4ed9b89b42352ca2dfcdb9528130a851dc",
    "path": "ovarian_cancer_fallopian_tube_cancer_primary_per/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 130,
     "algorithm_pages": 23,
@@ -3306,7 +3316,7 @@
     },
     "entries": 34,
     "entries_with_predicate": 33,
-    "entries_reached_by_link": 21,
+    "entries_reached_by_link": 34,
     "roles": {
      "page_heading": 41,
      "decision": 33,
@@ -3838,7 +3848,7 @@
    "version_date": "July 28, 2026",
    "pdf_sha256": "b7fe04662ed478881339473bfaa7594235f1d7f2030268b56deea63253a21dae",
    "path": "prostate/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 222,
     "algorithm_pages": 18,
@@ -3849,26 +3859,26 @@
      "table_text_checked": 39,
      "image_checked": 5
     },
-    "decision_boxes": 160,
+    "decision_boxes": 161,
     "predicate_status": {
      "model_reviewed": 123,
      "none": 30,
      "rejected": 4,
-     "inherited_from_link": 3
+     "inherited_from_link": 4
     },
     "decision_types": {
-     "condition": 133,
+     "condition": 134,
      "option": 19,
      "other": 8
     },
-    "entries": 25,
-    "entries_with_predicate": 24,
-    "entries_reached_by_link": 21,
+    "entries": 26,
+    "entries_with_predicate": 25,
+    "entries_reached_by_link": 23,
     "roles": {
      "page_heading": 18,
-     "step": 98,
+     "step": 97,
      "leaf": 76,
-     "entry": 23,
+     "entry": 24,
      "decision": 39,
      "note": 8,
      "table_root": 2,
@@ -3897,7 +3907,7 @@
    "version_date": "February 18, 2026",
    "pdf_sha256": "95dc5c7ee1f6a8515b9632666491d98f7910a2294588bfdc1cda1f67ea420410",
    "path": "prostate_early_detection/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 81,
     "algorithm_pages": 4,
@@ -3918,7 +3928,7 @@
     },
     "entries": 7,
     "entries_with_predicate": 6,
-    "entries_reached_by_link": 6,
+    "entries_reached_by_link": 7,
     "roles": {
      "note": 4,
      "page_heading": 5,
@@ -4660,7 +4670,7 @@
    "version_date": "June 2, 2026",
    "pdf_sha256": "7b071a4fd6fdcd7366f3a0a6d386fb98e05656d3157ef65eec15d6ffe1227a02",
    "path": "thyroid_carcinoma/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 159,
     "algorithm_pages": 46,
@@ -4671,28 +4681,28 @@
      "image_checked": 71,
      "single_source": 4
     },
-    "decision_boxes": 222,
+    "decision_boxes": 223,
     "predicate_status": {
      "model_reviewed": 201,
      "rejected": 4,
-     "inherited_from_link": 3,
+     "inherited_from_link": 4,
      "none": 14
     },
     "decision_types": {
-     "condition": 208,
+     "condition": 209,
      "null": 1,
      "option": 10,
      "other": 3
     },
-    "entries": 74,
-    "entries_with_predicate": 71,
-    "entries_reached_by_link": 63,
+    "entries": 75,
+    "entries_with_predicate": 72,
+    "entries_reached_by_link": 71,
     "roles": {
      "page_heading": 76,
      "note": 16,
-     "decision": 52,
+     "decision": 51,
      "leaf": 117,
-     "entry": 74,
+     "entry": 75,
      "step": 204,
      "link": 1,
      "column_header": 2
