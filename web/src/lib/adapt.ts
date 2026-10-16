@@ -50,9 +50,18 @@ const ACRONYMS = new Set(["PSA", "ADT", "CRPC", "CSPC", "RT", "RP", "MDT", "BCR"
 const SMALL = new Set(["and", "or", "for", "of", "the", "in", "to", "with", "on", "a", "an", "by", "at", "vs"]);
 
 /** "WORKUP FOR M1 CRPCxx,ddd" -> "Workup for M1 CRPC": title case, acronyms and stage codes kept. */
+/** Footnote marks glued to the end of a box's text ("INDUCTIONe,f,g", "(ST-1)a"). Only after a word
+ * printed in capitals (two or more capitals, no lower case), so ordinary words and staging codes
+ * keep their letters: "Low", "High", "cT1c", "T1c", "M1b". */
+const trailingMarks = (s: string) => {
+  const m = s.match(/^([\s\S]*?)(\S*[A-Z0-9)\]])((?:[a-z]{1,3}|\d{1,2})(?:[,-](?:[a-z]{1,3}|\d{1,2}))*)$/);
+  if (!m) return s;
+  const word = m[2];
+  const caps = (word.match(/[A-Z]/g) ?? []).length;
+  return caps >= 2 && !/[a-z]/.test(word) ? m[1] + word : s;
+};
 export const stripMarks = (raw: string) =>
-  raw.trim()
-    .replace(/(?<=[A-Z0-9)\]])(?:[a-z]{1,3}|\d{1,2})(?:[,-](?:[a-z]{1,3}|\d{1,2}))*$/, "")   // trailing marks: "INDUCTIONe,f,g"
+  trailingMarks(raw.trim())
     .replace(/\b([A-Z]{4,})[a-z]{1,3}(?:,[a-z]{1,3})*(?=\s)/g, "$1")                         // glued inside: "SURVEILLANCEvv and"
     .trim();
 export function smartTitle(raw: string): string {
