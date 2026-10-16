@@ -93,9 +93,9 @@ to are not offered. `fills` are the details the setting itself states (entered f
 |---|---|---|---|
 | Workup & first treatment | Clinical Presentation | APP-1  |  |
 |  | After surgery: Pathologic Types | APP-2  |  |
-| Follow-up | Surveillance: Lamn/Hamn and No High-Grade Peritoneal Deposit | APP-6  |  |
+| Follow-up | Surveillance: LAMN/HAMN and No High-Grade Peritoneal Deposit | APP-6  |  |
 | Recurrence or relapse | Workup for Recurrence | APP-5  |  |
-| Metastatic or advanced | Metastatic Lamn/Hamn: Peritoneal-Only Disease | APP-4  |  |
+| Metastatic or advanced | Metastatic LAMN/HAMN: Peritoneal-Only Disease | APP-4  |  |
 
 ## Cancer-Associated Venous Thromboembolic Disease · v1.2026 (`associated_venous_thromboembolic_disease`)
 
@@ -109,7 +109,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Pe: Diagnosis | PE-1  |  |
+| Workup & first treatment | PE: Diagnosis | PE-1  |  |
 
 ### Acute Superficial Vein Thrombosis
 
@@ -121,7 +121,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Workup and management for suspected hit | HIT-1 (Workup and Management for Suspected Hit) | hit_status=suspected |
+| Workup & first treatment | Workup and management for suspected hit | HIT-1 (Workup and Management for Suspected HIT) | hit_status=suspected |
 
 ### Perioperative Management of Anticoagulation and Antithrombotic Therapy
 
@@ -133,7 +133,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Splanchnic Vein Thrombosis (Spvt): Diagnosis | SPVT-1  |  |
+| Workup & first treatment | Splanchnic Vein Thrombosis (SPVT): Diagnosis | SPVT-1  |  |
 
 ## B-Cell Lymphomas · v4.2026 (`b_cell_lymphomas`)
 
@@ -197,7 +197,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 |---|---|---|---|
 | Workup & first treatment | Additional Diagnostic Testing | MANT-1  |  |
 | Follow-up | Management and FOLLOW-UP | MANT-3  |  |
-| Recurrence or relapse | cBTKi naïve or Late relapse (>24 months) after prior cBTKi- containing | MANT-6A (Mantle Cell Lymphoma) |  |
+| Recurrence or relapse | cBTKi naïve or Late relapse (>24 months) after prior cBTKi-containing | MANT-6A (Mantle Cell Lymphoma) |  |
 |  | Relapsed/Refractory or | MANT-6B  |  |
 
 ### Marginal Zone Lymphomas
@@ -236,6 +236,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
 | Workup & first treatment | Additional Diagnostic Testing | SMZL-1  |  |
+| Follow-up | Surveillance after treatment | SMZL-3 (Splenic Marginal Zone Lymphoma) |  |
 
 ## Basal Cell Skin Cancer · v2.2026 (`basal_cell_skin`)
 
@@ -393,9 +394,9 @@ to are not offered. `fills` are the details the setting itself states (entered f
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Clinical Stage | BINV-1  |  |
+| Workup & first treatment | Localized breast cancer: Invasive, non-inflammatory, non-metastatic (M0) | BINV-1 (Clinical Stage) | diagnosis_category=invasive_breast_cancer, m_category=M0 |
 |  | After surgery: Adjuvant Systemic Therapy Considerations Based on Histology and Receptor Status After Upfront Surgery | BINV-4  |  |
-| Follow-up | Surveillance/follow-up | BINV-17  |  |
+| Follow-up | Surveillance/Follow-Up | BINV-17  |  |
 | Recurrence or relapse | Stage IV (M1) or Recurrent | BINV-18 (Invasive Breast Cancer) |  |
 | Metastatic or advanced | Inoperable or Locally Advanced Disease (Non-Inflammatory): Preoperative Systemic Therapy and Subsequent Treatment | BINV-15  |  |
 |  | Stage IV (M1) or Recurrent | BINV-18 (Invasive Breast Cancer) |  |
@@ -424,7 +425,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 |---|---|---|---|
 | Workup & first treatment | Diagnostic Evaluation | BSCR-14  |  |
 | Follow-up | FOLLOW-UP Evaluation After Core Needle Biopsy | BSCR-15  |  |
-|  | FOLLOW-UP Evaluation After Aspiration Following a Clinically Suspicious Palpable Bi-Rads Category 2 Finding | BSCR-17  |  |
+|  | FOLLOW-UP Evaluation After Aspiration Following a Clinically Suspicious Palpable BI-RADS Category 2 Finding | BSCR-17  |  |
 | Recurrence or relapse | Persistent or severe breast pain | BSCR-11 (Presenting Signs and Symptoms) | breast_pain_persistent_or_severe=true |
 
 ## Castleman Disease · v2.2026 (`castleman_disease`)
@@ -432,7 +433,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
 | Workup & first treatment | Diagnosis | CD-1  |  |
-| Recurrence or relapse | Relapsed/Refractory or Progressive Disease (Mcd) | CD-6  |  |
+| Recurrence or relapse | Relapsed/Refractory or Progressive Disease (MCD) | CD-6  |  |
 
 ## Central Nervous System Cancers · v2.2026 (`central_nervous_system`)
 
@@ -617,7 +618,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
 | Workup & first treatment | Clinical | COL-1  |  |
-|  | Colon cancer appropriate for resection (non- metastatic) | COL-2 (Clinical Presentation) | primary_diagnosis=colon_adenocarcinoma, m_category=M0 |
+|  | Colon cancer appropriate for resection (non-metastatic) | COL-2 (Clinical Presentation) | primary_diagnosis=colon_adenocarcinoma, m_category=M0 |
 |  | After surgery: Pathologic Stage | COL-13  |  |
 | Follow-up | Surveillance after treatment | COL-8 (Pathologic Stage) |  |
 | Recurrence or relapse | Recurrence | COL-9  |  |
@@ -628,7 +629,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
 | Workup & first treatment | Clinical | COL-1  |  |
-|  | Colon cancer appropriate for resection (non- metastatic) | COL-2 (Clinical Presentation) | primary_diagnosis=colon_adenocarcinoma, m_category=M0 |
+|  | Colon cancer appropriate for resection (non-metastatic) | COL-2 (Clinical Presentation) | primary_diagnosis=colon_adenocarcinoma, m_category=M0 |
 |  | After surgery: Pathologic Stage | COL-4  |  |
 | Follow-up | Surveillance after treatment | COL-8 (Pathologic Stage) |  |
 | Recurrence or relapse | Recurrence | COL-9  |  |
@@ -648,7 +649,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
 | Workup & first treatment | Mycosis Fungoides/Sezary Syndrome | MFSS-1  |  |
-|  | Principles for Mycosis Fungoides/SÉZary Syndrome (Mf/Ss) | MFSS/INTRO-2  |  |
+|  | Principles for Mycosis Fungoides/SÉZary Syndrome (MF/SS) | MFSS/INTRO-2  |  |
 | Metastatic or advanced | Mycosis Fungoides/Sezary Syndrome | MFSS-11  |  |
 
 ### Primary Cutaneous B-Cell Lymphomas
@@ -668,7 +669,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Primary cutaneous indolent lymphoproliferative disorders (lpd) | INCTLD-2 (Primary Cutaneous Indolent Lymphoproliferative Disorders (Lpd)) |  |
+| Workup & first treatment | Primary cutaneous indolent lymphoproliferative disorders (lpd) | INCTLD-2 (Primary Cutaneous Indolent Lymphoproliferative Disorders (LPD)) |  |
 
 ### Subcutaneous Panniculitis-Like T-Cell Lymphoma
 
@@ -749,41 +750,41 @@ to are not offered. `fills` are the details the setting itself states (entered f
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
 | Workup & first treatment | APC-Associated Polyposis | FAP/AFAP-1  |  |
-| Follow-up | Attenuated Fap Treatment and Surveillance: Personal History | AFAP-1  |  |
-|  | Family History of Classical Fap - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
+| Follow-up | Attenuated FAP Treatment and Surveillance: Personal History | AFAP-1  |  |
+|  | Family History of Classical FAP - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
 
 ### Attenuated Familial Adenomatous Polyposis
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Attenuated Fap Genetic Testing and Surveillance: Family History of Attenuated Fap Pathogenic Variant Known | AFAP-2  |  |
-| Follow-up | Attenuated Fap Treatment and Surveillance: Personal History | AFAP-1  |  |
-|  | Attenuated Fap Genetic Testing and Surveillance: Family History of Attenuated Fap Pathogenic Variant Known | AFAP-2  |  |
-|  | Family History of Classical Fap - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
+| Workup & first treatment | Attenuated FAP Genetic Testing and Surveillance: Family History of Attenuated FAP Pathogenic Variant Known | AFAP-2  |  |
+| Follow-up | Attenuated FAP Treatment and Surveillance: Personal History | AFAP-1  |  |
+|  | Attenuated FAP Genetic Testing and Surveillance: Family History of Attenuated FAP Pathogenic Variant Known | AFAP-2  |  |
+|  | Family History of Classical FAP - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
 
 ### Hereditary Esophageal Cancer
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
 | Workup & first treatment | Principles of Genetic Risk Assessment for Esophageal Cancers | HESOPH-2  |  |
-| Follow-up | Attenuated Fap Treatment and Surveillance: Personal History | AFAP-1  |  |
-|  | Family History of Classical Fap - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
+| Follow-up | Attenuated FAP Treatment and Surveillance: Personal History | AFAP-1  |  |
+|  | Family History of Classical FAP - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
 
 ### Hereditary Gastric Cancer
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
 | Workup & first treatment | Genetic Testing Criteria for Gastric Cancer Risk | HGAST-1  |  |
-| Follow-up | Attenuated Fap Treatment and Surveillance: Personal History | AFAP-1  |  |
-|  | Family History of Classical Fap - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
+| Follow-up | Attenuated FAP Treatment and Surveillance: Personal History | AFAP-1  |  |
+|  | Family History of Classical FAP - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
 
 ### Idiopathic Adenomatous Polyposis
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Idiopathic Adenomatous Polyposis (Iap) | IAP-1  |  |
-| Follow-up | Attenuated Fap Treatment and Surveillance: Personal History | AFAP-1  |  |
-|  | Family History of Classical Fap - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
+| Workup & first treatment | Idiopathic Adenomatous Polyposis (IAP) | IAP-1  |  |
+| Follow-up | Attenuated FAP Treatment and Surveillance: Personal History | AFAP-1  |  |
+|  | Family History of Classical FAP - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
 
 ### Juvenile Polyposis Syndrome
 
@@ -791,26 +792,26 @@ to are not offered. `fills` are the details the setting itself states (entered f
 |---|---|---|---|
 | Workup & first treatment | Cancer risk management based on genetic test results | GENE-16 (Cancer Risk Management Based on Genetic Test Results) |  |
 |  | Juvenile Polyposis Syndrome | JPS-1  |  |
-| Follow-up | Attenuated Fap Treatment and Surveillance: Personal History | AFAP-1  |  |
-|  | Family History of Classical Fap - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
+| Follow-up | Attenuated FAP Treatment and Surveillance: Personal History | AFAP-1  |  |
+|  | Family History of Classical FAP - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
 
 ### Lynch Syndrome
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Strategies for Testing for Ls in Individuals Meeting Testing Criteria | HRS-3  |  |
-| Follow-up | Attenuated Fap Treatment and Surveillance: Personal History | AFAP-1  |  |
-|  | Family History of Classical Fap - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
+| Workup & first treatment | Strategies for Testing for LS in Individuals Meeting Testing Criteria | HRS-3  |  |
+| Follow-up | Attenuated FAP Treatment and Surveillance: Personal History | AFAP-1  |  |
+|  | Family History of Classical FAP - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
 
 ### MUTYH-Associated Polyposis
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Mutyh-Associated Polyposis | MAP-1  |  |
-| Follow-up | Attenuated Fap Treatment and Surveillance: Personal History | AFAP-1  |  |
-|  | Family History of Classical Fap - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
-|  | Map Treatment and Surveillance: Personal History | MAP-2  |  |
-|  | Map Treatment and Surveillance: Family History of Map Pathogenic Variant Known | MAP-3  |  |
+| Workup & first treatment | MUTYH-Associated Polyposis | MAP-1  |  |
+| Follow-up | Attenuated FAP Treatment and Surveillance: Personal History | AFAP-1  |  |
+|  | Family History of Classical FAP - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
+|  | MAP Treatment and Surveillance: Personal History | MAP-2  |  |
+|  | MAP Treatment and Surveillance: Family History of MAP Pathogenic Variant Known | MAP-3  |  |
 
 ### Peutz-Jeghers Syndrome
 
@@ -818,8 +819,8 @@ to are not offered. `fills` are the details the setting itself states (entered f
 |---|---|---|---|
 | Workup & first treatment | Cancer risk management based on genetic test results | GENE-17 (Cancer Risk Management Based on Genetic Test Results) |  |
 |  | Peutz-Jeghers Syndrome | PJS-1  |  |
-| Follow-up | Attenuated Fap Treatment and Surveillance: Personal History | AFAP-1  |  |
-|  | Family History of Classical Fap - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
+| Follow-up | Attenuated FAP Treatment and Surveillance: Personal History | AFAP-1  |  |
+|  | Family History of Classical FAP - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
 
 ### Serrated Polyposis Syndrome
 
@@ -827,8 +828,8 @@ to are not offered. `fills` are the details the setting itself states (entered f
 |---|---|---|---|
 | Workup & first treatment | Cancer risk management based on genetic test results | GENE-15 (Cancer Risk Management Based on Genetic Test Results) |  |
 |  | Serrated Polyposis Syndrome | SPS-1  |  |
-| Follow-up | Attenuated Fap Treatment and Surveillance: Personal History | AFAP-1  |  |
-|  | Family History of Classical Fap - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
+| Follow-up | Attenuated FAP Treatment and Surveillance: Personal History | AFAP-1  |  |
+|  | Family History of Classical FAP - Pathogenic Variant Known: Genetic Testing and Surveillance | FAP-2  |  |
 
 ## Gestational Trophoblastic Neoplasia · v2.2026 (`gestational_trophoblastic_neoplasia`)
 
@@ -911,7 +912,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
 | Workup & first treatment | Biopsy confirms diagnosis of mucosal malignant melanoma | MM-1 (Presentation) | histology=mucosal_melanoma |
-|  | Nodal basin | MM-4 (Primary Therapy FOR Occult Primary- Melanoma (also see NCCN Guidelines for Occult Primary)) |  |
+|  | Nodal basin | MM-4 (Primary Therapy for Occult Primary-Melanoma (also see NCCN Guidelines for Occult Primary)) |  |
 
 ### Occult Primary
 
@@ -954,12 +955,12 @@ to are not offered. `fills` are the details the setting itself states (entered f
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
 | Workup & first treatment | Evaluation of Anemia | ANEM-1  |  |
-|  | Special Categories in Considering Erythropoiesis-Stimulating Agent (Esa) Use | ANEM-3  |  |
+|  | Special Categories in Considering Erythropoiesis-Stimulating Agent (ESA) Use | ANEM-3  |  |
 |  | Risk evaluation for ICAHT prior to immune effector cell (IEC) therapies | ICAHT-1 (Pre-Treatment Evaluation of Patient Risk Factors for Immune Effector Cell-Associated Hematologic) | receiving_iec_therapy=true |
 |  | Prophylactic Use of G-CSFs for Febrile Neutropenia | MGF-1  |  |
-|  | Therapeutic Use of Mgf | MGF-4  |  |
+|  | Therapeutic Use of MGF | MGF-4  |  |
 |  | Thrombocytopenia post-hematopoietic cell transplant | TGF-2 (Use of TPO-RA in Patients Post-Hematopoietic Cell Transplant) |  |
-| Follow-up | Post-Treatment Assessment of Suspected Icaht | ICAHT-2  |  |
+| Follow-up | Post-Treatment Assessment of Suspected ICAHT | ICAHT-2  |  |
 
 ## Hepatocellular Carcinoma · v1.2026 (`hepatocellular_carcinoma`)
 
@@ -979,7 +980,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Tissue biopsy | ECD-1A (Tissue Biopsy Analysis for Ecd) |  |
+| Workup & first treatment | Tissue biopsy | ECD-1A (Tissue Biopsy Analysis for ECD) |  |
 |  | Confirmed ECD | ECD-2 (Presentation) | histiocytosis_type=erdheim_chester_disease, tissue_biopsy_confirmed=true |
 
 ### Malignant Histiocytic Neoplasms
@@ -1008,8 +1009,8 @@ to are not offered. `fills` are the details the setting itself states (entered f
 | Workup & first treatment | Diagnosis/Workup | HODG-1  |  |
 |  | Repeat FDG-PET/ CT or diagnostic CT | HODG-15 (Additional Therapy) |  |
 | Follow-up | FOLLOW-UP After Completion of Treatment and Monitoring for Late Effects | HODG-12  |  |
-| Recurrence or relapse | CHL Biopsy- proven relapse after ≥3 months: | HODG-14 (Additional Therapy) |  |
-|  | Nlphl Refractory or Suspected Relapse | HODG-17  |  |
+| Recurrence or relapse | CHL Biopsy-proven relapse after ≥3 months: | HODG-14 (Additional Therapy) |  |
+|  | NLPHL Refractory or Suspected Relapse | HODG-17  |  |
 | Later-line therapy | Second-Line Therapy | HODG-16  |  |
 
 ## Cancer in People with HIV · v2.2026 (`in_people_with_hiv`)
@@ -1050,15 +1051,15 @@ to are not offered. `fills` are the details the setting itself states (entered f
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
 | Workup & first treatment | Principles of patient monitoring for car t-cell–related toxicities | CART-1 (Principles of Patient Monitoring for CAR T-Cell–Related Toxicities) |  |
-|  | Overview of car t-cell therapy-related toxicities | CART-3 (Overview of CAR T-CELL Therapy-Related Toxicities) |  |
-|  | Toxicities specific to anti-bcma car t-cell therapy | CART-5 (Toxicities Specific to Anti-Bcma CAR T-CELL Therapy) |  |
+|  | Overview of car t-cell therapy-related toxicities | CART-3 (Overview of CAR T-Cell Therapy-Related Toxicities) |  |
+|  | Toxicities specific to anti-bcma car t-cell therapy | CART-5 (Toxicities Specific to Anti-BCMA CAR T-Cell Therapy) |  |
 |  | Car t-cell–related neurotoxicity treatment | CART-9 (CAR T-Cell–Related Neurotoxicity Treatment) |  |
 
 ### Management of Lymphocyte Engager-Related Toxicities
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Crs Related to T-CELL– Engaging Bispecific Agents | ENGAGE-3  |  |
+| Workup & first treatment | CRS Related to T-Cell– Engaging Bispecific Agents | ENGAGE-3  |  |
 |  | Management of Lymphocyte Engager-Related Toxicities | ENGAGE-5  |  |
 
 ## Management of Immune Checkpoint Inhibitor-Related Toxicities · v1.2026 (`management_of_immune_checkpoint_inhibitor_relate`)
@@ -1071,7 +1072,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 |  | Psoriasis and psoriasiform diseases | ICI_DERM-5 (Assessment/Grading) | presenting_irae=psoriasis_or_psoriasiform |
 |  | Oral mucosa inflammation | ICI_DERM-6 (Assessment/Grading) | presenting_irae=oral_mucosa_inflammation |
 |  | Dry mouth (Sicca syndrome) | ICI_DERM-7 (Assessment/Grading) |  |
-|  | Adverse Event(S) | ICI_FTG-1  |  |
+|  | Adverse EVENT(S) | ICI_FTG-1  |  |
 |  | Esophagitis/ Gastritis/ Duodenitis | ICI_GI-1 (Assessment/Grading) | presenting_irae=esophagitis_gastritis_duodenitis |
 |  | Assessment/Grading | ICI_GI-2  |  |
 |  | Elevated ALT/AST | ICI_GI-5 (Assessment/Grading) | presenting_irae=elevated_alt_ast |
@@ -1216,13 +1217,13 @@ to are not offered. `fills` are the details the setting itself states (entered f
 |---|---|---|---|
 | Workup & first treatment | Neuroendocrine Tumors of the Gastrointestinal Tract (Well-Differentiated Grade 1/2), Lung, and Thymus | NET-1  |  |
 |  | Duodenal | NET-2 (First-Line Treatment) | tumor_site=duodenal |
-|  | Jejunal/ ileal/colon | NET-4 (Clinical Location) | tumor_site=jejunal_ileal_colon |
+|  | Jejunal/ileal/colon | NET-4 (Clinical Location) | tumor_site=jejunal_ileal_colon |
 |  | Clinical Location | NET-5  |  |
 |  | Clinical Location | NET-7  |  |
 | Follow-up | Appendix | NET-3 (Surveillance) |  |
 |  | Surveillance | NET-6  |  |
 |  | Surveillance | NET-8  |  |
-| Metastatic or advanced | Management of Locoregional Advanced Disease And/Or Distant Metastases of the Gastrointestinal Tract | NET-9  |  |
+| Metastatic or advanced | Management of Locoregional Advanced Disease and/or Distant Metastases of the Gastrointestinal Tract | NET-9  |  |
 |  | Management of Locoregional Unresectable Disease: Lung or Thymus | NET-11  |  |
 |  | Management of Distant Metastases (Lung or Thymus) | NET-12  |  |
 
@@ -1237,7 +1238,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Well- differentiated Grade 3 NET | WDG3-1 (Well-Differentiated, Grade 3 Neuroendocrine Tumors) | histologic_grade=G3, differentiation=well_differentiated |
+| Workup & first treatment | Well-differentiated Grade 3 NET | WDG3-1 (Well-Differentiated, Grade 3 Neuroendocrine Tumors) | histologic_grade=G3, differentiation=well_differentiated |
 | Metastatic or advanced | Management of Locally Advanced/Metastatic Disease: Favorable Biology | WDG3-3  |  |
 |  | Management of Locally Advanced/Metastatic Disease: Unfavorable Biology | WDG3-4  |  |
 
@@ -1253,7 +1254,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 | Metastatic or advanced | Stage IVA, M1b and Stage IVB, M1c | NSCL-15 (Pretreatment Evaluation) |  |
 |  | Therapy for Recurrence and Metastasis | NSCL-18  |  |
 |  | Advanced or metastatic disease | NSCL-19 (Biomarker Testing) |  |
-| Later-line therapy | Progression on Osimertinib or Lazertinib ± Amivantamab- vmjw | NSCL-22 (Subsequent Therapy) |  |
+| Later-line therapy | Progression on Osimertinib or Lazertinib ± Amivantamab-vmjw | NSCL-22 (Subsequent Therapy) |  |
 |  | Progression on Alectinib or Brigatinib or Ceritinib or Ensartinib or Lorlatinib | NSCL-28 (Subsequent Therapy) |  |
 
 ## Occult Primary · v2.2026 (`occult_primary`)
@@ -1338,7 +1339,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
 | Workup & first treatment | Ovarian serous borderline epithelial tumors (LMP) | LCOC-9 (Adjuvant Treatment) | histology=serous_borderline_lmp |
-| Follow-up | Monitoring/follow-up | LCOC-11  |  |
+| Follow-up | Monitoring/Follow-Up | LCOC-11  |  |
 
 ### Small Cell Carcinoma of the Ovary (Hypercalcemic Type)
 
@@ -1383,14 +1384,14 @@ to are not offered. `fills` are the details the setting itself states (entered f
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
 | Workup & first treatment | Induction Therapy/ Initial Treatment | PBCL-6  |  |
-| Follow-up | Surveillance/follow-up | PBCL-10  |  |
+| Follow-up | Surveillance/Follow-Up | PBCL-10  |  |
 | Recurrence or relapse | Relapse or Refractory Disease | PBCL-11  |  |
 
 ### Pediatric Post-Transplant Lymphoproliferative Disorders
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Additional Diagnostic Testing for Ptld | PTLD-1  |  |
+| Workup & first treatment | Additional Diagnostic Testing for PTLD | PTLD-1  |  |
 
 ### Primary Mediastinal Large B-Cell Lymphoma
 
@@ -1430,12 +1431,12 @@ to are not offered. `fills` are the details the setting itself states (entered f
 |  | Head or neck mass | PRMS-3 (Head or Neck Mass) | presenting_site=head_neck |
 |  | Soft tissue mass of the extremity | PRMS-4 (Soft Tissue Mass of the Extremity) | presenting_site=extremity |
 |  | Soft tissue mass of the trunk | PRMS-5 (Soft Tissue Mass of the Trunk) | presenting_site=trunk |
-|  | Mass of the vulva, vagina, or uterus fundus/ cervix | PRMS-6 (Mass of the Vulva, Vagina, or Uterus Fundus/Cervix) | presenting_site=vulva_vagina_uterus_cervix |
+|  | Mass of the vulva, vagina, or uterus fundus/cervix | PRMS-6 (Mass of the Vulva, Vagina, or Uterus Fundus/Cervix) | presenting_site=vulva_vagina_uterus_cervix |
 |  | Paratesticular mass | PRMS-7 (Paratesticular Mass) | presenting_site=paratesticular |
 |  | Bladder or prostate mass | PRMS-8 (Bladder or Prostate Mass) | presenting_site=bladder_prostate |
 |  | Biliary/liver mass | PRMS-9 (Biliary/Liver Mass) | presenting_site=biliary_liver |
 | Follow-up | Surveillance for Patients with No Known Active Disease | PRMS-15  |  |
-| Recurrence or relapse | Recurrent or Progressive Rms | PRMS-14  |  |
+| Recurrence or relapse | Recurrent or Progressive RMS | PRMS-14  |  |
 
 ## Penile Cancer · v2.2026 (`penile`)
 
@@ -1459,7 +1460,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 |---|---|---|---|
 | Workup & first treatment | Clinically localized prostate cancer (Any T, N0, M0 or Any T, NX, MX) | PROS-1 (Initial Prostate Cancer Diagnosis) |  |
 | Recurrence or relapse | Recurrence | PROS-8  |  |
-|  | PSA persistence/ recurrence | PROS-9 (Radical Prostatectomy PSA) |  |
+|  | PSA persistence/recurrence | PROS-9 (Radical Prostatectomy PSA) |  |
 |  | Treatment for First Recurrence | PROS-10  |  |
 | Metastatic or advanced | Workup and Treatment of Metachronous Oligometastatic CSPC | PROS-13  |  |
 |  | Workup and Treatment of Low-Volume M1 (Metachronous or Synchronous) or Synchronous Oligometastic CSPC | PROS-14  |  |
@@ -1521,8 +1522,8 @@ to are not offered. `fills` are the details the setting itself states (entered f
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
 | Workup & first treatment | Workup | SBA-1  |  |
-| Recurrence or relapse | Metastatic And/Or Recurrence | SBA-8  |  |
-| Metastatic or advanced | Metastatic And/Or Recurrence | SBA-8  |  |
+| Recurrence or relapse | Metastatic and/or Recurrence | SBA-8  |  |
+| Metastatic or advanced | Metastatic and/or Recurrence | SBA-8  |  |
 
 ## Smoking Cessation · v1.2026 (`smoking_cessation`)
 
@@ -1575,12 +1576,11 @@ to are not offered. `fills` are the details the setting itself states (entered f
 | Metastatic or advanced | Metastatic (M1) at presentation | PHYLLSARC-4 (Malignant Phyllodes Tumor of the Breast) | m_category=M1 |
 |  | Stage IV disease | RETSARC-5 (Retroperitoneal/Intra-Abdominal) |  |
 
-### Rhabdomyosarcomaa
+### Rhabdomyosarcoma
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Rhabdomyosarcomaa | RMS-1  |  |
-| Metastatic or advanced | Metastatic (M1) at presentation | PHYLLSARC-4 (Malignant Phyllodes Tumor of the Breast) | m_category=M1 |
+| Workup & first treatment | Rhabdomyosarcoma | RMS-1  |  |
 
 ## Squamous Cell Skin Cancer · v2.2026 (`squamous_cell_skin`)
 
@@ -1588,9 +1588,9 @@ to are not offered. `fills` are the details the setting itself states (entered f
 |---|---|---|---|
 | Workup & first treatment | Lesion suspicious for skin cancer | SCC-1 (Diagnosis) | lesion_suspicious_for_skin_cancer=true |
 | Follow-up | Follow-up | SCC-11  |  |
-| Metastatic or advanced | Very-high-risk CSCC with significant risk of extensive local recurrence, nodal,… | SCC-6 (Very-High-Risk Cscc) | significant_risk_extensive_local_recurrence_nodal_or_sitm=true |
-|  | Locally Advanced Cscc | SCC-7  |  |
-|  | Satellitosis/In-Transit Metastasis | SCC-9  |  |
+| Metastatic or advanced | Very-high-risk CSCC with significant risk of extensive local recurrence, nodal,… | SCC-6 (Very-High-Risk CSCC) | significant_risk_extensive_local_recurrence_nodal_or_sitm=true |
+|  | Locally Advanced CSCC | SCC-7  |  |
+|  | Satellitosis/in-Transit Metastasis | SCC-9  |  |
 
 ## Survivorship · v3.2026 (`survivorship`)
 
@@ -1700,7 +1700,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
 | Workup & first treatment | General Principles of Pain Management | SPAIN-1  |  |
-|  | Screen for cancer pain or cancer treatment- related pain at regular intervals | SPAIN-3 (Universal Screening) |  |
+|  | Screen for cancer pain or cancer treatment-related pain at regular intervals | SPAIN-3 (Universal Screening) |  |
 | Follow-up | Survivorship Survivorship: Pain | SPAIN-7  |  |
 | Later-line therapy | Screening for Subsequent New Primary Cancers | SURV-4  |  |
 
@@ -1780,7 +1780,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Indolent T-CELL Lymphomas of the Gastrointestinal (GI) Tract and Indolent Nk-Cell Lymphoproliferative Disorders | INTCL-1  |  |
+| Workup & first treatment | Indolent T-Cell Lymphomas of the Gastrointestinal (GI) Tract and Indolent NK-cell Lymphoproliferative Disorders | INTCL-1  |  |
 
 ### Peripheral T-Cell Lymphomas
 
@@ -1834,7 +1834,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Fna Results | THYR-1  |  |
+| Workup & first treatment | FNA Results | THYR-1  |  |
 | Metastatic or advanced | Metastatic Disease | ANAP-3  |  |
 
 ### Thyroid Carcinoma – Follicular Carcinoma
@@ -1850,7 +1850,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Fna Results | THYR-1  |  |
+| Workup & first treatment | FNA Results | THYR-1  |  |
 | Follow-up | Surveillance after treatment | MEDU-5 (Disease Monitoring) |  |
 | Recurrence or relapse | Recurrent or Persistent Disease | MEDU-7  |  |
 
@@ -1868,7 +1868,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
 | Workup & first treatment | Postsurgical Evaluation | PAP-3  |  |
-|  | Fna Results | THYR-1  |  |
+|  | FNA Results | THYR-1  |  |
 | Recurrence or relapse | Recurrent Structural Disease | PAP-9  |  |
 | Metastatic or advanced | Known or Suspected Distant Metastatic Disease | PAP-6  |  |
 
@@ -1902,7 +1902,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 | Workup & first treatment | Primary Treatment | UTSARC-1  |  |
 | Follow-up | Surveillance | UTSARC-4  |  |
 | Recurrence or relapse | Therapy for Relapse | ENDO-9  |  |
-|  | Radiologically isolated vaginal/ pelvic recurrence | UTSARC-5 (Uterine Sarcoma) | recurrence_site=vaginal_or_pelvic_radiologically_isolated |
+|  | Radiologically isolated vaginal/pelvic recurrence | UTSARC-5 (Uterine Sarcoma) | recurrence_site=vaginal_or_pelvic_radiologically_isolated |
 
 ## Vaginal Cancer · v2.2026 (`vaginal`)
 

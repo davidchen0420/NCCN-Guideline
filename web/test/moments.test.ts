@@ -65,6 +65,61 @@ describe("clinical moments", () => {
   });
 });
 
+describe("first pages, needs and questions", () => {
+  it("finds the first page of a loop (NSCL-11 leads back to NSCL-1) and ignores its inherited entry condition", () => {
+    const nsclc = load("nsclc");
+    expect(moments(nsclc).filter((m) => m.phase === "diagnosis").map((m) => m.page)).toEqual(expect.arrayContaining(["DIAG-1", "NSCL-1"]));
+    expect(nsclc.preds["NSCL-1:n276_24"], "the stage IVA condition of the box that loops back is not a gate on the first page").toBeUndefined();
+  });
+
+  it("a title or entry that names two needs serves both; a risk of recurrence is not a recurrence", async () => {
+    const { statesOfTitle } = await import("../src/lib/graph");
+    expect(statesOfTitle("Stage IV (M1) or Recurrent Disease")).toEqual(["recurrence", "advanced"]);
+    expect(statesOfTitle("T3, N0 at high risk for systemic recurrence")).toEqual([]);
+    expect(statesOfTitle("Subsequent Treatment after locally advanced disease")).toEqual(["advanced"]);
+    const breast = load("breast");
+    expect(moments(breast).filter((m) => m.page === "BINV-18").map((m) => m.phase).sort()).toEqual(["advanced", "recurrence"]);
+  });
+
+  it("a page where all treatment ends and the schedules begin is the follow-up, whatever its title", () => {
+    const colon = load("colon");
+    expect(moments(colon).some((m) => m.page === "COL-8" && m.phase === "followup")).toBe(true);
+    expect(moments(colon).some((m) => m.page === "COL-4" && m.phase === "diagnosis" && m.post)).toBe(true);
+  });
+
+  it("what is only known later is not asked at a first workup", async () => {
+    const { askableQuestions, impliedBySection, isLaterStage } = await import("../src/lib/moments");
+    const { rankPathways } = await import("../src/lib/pathways");
+    const rectal = load("rectal");
+    const facts: Record<string, unknown> = { guideline_section: "pMMR/MSS Rectal Cancer", distant_metastases_suspected_or_proven: false, clinical_t_category: "T3", clinical_n_category: "N1", ...impliedBySection(rectal, "pMMR/MSS Rectal Cancer") };
+    const q = askableQuestions(rectal, rankPathways(rectal, facts, "REC-2"), facts, "REC-2", (f) => f !== "guideline_section").map((d) => d.fact);
+    for (const f of ["mismatch_repair_status", "pathologic_t_category", "pathologic_n_category", "polyp_invasive_cancer", "histologic_grade", "restaging_emvi_present", "clinical_complete_response"])
+      expect(q, f).not.toContain(f);
+    expect(isLaterStage(rectal, "REC-2", "REC-10")).toBe(true);
+    expect(isLaterStage(rectal, "REC-10", "REC-10")).toBe(false);
+    expect(isLaterStage(rectal, "auto", "REC-10")).toBe(false);
+  });
+
+  it("a workup page with no condition of its own asks what decides where it leads", async () => {
+    const { askableQuestions } = await import("../src/lib/moments");
+    const { rankPathways } = await import("../src/lib/pathways");
+    const hodg = load("hodgkin_lymphoma");
+    const q = askableQuestions(hodg, rankPathways(hodg, {}, "HODG-1"), {}, "HODG-1").map((d) => d.fact);
+    expect(q.length).toBeGreaterThan(0);
+  });
+
+  it("labels: section prefixes and cut-off titles are tidied; raw enum values are not shown", async () => {
+    const { sectionLabeller, vlabel } = await import("../src/lib/valueText");
+    const { tidyTitle } = await import("../src/lib/moments");
+    const lab = sectionLabeller(["Survivorship : Fertility", "Survivorship: Fatigue"]);
+    expect(lab("Survivorship : Fertility")).toBe("Fertility");
+    expect(sectionLabeller(["Adult Glioma: A", "Meningiomas"])("Adult Glioma: A")).toBe("Adult Glioma: A");
+    expect(tidyTitle("Adjuvant Treatment (Up to 6 Mo Perioperative")).toBe("Adjuvant Treatment");
+    expect(tidyTitle("Stage Iv or Relapsed Disease")).toBe("Stage IV or Relapsed Disease");
+    for (const v of ["pMMR_MSS", "dMMR_MSI_H", "POLE_POLD1_ultra_hypermutated", "B_or_T_lymphoblastic_leukemia_lymphoma"]) expect(vlabel(v), v).not.toContain("_");
+  });
+});
+
 describe("which guidelines offer the choice", () => {
   it("disease guidelines do, screening and supportive care do not", async () => {
     const { followsDisease } = await import("../src/lib/moments");

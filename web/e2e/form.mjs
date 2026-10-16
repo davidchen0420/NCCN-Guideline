@@ -386,6 +386,93 @@ await step("rectal cancer: subtype, what you need, the setting in plain words, a
   await page.locator("#fact-distant_metastases_suspected_or_proven button", { hasText: "Yes" }).click();
   await panel.getByTestId("next-step").getByRole("button", { name: /^See the recommendation/ }).waitFor();
 });
+/** Answer the interview with rules [question regex, answer regex | number]; anything else is skipped. Returns the questions asked. */
+const drive = async (rules) => {
+  const asked = [];
+  const tabOn = async () => (await page.locator("#tab-paths").getAttribute("aria-selected")) === "true";
+  for (let i = 0; i < 25 && !(await tabOn()); i++) {
+    if (await panel.locator(".interview.done, .interview.stuck").count()) break;
+    const q = (await panel.locator(".iv-q").first().innerText().catch(() => "")).trim();
+    const n = (await panel.locator(".iv-n").first().innerText().catch(() => "")).trim();
+    const rule = rules.find(([re]) => re.test(q));
+    let did = false;
+    if (rule && typeof rule[1] === "number") { await panel.locator(".iv-num input").fill(String(rule[1])); await panel.locator(".iv-num button[type=submit]").click(); did = true; }
+    else if (rule) { const b = panel.locator(".iv-options button, .iv-list button").filter({ hasText: rule[1] }).first(); if (await b.count()) { await b.click(); did = true; } }
+    if (!did) await panel.getByRole("button", { name: /Don't know/ }).click();
+    asked.push({ n, q, did });
+    await page.waitForTimeout(200);
+  }
+  return asked;
+};
+await step("NSCLC stage I: the lung cancer's own first page is a Workup setting, no question comes before it is chosen, and the route goes on to the pretreatment evaluation", async () => {
+  await page.goto(base + "#nsclc/");
+  await page.reload();
+  await page.locator("[data-testid=card]").first().waitFor();
+  if (await panel.getByTestId("mode-interview").count()) await panel.getByTestId("mode-interview").click();
+  const moment = panel.getByTestId("moment");
+  await moment.getByRole("button", { name: "Workup & first treatment" }).click();
+  const sit = moment.getByTestId("situations");
+  const labels = await sit.getByRole("radio").locator(".sit-t").allInnerTexts();
+  assert.ok(labels.some((t) => /Initial Evaluation.*\(NSCL-1\)/.test(t)), labels.join(" | "));
+  assert.ok(labels.some((t) => /Clinical Presentation.*\(DIAG-1\)/.test(t)), "the nodule page is still offered: " + labels.join(" | "));
+  for (const t of labels) assert.doesNotMatch(t, /[•◦▪]/, "no raw bullet text in a setting");
+  assert.equal(await panel.locator(".iv-q").count(), 0, "no question before the setting is chosen");
+  assert.match(await panel.locator(".fgroup.deciders").innerText(), /Choose the setting above/);
+  assert.doesNotMatch(await moment.locator(".hint").innerText(), /Starting at/, "no start is claimed before it is chosen");
+  await sit.getByRole("radio", { name: /NSCL-1\)/ }).click();
+  assert.match(await moment.locator(".hint").innerText(), /Starting at .*\(NSCL-1\)/);
+  const asked = await drive([[/^M Category/, /M0/], [/^N Category/, /N0/], [/Clinical T/, /T1b/], [/Tumor Location/, /Periph/], [/^Operable/, /Yes/], [/Pleural/, /No/], [/Contralateral/, /No/]]);
+  const qs = asked.map((a) => a.q).join(" | ");
+  assert.ok(asked.length >= 4 && asked.slice(0, 4).every((a) => a.did), "the staging details are asked from NSCL-1 on: " + qs);
+  assert.match(asked[0].n, /^Question 1/);
+  if (asked.some((a) => !a.did)) { const skipped = asked.findIndex((a) => !a.did); assert.match(asked[skipped + 1]?.n ?? "Question 99", new RegExp(`^Question ${skipped + 2}`), "Question N advances after a skip"); }
+  if (!(await page.locator("#tab-paths").getAttribute("aria-selected") === "true")) await panel.getByTestId("next-step").getByRole("button").first().click();
+  await page.waitForFunction(() => document.activeElement?.id === "tab-paths");   // the Recommendation tab takes the focus
+  const card = page.locator(".paths .reco-card").first();
+  await card.waitFor();
+  const txt = await page.locator(".paths").first().innerText();
+  assert.doesNotMatch(txt, /Nothing fits these answers|More answers needed/);
+  assert.match(txt, /How the patient gets here[\s\S]*Initial Evaluation \(NSCL-1\)[\s\S]*Pretreatment Evaluation \(NSCL-2\)/, "the route goes from the first page on to the stage I evaluation");
+});
+await step("DLBCL: the workup page asks the staging details that decide where it leads; nothing loops", async () => {
+  await page.goto(base + "#b_cell_lymphomas/");
+  await page.reload();
+  await page.locator("[data-testid=card]").first().waitFor();
+  if (await panel.getByTestId("mode-interview").count()) await panel.getByTestId("mode-interview").click();
+  await page.locator("#fact-guideline_section").selectOption({ label: "Diffuse Large B-Cell Lymphoma" });
+  const moment = panel.getByTestId("moment");
+  await moment.getByRole("button", { name: "Workup & first treatment" }).click();
+  assert.match(await moment.locator(".hint").innerText(), /Starting at .*\(BCEL-1\)/, "the disease's own first page, not the table of diseases (DIAG-1)");
+  const asked = await drive([[/Histologic Transformation|Concurrent/, /^\d?No$/], [/^Histology/, /Diffuse/], [/Ann Arbor/, /III/]]);
+  const qs = asked.map((a) => a.q).join(" | ");
+  assert.ok(asked.length >= 2, "questions are asked: " + qs);
+  assert.ok(asked.some((a) => /Ann Arbor/.test(a.q)), "the stage that decides the route after the workup is asked: " + qs);
+  assert.equal(await panel.locator(".interview.done .iv-q").filter({ hasText: /No patient details change/ }).count(), 0);
+  // the way on is always one button; it never sends the reader round in a circle
+  const tabOn = (await page.locator("#tab-paths").getAttribute("aria-selected")) === "true";
+  if (!tabOn) {
+    const btn = panel.getByTestId("next-step").getByRole("button").first();
+    assert.match(await btn.innerText(), /^(See the recommendation|Open .+ in the diagram)/);
+  }
+});
+await step("a topic with nothing to ask says so plainly and opens the page; the topic is asked as a topic", async () => {
+  await page.goto(base + "#survivorship/");
+  await page.reload();
+  await page.locator("[data-testid=card]").first().waitFor();
+  assert.match(await panel.getByTestId("disease").locator("legend").innerText(), /Which topic\?/);
+  const opts = await page.locator("#fact-guideline_section").evaluate((el) => [...el.querySelectorAll("option")].map((o) => o.textContent));
+  assert.ok(!opts.some((t) => /^Survivorship\s*:/.test(t ?? "")), "the shared prefix is dropped: " + opts.join(" | "));
+  await page.locator("#fact-guideline_section").selectOption({ label: "Lymphedema" });
+  if (await panel.getByTestId("mode-interview").count()) await panel.getByTestId("mode-interview").click();
+  const none = panel.getByTestId("no-questions");
+  await none.waitFor();
+  assert.match(await none.innerText(), /No patient details change the answer here: read the page\./);
+  assert.doesNotMatch(await panel.locator(".fgroup.deciders").innerText(), /That's every question/);
+  const btn = panel.getByTestId("next-step").getByRole("button").first();
+  assert.match(await btn.innerText(), /^Open .+ in the diagram/);
+  await btn.click();
+  await page.waitForFunction(() => /#survivorship\/flow\/SLYMPH/.test(location.hash));
+});
 await browser.close();
 server.close();
 assert.deepEqual(errors, [], "console errors: " + errors.join("; "));
