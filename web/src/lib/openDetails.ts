@@ -18,7 +18,7 @@ import type { Facts } from "../types";
 import type { Graph } from "./graph";
 import { rulesOnlyTrail } from "./aiWalk";
 import { remainingQuestions, type Decider } from "./formAssist";
-import { rankPathways, type Ranking } from "./pathways";
+import { rankPathways, recommendationOf, type Ranking } from "./pathways";
 import { stripMarks } from "./adapt";
 
 export interface OpenOptions {
@@ -46,7 +46,8 @@ export function openDetails(g: Graph, facts: Facts, start: string = "auto", opts
   for (const d of remainingQuestions(g, ranking, facts, 64)) out.set(d.fact, d);
   const top = ranking.paths[0];
   if (top) {
-    for (const f of [...top.missing, ...top.laterMissing]) {
+    const rec0 = recommendationOf(g, top, ranking.paths);
+    for (const f of [...top.missing, ...(rec0.found && rec0.tier === "treatment" && rec0.index + 1 < top.steps.length ? [] : top.laterMissing)]) {
       if (out.has(f) || !vars[f] || answered(facts, f)) continue;
       const end = top.steps[top.steps.length - 1].node;
       out.set(f, { fact: f, share: top.likelihood, node: end, page: end.split(":")[0], text: clip(stripMarks(g.node(end)?.text ?? end).replace(/\s+/g, " ")) });
@@ -54,7 +55,11 @@ export function openDetails(g: Graph, facts: Facts, start: string = "auto", opts
     // what the trail stops for
     try {
       const trail = rulesOnlyTrail(g, facts, trailStart(ranking, start), opts.overrides ?? {});
-      if (trail.stoppedFor === "ask" || trail.stoppedFor === "not-enough") {
+      // A stop behind the treatment the route recommends now (the margin of a resection that has not
+      // happened) is for later: it does not change what to do now.
+      const rec = recommendationOf(g, top, ranking.paths);
+      const behind = rec.found && rec.tier === "treatment" && top.steps.findIndex((s) => s.node === trail.end) > rec.index;
+      if (!behind && (trail.stoppedFor === "ask" || trail.stoppedFor === "not-enough")) {
         for (const f of trail.missing ?? []) {
           if (out.has(f) || !vars[f] || answered(facts, f)) continue;
           out.set(f, { fact: f, share: top.likelihood, node: trail.end, page: trail.end.split(":")[0], text: clip(stripMarks(g.node(trail.end)?.text ?? trail.end).replace(/\s+/g, " ")) });

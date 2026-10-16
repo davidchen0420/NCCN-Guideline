@@ -6,7 +6,7 @@
 import type { Facts, Pred, Schema, VarSpec } from "../types";
 import { sectionStartPages, type Graph } from "./graph";
 import { derive, evaluate } from "./predicates";
-import { hasFacts, missingFacts, rankPathways, startingFacts, usedFacts, type Ranking } from "./pathways";
+import { hasFacts, missingFacts, rankPathways, recommendationOf, startingFacts, usedFacts, type Ranking } from "./pathways";
 import { stripMarks } from "./adapt";
 import { label, valueLabel } from "./factMeta";
 
@@ -34,7 +34,12 @@ export function decidingFacts(g: Graph, ranking: Ranking, facts: Facts, limit = 
   const out = new Map<string, Decider>();
   if (ranking.paths.length) {
     for (const p of ranking.paths) {
-      for (const st of p.steps) {
+      // Only what could change the recommendation now: the steps up to the treatment it names. What lies
+      // behind that treatment (the margin of a resection, a recurrence) is for when the patient is there.
+      const rec = recommendationOf(g, p, ranking.paths);
+      const upTo = rec.found && rec.tier === "treatment" ? rec.index + 1 : p.steps.length;
+      const atEnd = upTo >= p.steps.length;
+      for (const st of p.steps.slice(0, upTo)) {
         for (const f of st.missing) {
           if (!vars[f] || known(f)) continue;
           const d = out.get(f);
@@ -45,11 +50,11 @@ export function decidingFacts(g: Graph, ranking: Ranking, facts: Facts, limit = 
       // What decides the later event a route stops before (PSA persistence vs recurrence) is
       // asked about too: the clinician may know it already.
       const end = p.steps[p.steps.length - 1]?.node;
-      for (const f of p.laterMissing ?? []) {
+      for (const f of atEnd ? p.laterMissing ?? [] : []) {
         if (!vars[f] || known(f) || out.has(f) || !end) continue;
         out.set(f, { fact: f, share: 0, node: end, page: end.split(":")[0], text: boxText(g, end) });
       }
-      for (const f of new Set([...p.missing, ...(p.laterMissing ?? [])])) { const d = out.get(f); if (d) d.share += p.likelihood; }
+      for (const f of new Set([...p.missing, ...(atEnd ? p.laterMissing ?? [] : [])])) { const d = out.get(f); if (d) d.share += p.likelihood; }
     }
   } else if (hasFacts(facts)) {
     // Facts were entered and no route fits them: more questions would not help (the route is

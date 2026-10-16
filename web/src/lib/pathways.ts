@@ -320,14 +320,20 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     const open = crit.length - met;
     const coverage = crit.length ? met / crit.length : 0;
     const encoding = steps.reduce((a, s) => a + EDGE_W[s.edge] * reviewW(s.node), 0) / steps.length;
-    const missing = [...new Set([...steps.flatMap((s) => s.missing), ...(end === "open" ? laterMissing : [])])];
-    done.push({
+    const pw = {
       id: steps.map((s) => s.node).join(">"), steps, end, next, weight, ...(continuesTo ? { continuesTo } : {}),
       met, open, options: steps.filter((s) => s.kind === "option").length, uncoded: steps.filter((s) => s.kind === "uncoded").length,
-      coverage, encoding, confidence: Math.round(100 * coverage * encoding), missing,
+      coverage, encoding, confidence: Math.round(100 * coverage * encoding), missing: [] as string[],
       used: [...new Set(steps.flatMap((s) => s.used))], laterMissing,
       alongside: [...new Set(steps.flatMap((s) => splitAlongside(g, g.kids(s.node)).alongside))].filter((x) => !steps.some((s) => s.node === x)),
-    });
+    };
+    // What could change the recommendation now: the details open up to the treatment it names. What
+    // lies behind that treatment (the margin of a resection that has not happened) is asked once the
+    // patient is there.
+    const rec = recommendationOf(g, { ...pw, likelihood: 0 });
+    const upTo = rec.found && rec.tier === "treatment" ? rec.index + 1 : steps.length;
+    pw.missing = [...new Set([...steps.slice(0, upTo).flatMap((s) => s.missing), ...(end === "open" ? laterMissing : [])])];
+    done.push(pw);
   };
 
   type Group = { id: string; pre: string[] };
@@ -835,9 +841,23 @@ export function recommendationOf(g: Graph, p: Pathway, paths: Pathway[] = []): R
   let followAt = firstFollow;
   // the follow-up page's own entry box belongs to it
   while (followAt > 0 && s[followAt - 1].node.split(":")[0] === s[firstFollow].node.split(":")[0] && !isActionBox(g, s[followAt - 1].node)) followAt--;
+  const pageOf = (st: PStep) => st.node.split(":")[0];
   const scan = (until: number) => {
     let settled = -1;
-    s.forEach((st, i) => { if (i < until && isSettled(st)) settled = i; });
+    // The entry box of a page the route moves on to after a treatment (the page of findings at
+    // surgery, after "surgical resection") is met by the details already used: it says where the
+    // patient will be after that treatment, not that the treatment is behind them. Only an entry
+    // that rests on something new (the pathologic stage after surgery) puts the patient past it.
+    const before = new Set<string>();
+    s.forEach((st, i) => {
+      if (i < until && isSettled(st)) {
+        const entered = i > 0 && pageOf(s[i - 1]) !== pageOf(st) && (g.bundle.roots[pageOf(st)] ?? []).includes(st.node);
+        const treated = s.slice(settled + 1, i).some((x) => isActionBox(g, x.node) && stepTier(g, x.node) === "treatment");
+        const fresh = st.used.some((f) => !before.has(f));
+        if (!(entered && treated && !fresh)) settled = i;
+      }
+      st.used.forEach((f) => before.add(f));
+    });
     // an "inferred" step is a treatment the patient already had: the advice comes after it
     const cands: number[] = [];
     // a met option box (an entry that is itself the treatment) is the recommendation, not only the decision before it
