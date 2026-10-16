@@ -6,9 +6,13 @@
  *     false is pruned (as in walk.autoStep);
  *  3. otherwise (conditions that cannot be decided yet, boxes with no encoded condition, several
  *     options at once) the language model's probabilities, through an injectable `score`
- *     function (default: decide.scoreBranches). The top child is followed when its probability
- *     reaches the threshold; below it the walk stops and asks; a "none of these" above 0.5 stops
- *     with "not enough information" and the details that are missing.
+ *     function (default: decide.scoreBranches). The top child is followed when it is one of
+ *     several mutually exclusive CONDITION arms, its probability reaches the threshold AND leads
+ *     the second by AUTO_MARGIN, and its condition does not rest on a detail that was never
+ *     entered; otherwise the walk stops and asks. OPTION arms (treatments that can each be
+ *     appropriate: radical prostatectomy, or radiotherapy with ADT) are never chosen by the
+ *     model: the walk stops there and every option is shown with its probability. A "none of
+ *     these" above 0.5 stops with "not enough information" and the details that are missing.
  *
  * When an encoded verdict contradicts a probability at or above the threshold the step is
  * flagged `disagree`; the rule still wins. Rule-decided nodes are only scored when
@@ -22,10 +26,10 @@
  * are all that is read.
  */
 import type { Facts } from "../types";
-import { boxText, DecideError, isScorable, NONE, scoreBranches, type DecideOptions } from "./decide";
+import { boxText, branchChildren, DecideError, isScorable, NONE, scoreBranches, type DecideOptions } from "./decide";
 import { remainingQuestions } from "./formAssist";
 import type { Graph } from "./graph";
-import { missingFacts, rankPathways } from "./pathways";
+import { missingFacts, rankPathways, splitAlongside } from "./pathways";
 import { derive, evaluate } from "./predicates";
 
 export type TrailBy = "rule" | "ai" | "clinician" | "single" | "entry";
@@ -60,6 +64,8 @@ export interface TrailStep {
   options: TrailOption[];
   /** an encoded verdict and a probability at or above the threshold contradicted each other */
   disagree?: boolean;
+  /** by "ai": the details the chosen arm's condition rests on that were never entered (the model assumed them) */
+  assumed?: string[];
 }
 
 export type StoppedFor = "ask" | "not-enough" | "error";
@@ -75,6 +81,8 @@ export interface AiWalkResult {
   options?: TrailOption[];
   /** the model's "none" probability at the stop */
   none?: number;
+  /** the walk stopped at treatment OPTIONS (each may be appropriate): shown side by side, never chosen by the model */
+  optionArms?: boolean;
   /** the walk was cut at maxSteps */
   truncated?: boolean;
   /** what went wrong, for "error" */
@@ -99,6 +107,8 @@ export interface AiWalkOptions {
 }
 
 export const DEFAULT_THRESHOLD = 0.85;
+/** The model's top condition arm must also lead the runner-up by this much to be followed without asking. */
+export const AUTO_MARGIN = 0.15;
 const DEFAULT_MAX_STEPS = 200;
 /** A "none of these" above this stops the walk. */
 export const NONE_STOP = 0.5;
@@ -172,7 +182,7 @@ type Analysis =
   | { t: "end" }
   | { t: "follow"; chosen: string; by: "rule" | "single" | "clinician"; options: TrailOption[]; branch: boolean }
   | { t: "stop"; why: "ask" | "not-enough"; options: TrailOption[]; missing: string[] }
-  | { t: "ai"; kids: string[]; cands: string[]; options: TrailOption[] };
+  | { t: "ai"; kids: string[]; cands: string[]; options: TrailOption[]; optionArms: boolean };
 
 const sortOptions = (xs: TrailOption[]): TrailOption[] =>
   xs.map((o, i) => [o, i] as const)
@@ -212,8 +222,7 @@ function analyse(ctx: Ctx, at: string, path: string[], seen: Set<string>): Analy
   if (!kids.length) return { t: "end" };
   // In a treatment table, the condition rows are the arms; a recommendation row beside them
   // (e.g. "For stage II and III … start aspirin") applies alongside, it is not a branch.
-  const rowCond = kids.filter((k) => g.node(k)?.role === "table_condition");
-  if (rowCond.length) kids = kids.filter((k) => rowCond.includes(k) || !!g.preds[k] || !!g.node(k)?.decision);
+  kids = splitAlongside(g, kids).main;
   const { v, options } = optionsOf(ctx, kids);
 
   const ov = ctx.overrides[at];
@@ -255,7 +264,9 @@ function analyse(ctx: Ctx, at: string, path: string[], seen: Set<string>): Analy
   if (!pass) return { t: "end" };
   const cands = trues.length > 1 ? trues : kids.filter((_, j) => v[j] !== false);
   if (!cands.length) return { t: "stop", why: "ask", options: sortOptions(options), missing: [] };
-  return { t: "ai", kids, cands, options };
+  // Treatment options are independent of each other (each may be appropriate): the model does not pick one.
+  const optionArms = branchChildren(g, at).opts.some((o) => cands.includes(o));
+  return { t: "ai", kids, cands, options, optionArms };
 }
 
 // ---------------------------------------------------------------- applying probabilities
@@ -281,6 +292,16 @@ function disagrees(options: TrailOption[], chosen: string, threshold: number): b
   const t = top(options, options.map((o) => o.child));
   return !!t && t.child !== chosen && t.prob! >= threshold;
 }
+
+/** The highest probability among the options other than `child` (0 when it is the only one scored). */
+function runnerUp(options: TrailOption[], child: string): number {
+  let best = 0;
+  for (const o of options) if (o.child !== child && typeof o.prob === "number" && o.prob > best) best = o.prob;
+  return best;
+}
+
+/** The details a clinician can still be asked for: not those already answered "don't know". */
+const askable = (ctx: Ctx, names: string[]): string[] => names.filter((m) => ctx.raw[m] !== "unknown");
 
 const pickOptions = (map: Map<string, Map<string, number>>, at: string) => {
   const m = map.get(at);
@@ -311,10 +332,10 @@ export function rulesOnlyTrail(g: Graph, facts: Facts, start: string, overrides:
   while (steps.length <= maxSteps) {
     const a = analyse(ctx, at, path, seen);
     if (a.t === "end") return { steps, end: at };
-    if (a.t === "stop") return { steps, end: at, stoppedFor: a.why, missing: a.missing, options: a.options };
+    if (a.t === "stop") return { steps, end: at, stoppedFor: a.why, missing: askable(ctx, a.missing), options: a.options };
     if (a.t === "ai") {
       const { v } = optionsOf(ctx, a.kids);
-      return { steps, end: at, stoppedFor: "ask", missing: missingOf(ctx, a.kids, v), options: sortOptions(a.options) };
+      return { steps, end: at, stoppedFor: "ask", missing: askable(ctx, missingOf(ctx, a.kids, v)), options: sortOptions(a.options), ...(a.optionArms ? { optionArms: true } : {}) };
     }
     steps.push({ node: at, page: pageOf(at), chosen: a.chosen, by: a.by, options: a.options });
     at = a.chosen; path.push(at); seen.add(at);
@@ -361,7 +382,7 @@ export async function aiWalk(g: Graph, facts: Facts, start: string, opts: AiWalk
       const a = analyse(ctx, at, path, seen);
       if (a.t === "end") return { steps, end: at };
       if (a.t === "stop") {
-        const missing = a.why === "not-enough" && !a.missing.length ? decidersAt(g, facts, at) : a.missing;
+        const missing = askable(ctx, a.why === "not-enough" && !a.missing.length ? decidersAt(g, facts, at) : a.missing);
         return { steps, end: at, stoppedFor: a.why, missing, options: a.options };
       }
 
@@ -394,20 +415,28 @@ export async function aiWalk(g: Graph, facts: Facts, start: string, opts: AiWalk
       const options = withProbs(a.options, m);
       const none = m?.get(NONE);
       const best = top(options, a.cands);
-      if (!m) return { steps, end: at, stoppedFor: "ask", missing: missingOf(ctx, a.kids, optionsOf(ctx, a.kids).v), options: sortOptions(options) };
+      const openHere = () => askable(ctx, missingOf(ctx, a.kids, optionsOf(ctx, a.kids).v));
+      const optMark = a.optionArms ? { optionArms: true as const } : {};
+      if (!m) return { steps, end: at, stoppedFor: "ask", missing: openHere(), options: sortOptions(options), ...optMark };
       if (none !== undefined && none > NONE_STOP) {
-        const missing = missingOf(ctx, a.kids, optionsOf(ctx, a.kids).v);
-        return { steps, end: at, stoppedFor: "not-enough", missing: missing.length ? missing : decidersAt(g, facts, at), options: sortOptions(options), none };
+        const missing = openHere();
+        return { steps, end: at, stoppedFor: "not-enough", missing: missing.length ? missing : askable(ctx, decidersAt(g, facts, at)), options: sortOptions(options), none, ...optMark };
       }
-      if (best && best.prob! >= threshold) {
+      // Only mutually exclusive condition arms are followed on the model's word, and only when it
+      // is sure: at the threshold AND clearly ahead of the runner-up.
+      if (best && !a.optionArms && best.prob! >= threshold && best.prob! - runnerUp(options, best.child) >= AUTO_MARGIN - 1e-9) {
+        // ... and say so when the arm's condition rests on a detail that was never entered: the
+        // model assumed it, and the reader can answer it instead.
+        const gaps = g.preds[best.child] ? missingFacts(g, g.preds[best.child], ctx.raw) : [];
         steps.push({
           node: at, page: pageOf(at), chosen: best.child, by: "ai", prob: best.prob, ...(none !== undefined ? { none } : {}), options,
+          ...(gaps.length ? { assumed: gaps } : {}),
           ...(disagrees(options, best.child, threshold) ? { disagree: true } : {}),
         });
         at = best.child; path.push(at); seen.add(at);
         continue;
       }
-      return { steps, end: at, stoppedFor: "ask", missing: missingOf(ctx, a.kids, optionsOf(ctx, a.kids).v), options: sortOptions(options), ...(none !== undefined ? { none } : {}) };
+      return { steps, end: at, stoppedFor: "ask", missing: openHere(), options: sortOptions(options), ...(none !== undefined ? { none } : {}), ...optMark };
     }
     return { steps, end: at, truncated: true };
   } catch (e) {

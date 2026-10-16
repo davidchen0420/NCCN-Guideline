@@ -13,7 +13,7 @@ import { buildGraph } from "../src/lib/graph";
 import { rankPathways } from "../src/lib/pathways";
 import { NONE } from "../src/lib/decide";
 import { aiWalk, rulesOnlyTrail, type ScoreFn } from "../src/lib/aiWalk";
-import { aiAssistedLine, decisionSteps, edgeTags, favouredByAi, percent, questionText, staleOverrides, trailStats, trailSummary, trimToRoute } from "../src/lib/trailView";
+import { aiAssistedLine, byTag, clipText, decisionByChosen, decisionSteps, edgeTags, favouredByAi, percent, questionParts, questionText, readable, staleOverrides, stripGlyphs, trailStats, trailSummary, trimToRoute } from "../src/lib/trailView";
 import { AI_THRESHOLD_DEFAULT, clampThreshold, readAiEnabled, readAiThreshold } from "../src/lib/prefs";
 import { cleanOverrides } from "../src/lib/patient";
 import { trailKey, useAiTrail, type AiTrail } from "../src/lib/useAiTrail";
@@ -131,6 +131,28 @@ describe("the questions and the disagreement note", () => {
     expect(questionText(g, "SAMPLE-1:START")).toBe("Which starting point applies?");
     expect(questionText(g, S1.n2).length).toBeGreaterThan(0);
   });
+  it("a box that is not a question is headed by its page, with its text kept apart", () => {
+    const { heading, text } = questionParts(g, S1.n2);
+    if (/\?\s*$/.test(questionText(g, S1.n2))) expect(text).toBeNull();
+    else { expect(heading).toMatch(/^Choice on /); expect(text).toBe(questionText(g, S1.n2)); }
+    expect(questionParts(g, "SAMPLE-1:START")).toEqual({ heading: "Which starting point applies?", text: null });
+    const rectal = buildGraph(adaptGuideline(JSON.parse(readFileSync("../data/rectal/guideline.json", "utf8"))));
+    const bullets = questionParts(rectal, "REC-2:n138_181");   // "• Biopsy • MMR/MSI testing …"
+    expect(bullets.heading).toMatch(/^Choice on Clinical Presentation \(REC-2\)$/);
+    expect(bullets.text).toContain("Biopsy");
+  });
+  it("private-use glyphs are dropped and a page code appears once", () => {
+    expect(stripGlyphs("exam Axillary and including� \u0017x")).toBe("exam Axillary and including x");
+    expect(clipText("😀".repeat(10), 5)).toBe("😀😀😀😀…");   // cut on characters, not UTF-16 halves
+    const nsclc = buildGraph(adaptGuideline(JSON.parse(readFileSync("../data/nsclc/guideline.json", "utf8"))));
+    expect(readable(nsclc, "NSCL-20")).not.toMatch(/\(NSCL-20\).*\(NSCL-20\)/);
+    expect(readable(nsclc, "NSCL-20").match(/NSCL-20/g)!.length).toBe(1);
+  });
+  it("says how each step was decided, for the summary", () => {
+    const mk = (by: "rule" | "ai" | "clinician", prob?: number) => ({ node: "a", page: "p", chosen: "b", by, options: [], ...(prob !== undefined ? { prob } : {}) });
+    expect([byTag(mk("rule")), byTag(mk("ai", 0.93)), byTag(mk("clinician"))]).toEqual(["guideline rule", "AI 93%", "you chose"]);
+    expect(decisionByChosen({ steps: [{ ...mk("rule"), options: [{ child: "b", text: "B", verdict: true, source: "rule" as const }, { child: "c", text: "C", verdict: false, source: "rule" as const }] }] }).get("b")?.by).toBe("rule");
+  });
   it("favouredByAi is the AI's top option when it is not the one followed", () => {
     const step = { node: "a", page: "p", chosen: "x", by: "rule" as const, disagree: true, options: [
       { child: "x", text: "X", verdict: true, source: "rule" as const, prob: 0.03 },
@@ -176,6 +198,17 @@ describe("useAiTrail", () => {
     const on = first(true);
     expect(on.trail).toBe(on.rules);          // the rules show while the AI is asked
     expect(on).toMatchObject({ ai: null, loading: true, settled: false });
+  });
+  it("does not ask the AI about a blank patient (nothing entered, no choices)", () => {
+    let out!: AiTrail;
+    const C = () => { out = useAiTrail(g, {}, "SAMPLE-1", {}, { enabled: true, score: mock({ [NONE]: {} }) }); return null; };
+    renderToString(createElement(C));
+    expect(out).toMatchObject({ ai: null, loading: false, settled: true });
+    // answers that are all "don't know" are blank as well; a choice or a real answer is not
+    let withChoice!: AiTrail;
+    const D = () => { withChoice = useAiTrail(g, { score: "unknown" }, "SAMPLE-1", { [S1.n2]: S1.low }, { enabled: true, score: mock({}) }); return null; };
+    renderToString(createElement(D));
+    expect(withChoice.loading).toBe(true);
   });
   it("the rules trail applies the clinician's choices", () => {
     expect(first(false, { [S1.n2]: S1.low }).trail.steps.find((s) => s.node === S1.n2)).toMatchObject({ chosen: S1.low, by: "clinician" });

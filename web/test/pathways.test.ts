@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
 import type { Bundle } from "../src/types";
+import { adaptGuideline } from "../src/lib/adapt";
 import { buildGraph } from "../src/lib/graph";
 import { missingFacts, rankPathways } from "../src/lib/pathways";
 
@@ -85,5 +86,21 @@ describe.skipIf(!existsSync(REAL))("prostate examples", () => {
   it("V7 recurrence with metastases starts from the PSA recurrence page", () => {
     const r = rankPathways(rg!, ex("V7").facts);
     expect(r.entries.every((e) => e.startsWith("PROS-9:"))).toBe(true);
+  });
+});
+
+describe("details that gated a route count as used", () => {
+  const rec = existsSync("../data/rectal/guideline.json") ? buildGraph(adaptGuideline(JSON.parse(readFileSync("../data/rectal/guideline.json", "utf8")))) : null;
+  const facts = { guideline_section: "pMMR/MSS Rectal Cancer", disease_resectable: true, mismatch_repair_status: "pMMR_MSS", isolated_pelvic_or_anastomotic_recurrence: true, metachronous_metastases_documented: false, cea_serial_trend: "rising" };
+  it.skipIf(!rec)("rectal local recurrence: resectable, MMR, isolated pelvic and the metachronous entry that was ruled out are all used", () => {
+    const ps = rankPathways(rec!, facts, "REC-11").paths;
+    const treat = ps.find((p) => p.steps.some((s) => s.node.startsWith("REC-11A:")))!;
+    expect(treat.used).toEqual(expect.arrayContaining(["disease_resectable", "mismatch_repair_status", "isolated_pelvic_or_anastomotic_recurrence", "metachronous_metastases_documented"]));
+  });
+  it.skipIf(!rec)("a recommendation row beside a table's condition rows is alongside the routes, not a route", () => {
+    const f = { guideline_section: "pMMR/MSS Rectal Cancer", distant_metastases_suspected_or_proven: false, clinical_t_category: "T3", mismatch_repair_status: "pMMR_MSS" };
+    const ps = rankPathways(rec!, f).paths;
+    expect(ps.some((p) => p.steps.some((s) => s.node === "REC-6:t1_0_0"))).toBe(false);
+    expect(ps.filter((p) => p.steps.some((s) => s.node.startsWith("REC-6:"))).every((p) => p.alongside.includes("REC-6:t1_0_0"))).toBe(true);
   });
 });

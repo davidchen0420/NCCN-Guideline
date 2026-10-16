@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { TransformComponent, TransformWrapper, type ReactZoomPanPinchRef } from "react-zoom-pan-pinch";
 import { Maximize2, Minus, Plus, Crosshair } from "lucide-react";
-import { useApp } from "../store";
+import { useAdvanced, useApp } from "../store";
+import { recommendationOf, shownRoute } from "../lib/pathways";
 import { Card, type CardFlags } from "./Card";
 import { cardWidth, edgeMid, edgePath, layoutPage } from "../lib/layout";
 import { edgeTags } from "../lib/trailView";
@@ -16,7 +17,12 @@ const FLOOR = 0.55;
 const n_entry =(g: { bundle: { roots: Record<string, string[]> } }, full: string) => (g.bundle.roots[full.split(":")[0]] ?? []).includes(full);
 
 export function Canvas({ page }: { page: string }) {
-  const { s, g, set, dispatch, openFootnote, selected: route, isPhone, ai } = useApp();
+  const { s, g, set, dispatch, openFootnote, selected, ranking, isPhone, ai, slug } = useApp();
+  const adv = useAdvanced();
+  // the route the Recommendation tab is about (Advanced tools list routes: the one picked there)
+  const route = useMemo(() => (adv ? selected : shownRoute(g, ranking, s.pathSel) ?? selected), [adv, selected, g, ranking, s.pathSel]);
+  const rec = useMemo(() => (route ? recommendationOf(g, route, ranking.paths) : null), [g, route, ranking]);
+  const recNode = rec?.key.node ?? null;
   const flow = g.bundle.pages[page];
   const boxes = useMemo(() => flow.nodes.filter((n) => n.kind === "box"), [flow]);
   const parsedByShort = useMemo(() => Object.fromEntries(boxes.map((n) => [n.id, g.parsed.get(`${page}:${n.id}`)!])), [boxes, g, page]);
@@ -66,13 +72,28 @@ export function Canvas({ page }: { page: string }) {
   }, [layout]);
   useEffect(() => { fit("open"); }, [fit]);
 
+  // Follow the recommendation: when it changes (an answer, a picked option) the diagram goes to its page
+  // and card, once. Not on opening a page, not during a manual walk, and not again when the reader
+  // moves away from it by themselves.
+  const seenRec = useRef<string | null | undefined>(undefined);
+  useEffect(() => {
+    const prev = seenRec.current;
+    seenRec.current = recNode;
+    if (prev === undefined || !recNode || recNode === prev || s.walk) return;
+    // the address bar already belongs to something else (another guideline is being opened): leave it be
+    const prefix = slug ? `${slug}/` : "";
+    try { if (prefix && !decodeURIComponent(location.hash.replace(/^#/, "")).startsWith(prefix)) return; } catch { /* odd hash: carry on */ }
+    dispatch({ type: "go", loc: { kind: "flow", page: recNode.split(":")[0], node: recNode }, push: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recNode]);
+
   // keep the selected card in view
-  const selected = s.loc.kind === "flow" ? s.loc.node : undefined;
+  const selectedNode = s.loc.kind === "flow" ? s.loc.node : undefined;
   useEffect(() => {
     const el = wrapRef.current, t = tx.current;
-    if (!selected || !layout || !el || !t) return;
-    if (clicked.current === selected) { clicked.current = null; return; }
-    const p = layout.cards[selected.split(":")[1]];
+    if (!selectedNode || !layout || !el || !t) return;
+    if (clicked.current === selectedNode) { clicked.current = null; return; }
+    const p = layout.cards[selectedNode.split(":")[1]];
     if (!p) return;
     const sc = t.instance.state.scale;
     const cw = el.clientWidth, ch = el.clientHeight;
@@ -81,7 +102,7 @@ export function Canvas({ page }: { page: string }) {
     const margin = 60;
     const inside = sx > margin && sx < cw - margin && sy > margin && sy < ch - margin;
     if (!inside) t.setTransform(cw / 2 - cx * sc, ch / 2 - cy * sc, sc, 280);
-  }, [selected, layout]);
+  }, [selectedNode, layout]);
 
   const path = useMemo(() => pathSets(g, s.answers), [g, s.answers]);
   // The manual walk when one is running, else the pathway picked in the Pathways tab.
@@ -104,9 +125,9 @@ export function Canvas({ page }: { page: string }) {
     const answerMode = s.answers.length > 0;
     const hit = hasFilter && match(p.plain) && s.tags.every((t) => p.tags.includes(t));
     return {
-      selected: selected === full, answer: s.answers.includes(full), onPath: answerMode && inPath,
+      selected: selectedNode === full, answer: s.answers.includes(full), onPath: answerMode && inPath,
       dim: answerMode && !inPath && s.showNon, hide: answerMode && !inPath && !s.showNon,
-      gray: hasFilter && !hit, hit, fnActive: s.fn, walk: walkNodes.has(full), current: s.walk ? s.walk.at === full : !!route && route.steps[route.steps.length - 1].node === full,
+      gray: hasFilter && !hit, hit, fnActive: s.fn, walk: walkNodes.has(full), current: s.walk ? s.walk.at === full : recNode ? recNode === full : !!route && route.steps[route.steps.length - 1].node === full,
       entry: g.node(full)?.role === "entry" || (g.node(full)?.role == null && !g.parents[full]?.length && g.kids(full).length > 0 && n_entry(g, full)),
     };
   };

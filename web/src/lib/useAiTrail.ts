@@ -42,8 +42,13 @@ export interface AiTrail {
 export const trailKey = (g: Graph, facts: Facts, start: string, overrides: Record<string, string>, enabled: boolean, threshold: number): string =>
   JSON.stringify([g.bundle.title, start, facts, overrides, enabled, enabled ? threshold : 0]);
 
+/** Is there anything to ask the model about? A blank patient (no answers, no choices) has no facts to weigh. */
+const hasInput = (facts: Facts, overrides: Record<string, string>) =>
+  Object.keys(overrides).length > 0 || Object.values(facts).some((v) => v !== null && v !== undefined && v !== "" && v !== "unknown");
+
 export function useAiTrail(g: Graph, facts: Facts, start: string, overrides: Record<string, string>, cfg: AiTrailConfig = {}): AiTrail {
-  const enabled = !!cfg.enabled;
+  // AI is asked only for a patient with something entered; a blank one shows the rules-only trail
+  const enabled = !!cfg.enabled && hasInput(facts, overrides);
   const threshold = cfg.threshold ?? DEFAULT_THRESHOLD;
   const debounceMs = cfg.debounceMs ?? 400;
   const score = cfg.score;

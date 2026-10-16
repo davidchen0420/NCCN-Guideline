@@ -68,7 +68,17 @@
 .set-slider small, .set-note { color: var(--muted); font-size: var(--fs-xs); line-height: 1.45; }
 .set-note { margin: 4px 6px 0; }
 
+/* the text of a box that stands for the question, kept out of the way */
+.tr-text { margin-left: 28px; font-size: var(--fs-sm); color: var(--ink-2); }
+.tr-text summary { cursor: pointer; min-height: 28px; display: flex; align-items: center; }
+.tr-text p { margin: 2px 0 0; line-height: 1.45; overflow-wrap: anywhere; }
+.tr-yours { margin-left: 28px; color: var(--ink); }
+/* a choice the AI made is framed differently from a rule's: dashed, in the AI colour */
+.tr-opt.chosen.by-ai { border-style: dashed; border-color: var(--opt); background: var(--opt-soft); box-shadow: inset 3px 0 0 var(--opt); }
+.tr-stop.options { border-left-color: var(--opt); border-color: var(--line-strong); }
+
 @media (max-width: 820px) {
+  .tr-text, .tr-yours { margin-left: 0; }
   .tr-opts, .tr-warn { margin-left: 0; }
   .tr-stop .tr-opt { grid-template-columns: 1fr; }
   .tr-stop .tr-opt-act { grid-column: 1; grid-row: auto; }

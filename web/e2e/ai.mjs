@@ -273,7 +273,8 @@ await step("when the AI fails, one muted line says so and the guideline rules st
   await page.getByText("AI scoring unavailable — showing the guideline rules only.").waitFor();
   assert.equal(await page.locator(".reco-card").count(), 1);
   await openTrail(page);
-  assert.match(await page.locator("#rc-trail").innerText(), /Still open: /, "the rules stop where they cannot decide, and the choice is the clinician's");
+  // the pending choice sits inside the card (provisional), not below the fold
+  assert.match(await page.locator(".reco-card").innerText(), /Provisional: this depends on the decision below[\s\S]*Still open: /, "the rules stop where they cannot decide, and the choice is the clinician's");
   assert.equal(await page.getByRole("group", { name: "Your decision needed" }).count(), 0);
 });
 await page.context().close();
@@ -296,7 +297,7 @@ for (const [slug, facts] of Object.entries(seeds)) {
     console.log(`   ${slug}: ${summary}`);
     assert.match(summary, /\d+ decisions? · \d+ by the guideline rules? · \d+ by AI|No decisions made yet/);
     assert.ok((await page.locator("#rc-trail .tr-step").count()) + (await page.getByRole("group", { name: /Your decision needed|Not enough information/ }).count()) > 0);
-    assert.ok((await page.locator("#rc-trail .tr-opt").count()) > 0 || (await page.locator("#rc-trail .rc-q").count()) > 0, "options, or the details that are missing");
+    assert.ok((await page.locator(".paths .tr-opt").count()) > 0 || (await page.locator(".paths .rc-q").count()) > 0, "options, or the details that are missing");
     await page.locator("#rc-trail").scrollIntoViewIfNeeded();
     await shot(page, `trail-${slug}`);
   });
@@ -319,7 +320,7 @@ for (const status of [null, { enabled: false, model: "mock-model" }]) {
     assert.doesNotMatch(await page.locator("#rp-panel").innerText(), /\bAI\b|OpenAI/);
     assert.equal(await page.getByTestId("ai-assisted").count(), 0);
     assert.equal(await page.locator("[data-testid=edge-tag]").count(), 0);
-    assert.match(await page.locator("#rc-trail").innerText(), /Still open: /);
+    assert.match(await page.locator(".reco-card").innerText(), /Still open: /);
     assert.equal(mock.requests.length, 0, "no request to /api/decide");
   });
   await page.context().close();

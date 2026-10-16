@@ -114,3 +114,34 @@
 .rc-needs-h { margin: 0; font-family: var(--serif); font-size: 18px; font-weight: 600; line-height: 1.4; }
 .rc-below { margin: 8px 0 0; }
 .pcard.other .pc-end { font-size: var(--fs-md); line-height: 1.4; }
+
+/* the headline: capped at about three lines, the full text a click away */
+.reco-card .reco-box.clamp { max-height: 80px; overflow: hidden; -webkit-mask-image: linear-gradient(#000 65%, transparent); mask-image: linear-gradient(#000 65%, transparent); }
+
+/* the options the guideline lists at the step of the recommendation */
+.rc-opts { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.rc-opts li { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 10px; padding: 9px 11px; border: 1px solid var(--line-2); border-radius: var(--r); background: var(--surface); }
+.rc-opts li.this { border-color: var(--route); background: var(--route-soft); }
+.rc-opt-t { flex: 1 1 220px; min-width: 0; font-size: var(--fs-lg); line-height: 1.4; font-weight: 600; overflow-wrap: anywhere; }
+.rc-opts li .tag, .rc-opts li .tr-badge { margin-left: 6px; font-weight: 500; vertical-align: 1px; }
+.rc-opts li .alt-tag { margin-left: 0; }
+
+/* what follows, and what is printed beside the branches */
+.rc-then { margin: 0; font-size: var(--fs-md); }
+.rc-then ol { margin: 2px 0 0; padding-left: 22px; display: grid; gap: 2px; color: var(--ink-2); }
+.rc-also { font-size: var(--fs-sm); color: var(--ink-2); }
+.rc-also summary { cursor: pointer; min-height: 28px; display: flex; align-items: center; }
+.rc-also ul { margin: 4px 0 0; padding-left: 20px; display: grid; gap: 4px; }
+
+/* provisional: the decision this depends on sits inside the card, above the recommendation */
+.rc-provisional { display: grid; gap: 8px; }
+.rc-prov { margin: 0; font-size: var(--fs-md); color: var(--ink); }
+.rc-prov b { color: var(--open); }
+.rc-yours { margin: 0; font-size: var(--fs-sm); color: var(--ink); background: var(--accent-soft); border-radius: var(--r); padding: 6px 10px; }
+
+/* AI is on: the chip beside the recommendation and the first-use notice */
+.ai-chip { display: inline-flex; align-items: center; gap: 4px; padding: 1px 9px; border-radius: 999px; font-size: var(--fs-badge); font-weight: 600; background: var(--opt-soft); color: var(--opt); border: 1px dashed var(--opt); white-space: nowrap; }
+.ai-notice { display: grid; gap: 8px; margin: 0 0 12px; padding: 10px 12px; font-size: var(--fs-sm); line-height: 1.5; color: var(--ink); background: var(--opt-soft); border: 1px solid var(--opt); border-radius: var(--r); }
+.ai-notice p { margin: 0; }
+.ai-notice-act { display: flex; flex-wrap: wrap; gap: 8px; }
+.rc-assumed { flex-basis: 100%; color: var(--ink); }
