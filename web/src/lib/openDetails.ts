@@ -17,9 +17,11 @@
 import type { Facts } from "../types";
 import type { Graph } from "./graph";
 import { rulesOnlyTrail } from "./aiWalk";
-import { remainingQuestions, type Decider } from "./formAssist";
-import { rankPathways, recommendationOf, type Ranking } from "./pathways";
+import { decidingFacts, remainingQuestions, type Decider } from "./formAssist";
+import { rankPathways, reachesRecommendation, recommendationOf, shownRoute, type Ranking } from "./pathways";
 import { stripMarks } from "./adapt";
+import { askFilter, askableQuestions, nextActionPage, pageDeciders } from "./moments";
+import { isPendingDecision, trimToRoute } from "./trailView";
 
 export interface OpenOptions {
   /** the ranking for these facts and this start, when the caller has it already */
@@ -68,4 +70,68 @@ export function openDetails(g: Graph, facts: Facts, start: string = "auto", opts
     } catch { /* the trail is a hint here; the routes' own details stand */ }
   }
   return [...out.values()].sort((a, b) => b.share - a.share).slice(0, limit);
+}
+
+
+/**
+ * The details the recommendation card names as settling what it shows, in the route's order: the
+ * answers to the decision it is provisional on ("Answering one of these would settle it"), or, for a
+ * route that stops before any recommendation, the details it asks for. Empty when the card names none.
+ */
+export function cardSettlerDetails(g: Graph, facts: Facts, start: string = "auto", opts: OpenOptions = {}): Decider[] {
+  const ranking = opts.ranking ?? rankPathways(g, facts, start, { overrides: opts.overrides });
+  const p = shownRoute(g, ranking, null);
+  if (!p) return [];
+  const worth = namedByCard(g, facts, start, ranking);
+  const at = (f: string, node: string): Decider => ({ fact: f, share: p.likelihood, node, page: node.split(":")[0], text: clip(stripMarks(g.node(node)?.text ?? node).replace(/\s+/g, " ")) });
+  if (reachesRecommendation(g, p)) {
+    const trail = trimToRoute(rulesOnlyTrail(g, facts, trailStart(ranking, start), opts.overrides ?? {}), new Set(p.steps.map((x) => x.node)));
+    if (!isPendingDecision(trail) || trail.optionArms) return [];
+    return [...new Set(trail.missing ?? [])].filter((f) => worth(f, trail.end.split(":")[0])).slice(0, 8).map((f) => at(f, trail.end));
+  }
+  if (p.end === "continues" && p.continuesTo) return [];
+  const end = p.steps[p.steps.length - 1]?.node ?? "";
+  const names = [...openDetails(g, facts, start, opts).map((d) => d.fact), ...p.missing, ...p.laterMissing];
+  return [...new Set(names)].filter((f) => worth(f, end.split(":")[0])).map((f) => at(f, end));
+}
+export const cardSettlers = (g: Graph, facts: Facts, start: string = "auto", opts: OpenOptions = {}): string[] =>
+  cardSettlerDetails(g, facts, start, opts).map((d) => d.fact);
+
+/**
+ * Which details a card may name as worth answering now: unanswered, and not about a later stage of the
+ * course, a detail the data defines as found only later (a response at restaging), or another disease's
+ * page. `page` is the page of the box the detail decides.
+ */
+export function namedByCard(g: Graph, facts: Facts, start: string, ranking?: Ranking): (fact: string, page: string) => boolean {
+  const vars = g.bundle.schema?.variables ?? {};
+  const ok = askFilter(g, facts, start, () => true, ranking ?? rankPathways(g, facts, start));
+  return (fact, page) => !!vars[fact] && ok({ fact, page, share: 1, node: "", text: "" });
+}
+
+/**
+ * The questions the interview asks, in the order it asks them: first the details the recommendation card
+ * would name as settling its decision (in the route's order), so the question asked is the one the card
+ * is waiting for; then the details that decide the routes still open, then whatever else is open. Only
+ * when none of those is left does it look further ahead, to what decides where the routes lead on.
+ * `keep` limits the details to those in scope for the form.
+ */
+export function interviewQuestions(g: Graph, ranking: Ranking, facts: Facts, start: string, overrides: Record<string, string>, keep: (fact: string) => boolean = () => true, keepLead: (fact: string) => boolean = keep, limit = 12): Decider[] {
+  const ok = askFilter(g, facts, start, keep, ranking);
+  const direct = decidingFacts(g, ranking, facts, 24).filter(ok);
+  const extra = openDetails(g, facts, start, { ranking, overrides }).filter((d) => ok(d) && !direct.some((b) => b.fact === d.fact));
+  let all = [...direct, ...extra];
+  // (nothing open on the routes themselves: what decides where they lead on)
+  if (!all.length) all = askableQuestions(g, ranking, facts, start, keep);
+  // (what the card names is asked even when it lies outside the form's scope for this start: the card sent the reader here)
+  const okLead = askFilter(g, facts, start, keepLead, ranking);
+  // a start that only gives background (a definition page): the questions are those of the first page that says what to do
+  if (!all.length) {
+    const at = start === "auto" ? ranking.paths[0]?.steps[0]?.node.split(":")[0] : start;
+    const next = at ? nextActionPage(g, at) : null;
+    if (next) all = pageDeciders(g, next, facts).filter((d) => keepLead(d.fact) && !answered(facts, d.fact));
+  }
+  let settle: Decider[] = [];
+  try { settle = cardSettlerDetails(g, facts, start, { ranking, overrides }); } catch { /* the card's own list is a hint here */ }
+  const lead = settle.map((s) => all.find((d) => d.fact === s.fact) ?? s).filter(okLead);
+  return [...lead, ...all.filter((d) => !lead.some((l) => l.fact === d.fact))].slice(0, limit);
 }

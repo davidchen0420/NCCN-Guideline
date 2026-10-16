@@ -6,6 +6,7 @@ import type { AiWalkResult, TrailOption, TrailStep } from "../lib/aiWalk";
 import type { Pathway } from "../lib/pathways";
 import { clipText, decisionSteps, favouredByAi, isPendingDecision, offeredOptions, percent, questionParts, readable, trailStats, trailSummary, trimToRoute } from "../lib/trailView";
 import { label } from "../lib/factMeta";
+import { namedByCard } from "../lib/openDetails";
 import type { Graph } from "../lib/graph";
 import "../styles/trail.css";
 
@@ -112,7 +113,9 @@ function Decision({ step, n }: { step: TrailStep; n: number }) {
 
 /** Where the walk could not go on by itself: the clinician decides, or says what is missing. */
 function Stop({ quiet, t }: { quiet: boolean; t: AiWalkResult }) {
-  const { g, ai, setOverride, focusFact } = useApp();
+  const { g, ai, setOverride, focusFact, s, ranking } = useApp();
+  // only what is worth answering now: not a later stage's detail, nor another disease's
+  const worth = useMemo(() => namedByCard(g, s.facts, s.start, ranking), [g, s.facts, s.start, ranking]);
   if (!t.stoppedFor || t.stoppedFor === "error") return null;
   const parts = questionParts(g, t.end);
   const q = clip(parts.heading, 220);
@@ -121,7 +124,7 @@ function Stop({ quiet, t }: { quiet: boolean; t: AiWalkResult }) {
   // an arm the answers rule out is never offered as the decision or counted among those that fit
   if (!isPendingDecision(t)) return null;
   const options = offeredOptions(t);
-  const missing = (t.missing ?? []).slice(0, 8);
+  const missing = (t.missing ?? []).filter((f) => worth(f, t.end.split(":")[0])).slice(0, 8);
   const fits = options.filter((o) => o.verdict === true).length;
   const list = (
     <ul className="tr-opts">

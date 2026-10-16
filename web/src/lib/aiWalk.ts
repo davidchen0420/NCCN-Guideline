@@ -87,6 +87,8 @@ export interface AiWalkResult {
   truncated?: boolean;
   /** what went wrong, for "error" */
   error?: string;
+  /** the boxes the model was asked about: the result holds for any answers that leave what these rest on unchanged */
+  scored?: string[];
 }
 
 export type ScoreFn = (g: Graph, facts: Facts, nodeIds: string[]) => Promise<Map<string, Map<string, number>>>;
@@ -367,6 +369,12 @@ function decidersAt(g: Graph, facts: Facts, at: string): string[] {
  * described at the top of this file. Never throws.
  */
 export async function aiWalk(g: Graph, facts: Facts, start: string, opts: AiWalkOptions = {}): Promise<AiWalkResult> {
+  const scored: string[] = [];
+  const res = await walkWithModel(g, facts, start, opts, scored);
+  return scored.length ? { ...res, scored } : res;
+}
+
+async function walkWithModel(g: Graph, facts: Facts, start: string, opts: AiWalkOptions, scored: string[]): Promise<AiWalkResult> {
   const threshold = opts.threshold ?? DEFAULT_THRESHOLD;
   const maxSteps = opts.maxSteps ?? DEFAULT_MAX_STEPS;
   const score: ScoreFn = opts.score ?? ((gg, ff, ids) => scoreBranches(gg, ff, ids, opts.decide));
@@ -379,6 +387,7 @@ export async function aiWalk(g: Graph, facts: Facts, start: string, opts: AiWalk
 
   /** Ask the scorer about one node. */
   const ask = async (node: string) => {
+    if (!scored.includes(node)) scored.push(node);
     const got = await score(g, facts, [node]);
     return pickOptions(got, node);
   };

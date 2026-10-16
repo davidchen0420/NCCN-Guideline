@@ -266,7 +266,8 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
   // ranking may have picked a later point in care, which the first page's walk would not reach.
   const baseRanking = useMemo(() => rankPathways(g, live, s.start, { overrides: s.overrides }), [g, live, s.start, s.overrides]);
   const walkStart = s.start === "auto" && baseRanking.paths[0] ? baseRanking.paths[0].steps[0].node : s.start;
-  const aiTrail = useAiTrail(g, live, walkStart, s.overrides, { enabled: aiOn, threshold });
+  // (answering questions on the patient tab: the model is asked once the answers have been quiet for a while)
+  const aiTrail = useAiTrail(g, live, walkStart, s.overrides, { enabled: aiOn, threshold, interviewing: s.rightTab === "patient" });
   // a choice that no longer applies (the route changed) is dropped once the walk has settled
   useEffect(() => {
     if (!aiTrail.settled || !Object.keys(s.overrides).length) return;

@@ -6,7 +6,7 @@
  */
 import type { Facts, Pred } from "../types";
 import { entryHeadsByGroup, isPostSurgicalTitle, pageLeads, stateOfEntries, stateOfTitle, statesOfTitle, withoutRisk, type Graph } from "./graph";
-import { missingFacts, rankPathways, type Ranking } from "./pathways";
+import { isActionBox, missingFacts, rankPathways, type Ranking } from "./pathways";
 import { derive, evaluate } from "./predicates";
 import { decidingFacts, type Decider } from "./formAssist";
 import { stripMarks } from "./adapt";
@@ -715,6 +715,8 @@ export function isLaterStage(g: Graph, start: string, page: string): boolean {
 /** Details the data itself defines as found only later in the course: on restaging, on re-evaluation,
  * after neoadjuvant treatment, in the resected specimen. */
 const LATER_DETAIL = /\brestag\w*|\bre-?evaluat\w*|\bresponse (?:to|on|after)\b|\bresected (?:tumor|lesion|specimen|polyp)|\bof the resected\b|\bspecimen\b|\bafter (?:surgery|resection|neoadjuvant|induction|chemoradi\w*|completion|treatment)\b|\bpost-?(?:operative|surgical|treatment)\b|\bsurgical pathology\b/i;
+/** A detail that names a later event of the disease course by its name (radiographic_relapse, progression_on_first_line). */
+const LATER_EVENT_FACT = /relaps|recurren|progress|persisten|refractor/i;
 export function isLaterDetail(g: Graph, fact: string): boolean {
   const spec = g.bundle.schema?.variables?.[fact];
   return !!spec && LATER_DETAIL.test(`${fact.replace(/_/g, " ")} ${spec.definition ?? ""} ${spec.criteria ?? ""}`);
@@ -730,20 +732,35 @@ export function isLaterDetail(g: Graph, fact: string): boolean {
  */
 /** Which of the details found open are worth asking at this start: unanswered, kept by the caller, not
  * about a later stage, and (at a first workup) not defined by the data as found only later. */
-export function askFilter(g: Graph, facts: Facts, start: string, keep: (fact: string) => boolean = () => true): (d: Decider) => boolean {
+export function askFilter(g: Graph, facts: Facts, start: string, keep: (fact: string) => boolean = () => true, ranking?: Ranking): (d: Decider) => boolean {
   const vars = g.bundle.schema?.variables ?? {};
   const known = (f: string) => facts[f] !== undefined && facts[f] !== null && facts[f] !== "";
   // at a first workup (not after surgery), what the data itself defines as found on restaging, on
-  // re-evaluation or in the resected specimen cannot be known yet
-  const first = start !== "auto" && !!g.bundle.pages[start] && !isPostSurgical(g, start) && pageNeeds(g, start).every((n) => n === "diagnosis" || n === "advanced");
-  return (d) => !!vars[d.fact] && !known(d.fact) && keep(d.fact) && !isLaterStage(g, start, d.page) && !(first && isLaterDetail(g, d.fact));
+  // re-evaluation or in the resected specimen cannot be known yet. With no setting chosen, the page the
+  // best route starts at says which stage the patient is at.
+  const at = start === "auto" ? ranking?.paths[0]?.steps[0]?.node.split(":")[0] ?? start : start;
+  const first = at !== "auto" && !!g.bundle.pages[at] && !isPostSurgical(g, at) && pageNeeds(g, at).every((n) => n === "diagnosis" || n === "advanced");
+  const other = pageOfOtherSection(g, facts);
+  return (d) => !!vars[d.fact] && !known(d.fact) && keep(d.fact) && !isLaterStage(g, start, d.page) && !(first && isLaterDetail(g, d.fact)) && !other(d.page);
+}
+
+/** Is a page one that belongs to another disease or subtype than the one chosen (a question about its boxes is not the patient's)? */
+export function pageOfOtherSection(g: Graph, facts: Facts): (page: string) => boolean {
+  const sec = g.bundle.sections;
+  const chosen = sec ? facts[sec.variable] : undefined;
+  if (!sec || typeof chosen !== "string") return () => false;
+  return (page) => { const s = sec.pages?.[page]; return !!s && s !== chosen; };
 }
 
 export function askableQuestions(g: Graph, ranking: Ranking, facts: Facts, start: string, keep: (fact: string) => boolean = () => true, limit = 8): Decider[] {
-  const ok = askFilter(g, facts, start, keep);
+  const ok = askFilter(g, facts, start, keep, ranking);
   const base = decidingFacts(g, ranking, facts, 24).filter(ok);
   if (base.length || !ranking.paths.length) return base.slice(0, limit);
-  return questionsAhead(g, ranking, facts).filter(ok).slice(0, limit);
+  // Looking ahead past the end of the routes: for a patient who has not had treatment yet, whether the
+  // disease later relapses or progresses is not a question (it is found after the treatment that comes first).
+  const at = start === "auto" ? ranking.paths[0]?.steps[0]?.node.split(":")[0] ?? start : start;
+  const atEvent = g.bundle.pages[at] ? pageNeeds(g, at).some((n) => n === "followup" || n === "recurrence" || n === "later") || isPostSurgical(g, at) : true;
+  return questionsAhead(g, ranking, facts).filter((d) => ok(d) && (atEvent || !LATER_EVENT_FACT.test(d.fact))).slice(0, limit);
 }
 
 /** Walk forward from where the open routes stop, level by level, to the first conditions that still
@@ -751,10 +768,12 @@ export function askableQuestions(g: Graph, ranking: Ranking, facts: Facts, start
 export function questionsAhead(g: Graph, ranking: Ranking, facts: Facts, depth = 8): Decider[] {
   const paths = ranking.paths.slice(0, 6);
   let level: string[] = [];
-  const jump = (id: string) => (g.node(id)?.links ?? []).filter((l) => l !== id.split(":")[0] && g.bundle.pages[l]).flatMap((l) => g.bundle.roots[l] ?? []);
+  // (a page of another disease or subtype than the one chosen is not where this patient goes on)
+  const other = pageOfOtherSection(g, facts);
+  const jump = (id: string) => (g.node(id)?.links ?? []).filter((l) => l !== id.split(":")[0] && g.bundle.pages[l] && !other(l)).flatMap((l) => g.bundle.roots[l] ?? []);
   for (const p of paths) {
     level.push(...p.next);
-    if (p.continuesTo && g.bundle.pages[p.continuesTo]) level.push(...(g.bundle.roots[p.continuesTo] ?? []));
+    if (p.continuesTo && g.bundle.pages[p.continuesTo] && !other(p.continuesTo)) level.push(...(g.bundle.roots[p.continuesTo] ?? []));
     const last = p.steps[p.steps.length - 1]?.node;
     if (last && !p.next.length) level.push(...jump(last));
   }
@@ -813,5 +832,68 @@ export function nextPageOf(g: Graph, ranking: Ranking): string | null {
   const last = p.steps[p.steps.length - 1]?.node;
   const own = last?.split(":")[0] ?? null;
   const out = (last && (g.node(last)?.links ?? []).find((l) => l !== own && g.bundle.pages[l])) || null;
-  return out ?? (p.next[0] ? p.next[0].split(":")[0] : own);
+  const to = out ?? (p.next[0] ? p.next[0].split(":")[0] : own);
+  // a page that only gives background leads nowhere itself: the way on is the first page that says what to do
+  return to && to === own && isContextPage(g, to) ? nextActionPage(g, to) ?? to : to;
+}
+
+/* ---------------- background pages: the first page that says what to do ---------------- */
+
+const boxesOf = (g: Graph, page: string) => [...g.nodes.values()].filter((n) => n.page === page && n.kind !== "header");
+
+/** A page that only gives background (a definition, considerations for survivors): none of its boxes says what to do,
+ * and it leads nowhere itself (no arrow and no pointer to another page). */
+export function isContextPage(g: Graph, page: string): boolean {
+  const boxes = boxesOf(g, page);
+  return boxes.length > 0 && !boxes.some((n) => isActionBox(g, n.full) || g.kids(n.full).length > 0 || n.links.some((l) => l !== page && g.bundle.pages[l]));
+}
+
+/**
+ * Where a page that only gives background (SFAT-1, the definition of fatigue) goes on: the first page
+ * that has something to do, found by the pages it hands over to, else by the pages that follow it in
+ * the same topic (SFAT-2 screening, SFAT-5 interventions). Null when the page is not background only,
+ * or no later page of the topic has anything to do.
+ */
+export function nextActionPage(g: Graph, page: string): string | null {
+  if (!g.bundle.pages[page] || !isContextPage(g, page)) return null;
+  const sec = g.bundle.sections;
+  const mine = sec?.pages?.[page] ?? null;
+  const ok = (p: string) => p !== page && !!g.bundle.pages[p] && (!mine || !sec?.pages?.[p] || sec.pages[p] === mine) && boxesOf(g, p).some((n) => isActionBox(g, n.full));
+  // pages handed over to, nearest first
+  const leads = pageLeads(g);
+  const seen = new Set([page]);
+  let level = [page];
+  for (let d = 0; d < 6 && level.length; d++) {
+    const next: string[] = [];
+    for (const q of level) for (const p of [...(leads.get(q) ?? [])].sort(order)) if (!seen.has(p)) { seen.add(p); if (ok(p)) return p; next.push(p); }
+    level = next;
+  }
+  // else the pages after it in the same topic (same code prefix, higher number)
+  const m = /^(.*?)(\d+)([A-Z]?)$/.exec(page);
+  if (!m) return null;
+  return g.flowPages.filter((p) => p.startsWith(m[1]) && order(p, page) > 0 && ok(p)).sort(order)[0] ?? null;
+}
+
+/** A page's name for a pointer to it: its title, or, when the title only repeats the topic ("Survivorship Survivorship: Fatigue"), its own heading ("Screening"). */
+export function pointerTitle(g: Graph, page: string): string {
+  const title = g.bundle.pages[page]?.title ?? "";
+  const sec = g.bundle.sections?.pages?.[page];
+  if (title && !/\b(\w+)\s+\1\b/i.test(title) && !(sec && title.toLowerCase() === sec.toLowerCase())) return title;
+  const head = [...g.nodes.values()].find((n) => n.page === page && n.role === "page_heading");
+  const h = head ? cleanText(g, head.full) : "";
+  return h ? tidyTitle(h) : title;
+}
+
+/** The details that decide the boxes of a page that has not been reached by any route (a page with no entry box of its own): in box order. */
+export function pageDeciders(g: Graph, page: string, facts: Facts): Decider[] {
+  const out = new Map<string, Decider>();
+  const sv = g.bundle.sections?.variable;
+  const vars = g.bundle.schema?.variables ?? {};
+  for (const n of boxesOf(g, page)) {
+    for (const f of missingFacts(g, g.preds[n.full], facts)) {
+      if (f === sv || !vars[f] || out.has(f)) continue;
+      out.set(f, { fact: f, share: 1, node: n.full, page, text: clipBox(cleanText(g, n.full)) });
+    }
+  }
+  return [...out.values()];
 }

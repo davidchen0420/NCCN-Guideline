@@ -6,11 +6,11 @@ import { distinctRecommendations, isActionBox, likelihoodWord, reachesRecommenda
 import { conditionTree, type CondNode } from "../lib/humanize";
 import { derive } from "../lib/predicates";
 import { factValue, label } from "../lib/factMeta";
-import { openDetails } from "../lib/openDetails";
+import { namedByCard, openDetails } from "../lib/openDetails";
 import { Blocks, Linked } from "./Rich";
 import { PageCrop, SrcChip, useSource, useSrc, type SrcTarget } from "../source";
 import { resolveRef, type Graph } from "../lib/graph";
-import { gateSentence } from "../lib/moments";
+import { gateSentence, nextActionPage, pointerTitle } from "../lib/moments";
 import { whyNothingFits } from "../lib/formAssist";
 import type { Block, Inline, Item } from "../lib/parseBox";
 import { Summary } from "./Summary";
@@ -549,6 +549,8 @@ function RecoCard({ p, tied, isTop, share }: CardProps) {
   const several = rec.options.length > 1;
   // the page the route goes on to after this box, when the box itself does not say where
   const nextPage = placed && !rec.then.some((x) => gotoPage(g, x)) ? p.steps.slice(rec.index + 1).map((x) => x.node.split(":")[0]).find((pg) => pg !== n.page) : undefined;
+  // a page that only gives background (a definition): the first page that says what to do is the next step
+  const follow = !action && !nextPage && !rec.then.some((x) => gotoPage(g, x)) ? nextActionPage(g, n.page) : null;
   const lead = !action ? "Context on this page, not a treatment recommendation"
     : several ? "NCCN lists these options"
     : start || tied > 0 ? "NCCN lists" : isTop || yours.length ? "NCCN recommends" : "NCCN also lists";
@@ -578,6 +580,12 @@ function RecoCard({ p, tied, isTop, share }: CardProps) {
       <div className="rc-main">
         <span className="rc-label">{lead}</span>
         {several ? <OptionList rec={rec} p={p} /> : <Headline id={id} />}
+        {follow && (
+          <div className="rc-nextstep" data-testid="card-next-step">
+            <span><b>Next step:</b> {pageName(follow, pointerTitle(g, follow))}</span>
+            <button type="button" className="btn small" onClick={() => toDiagram(follow)}><LocateFixed size={13} aria-hidden /> Show this page</button>
+          </div>
+        )}
         {(n.footnotes.length > 0 || rec.then.length > 0 || rec.alongside.length > 0 || snip || nextPage) && (
           <div className="rc-more">
             <ThenList rec={rec} />
@@ -729,7 +737,9 @@ function NeedsCard({ p }: { p: Pathway }) {
   // the same definition of "still open" as the interview and the decision trail
   const questions = useMemo(() => {
     const names = [...openDetails(g, s.facts, s.start, { ranking, overrides: s.overrides }).map((d) => d.fact), ...p.missing, ...p.laterMissing];
-    return [...new Set(names)].filter((f) => g.bundle.schema.variables[f] && unanswered(s.facts, f));
+    const worth = namedByCard(g, s.facts, s.start, ranking);
+    const end = (p.steps[p.steps.length - 1]?.node ?? "").split(":")[0];
+    return [...new Set(names)].filter((f) => g.bundle.schema.variables[f] && unanswered(s.facts, f) && worth(f, end));
   }, [g, ranking, s.facts, s.start, s.overrides, p]);
   const shown = all ? questions : questions.slice(0, 6);
   return (

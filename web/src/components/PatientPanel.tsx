@@ -5,14 +5,14 @@ import { derive } from "../lib/predicates";
 import { GROUPS, filledCount, formatNumber, groupOf, label, meta, numberText, parseNumber, unitLabel } from "../lib/factMeta";
 import { factText, sectionLabeller, vlabel } from "../lib/valueText";
 import { contradictions, plausibility, whyNothingFits, previewAnswer, previewValues, type Decider, type Preview } from "../lib/formAssist";
-import { openDetails } from "../lib/openDetails";
+import { interviewQuestions } from "../lib/openDetails";
 import { distinctRecommendations } from "../lib/pathways";
 import { applyFound, extractFacts, type Found } from "../lib/extract";
 import type { Graph } from "../lib/graph";
 import type { Ranking } from "../lib/pathways";
 import { resolveRef } from "../lib/graph";
 import { SrcChip } from "../source";
-import { PHASES, askFilter, askableQuestions, followsDisease, gateSentence, impliedBySection, leadsCondition, momentsFor, momentsOf, needOf, nextPageOf, reachableFacts, settingChoices, settingsFor, startPhase, type Phase, type Setting } from "../lib/moments";
+import { PHASES, pointerTitle, followsDisease, gateSentence, impliedBySection, leadsCondition, momentsFor, momentsOf, needOf, nextPageOf, reachableFacts, settingChoices, settingsFor, startPhase, type Phase, type Setting } from "../lib/moments";
 import { T, countRecs, pageName } from "../lib/terms";
 import { readPref, writePref } from "../lib/prefs";
 import { ArrowRight, ChevronDown, ClipboardPaste, RotateCcw, Save, Search as SearchIcon, Trash2, X } from "lucide-react";
@@ -30,7 +30,7 @@ const pageTitle = (g: Graph, code: string) => { const t = g.bundle.pages[code]?.
 function usePageName() {
   const { g } = useApp();
   return useCallback((code: string) => {
-    const t = g.bundle.pages[code]?.title;
+    const t = g.bundle.pages[code] ? pointerTitle(g, code) : "";
     return { title: t && t !== code ? t : "", code };
   }, [g]);
 }
@@ -342,11 +342,8 @@ export function PatientPanel() {
   // lists steps, what decides where it leads on), then whatever else the recommendation or the decision trail would still want.
   const deciders = useMemo(() => {
     if (stuck || needSetting) return [];
-    const base = askableQuestions(g, ranking, s.facts, s.start, keep);
-    const ok = askFilter(g, s.facts, s.start, keep);
-    const extra = openDetails(g, s.facts, s.start, { ranking, overrides: s.overrides }).filter((d) => ok(d) && !base.some((b) => b.fact === d.fact));
-    return [...base, ...extra].slice(0, 12);
-  }, [g, ranking, s.facts, s.start, s.overrides, keep, stuck, needSetting]);
+    return interviewQuestions(g, ranking, s.facts, s.start, s.overrides, keep, (f) => f !== sectionVar && !staleSet.has(f));
+  }, [g, ranking, s.facts, s.start, s.overrides, keep, sectionVar, staleSet, stuck, needSetting]);
   const gate = useMemo(() => (stuck ? whyNothingFits(g, s.facts, s.start) : null), [stuck, g, s.facts, s.start]);
   const gateText = gate ? gateSentence(g, gate, s.facts) : "";
   // a question whose answer only restates the chosen subtype (pMMR/MSS colon cancer answers the

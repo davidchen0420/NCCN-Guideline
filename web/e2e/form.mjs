@@ -467,16 +467,36 @@ await step("a topic with nothing to ask says so plainly and opens the page; the 
   assert.match(await panel.getByTestId("disease").locator("legend").innerText(), /Which topic\?/);
   const opts = await page.locator("#fact-guideline_section").evaluate((el) => [...el.querySelectorAll("option")].map((o) => o.textContent));
   assert.ok(!opts.some((t) => /^Survivorship\s*:/.test(t ?? "")), "the shared prefix is dropped: " + opts.join(" | "));
-  await page.locator("#fact-guideline_section").selectOption({ label: "Lymphedema" });
+  await page.locator("#fact-guideline_section").selectOption({ label: "Employment and Return to Work" });
   if (await panel.getByTestId("mode-interview").count()) await panel.getByTestId("mode-interview").click();
   const none = panel.getByTestId("no-questions");
   await none.waitFor();
   assert.match(await none.innerText(), /No patient details change the answer here: read the page\./);
   assert.doesNotMatch(await panel.locator(".fgroup.deciders").innerText(), /That's every question/);
   const btn = panel.getByTestId("next-step").getByRole("button").first();
+  // (the definition page leads nowhere: the way on is the first page that says what to do)
   assert.match(await btn.innerText(), /^Open .+ in the diagram/);
+  assert.doesNotMatch(await btn.innerText(), /General Principles of Working/);
   await btn.click();
-  await page.waitForFunction(() => /#survivorship\/flow\/SLYMPH/.test(location.hash));
+  await page.waitForFunction(() => /#survivorship\/flow\/SWORK-3/.test(location.hash));
+});
+await step("fatigue (a start that is only a definition): the interview asks the screening page's question, the card points to the screening page", async () => {
+  await page.goto(base + "#survivorship/");
+  await page.reload();
+  await page.locator("[data-testid=card]").first().waitFor();
+  await page.locator("#fact-guideline_section").selectOption({ label: "Fatigue" });
+  if (await panel.getByTestId("mode-interview").count()) await panel.getByTestId("mode-interview").click();
+  const iv = panel.locator(".interview");
+  await iv.locator(".iv-q").waitFor();
+  assert.match(await iv.locator(".iv-q").innerText(), /Fatigue Score/);
+  assert.match(await iv.locator(".decides").innerText(), /Changes the recommendation at: Screening \(SFAT-2\)/);
+  // the recommendation card: the definition is context, and the next step is named and one click away
+  await page.locator("#tab-paths").click();
+  const step = page.getByTestId("card-next-step");
+  await step.first().waitFor();
+  assert.match(await step.first().innerText(), /Next step:\s*Screening \(SFAT-2\)/);
+  await step.first().getByRole("button", { name: /Show this page/ }).click();
+  await page.waitForFunction(() => /#survivorship\/flow\/SFAT-2/.test(location.hash));
 });
 await step("colon, after surgery: the setting asks pathologic details, not the clinical-stage or pre-op ones", async () => {
   await page.goto(base + "#colon/");
