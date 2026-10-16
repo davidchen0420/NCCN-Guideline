@@ -1,0 +1,11 @@
+{
+ "page": "REC-10A",
+ "note": "Typed as a footnote page by its code; the PDF page is the surveillance schedule after nonoperative management, a recommendation page that many boxes point to (\"consider surveillance (REC-10A)\"). It has no arrows: one list box that patients enter, plus its reference to REC-H.",
+ "footnotes": {},
+ "boxes": [
+  {"key": "h_title", "header": true, "region": [210, 84, 565, 104]},
+  {"key": "list", "region": [20, 104, 770, 222], "entry": true, "role": "entry", "decision_type": "other", "predicate_status": "none"},
+  {"key": "to_h", "region": [20, 222, 300, 242], "role": "link"}
+ ],
+ "edges": []
+}

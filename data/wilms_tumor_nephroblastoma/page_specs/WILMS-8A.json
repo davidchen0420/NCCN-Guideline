@@ -1,0 +1,311 @@
+{
+ "page": "WILMS-8A",
+ "note": "Typed as a footnote page by its code; the PDF page continues WILMS-8 (localized bilateral renal tumors: regimen VAD, resectability at 6 weeks, response at week 12, partial nephrectomy, biopsies, adjuvant chemotherapy). Boxes, arrows and conditions written from the PDF page image and text. Findings at week 12 carry no condition: the schema records one response at the most recent re-imaging. Footnote letters resolve to the nearest page of the guideline that defines them.",
+ "footnotes": {},
+ "boxes": [
+  {
+   "key": "h_find",
+   "header": true,
+   "region": [
+    20,
+    84,
+    85,
+    104
+   ]
+  },
+  {
+   "key": "h_neo",
+   "header": true,
+   "region": [
+    105,
+    84,
+    200,
+    116
+   ]
+  },
+  {
+   "key": "h_adj",
+   "header": true,
+   "region": [
+    563,
+    84,
+    710,
+    116
+   ]
+  },
+  {
+   "key": "start",
+   "region": [
+    20,
+    224,
+    100,
+    316
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "all": [
+     {
+      "fact": "disease_extent",
+      "op": "==",
+      "value": "localized"
+     },
+     {
+      "fact": "tumor_laterality",
+      "op": "==",
+      "value": "bilateral"
+     }
+    ]
+   }
+  },
+  {
+   "key": "regimen",
+   "region": [
+    108,
+    242,
+    168,
+    300
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "cr",
+   "region": [
+    184,
+    132,
+    208,
+    152
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "renal_tumor_response",
+    "op": "==",
+    "value": "complete_response"
+   }
+  },
+  {
+   "key": "link_a",
+   "region": [
+    482,
+    132,
+    534,
+    152
+   ]
+  },
+  {
+   "key": "res6",
+   "region": [
+    186,
+    176,
+    350,
+    208
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "resectable_by_bilateral_partial_nephrectomy",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "key": "link_b",
+   "region": [
+    482,
+    182,
+    534,
+    202
+   ]
+  },
+  {
+   "key": "notres",
+   "region": [
+    186,
+    300,
+    270,
+    356
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "resectable_by_partial_nephrectomy",
+    "op": "==",
+    "value": false
+   }
+  },
+  {
+   "key": "partial",
+   "region": [
+    287,
+    270,
+    342,
+    302
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "renal_tumor_response",
+    "op": "==",
+    "value": "partial_response"
+   }
+  },
+  {
+   "key": "contvad",
+   "region": [
+    370,
+    252,
+    432,
+    320
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "ltcr",
+   "region": [
+    473,
+    223,
+    532,
+    256
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "cr12",
+   "region": [
+    474,
+    303,
+    540,
+    335
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "pn",
+   "region": [
+    563,
+    205,
+    752,
+    273
+   ]
+  },
+  {
+   "key": "switch",
+   "region": [
+    564,
+    303,
+    648,
+    335
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "ltpr",
+   "region": [
+    289,
+    389,
+    382,
+    445
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "renal_tumor_response",
+    "op": "==",
+    "value": "less_than_partial_response_or_progression"
+   }
+  },
+  {
+   "key": "biopsies",
+   "region": [
+    424,
+    383,
+    537,
+    451
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "adjust",
+   "region": [
+    564,
+    395,
+    680,
+    439
+   ]
+  },
+  {
+   "key": "link_s",
+   "region": [
+    714,
+    401,
+    766,
+    433
+   ]
+  }
+ ],
+ "edges": [
+  [
+   "start",
+   "regimen"
+  ],
+  [
+   "regimen",
+   "cr"
+  ],
+  [
+   "regimen",
+   "res6"
+  ],
+  [
+   "regimen",
+   "notres"
+  ],
+  [
+   "cr",
+   "link_a"
+  ],
+  [
+   "res6",
+   "link_b"
+  ],
+  [
+   "notres",
+   "partial"
+  ],
+  [
+   "notres",
+   "ltpr"
+  ],
+  [
+   "partial",
+   "contvad"
+  ],
+  [
+   "contvad",
+   "ltcr"
+  ],
+  [
+   "contvad",
+   "cr12"
+  ],
+  [
+   "ltcr",
+   "pn"
+  ],
+  [
+   "pn",
+   "link_b"
+  ],
+  [
+   "cr12",
+   "switch"
+  ],
+  [
+   "ltpr",
+   "biopsies"
+  ],
+  [
+   "biopsies",
+   "adjust"
+  ],
+  [
+   "adjust",
+   "link_s"
+  ]
+ ]
+}

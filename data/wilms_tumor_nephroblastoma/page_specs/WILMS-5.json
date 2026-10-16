@@ -1,0 +1,15 @@
+{
+ "page": "WILMS-5",
+ "note": "The page-label detector read the reference box 'WILMS-11' printed inside the flowchart of PDF page 14 instead of its corner label 'WILMS-5', so pages 14 and 28 shared the code WILMS-11 and the boxes of page 14 were filed under page 28. The page is relabelled WILMS-5 and its boxes, arrows and conditions (unchanged) moved onto it; page 28 is WILMS-11 again (see WILMS-11.json).",
+ "relabel": [
+  {
+   "page": "WILMS-11 1 of 2",
+   "code": "WILMS-5",
+   "nodes_from": "WILMS-11 2 of 2"
+  },
+  {
+   "page": "WILMS-11 2 of 2",
+   "code": "WILMS-11"
+  }
+ ]
+}

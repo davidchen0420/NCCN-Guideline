@@ -1,0 +1,214 @@
+{
+ "page": "CD-4B",
+ "note": "Typed as 'other' by its page code (a lettered continuation page); the PDF page is the HHV8-positive multicentric Castleman disease algorithm that CD-4A points to (first-line therapy, response, observation, relapsed disease, CD-6). Boxes, arrows and conditions written from the PDF page image and text.",
+ "footnotes": {
+  "f": "Diagnostic Criteria for Idiopathic MCD (CD-B). Active disease is the presence of ≥2 minor criteria (with at least 1 of them being a lab abnormality).",
+  "k": "See Supportive Care for B-Cell Lymphomas for the management of complications associated with anti-CD20 mAb therapy in the NCCN Guidelines for B-Cell Lymphomas.",
+  "n": "Encourage biopsy to rule out transformation to DLBCL or concomitant development of other malignancies or opportunistic infections.",
+  "p": "All patients with HIV infection should be on cART. For principles of concurrent HIV management and supportive care, see the NCCN Guidelines for Cancer in People with HIV.",
+  "q": "Response assessment using the imaging modalities performed during workup (C/A/P CT with contrast or PET/CT).",
+  "r": "Rituximab ± prednisone may be repeated without limit if progression is ≥6 months after completion of rituximab.",
+  "s": "Occult KS is prevalent in HIV/HHV8+ MCD and is likely to flare after rituximab or prednisone. Consider baseline imaging and direct visualization to screen for pulmonary ± gastrointestinal (GI) involvement. Monitor closely for KS progression and continue KS-directed therapy for ~3 months post last rituximab to minimize risk of KS flare (given long action of rituximab). See NCCN Guidelines for Kaposi Sarcoma."
+ },
+ "boxes": [
+  {
+   "key": "h_first",
+   "header": true,
+   "region": [
+    238,
+    82,
+    370,
+    104
+   ]
+  },
+  {
+   "key": "h_rel",
+   "header": true,
+   "region": [
+    508,
+    82,
+    580,
+    116
+   ]
+  },
+  {
+   "key": "mcd",
+   "region": [
+    12,
+    236,
+    44,
+    256
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "castleman_subtype",
+    "op": "==",
+    "value": "mcd"
+   }
+  },
+  {
+   "key": "crit",
+   "region": [
+    58,
+    216,
+    145,
+    274
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "all": [
+     {
+      "fact": "active_disease_criteria_present",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "organ_failure_present",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "key": "hiv",
+   "region": [
+    160,
+    213,
+    222,
+    281
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "hhv8_status",
+    "op": "==",
+    "value": "positive"
+   }
+  },
+  {
+   "key": "regimens",
+   "region": [
+    238,
+    206,
+    316,
+    286
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "resp",
+   "region": [
+    323,
+    201,
+    388,
+    223
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "response_to_therapy",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "key": "noresp",
+   "region": [
+    323,
+    271,
+    392,
+    303
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "response_to_therapy",
+    "op": "==",
+    "value": false
+   }
+  },
+  {
+   "key": "obs",
+   "region": [
+    409,
+    203,
+    480,
+    223
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "relapsed",
+   "region": [
+    508,
+    197,
+    562,
+    229
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "relapsed_refractory_or_progressive",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "key": "alt",
+   "region": [
+    592,
+    191,
+    680,
+    308
+   ]
+  },
+  {
+   "key": "rr",
+   "region": [
+    698,
+    222,
+    780,
+    280
+   ]
+  }
+ ],
+ "edges": [
+  [
+   "mcd",
+   "crit"
+  ],
+  [
+   "crit",
+   "hiv"
+  ],
+  [
+   "hiv",
+   "regimens"
+  ],
+  [
+   "regimens",
+   "resp"
+  ],
+  [
+   "regimens",
+   "noresp"
+  ],
+  [
+   "resp",
+   "obs"
+  ],
+  [
+   "obs",
+   "relapsed"
+  ],
+  [
+   "noresp",
+   "alt"
+  ],
+  [
+   "relapsed",
+   "alt"
+  ],
+  [
+   "alt",
+   "rr"
+  ]
+ ]
+}

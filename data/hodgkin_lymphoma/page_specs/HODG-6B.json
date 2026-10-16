@@ -1,0 +1,320 @@
+{
+ "page": "HODG-6B",
+ "note": "Typed as 'other' by its page code (a lettered continuation page); the PDF page continues HODG-6A (BrECADD + G-CSF for stage IIB with a large mediastinal mass and/or extranodal disease: restaging by Deauville score, further cycles, biopsy, follow-up HODG-12 or primary refractory disease HODG-13). Boxes, arrows and conditions written from the PDF page image and text. The Deauville scores after the second restaging are later findings than the schema's single score records, so those boxes carry no condition.",
+ "footnotes": {
+  "c": "Principles of FDG-PET/CT (HODG-A).",
+  "p": "Principles of Systemic Therapy (HODG-B 1 of 8).",
+  "q": "FDG-PET 5-Point Scale (Deauville Criteria) (HODG-A 2 of 2).",
+  "r": "Principles of Radiation Therapy (HODG-C).",
+  "u": "Special Considerations for Deauville 4–5 Treatment Responses: The degree of abnormality of both Deauville 4 and 5 scores are quite variable and clinical judgment is often necessary in such settings. If disease is responding well to chemotherapy, but an interim FDG-PET/CT shows a Deauville 4 or 5 response, it may be appropriate to continue with the same chemotherapy regimen and repeat an FDG-PET/CT after 2 additional cycles. Similarly, if a post-chemotherapy FDG-PET/CT is only focally positive, consolidation RT may be appropriate, especially if a biopsy is not feasible. See Principles of Radiation Therapy (HODG-C 2 of 16). Use clinical judgement if a new lymph node can be explained by alternative etiology (eg, inflammation or infection) or if residual FDG-uptake may be related to treatment (eg, immunotherapy). Repeating a short-interval FDG-PET/CT may be preferred in such scenarios. At any point, if there is concern for refractory disease, a biopsy is appropriate to inform subsequent therapy.",
+  "x": "Utilize with caution in those with neuropathy.",
+  "y": "PJP prophylaxis is recommended for all BV containing regimens."
+ },
+ "boxes": [
+  {
+   "key": "note_cp",
+   "region": [
+    20,
+    84,
+    240,
+    155
+   ],
+   "role": "note"
+  },
+  {
+   "key": "note_u",
+   "region": [
+    265,
+    86,
+    770,
+    208
+   ],
+   "role": "note"
+  },
+  {
+   "key": "h_pt",
+   "header": true,
+   "region": [
+    20,
+    219,
+    155,
+    240
+   ]
+  },
+  {
+   "key": "h_at",
+   "header": true,
+   "region": [
+    285,
+    219,
+    425,
+    240
+   ]
+  },
+  {
+   "key": "start",
+   "region": [
+    20,
+    304,
+    125,
+    402
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "restage1",
+   "region": [
+    135,
+    325,
+    188,
+    382
+   ]
+  },
+  {
+   "key": "d13",
+   "region": [
+    206,
+    306,
+    262,
+    338
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "deauville_score",
+    "op": "<=",
+    "value": 3
+   }
+  },
+  {
+   "key": "d45",
+   "region": [
+    206,
+    366,
+    262,
+    398
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "deauville_score",
+    "op": ">=",
+    "value": 4
+   }
+  },
+  {
+   "key": "b2",
+   "region": [
+    284,
+    294,
+    348,
+    350
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "b4",
+   "region": [
+    284,
+    354,
+    348,
+    410
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "restage2",
+   "region": [
+    380,
+    324,
+    432,
+    382
+   ]
+  },
+  {
+   "key": "r13",
+   "region": [
+    436,
+    296,
+    494,
+    328
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "r4",
+   "region": [
+    445,
+    336,
+    500,
+    368
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "r5",
+   "region": [
+    436,
+    376,
+    500,
+    408
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "isrt1",
+   "region": [
+    529,
+    326,
+    564,
+    348
+   ]
+  },
+  {
+   "key": "biopsy",
+   "region": [
+    532,
+    378,
+    576,
+    398
+   ]
+  },
+  {
+   "key": "neg",
+   "region": [
+    585,
+    349,
+    636,
+    369
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "biopsy_result",
+    "op": "==",
+    "value": "negative"
+   }
+  },
+  {
+   "key": "isrt2",
+   "region": [
+    654,
+    347,
+    688,
+    369
+   ]
+  },
+  {
+   "key": "pos",
+   "region": [
+    585,
+    413,
+    632,
+    433
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "biopsy_result",
+    "op": "==",
+    "value": "positive"
+   }
+  },
+  {
+   "key": "fu",
+   "region": [
+    708,
+    323,
+    770,
+    356
+   ]
+  },
+  {
+   "key": "prd",
+   "region": [
+    708,
+    395,
+    770,
+    452
+   ]
+  }
+ ],
+ "edges": [
+  [
+   "start",
+   "restage1"
+  ],
+  [
+   "restage1",
+   "d13"
+  ],
+  [
+   "restage1",
+   "d45"
+  ],
+  [
+   "d13",
+   "b2"
+  ],
+  [
+   "d45",
+   "b4"
+  ],
+  [
+   "b2",
+   "restage2"
+  ],
+  [
+   "b4",
+   "restage2"
+  ],
+  [
+   "restage2",
+   "r13"
+  ],
+  [
+   "restage2",
+   "r4"
+  ],
+  [
+   "restage2",
+   "r5"
+  ],
+  [
+   "r13",
+   "fu"
+  ],
+  [
+   "r4",
+   "isrt1"
+  ],
+  [
+   "r4",
+   "biopsy"
+  ],
+  [
+   "r5",
+   "biopsy"
+  ],
+  [
+   "isrt1",
+   "fu"
+  ],
+  [
+   "biopsy",
+   "neg"
+  ],
+  [
+   "biopsy",
+   "pos"
+  ],
+  [
+   "neg",
+   "isrt2"
+  ],
+  [
+   "isrt2",
+   "fu"
+  ],
+  [
+   "pos",
+   "prd"
+  ]
+ ]
+}

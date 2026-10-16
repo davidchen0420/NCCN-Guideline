@@ -1,0 +1,354 @@
+{
+ "page": "PHL-5A",
+ "note": "Typed as a footnote page by its code; the PDF page continues PHL-5 (Useful in Certain Circumstances for stage III-IV CHL: Bv-AVD x 6 cycles, ABVE-PC x 2 cycles with response assessment, end of therapy assessment, follow-up PHL-8 or relapsed disease PHL-9; BrECADD or adult regimens). Boxes, arrows and conditions written from the PDF page image and text. Footnote letters are defined on the printed footnote page (PHL-5B).",
+ "footnotes": {},
+ "boxes": [
+  {
+   "key": "h_pres",
+   "header": true,
+   "region": [
+    20,
+    84,
+    205,
+    104
+   ]
+  },
+  {
+   "key": "h_prim",
+   "header": true,
+   "region": [
+    20,
+    103,
+    180,
+    150
+   ]
+  },
+  {
+   "key": "h_resp",
+   "header": true,
+   "region": [
+    205,
+    103,
+    285,
+    124
+   ]
+  },
+  {
+   "key": "h_add",
+   "header": true,
+   "region": [
+    355,
+    103,
+    520,
+    124
+   ]
+  },
+  {
+   "key": "useful",
+   "region": [
+    24,
+    151,
+    198,
+    171
+   ],
+   "decision_type": "other",
+   "entry": true
+  },
+  {
+   "key": "bvavd",
+   "region": [
+    24,
+    175,
+    160,
+    235
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "abve",
+   "region": [
+    24,
+    309,
+    100,
+    390
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "brecadd",
+   "region": [
+    24,
+    452,
+    175,
+    498
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "ext",
+   "region": [
+    205,
+    466,
+    470,
+    488
+   ],
+   "links": [
+    {
+     "code": null,
+     "part": null,
+     "type": "external_guideline",
+     "guideline": "hodgkin_lymphoma",
+     "page": null
+    }
+   ]
+  },
+  {
+   "key": "resp1",
+   "region": [
+    210,
+    190,
+    282,
+    220
+   ]
+  },
+  {
+   "key": "adq1",
+   "region": [
+    317,
+    164,
+    375,
+    196
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "end_of_therapy_adequate",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "key": "inadq1",
+   "region": [
+    317,
+    217,
+    385,
+    248
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "end_of_therapy_adequate",
+    "op": "==",
+    "value": false
+   }
+  },
+  {
+   "key": "fu1",
+   "region": [
+    645,
+    164,
+    700,
+    196
+   ]
+  },
+  {
+   "key": "rsrt",
+   "region": [
+    645,
+    190,
+    775,
+    284
+   ]
+  },
+  {
+   "key": "resp2",
+   "region": [
+    118,
+    333,
+    192,
+    365
+   ]
+  },
+  {
+   "key": "adq2",
+   "region": [
+    204,
+    305,
+    302,
+    336
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "early_response_category",
+    "op": "==",
+    "value": "rapid_early_response"
+   }
+  },
+  {
+   "key": "inadq2",
+   "region": [
+    204,
+    361,
+    302,
+    393
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "early_response_category",
+    "op": "==",
+    "value": "slow_early_response"
+   }
+  },
+  {
+   "key": "abve_a",
+   "region": [
+    325,
+    305,
+    383,
+    335
+   ]
+  },
+  {
+   "key": "abve_b",
+   "region": [
+    325,
+    361,
+    383,
+    392
+   ]
+  },
+  {
+   "key": "eot_a",
+   "region": [
+    398,
+    305,
+    482,
+    335
+   ]
+  },
+  {
+   "key": "isrt",
+   "region": [
+    398,
+    365,
+    447,
+    386
+   ]
+  },
+  {
+   "key": "fu_mid",
+   "region": [
+    496,
+    290,
+    620,
+    350
+   ]
+  },
+  {
+   "key": "eot_b",
+   "region": [
+    498,
+    361,
+    570,
+    392
+   ]
+  },
+  {
+   "key": "fu2",
+   "region": [
+    645,
+    299,
+    775,
+    392
+   ]
+  }
+ ],
+ "edges": [
+  [
+   "useful",
+   "bvavd"
+  ],
+  [
+   "useful",
+   "abve"
+  ],
+  [
+   "useful",
+   "brecadd"
+  ],
+  [
+   "brecadd",
+   "ext"
+  ],
+  [
+   "bvavd",
+   "resp1"
+  ],
+  [
+   "resp1",
+   "adq1"
+  ],
+  [
+   "resp1",
+   "inadq1"
+  ],
+  [
+   "adq1",
+   "fu1"
+  ],
+  [
+   "inadq1",
+   "rsrt"
+  ],
+  [
+   "abve",
+   "resp2"
+  ],
+  [
+   "resp2",
+   "adq2"
+  ],
+  [
+   "resp2",
+   "inadq2"
+  ],
+  [
+   "adq2",
+   "abve_a"
+  ],
+  [
+   "abve_a",
+   "eot_a"
+  ],
+  [
+   "eot_a",
+   "fu_mid"
+  ],
+  [
+   "fu_mid",
+   "fu2"
+  ],
+  [
+   "inadq2",
+   "abve_b"
+  ],
+  [
+   "abve_b",
+   "isrt"
+  ],
+  [
+   "isrt",
+   "eot_b"
+  ],
+  [
+   "eot_b",
+   "fu2"
+  ]
+ ],
+ "extra_edges": [
+  [
+   "PHL-5:n445_64",
+   "PHL-5:n522_321",
+   "the 'Useful in Certain Circumstances' label was merged into the AEPA box of PHL-5; its arrow to the PHL-5A link was not extracted"
+  ]
+ ]
+}
