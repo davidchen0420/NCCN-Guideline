@@ -60,7 +60,7 @@ export function GuideBar() {
       {start.length > 0
         ? <>Start with{" "}{start.map((f, i) => <span key={f}>{i > 0 && (i === start.length - 1 ? " and " : ", ")}<button type="button" className="need" onClick={() => focusFact(f)}>{label(f)}</button></span>)} — they decide the first steps.</>
         : <>Start with what the record says.</>}
-      {examples.length > 0 && <> Or <button type="button" className="need" onClick={() => { setFacts({ ...examples[0].facts }); set({ age: examples[0].age ?? null, pathSel: null, rightTab: "paths" }); }}>load an example patient</button>.</>}
+      {examples.length > 0 && <> Or <button type="button" className="need" onClick={() => { setFacts({ ...examples[0].facts }); set({ age: examples[0].age ?? null, pathSel: null, overrides: {}, rightTab: "paths" }); }}>load an example patient</button>.</>}
     </>);
   } else if (s.rightTab === "patient") {
     next = (<>

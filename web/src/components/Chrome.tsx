@@ -3,14 +3,15 @@ import { createPortal } from "react-dom";
 import { Library as LibraryIcon, ArrowLeft, ArrowRight, BookOpen, UserRound, ListChecks, CircleHelp, RotateCcw, Search, ExternalLink, Settings, X } from "lucide-react";
 import { useApp } from "../store";
 import { PdfButton } from "../source";
-import { readPref, writePref } from "../lib/prefs";
+import { AI_THRESHOLD_MAX, AI_THRESHOLD_MIN, readPref, writePref } from "../lib/prefs";
+import { percent } from "../lib/trailView";
 import { T } from "../lib/terms";
 import { setGuideSteps, useGuideSteps } from "./Guide";
 import "../styles/shell.css";
 
 /** Settings: Advanced tools, the 3-step guide, Help. A small popover beside the rail button. */
 function SettingsMenu() {
-  const { s, set, isPhone } = useApp();
+  const { s, set, isPhone, ai } = useApp();
   const guideSteps = useGuideSteps();
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState<{ left?: number; right?: number; top?: number; bottom?: number }>({});
@@ -52,6 +53,26 @@ function SettingsMenu() {
             <span className="set-t"><b>Show the 3-step guide</b>
               <small>A strip above the panel showing Patient, Recommendation and Check the NCCN page.</small></span>
           </label>
+          {ai.available && (
+            <div className="set-ai" role="group" aria-label="AI decision support">
+              <h4>AI decision support</h4>
+              <label className="set-row">
+                <input type="checkbox" className="sw" checked={ai.on} onChange={(e) => ai.setOn(e.target.checked)} data-testid="ai-toggle" />
+                <span className="set-t"><b>Use AI to help choose between branches</b>
+                  <small>Where the answers do not settle a branch, the AI scores the options. Guideline rules always come first.</small></span>
+              </label>
+              {ai.on && (
+                <div className="set-slider">
+                  <label htmlFor="ai-threshold">Follow the AI automatically when it is at least {percent(ai.threshold)} confident</label>
+                  <input id="ai-threshold" type="range" min={Math.round(AI_THRESHOLD_MIN * 100)} max={Math.round(AI_THRESHOLD_MAX * 100)} step={1}
+                    value={Math.round(ai.threshold * 100)} onChange={(e) => ai.setThreshold(Number(e.target.value) / 100)}
+                    aria-valuetext={`${percent(ai.threshold)} confident`} data-testid="ai-threshold" />
+                  <small>Below that, it stops and asks you to choose.</small>
+                </div>
+              )}
+              <p className="set-note">With AI on, the patient's structured answers and the guideline page text are sent to OpenAI to score branches. No names or free text are sent.</p>
+            </div>
+          )}
           <button type="button" className="set-help" onClick={() => { setOpen(false); set({ help: true }); }}><CircleHelp size={16} aria-hidden />Help</button>
         </div>, document.body)}
     </>
@@ -187,7 +208,7 @@ export function Welcome() {
               <span>See how it works with a made-up patient.</span>
               <div className="wl-ex">
                 {examples.map((x) => (
-                  <button key={x.id} type="button" className="linkish" onClick={() => { setFacts({ ...x.facts }); close({ age: x.age ?? null, pathSel: null, start: "auto", stale: [], rightTab: "paths", sheet: true }); }}>{x.label}</button>
+                  <button key={x.id} type="button" className="linkish" onClick={() => { setFacts({ ...x.facts }); close({ age: x.age ?? null, pathSel: null, start: "auto", stale: [], overrides: {}, rightTab: "paths", sheet: true }); }}>{x.label}</button>
                 ))}
               </div>
             </div>

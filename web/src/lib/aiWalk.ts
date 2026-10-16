@@ -179,9 +179,19 @@ const sortOptions = (xs: TrailOption[]): TrailOption[] =>
     .sort(([a, i], [b, j]) => Number(a.verdict === false) - Number(b.verdict === false) || (b.prob ?? -1) - (a.prob ?? -1) || i - j)
     .map(([o]) => o);
 
+/**
+ * An option the patient has already had ("the patient received this", encoded on treatment boxes
+ * of structured guidelines) counts as its own true condition, as in pathways.rankPathways, so the
+ * walk and the recommendation follow the same route.
+ */
+function receivedVerdict(ctx: Ctx, child: string): boolean | null {
+  const r = ctx.g.bundle.structured ? ctx.g.node(child)?.received : null;
+  return r && evaluate(r, ctx.facts) === true ? true : null;
+}
+
 /** The rule verdict of every child, and the options as the trail shows them (no probabilities yet). */
 function optionsOf(ctx: Ctx, kids: string[]): { v: (boolean | null)[]; options: TrailOption[] } {
-  const v = kids.map((c) => (ctx.g.preds[c] ? evaluate(ctx.g.preds[c], ctx.facts) : null));
+  const v = kids.map((c) => (ctx.g.preds[c] ? evaluate(ctx.g.preds[c], ctx.facts) : receivedVerdict(ctx, c)));
   return { v, options: kids.map((c, i) => ({ child: c, text: textOf(ctx.g, c), verdict: v[i], source: v[i] === null ? "none" : "rule" }) as TrailOption) };
 }
 

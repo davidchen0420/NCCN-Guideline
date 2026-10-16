@@ -705,8 +705,8 @@ function Summary({ filled, slug, examples, focus }: { filled: number; slug: stri
     const list = [{ id: String(Date.now()), name: name.trim() || `Patient ${saved.length + 1}`, facts: s.facts, age: s.age, at: new Date().toISOString() }, ...saved].slice(0, 30);
     setSaved(list); writeSaved(slug, list); setNaming(null);
   };
-  const load = (p: { facts: Facts; age?: number | null }) => { setFacts({ ...p.facts }); set({ age: p.age ?? null, pathSel: null, start: "auto", stale: [] }); setMenu(false); };
-  const startOver = () => { setFacts({}); set({ age: null, pathSel: null, start: "auto", stale: [] }); setMenu(false); };
+  const load = (p: { facts: Facts; age?: number | null }) => { setFacts({ ...p.facts }); set({ age: p.age ?? null, pathSel: null, start: "auto", stale: [], overrides: {} }); setMenu(false); };
+  const startOver = () => { setFacts({}); set({ age: null, pathSel: null, start: "auto", stale: [], overrides: {} }); setMenu(false); };
   return (
     <div className="summary">
       <div className="patient-top">

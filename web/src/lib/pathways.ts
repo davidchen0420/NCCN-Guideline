@@ -167,6 +167,12 @@ export interface RankOptions {
    * entry share the mean of the supplied ones. Absent, the split is as before.
    */
   edgeProb?: Map<string, number>;
+  /**
+   * The clinician's choices: a branch box -> the child to follow (a page's virtual `PAGE:START`
+   * -> the entry box). The route takes that child whatever its condition says and drops its
+   * siblings; a choice for a box the route never reaches changes nothing.
+   */
+  overrides?: Record<string, string>;
 }
 /** Lowest probability an arm keeps when an AI probability is used, so an unlikely route stays listed. */
 const MIN_PROB = 0.01;
@@ -475,6 +481,10 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
       const add = [...preSteps(id, gr), stepFor(id, gr.id, targetKind(gr, kind), share, sibs)];
       dfs(gr.id, [...steps, ...add], weight * share, nx);
     };
+    // The clinician chose this branch: it is the route, whatever the conditions say.
+    const chosenKid = opts?.overrides?.[id];
+    const chosenGroup = chosenKid ? groups.find((gr) => gr.id === chosenKid) : undefined;
+    if (chosenGroup) return go(chosenGroup, gVerdict(chosenGroup) === true ? "met" : "flow", 1);
     // Every arm is a later event ("Recurrence", "Progression") and the facts do not say it has
     // happened: the plan ends here, whatever the box is, and what decides the event is kept.
     if (groups.every((gr) => isEvent(gr.id) && !gr.pre.length)) {
@@ -508,6 +518,9 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
   };
 
   const explore = (entries: string[]) => {
+    // The clinician chose the starting point (the page's virtual START box).
+    const pickedEntry = Object.entries(opts?.overrides ?? {}).find(([k, v]) => k.endsWith(":START") && entries.includes(v))?.[1];
+    if (pickedEntry) return dfs(pickedEntry, [stepFor(null, pickedEntry, verdict(pickedEntry) === true ? "met" : "flow", 1, entries)], 1, new Set([pickedEntry]));
     split(entries.map((id) => ({ id, pre: [] })), false).forEach((o) =>
       dfs(o.gr.id, [stepFor(null, o.gr.id, o.kind, o.share, entries)], o.share, new Set([o.gr.id])));
   };

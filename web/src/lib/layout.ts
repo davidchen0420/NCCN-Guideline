@@ -85,6 +85,15 @@ export function layoutPage(page: FlowPage, heights: Record<string, number>, pars
 const cy = (b: number[]) => (b[1] + b[3]) / 2;
 
 /** Elbow-free cubic curve from the right edge of one card to the left edge of another. */
+/** The middle of the arrow edgePath draws (its curve is symmetric, so the middle of its end points). */
+export function edgeMid(a: Placed, b: Placed): { x: number; y: number } {
+  const fwd = b.x > a.x + a.w - 8;
+  if (fwd) return { x: (a.x + a.w + b.x) / 2, y: (a.y + a.h / 2 + b.y + b.h / 2) / 2 };
+  if (b.x + b.w < a.x + 8) return { x: (a.x + b.x + b.w) / 2, y: (a.y + a.h / 2 + b.y + b.h / 2) / 2 };
+  const down = b.y > a.y;
+  return { x: (a.x + a.w / 2 + b.x + b.w / 2) / 2, y: ((down ? a.y + a.h : a.y) + (down ? b.y : b.y + b.h)) / 2 };
+}
+
 export function edgePath(a: Placed, b: Placed): string {
   const fwd = b.x > a.x + a.w - 8;
   if (fwd) {

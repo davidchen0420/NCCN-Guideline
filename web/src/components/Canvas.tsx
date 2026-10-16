@@ -3,7 +3,8 @@ import { TransformComponent, TransformWrapper, type ReactZoomPanPinchRef } from 
 import { Maximize2, Minus, Plus, Crosshair } from "lucide-react";
 import { useApp } from "../store";
 import { Card, type CardFlags } from "./Card";
-import { cardWidth, edgePath, layoutPage } from "../lib/layout";
+import { cardWidth, edgeMid, edgePath, layoutPage } from "../lib/layout";
+import { edgeTags } from "../lib/trailView";
 import { pathSets } from "../lib/graph";
 import { matcher } from "../lib/search";
 import { boxSrc } from "./PathwaysPanel";
@@ -15,7 +16,7 @@ const FLOOR = 0.55;
 const n_entry =(g: { bundle: { roots: Record<string, string[]> } }, full: string) => (g.bundle.roots[full.split(":")[0]] ?? []).includes(full);
 
 export function Canvas({ page }: { page: string }) {
-  const { s, g, set, dispatch, openFootnote, selected: route, isPhone } = useApp();
+  const { s, g, set, dispatch, openFootnote, selected: route, isPhone, ai } = useApp();
   const flow = g.bundle.pages[page];
   const boxes = useMemo(() => flow.nodes.filter((n) => n.kind === "box"), [flow]);
   const parsedByShort = useMemo(() => Object.fromEntries(boxes.map((n) => [n.id, g.parsed.get(`${page}:${n.id}`)!])), [boxes, g, page]);
@@ -91,6 +92,8 @@ export function Canvas({ page }: { page: string }) {
     trail.forEach((x, i) => { if (i) e.add(`${trail[i - 1]}>${x}`); });
     return e;
   }, [trail]);
+  // With AI on, the arrows the recommendation's route takes out of each decision say who chose them
+  const tags = useMemo(() => (ai.on && !s.walk ? edgeTags(ai.trail, ai.threshold) : null), [ai.on, ai.trail, ai.threshold, s.walk]);
   const hasFilter = !!s.query.trim() || s.tags.length > 0;
   const match = useMemo(() => matcher(s.query), [s.query]);
 
@@ -151,10 +154,26 @@ export function Canvas({ page }: { page: string }) {
                   const a = byId[e.src], b = byId[e.dst];
                   if (!a || !b) return null;
                   const key = `${page}:${e.src}>${page}:${e.dst}`;
-                  const cls = ["edge", s.conf ? e.cls : "agreed", path.edges.has(key) && "onpath", s.answers.length && !path.edges.has(key) && (s.showNon ? "dim" : "hide"), walkEdges.has(key) && "walk"].filter(Boolean).join(" ");
+                  const cls = ["edge", s.conf ? e.cls : "agreed", path.edges.has(key) && "onpath", s.answers.length && !path.edges.has(key) && (s.showNon ? "dim" : "hide"), walkEdges.has(key) && "walk", tags?.get(key)?.low && walkEdges.has(key) && "lowconf"].filter(Boolean).join(" ");
                   return <path key={i} className={cls} d={edgePath(a, b)} markerEnd={`url(#${walkEdges.has(key) ? "arrow-walk" : path.edges.has(key) ? "arrow-path" : "arrow"})`} />;
                 })}
               </svg>
+              {tags && (
+                <svg className="edges edge-tags" width={layout.width} height={layout.height} aria-hidden style={{ position: "absolute", left: 0, top: 0, pointerEvents: "none", overflow: "visible" }}>
+                  {flow.edges.map((e, i) => {
+                    const key = `${page}:${e.src}>${page}:${e.dst}`;
+                    const tag = tags.get(key), a = byId[e.src], b = byId[e.dst];
+                    if (!tag || !a || !b || !walkEdges.has(key)) return null;
+                    const m = edgeMid(a, b), w = tag.text.length * 6.6 + 12;
+                    return (
+                      <g key={i} className={`edge-tag${tag.low ? " low" : ""}`} data-testid="edge-tag" transform={`translate(${m.x},${m.y})`}>
+                        <rect x={-w / 2} y={-9} width={w} height={18} rx={9} />
+                        <text>{tag.text}</text>
+                      </g>
+                    );
+                  })}
+                </svg>
+              )}
               {layout.headers.map((h) => (
                 <div key={h.id} className="col-head" title={h.text} style={{ left: h.x, width: h.w, top: 14 }}>{h.text.toLowerCase().replace(/(^|\s)\S/g, (m) => m.toUpperCase())}</div>
               ))}

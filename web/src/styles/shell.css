@@ -2,7 +2,7 @@
    Loaded after app.css (imported from Chrome.tsx); overrides use the same or higher specificity. */
 
 /* ---------- settings popover (opened from the rail) ---------- */
-.set-menu { position: fixed; z-index: 70; width: 320px; max-width: calc(100vw - 16px); padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; gap: 4px; animation: peek-in .14s ease-out; }
+.set-menu { max-height: calc(100vh - 16px); overflow-y: auto; position: fixed; z-index: 70; width: 320px; max-width: calc(100vw - 16px); padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; gap: 4px; animation: peek-in .14s ease-out; }
 .set-menu h3 { font-family: var(--serif); font-size: var(--fs-lg); margin-bottom: 6px; }
 .set-row { display: flex; align-items: flex-start; gap: 12px; padding: 9px 6px; border-radius: var(--r); cursor: pointer; min-height: 44px; }
 .set-row:hover { background: var(--surface-2); }

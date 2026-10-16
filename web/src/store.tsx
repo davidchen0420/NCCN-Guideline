@@ -6,7 +6,10 @@ import type { Kind } from "./lib/search";
 import { rankPathways, type Pathway, type Ranking } from "./lib/pathways";
 import { patientKey, readPatient } from "./lib/patient";
 import { carryOver } from "./lib/moments";
-import { ADVANCED_EVENT, ADVANCED_KEY, readFlag, readPref, setAdvancedPref } from "./lib/prefs";
+import { ADVANCED_EVENT, ADVANCED_KEY, readAiEnabled, readAiThreshold, readFlag, readPref, setAdvancedPref, writeAiEnabled, writeAiThreshold, clampThreshold } from "./lib/prefs";
+import { aiStatus, type AiStatus } from "./lib/decide";
+import { useAiTrail, type AiTrail } from "./lib/useAiTrail";
+import { staleOverrides } from "./lib/trailView";
 
 export type Loc =
   | { kind: "flow"; page: string; node?: string }
@@ -28,6 +31,8 @@ export interface State {
   stale: string[];
   /** Advanced tools: reviewer views (extraction, encoding, walk, scores); off for clinicians */
   advanced: boolean;
+  /** the clinician's choices at branches of the algorithm (box id -> child), kept with the patient */
+  overrides: Record<string, string>;
 }
 
 type Action =
@@ -61,6 +66,19 @@ function reducer(s: State, a: Action): State {
   }
 }
 
+/** AI decision support as the reader sees it. */
+export interface AiCtx extends AiTrail {
+  /** the local server offers it (it has a key); false on file:// and on the hosted copy: then nothing about AI is shown */
+  available: boolean;
+  /** available and switched on */
+  on: boolean;
+  /** the model's name as the server reports it, for display */
+  model: string | null;
+  threshold: number;
+  setOn: (on: boolean) => void;
+  setThreshold: (t: number) => void;
+}
+
 export interface Ctx {
   s: State; g: Graph; bundle: Bundle;
   dispatch: React.Dispatch<Action>;
@@ -71,6 +89,9 @@ export interface Ctx {
   startWalkAt: (page: string, node: string | null) => void;
   chooseStep: (child: string) => void;
   setFacts: (f: Facts) => void;
+  /** choose a child at a branch of the algorithm (null takes the choice back); the recommendation and the trail follow */
+  setOverride: (node: string, child: string | null) => void;
+  ai: AiCtx;
   /** start the algorithm at a moment (a page, or "auto"); details that may have changed since are carried over for confirmation */
   setStart: (page: string) => void;
   isPhone: boolean;
@@ -149,7 +170,7 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
       query: "", kinds: [], tags: [], searchNon: false,
       dock: null, fn: null, fnIdx: 0, walk: null, facts: patient?.facts ?? {}, help: false, welcome: !saved && !(patient && Object.keys(patient.facts).length) && intent !== "patient" && intent !== "read",
       rightTab: "patient", age: patient?.age ?? null, start: patient?.start && g.bundle.pages[patient.start] ? patient.start : "auto", pathSel: null,
-      stale: patient?.stale ?? [], advanced: readFlag(ADVANCED_KEY),
+      stale: patient?.stale ?? [], advanced: readFlag(ADVANCED_KEY), overrides: patient?.overrides ?? {},
     };
   }, [g]);
   const [s, dispatch] = useReducer(reducer, init);
@@ -157,8 +178,8 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
   useEffect(() => { try { history.replaceState(null, "", locToHash(s.loc, prefix)); } catch { /* file:// may refuse */ } }, [s.loc, prefix]);
   useEffect(() => {
     if (!slug) return;
-    try { sessionStorage.setItem(patientKey(slug), JSON.stringify({ facts: s.facts, age: s.age, start: s.start, stale: s.stale })); } catch { /* storage blocked */ }
-  }, [slug, s.facts, s.age, s.start, s.stale]);
+    try { sessionStorage.setItem(patientKey(slug), JSON.stringify({ facts: s.facts, age: s.age, start: s.start, stale: s.stale, overrides: s.overrides })); } catch { /* storage blocked */ }
+  }, [slug, s.facts, s.age, s.start, s.stale, s.overrides]);
   useEffect(() => {
     const f = () => { const l = hashToLoc(location.hash, g, prefix); if (l) dispatch({ type: "go", loc: l }); };
     window.addEventListener("hashchange", f);
@@ -222,7 +243,37 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
     for (const k of s.stale) delete f[k];
     return f;
   }, [s.facts, s.stale]);
-  const ranking = useMemo(() => rankPathways(g, live, s.start), [g, live, s.start]);
+
+  // AI decision support: only where the local server offers it, and only while it is switched on
+  const [status, setStatus] = useState<AiStatus | null>(null);
+  const [aiPref, setAiPref] = useState(readAiEnabled);
+  const [threshold, setThresholdState] = useState(readAiThreshold);
+  useEffect(() => {
+    let off = false;
+    aiStatus().then((st) => { if (!off) setStatus(st); }, () => { /* no server: no AI */ });
+    return () => { off = true; };
+  }, []);
+  const available = !!status?.enabled;
+  const aiOn = available && aiPref;
+  const aiTrail = useAiTrail(g, live, s.start, s.overrides, { enabled: aiOn, threshold });
+  // a choice that no longer applies (the route changed) is dropped once the walk has settled
+  useEffect(() => {
+    if (!aiTrail.settled || !Object.keys(s.overrides).length) return;
+    const gone = staleOverrides(aiOn && aiTrail.ai ? aiTrail.ai : aiTrail.rules, s.overrides);
+    if (gone.length) dispatch({ type: "set", patch: { overrides: Object.fromEntries(Object.entries(s.overrides).filter(([k]) => !gone.includes(k))) } });
+  }, [aiTrail.settled, aiTrail.ai, aiTrail.rules, aiOn, s.overrides]);
+  const setOverride = useCallback((node: string, child: string | null) => {
+    const next = { ...s.overrides };
+    if (child === null) delete next[node]; else next[node] = child;
+    dispatch({ type: "set", patch: { overrides: next, pathSel: null } });
+  }, [s.overrides]);
+  const ai: AiCtx = useMemo(() => ({
+    ...aiTrail, available, on: aiOn, model: status?.model ?? null, threshold,
+    setOn: (on: boolean) => { writeAiEnabled(on); setAiPref(on); },
+    setThreshold: (t: number) => { const c = clampThreshold(t); writeAiThreshold(c); setThresholdState(c); },
+  }), [aiTrail, available, aiOn, status, threshold]);
+
+  const ranking = useMemo(() => rankPathways(g, live, s.start, { edgeProb: aiOn ? aiTrail.edgeProb : undefined, overrides: s.overrides }), [g, live, s.start, aiOn, aiTrail.edgeProb, s.overrides]);
   const selected = useMemo(() => {
     if (!ranking.paths.length) return null;
     return ranking.paths.find((p) => p.id === s.pathSel) ?? ranking.paths[0];
@@ -245,6 +296,6 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
     }, 60);
   }, []);
 
-  const value: Ctx = { s, g, bundle, dispatch, go, goRef, set, openFootnote, startWalkAt, chooseStep, setFacts, setStart, isPhone, ranking, selected, showPath, focusFact, library, slug };
+  const value: Ctx = { s, g, bundle, dispatch, go, goRef, set, openFootnote, startWalkAt, chooseStep, setFacts, setOverride, ai, setStart, isPhone, ranking, selected, showPath, focusFact, library, slug };
   return <AppCtx.Provider value={value}>{children}</AppCtx.Provider>;
 }
