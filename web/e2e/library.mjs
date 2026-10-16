@@ -3,7 +3,7 @@
 import { chromium } from "playwright-core";
 import { strict as assert } from "node:assert";
 import { createServer } from "node:http";
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -11,6 +11,7 @@ const ROOT = fileURLToPath(new URL("../../", import.meta.url));
 const TYPES = { ".html": "text/html", ".json": "application/json", ".js": "text/javascript" };
 const server = createServer(async (req, res) => {
   const path = normalize(decodeURIComponent(new URL(req.url, "http://x").pathname)).replace(/^(\.\.[/\\])+/, "");
+  if (/^[/\\]Guideline[/\\]/.test(path)) { res.writeHead(404); res.end(); return; }   // the tests run without the licensed PDFs
   try { const body = await readFile(join(ROOT, path)); res.writeHead(200, { "content-type": TYPES[extname(path)] ?? "application/octet-stream" }); res.end(body); }
   catch { res.writeHead(404); res.end(); }
 }).listen(0, "127.0.0.1");
@@ -129,11 +130,27 @@ await step("clicking a box opens its page from the guideline PDF in its own wind
   await page.goto(base + "#prostate/flow/PROS-2");
   await closeWelcome();
   const card = page.locator(".canvas [data-testid=card]:visible").filter({ hasText: "Intermediate" }).first();
-  const [win] = await Promise.all([page.context().waitForEvent("page"), card.click({ position: { x: 20, y: 40 } })]);
+  const [win] = await Promise.all([page.context().waitForEvent("page"), card.click({ position: { x: 10, y: 10 } })]);
   await win.locator(".viewer-bar", { hasText: "PROS-2" }).waitFor();
   await win.getByRole("button", { name: "Close page viewer" }).click();
   await page.waitForTimeout(300);
   assert.ok(win.isClosed(), "Close shuts the window");
+});
+await step("a page opens fitted to its width (never below 55%), and the reading size is one click away", async () => {
+  await page.goto(base + "#prostate/flow/PROS-3");
+  await closeWelcome();
+  await page.locator(".canvas [data-testid=card]:visible").first().waitFor();
+  await page.waitForTimeout(400);
+  const zoom = () => page.evaluate(() => { const m = /matrix\(([^,]+)/.exec(getComputedStyle(document.querySelector(".canvas .plane").parentElement).transform); return m ? Number(m[1]) : 1; });
+  const fitted = await zoom();
+  assert.ok(fitted >= 0.55 - 0.01 && fitted <= 1.001, `opened at ${fitted}`);
+  const inView = () => page.evaluate(() => { const c = document.querySelector(".canvas").getBoundingClientRect(); return [...document.querySelectorAll(".canvas .plane [data-testid=card]")].filter((e) => { const r = e.getBoundingClientRect(); return r.left >= c.left && r.right <= c.right && r.top >= c.top && r.bottom <= c.bottom; }).length; });
+  const opened = await inView();
+  await page.getByRole("button", { name: "Back to reading size" }).click();
+  await page.waitForTimeout(200);
+  const reading = await zoom();
+  assert.ok(reading >= fitted - 0.001, `reading size ${reading} is not smaller than the fitted ${fitted}`);
+  if (fitted < reading - 0.05) assert.ok(opened >= await inView(), "fitting shows at least as many cards as the reading size");
 });
 if (process.argv.includes("--all")) {
   // Every guideline: opens, renders its first algorithm page, the patient form and the pathways tab.
@@ -142,7 +159,7 @@ if (process.argv.includes("--all")) {
   await p.addInitScript(() => { try { localStorage.setItem("oc-advanced", "1"); } catch { /* blocked */ } });   // the start-from picker is an Advanced tool
   const fails = [];
   await p.addInitScript(() => { try { localStorage.setItem("oc-form-mode", "form"); } catch { /* */ } });   // the full form lists every field
-  for (const slug of slugs) {
+  for (const slug of slugs.filter((s) => !process.env.SLUGS || process.env.SLUGS.split(",").includes(s))) {
     const errs = [];
     const onErr = (e) => errs.push(String(e.message ?? e));
     p.on("pageerror", onErr);
@@ -165,6 +182,74 @@ if (process.argv.includes("--all")) {
   }
   console.log(`ok ${++n} all ${slugs.length} guidelines open, list patient details and rank pathways${fails.length ? "" : " without errors"}`);
   assert.deepEqual(fails, [], fails.join("\n"));
+
+  // The clinician's path through every guideline: open, find a recommendation, say what is needed
+  // (the first need and setting), and always see the way on; the Recommendation tab then shows a
+  // recommendation, an honest next step on another page, or what to answer: never a heading as
+  // "NCCN recommends", never a dead end without a button.
+  const sw = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  const states = {};
+  const slugState = {};
+  const bad = [];
+  for (const slug of slugs.filter((s) => !process.env.SLUGS || process.env.SLUGS.split(",").includes(s))) {
+    const errs = [];
+    const onErr = (e) => errs.push(String(e.message ?? e));
+    sw.on("pageerror", onErr);
+    try {
+      await sw.goto(`${base}#${slug}/`);
+      await sw.locator("[data-testid=card]").first().waitFor({ timeout: 15000 });
+      if (await sw.getByRole("dialog", { name: /Find where a patient sits/ }).count()) await sw.getByRole("button", { name: /Find a recommendation for a patient/ }).click();
+      await sw.getByRole("tab", { name: "Patient" }).click();
+      // a guideline of several diseases: the first one
+      const dis = sw.getByTestId("disease");
+      if (await dis.count()) {
+        if (await dis.locator("select").count()) await dis.locator("select").selectOption({ index: 1 });
+        else await dis.locator("[role=radio]").first().click();
+      }
+      const moment = sw.getByTestId("moment");
+      if (await moment.count()) {
+        const chips = moment.locator(".moment-chips button");
+        if (await chips.count() > 1) await chips.nth(1).click();
+        const sit = moment.getByTestId("situations");
+        if (await sit.count()) await sit.getByRole("radio").first().click();
+      }
+      const footer = sw.getByTestId("next-step");
+      // no need to choose (or nothing ranked yet): answer the first question
+      for (let i = 0; i < 3 && !(await footer.count()); i++) {
+        const opt = sw.locator(".rp-body .iv-options button").first();
+        if (await opt.count()) await opt.click(); else if (await sw.getByRole("button", { name: /Don't know/ }).count()) await sw.getByRole("button", { name: /Don't know/ }).click(); else break;
+        await sw.waitForTimeout(150);
+      }
+      let state;
+      if (await sw.getByRole("tab", { name: /Recommendation/ }).getAttribute("aria-selected") !== "true") {
+        await footer.waitFor({ timeout: 5000 });
+        const see = footer.getByRole("button", { name: /^See the recommendation/ }), fix = footer.getByRole("button", { name: "Fix this" });
+        assert.ok((await see.count()) + (await fix.count()) === 1, "the footer offers See the recommendation or Fix this");
+        if (await see.count()) await see.click(); else await sw.getByRole("tab", { name: /Recommendation/ }).click();
+      }
+      const paths = sw.locator(".paths");
+      await paths.locator(".reco-card, .empty, .needs").first().waitFor({ timeout: 8000 });
+      const text = await paths.innerText();
+      const card = paths.locator(".reco-card").first();
+      if (await paths.locator(".continues").count()) { state = "next step on another page"; assert.match(text, /The next step is on .+/); assert.doesNotMatch(text, /NCCN (recommends|lists|also lists)/i); }
+      else if (await paths.locator(".needs").count()) { state = "answer these"; assert.match(text, /Answer these to reach a recommendation/); assert.doesNotMatch(text, /NCCN (recommends|lists|also lists)/i); }
+      else if (await paths.locator(".empty").count()) { state = "nothing fits"; assert.ok(await paths.locator(".empty button").count() >= 1, "a way back from the dead end"); }
+      else {
+        state = "recommendation";
+        const box = (await card.locator(".reco-box").innerText()).replace(/\s+/g, " ").trim();
+        assert.ok(box.length > 3, "the recommendation has text");
+        assert.ok(!/^[A-Z0-9 \-/,&.:'’()]+$/.test(box) && !/^[A-Z]{2,8}-\d+[A-Z]?(\s|$)/.test(box), `a heading or page reference is not a recommendation: "${box.slice(0, 60)}"`);
+        assert.match(text, /NCCN (recommends|lists|also lists)/i);
+      }
+      states[state] = (states[state] ?? 0) + 1;
+      slugState[slug] = state;
+    } catch (e) { errs.push(String(e.message ?? e).split("\n")[0]); }
+    sw.off("pageerror", onErr);
+    if (errs.length) bad.push(`${slug}: ${errs.join("; ")}`);
+  }
+  console.log(`ok ${++n} the clinician's path ends in a way on in all ${slugs.length - bad.length} of ${slugs.length} guidelines: ${Object.entries(states).map(([k, v]) => `${v} ${k}`).join(", ")}`);
+  if (process.env.SWEEP_OUT) await writeFile(process.env.SWEEP_OUT, Object.entries(slugState).map(([k, v]) => `${k}\t${v}`).join("\n"));
+  assert.deepEqual(bad, [], bad.join("\n"));
 }
 await browser.close();
 server.close();
