@@ -1,0 +1,23 @@
+{
+ "page": "HIV-1",
+ "note": "Two columns of recommendation text without arrows (anal dysplasia / anal cancer screening in PWH; anal cancer in PWH), the page INTRO-1 sends anal cancer to. The old extraction cut the columns into loose fragments and left no entry box; each column is one list box that patients enter. The screening column holds general recommendations (no condition); the anal cancer column applies when the primary cancer is anal cancer (as the INTRO-1 link says).",
+ "footnotes": {
+  "a": "Stier EA, et al. Int J Cancer 2024;154:1694-1702.",
+  "b": "Palefsky JM, et al. N Engl J Med 2022;386:2273-2282.",
+  "c": "Guidelines for the Prevention and Treatment of Opportunistic Infections in Adults and Adolescents With HIV. U.S. Department of Health and Human Services, NIH Office of AIDS Research. Available at: https://clinicalinfo.hiv.gov/en/guidelines/hiv-clinical-guidelines-adult-and-adolescent-opportunistic-infections/whats-new. Accessed September 20, 2024.",
+  "d": "Richel O, et al. Lancet Oncol 2013;14:346-353.",
+  "e": "Polizzotto MN, et al. Clin Infect Dis 2016;62:730-738.",
+  "f": "Uldrick TS, et al. JAMA Oncol 2019;5:1332-1339.",
+  "g": "Fujita K, et al. Open Forum Infect Dis 2020;7:ofaa067.",
+  "h": "Bae S, et al. J Immunother Cancer 2021;9:e002960.",
+  "i": "Zaemes J, et al. Eur J Cancer 2020;132:168-175.",
+  "j": "Suliman AM, et al. Cancer Immunol Immunother 2021;70:935-944.",
+  "k": "Anidi IU, et al. Open Forum Infect Dis 2024;11:ofae183."
+ },
+ "boxes": [
+  {"key": "screen", "region": [20, 84, 392, 455], "entry": true, "role": "entry", "decision_type": "other"},
+  {"key": "cancer", "region": [400, 84, 775, 552], "entry": true, "role": "entry", "decision_type": "condition",
+   "predicate": {"fact": "primary_cancer_type", "op": "==", "value": "anal_cancer"}}
+ ],
+ "edges": []
+}

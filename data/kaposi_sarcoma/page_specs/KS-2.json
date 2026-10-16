@@ -1,0 +1,5 @@
+{
+ "page": "KS-2",
+ "note": "First-line therapy page of the Kaposi sarcoma algorithm. Patients enter at the box 'Limited cutaneous' at the left of the page (KS STATE column); the old extraction counted it as having a parent because 'Relapsed ... -> Limited cutaneous' loops back to it (the arrow along the top of the page), so no entry box was named. Boxes and arrows were already extracted and agree with the image.",
+ "entries": ["KS-2:n248_21"]
+}

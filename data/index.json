@@ -63,51 +63,55 @@
    "version_date": "February 27, 2026",
    "pdf_sha256": "76eafbe51ef2a66dfcb95e3828994516761b9449c4b84d830eb4db5a0ad8865f",
    "path": "adolescent_and_young_adult_aya_oncology/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 113,
-    "algorithm_pages": 12,
-    "boxes": 36,
-    "boxes_text_found_in_pdf_at_bbox": "33/36",
+    "algorithm_pages": 13,
+    "boxes": 42,
+    "boxes_text_found_in_pdf_at_bbox": "42/42",
     "edges_by_evidence": {
-     "image_checked": 4,
+     "image_checked": 11,
      "two_methods": 16,
-     "table_text_checked": 30
+     "table_text_checked": 28
     },
-    "decision_boxes": 27,
+    "decision_boxes": 28,
     "predicate_status": {
      "model_reviewed": 12,
-     "none": 12,
-     "inherited_from_link": 3
+     "none": 11,
+     "inherited_from_link": 5
     },
     "decision_types": {
      "condition": 16,
-     "other": 11
+     "other": 12
     },
-    "entries": 13,
-    "entries_with_predicate": 4,
-    "entries_reached_by_link": 3,
+    "entries": 14,
+    "entries_with_predicate": 6,
+    "entries_reached_by_link": 12,
     "roles": {
-     "page_heading": 12,
-     "note": 7,
+     "page_heading": 16,
+     "note": 5,
      "step": 8,
      "leaf": 10,
-     "decision": 1,
-     "entry": 9,
-     "table_root": 4,
+     "decision": 3,
+     "entry": 11,
+     "table_root": 3,
      "table_condition": 10,
      "table_value": 3,
-     "column_header": 1,
-     "table_rec": 17
+     "table_rec": 15,
+     "link": 5
     },
     "links": {
-     "page": 25,
-     "external_guideline": 6
+     "page": 31,
+     "external_guideline": 5
     },
     "footnote_refs_by_resolution": {
-     "own_page": 11
+     "own_page": 14
     },
-    "clinician_validated": false
+    "clinician_validated": false,
+    "reextracted_pages": [
+     "AYAO-7",
+     "AYAO-8"
+    ]
    }
   },
   {
@@ -2226,41 +2230,47 @@
    "version_date": "December 17, 2025",
    "pdf_sha256": "55f29d0146a5f728d4b06105bbb77025e0f1887f063dbf635367a7267d47a608",
    "path": "in_people_with_hiv/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 66,
     "algorithm_pages": 5,
-    "boxes": 43,
-    "boxes_text_found_in_pdf_at_bbox": "37/43",
+    "boxes": 16,
+    "boxes_text_found_in_pdf_at_bbox": "16/16",
     "edges_by_evidence": {
      "image_checked": 4,
      "two_methods": 2
     },
-    "decision_boxes": 7,
+    "decision_boxes": 14,
     "predicate_status": {
-     "model_reviewed": 7
+     "model_reviewed": 12,
+     "none": 2
     },
     "decision_types": {
-     "condition": 7
+     "condition": 12,
+     "other": 2
     },
-    "entries": 2,
-    "entries_with_predicate": 2,
-    "entries_reached_by_link": 0,
+    "entries": 9,
+    "entries_with_predicate": 7,
+    "entries_reached_by_link": 7,
     "roles": {
-     "note": 35,
-     "entry": 2,
+     "note": 1,
+     "entry": 9,
      "leaf": 6
     },
     "links": {
      "page": 9,
-     "external_guideline": 10
+     "external_guideline": 1
     },
     "footnote_refs_by_resolution": {
-     "own_page": 4,
-     "null": 2,
-     "nearest_same_prefix": 3
+     "own_page": 41
     },
-    "clinician_validated": false
+    "clinician_validated": false,
+    "reextracted_pages": [
+     "HIV-1",
+     "HIV-2",
+     "HIV-3",
+     "HIV-4"
+    ]
    }
   },
   {
@@ -2271,7 +2281,7 @@
    "version_date": "September 16, 2025",
    "pdf_sha256": "232ecec1580e09351b4b498a9cc13db8b45758c8d271183a99eaa1c9f71008a0",
    "path": "kaposi_sarcoma/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 52,
     "algorithm_pages": 5,
@@ -2283,22 +2293,23 @@
      "single_source": 1,
      "table_text_checked": 8
     },
-    "decision_boxes": 29,
+    "decision_boxes": 30,
     "predicate_status": {
      "none": 6,
-     "model_reviewed": 23
+     "model_reviewed": 23,
+     "inherited_from_link": 1
     },
     "decision_types": {
      "other": 5,
-     "condition": 22,
+     "condition": 23,
      "option": 2
     },
-    "entries": 4,
-    "entries_with_predicate": 2,
-    "entries_reached_by_link": 2,
+    "entries": 5,
+    "entries_with_predicate": 3,
+    "entries_reached_by_link": 3,
     "roles": {
-     "entry": 3,
-     "decision": 9,
+     "entry": 4,
+     "decision": 8,
      "step": 22,
      "leaf": 10,
      "note": 4,
@@ -3361,7 +3372,7 @@
    "version_date": "July 9, 2026",
    "pdf_sha256": "eab415d07faee19442e5eef7f81e2e0a9ad792da4aae75b432c8b2710012c5ea",
    "path": "palliative_care/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 117,
     "algorithm_pages": 34,
@@ -3373,26 +3384,26 @@
      "single_source": 3,
      "table_text_checked": 19
     },
-    "decision_boxes": 154,
+    "decision_boxes": 155,
     "predicate_status": {
-     "none": 26,
+     "none": 27,
      "inherited_from_link": 5,
      "model_reviewed": 120,
      "rejected": 3
     },
     "decision_types": {
-     "other": 26,
+     "other": 27,
      "condition": 128
     },
-    "entries": 73,
+    "entries": 74,
     "entries_with_predicate": 68,
-    "entries_reached_by_link": 60,
+    "entries_reached_by_link": 65,
     "roles": {
-     "note": 36,
+     "note": 35,
      "page_heading": 82,
      "leaf": 68,
      "decision": 26,
-     "entry": 70,
+     "entry": 71,
      "step": 95,
      "table_root": 3,
      "table_rec": 15,
@@ -3410,7 +3421,10 @@
      "null": 3,
      "nearest_same_prefix": 2
     },
-    "clinician_validated": false
+    "clinician_validated": false,
+    "reextracted_pages": [
+     "PAL-33"
+    ]
    }
   },
   {
@@ -4041,7 +4055,7 @@
    "version_date": "April 10, 2026",
    "pdf_sha256": "61da4c6de439d00673b03196826a105213b1fe5159a4c76b3dbc7e1bbf234863",
    "path": "related_fatigue/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 73,
     "algorithm_pages": 8,
@@ -4054,24 +4068,23 @@
     "decision_boxes": 13,
     "predicate_status": {
      "model_reviewed": 6,
-     "inherited_from_link": 4,
-     "none": 3
+     "inherited_from_link": 7
     },
     "decision_types": {
      "condition": 6,
      "other": 4,
      "option": 3
     },
-    "entries": 7,
-    "entries_with_predicate": 4,
-    "entries_reached_by_link": 4,
+    "entries": 8,
+    "entries_with_predicate": 7,
+    "entries_reached_by_link": 8,
     "roles": {
      "page_heading": 5,
      "note": 18,
      "step": 12,
-     "decision": 2,
+     "entry": 8,
      "leaf": 8,
-     "entry": 7
+     "decision": 1
     },
     "links": {
      "page": 14,
@@ -4192,7 +4205,7 @@
    "version_date": "April 6, 2026",
    "pdf_sha256": "ba0f5379380584a7d6887a8c880518e6372cd2574dc4f8c7ee72453fdcfb5387",
    "path": "smoking_cessation/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 93,
     "algorithm_pages": 6,
@@ -4203,27 +4216,27 @@
      "image_checked": 19,
      "single_source": 1
     },
-    "decision_boxes": 25,
+    "decision_boxes": 26,
     "predicate_status": {
      "model_reviewed": 18,
      "none": 4,
      "rejected": 2,
-     "inherited_from_link": 1
+     "inherited_from_link": 2
     },
     "decision_types": {
-     "condition": 22,
+     "condition": 23,
      "other": 2,
      "option": 1
     },
-    "entries": 5,
-    "entries_with_predicate": 3,
-    "entries_reached_by_link": 3,
+    "entries": 6,
+    "entries_with_predicate": 4,
+    "entries_reached_by_link": 5,
     "roles": {
      "page_heading": 14,
      "leaf": 11,
      "step": 24,
-     "entry": 5,
-     "decision": 7,
+     "entry": 6,
+     "decision": 6,
      "note": 7
     },
     "links": {
@@ -4359,42 +4372,42 @@
    "version_date": "July 22, 2026",
    "pdf_sha256": "d36de0a15b7fb739d1111a312f9705b79333451aaeddc6534123fdc7b234a997",
    "path": "survivorship/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 329,
     "algorithm_pages": 74,
-    "boxes": 333,
-    "boxes_text_found_in_pdf_at_bbox": "319/333",
+    "boxes": 332,
+    "boxes_text_found_in_pdf_at_bbox": "318/332",
     "edges_by_evidence": {
      "table_text_checked": 50,
      "two_methods": 157,
      "image_checked": 29,
      "single_source": 7
     },
-    "decision_boxes": 148,
+    "decision_boxes": 153,
     "predicate_status": {
-     "none": 48,
+     "none": 51,
      "section_only": 8,
      "model_reviewed": 76,
-     "inherited_from_link": 13,
+     "inherited_from_link": 15,
      "rejected": 3
     },
     "decision_types": {
-     "other": 41,
+     "other": 46,
      "condition": 99,
      "option": 5,
      "null": 3
     },
-    "entries": 74,
-    "entries_with_predicate": 51,
-    "entries_reached_by_link": 40,
+    "entries": 79,
+    "entries_with_predicate": 53,
+    "entries_reached_by_link": 63,
     "roles": {
-     "page_heading": 88,
-     "note": 80,
+     "page_heading": 89,
+     "note": 74,
      "table_root": 9,
      "table_rec": 20,
      "step": 86,
-     "entry": 65,
+     "entry": 70,
      "leaf": 78,
      "decision": 10,
      "table_title": 7,
@@ -4406,7 +4419,7 @@
     },
     "links": {
      "page": 207,
-     "external_guideline": 47
+     "external_guideline": 45
     },
     "footnote_refs_by_resolution": {
      "own_page": 153,
@@ -4414,7 +4427,13 @@
      "printed_pointer": 69,
      "null": 3
     },
-    "clinician_validated": false
+    "clinician_validated": false,
+    "reextracted_pages": [
+     "SCF-1",
+     "SFAT-1",
+     "SLYMPH-1",
+     "SURV-4"
+    ]
    }
   },
   {
@@ -4478,46 +4497,50 @@
    "version_date": "July 10, 2026",
    "pdf_sha256": "9b539fe2d8e4af9f85b250519444a562d5ca5038939895d6f00e9247ab87d17c",
    "path": "systemic_mastocytosis/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 82,
     "algorithm_pages": 9,
-    "boxes": 98,
-    "boxes_text_found_in_pdf_at_bbox": "96/98",
+    "boxes": 94,
+    "boxes_text_found_in_pdf_at_bbox": "92/94",
     "edges_by_evidence": {
      "two_methods": 48,
-     "image_checked": 33
+     "image_checked": 38
     },
-    "decision_boxes": 38,
+    "decision_boxes": 44,
     "predicate_status": {
-     "model_reviewed": 36,
-     "none": 2
+     "model_reviewed": 41,
+     "none": 2,
+     "inherited_from_link": 1
     },
     "decision_types": {
-     "condition": 36,
+     "condition": 42,
      "option": 2
     },
-    "entries": 8,
-    "entries_with_predicate": 8,
-    "entries_reached_by_link": 3,
+    "entries": 9,
+    "entries_with_predicate": 9,
+    "entries_reached_by_link": 7,
     "roles": {
-     "note": 16,
-     "page_heading": 3,
-     "leaf": 20,
+     "note": 6,
+     "page_heading": 5,
+     "leaf": 25,
      "step": 43,
      "decision": 11,
-     "entry": 8
+     "entry": 9
     },
     "links": {
      "page": 18,
-     "external_guideline": 2
+     "external_guideline": 1
     },
     "footnote_refs_by_resolution": {
-     "null": 5,
-     "own_page": 53,
-     "nearest_same_prefix": 4
+     "null": 4,
+     "own_page": 57,
+     "nearest_same_prefix": 2
     },
-    "clinician_validated": false
+    "clinician_validated": false,
+    "reextracted_pages": [
+     "SM-2"
+    ]
    }
   },
   {

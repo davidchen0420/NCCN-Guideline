@@ -1,0 +1,10 @@
+{
+ "page": "SLYMPH-1",
+ "note": "Definition and stages of lymphedema: a list without arrows that SPAIN-3 points to. The old extraction held it as loose notes; it is one list box that patients enter. Its two references are numbered (1, 2) and printed at the bottom of the page.",
+ "footnotes": {},
+ "boxes": [
+  {"key": "h_title", "header": true, "region": [200, 82, 620, 104]},
+  {"key": "list", "region": [20, 105, 775, 275], "entry": true, "role": "entry", "decision_type": "other"}
+ ],
+ "edges": []
+}

@@ -1,0 +1,5 @@
+{
+ "page": "SC-4",
+ "note": "Individuals who formerly smoked (more than 30 days since last smoked). Patients enter at 'Patient risk factors for return to smoking' (left of the page); the old extraction counted it as having a parent because 'Reevaluate risk of return to smoking at each visit' loops back to it (the line along the bottom of the page), so no entry box was named. Boxes and arrows were already extracted.",
+ "entries": ["SC-4:n264_41"]
+}

@@ -1,0 +1,10 @@
+{
+ "page": "PAL-33",
+ "note": "Proportional sedation: a recommendation list without arrows that PAL-12, PAL-24 and PAL-32 point to. The old extraction held it as a loose note, so those links ended there; it is one list box that patients enter.",
+ "footnotes": {},
+ "boxes": [
+  {"key": "h_title", "header": true, "region": [300, 84, 500, 104]},
+  {"key": "list", "region": [20, 106, 775, 270], "entry": true, "role": "entry", "decision_type": "other"}
+ ],
+ "edges": []
+}

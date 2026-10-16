@@ -1,0 +1,10 @@
+{
+ "page": "SURV-4",
+ "note": "Screening for subsequent new primary cancers: a recommendation list without arrows that SURV-2 points to (and that points on to SURV-4A and SURV-5). The old extraction held it as one loose note, so the links from SURV-2 ended there; it is one list box that patients enter.",
+ "footnotes": {},
+ "boxes": [
+  {"key": "h_title", "header": true, "region": [200, 84, 620, 104]},
+  {"key": "list", "region": [20, 105, 775, 330], "entry": true, "role": "entry", "decision_type": "other"}
+ ],
+ "edges": []
+}

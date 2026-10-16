@@ -1,0 +1,12 @@
+{
+ "page": "SFAT-1",
+ "note": "Definition of cancer-related fatigue and considerations for fatigue in survivors: two recommendation lists without arrows that eight boxes (SPA-3, SANXDE-7, SCF-2, SCF-3, SHRS-3, SSD-3, SWORK-2) point to. The old extraction held them as loose notes; each list is one box that patients enter.",
+ "footnotes": {},
+ "boxes": [
+  {"key": "h_def", "header": true, "region": [200, 84, 620, 104]},
+  {"key": "definition", "region": [20, 106, 775, 152], "entry": true, "role": "entry", "decision_type": "other"},
+  {"key": "h_cons", "header": true, "region": [200, 156, 620, 176]},
+  {"key": "considerations", "region": [20, 178, 775, 440], "entry": true, "role": "entry", "decision_type": "other"}
+ ],
+ "edges": []
+}
