@@ -1,0 +1,335 @@
+{
+ "page": "WILMS-5A",
+ "note": "Typed as a footnote page by its code; the PDF page continues WILMS-5 (unilateral FHWT, initially unresectable, no predisposing condition: biomarker and imaging results for extrapulmonary +/- lung metastases, adjuvant chemotherapy and radiation therapy). Boxes, arrows and conditions written from the PDF page image and text. Resectable / unresectable after week 6 carry no condition: the schema's resectability judgement is the one the entry box fixes at diagnosis. Footnote letters resolve to the nearest page of the guideline that defines them.",
+ "footnotes": {},
+ "boxes": [
+  {
+   "key": "h_find",
+   "header": true,
+   "region": [
+    20,
+    84,
+    85,
+    106
+   ]
+  },
+  {
+   "key": "h_neo",
+   "header": true,
+   "region": [
+    105,
+    84,
+    200,
+    116
+   ]
+  },
+  {
+   "key": "h_bio",
+   "header": true,
+   "region": [
+    436,
+    84,
+    520,
+    128
+   ]
+  },
+  {
+   "key": "h_adj",
+   "header": true,
+   "region": [
+    540,
+    84,
+    648,
+    116
+   ]
+  },
+  {
+   "key": "h_rt",
+   "header": true,
+   "region": [
+    682,
+    84,
+    756,
+    116
+   ]
+  },
+  {
+   "key": "start",
+   "region": [
+    20,
+    257,
+    115,
+    336
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "all": [
+     {
+      "fact": "tumor_laterality",
+      "op": "==",
+      "value": "unilateral"
+     },
+     {
+      "fact": "pathology_subtype",
+      "op": "in",
+      "value": [
+       "fhwt_blastemal_predominant",
+       "fhwt_not_blastemal_predominant"
+      ]
+     },
+     {
+      "fact": "tumor_resectable",
+      "op": "==",
+      "value": false
+     },
+     {
+      "fact": "predisposing_condition",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "key": "regimen",
+   "region": [
+    130,
+    269,
+    190,
+    324
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "res",
+   "region": [
+    180,
+    230,
+    245,
+    250
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "unres",
+   "region": [
+    156,
+    338,
+    250,
+    360
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "neph",
+   "region": [
+    266,
+    206,
+    368,
+    274
+   ]
+  },
+  {
+   "key": "cont",
+   "region": [
+    266,
+    316,
+    350,
+    432
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "localized",
+   "region": [
+    385,
+    147,
+    440,
+    167
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "disease_extent",
+    "op": "==",
+    "value": "localized"
+   }
+  },
+  {
+   "key": "link_a",
+   "region": [
+    516,
+    147,
+    568,
+    167
+   ]
+  },
+  {
+   "key": "lung",
+   "region": [
+    385,
+    224,
+    460,
+    256
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "metastasis_pattern",
+    "op": "==",
+    "value": "lung_only"
+   }
+  },
+  {
+   "key": "link_b",
+   "region": [
+    516,
+    230,
+    568,
+    250
+   ]
+  },
+  {
+   "key": "extra",
+   "region": [
+    361,
+    410,
+    453,
+    450
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "metastasis_pattern",
+    "op": "==",
+    "value": "extrapulmonary_with_or_without_lung"
+   }
+  },
+  {
+   "key": "nolh",
+   "region": [
+    453,
+    348,
+    513,
+    404
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "combined_loh_1p_16q",
+    "op": "==",
+    "value": false
+   }
+  },
+  {
+   "key": "clh",
+   "region": [
+    453,
+    461,
+    515,
+    505
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "combined_loh_1p_16q",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "key": "dd4a",
+   "region": [
+    539,
+    361,
+    633,
+    391
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "pref",
+   "region": [
+    539,
+    451,
+    661,
+    520
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "rt",
+   "region": [
+    680,
+    375,
+    778,
+    492
+   ]
+  }
+ ],
+ "edges": [
+  [
+   "start",
+   "regimen"
+  ],
+  [
+   "regimen",
+   "res"
+  ],
+  [
+   "regimen",
+   "unres"
+  ],
+  [
+   "res",
+   "neph"
+  ],
+  [
+   "unres",
+   "cont"
+  ],
+  [
+   "cont",
+   "neph"
+  ],
+  [
+   "neph",
+   "localized"
+  ],
+  [
+   "neph",
+   "lung"
+  ],
+  [
+   "neph",
+   "extra"
+  ],
+  [
+   "localized",
+   "link_a"
+  ],
+  [
+   "lung",
+   "link_b"
+  ],
+  [
+   "extra",
+   "nolh"
+  ],
+  [
+   "extra",
+   "clh"
+  ],
+  [
+   "nolh",
+   "dd4a"
+  ],
+  [
+   "clh",
+   "pref"
+  ],
+  [
+   "dd4a",
+   "rt"
+  ],
+  [
+   "pref",
+   "rt"
+  ]
+ ]
+}

@@ -1,0 +1,182 @@
+{
+ "page": "WILMS-11",
+ "note": "Unilateral Wilms tumor with diffuse anaplasia (initially unresectable): the page was empty because its code was shared with PDF page 14 (see WILMS-5.json). Boxes, arrows and conditions written from the PDF page image and text. Footnote letters resolve to the nearest page of the guideline that defines them.",
+ "footnotes": {},
+ "boxes": [
+  {
+   "key": "h_find",
+   "header": true,
+   "region": [
+    20,
+    84,
+    85,
+    104
+   ]
+  },
+  {
+   "key": "h_neo",
+   "header": true,
+   "region": [
+    160,
+    84,
+    255,
+    116
+   ]
+  },
+  {
+   "key": "h_adj",
+   "header": true,
+   "region": [
+    527,
+    84,
+    635,
+    116
+   ]
+  },
+  {
+   "key": "h_rt",
+   "header": true,
+   "region": [
+    658,
+    84,
+    752,
+    116
+   ]
+  },
+  {
+   "key": "start",
+   "region": [
+    20,
+    206,
+    115,
+    298
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "all": [
+     {
+      "fact": "tumor_laterality",
+      "op": "==",
+      "value": "unilateral"
+     },
+     {
+      "fact": "pathology_subtype",
+      "op": "==",
+      "value": "diffuse_anaplasia"
+     },
+     {
+      "fact": "tumor_resectable",
+      "op": "==",
+      "value": false
+     },
+     {
+      "fact": "predisposing_condition",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "key": "regimen",
+   "region": [
+    158,
+    236,
+    288,
+    268
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "res",
+   "region": [
+    312,
+    191,
+    375,
+    211
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "unres",
+   "region": [
+    309,
+    295,
+    393,
+    316
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "neph",
+   "region": [
+    412,
+    180,
+    492,
+    223
+   ]
+  },
+  {
+   "key": "cont",
+   "region": [
+    412,
+    291,
+    562,
+    322
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "adj",
+   "region": [
+    527,
+    186,
+    610,
+    217
+   ]
+  },
+  {
+   "key": "rt",
+   "region": [
+    648,
+    162,
+    778,
+    241
+   ]
+  }
+ ],
+ "edges": [
+  [
+   "start",
+   "regimen"
+  ],
+  [
+   "regimen",
+   "res"
+  ],
+  [
+   "regimen",
+   "unres"
+  ],
+  [
+   "res",
+   "neph"
+  ],
+  [
+   "unres",
+   "cont"
+  ],
+  [
+   "cont",
+   "neph"
+  ],
+  [
+   "neph",
+   "adj"
+  ],
+  [
+   "adj",
+   "rt"
+  ]
+ ]
+}

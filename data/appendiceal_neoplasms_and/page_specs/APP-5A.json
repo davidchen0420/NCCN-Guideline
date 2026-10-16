@@ -1,0 +1,214 @@
+{
+ "page": "APP-5A",
+ "note": "Typed as a footnote page by its code; the PDF page is the biopsy-proven recurrence algorithm that APP-5 points to (high-risk disease: previous or no previous CRS, neoadjuvant systemic therapy, complete CRS possible or not; low-risk peritoneal-only disease to APP-4). Boxes, arrows and conditions written from the PDF page image and text. Risk status of the recurrence and previous CRS have no variable in the schema, so those boxes carry no condition.",
+ "footnotes": {
+  "n": "Multidisciplinary team evaluation, including formal surgical evaluation.",
+  "q": "Principles of Surgery and CRS/IPCT (APP-C).",
+  "w": "Risk status should be according to pathology of metastatic disease; subsequent treatment should be based on the highest risk pathology found (thus, a low-risk primary with high-risk metastatic disease should be treated as per high-risk pathways).",
+  "x": "This recommendation has been extrapolated from colon cancer; duration of perioperative therapy should be limited to no more than 6 months."
+ },
+ "boxes": [
+  {
+   "key": "h_title",
+   "header": true,
+   "region": [
+    20,
+    82,
+    212,
+    104
+   ]
+  },
+  {
+   "key": "start",
+   "region": [
+    22,
+    297,
+    108,
+    372
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "high",
+   "region": [
+    82,
+    236,
+    182,
+    268
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "low",
+   "region": [
+    105,
+    400,
+    200,
+    430
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "nocrs",
+   "region": [
+    198,
+    193,
+    268,
+    223
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "prev",
+   "region": [
+    204,
+    305,
+    282,
+    325
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "neoadj",
+   "region": [
+    275,
+    181,
+    358,
+    244
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "complete",
+   "region": [
+    371,
+    151,
+    446,
+    181
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "complete_crs_not_possible",
+    "op": "==",
+    "value": false
+   }
+  },
+  {
+   "key": "notposs",
+   "region": [
+    366,
+    255,
+    450,
+    285
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "complete_crs_not_possible",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "key": "crs",
+   "region": [
+    459,
+    155,
+    528,
+    175
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "obs",
+   "region": [
+    545,
+    107,
+    672,
+    236
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "surv",
+   "region": [
+    688,
+    151,
+    760,
+    181
+   ]
+  },
+  {
+   "key": "sys",
+   "region": [
+    543,
+    249,
+    722,
+    291
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "perit",
+   "region": [
+    273,
+    406,
+    444,
+    425
+   ]
+  }
+ ],
+ "edges": [
+  [
+   "start",
+   "high"
+  ],
+  [
+   "start",
+   "low"
+  ],
+  [
+   "high",
+   "nocrs"
+  ],
+  [
+   "high",
+   "prev"
+  ],
+  [
+   "nocrs",
+   "neoadj"
+  ],
+  [
+   "neoadj",
+   "complete"
+  ],
+  [
+   "neoadj",
+   "notposs"
+  ],
+  [
+   "complete",
+   "crs"
+  ],
+  [
+   "crs",
+   "obs"
+  ],
+  [
+   "obs",
+   "surv"
+  ],
+  [
+   "notposs",
+   "sys"
+  ],
+  [
+   "prev",
+   "sys"
+  ],
+  [
+   "low",
+   "perit"
+  ]
+ ]
+}

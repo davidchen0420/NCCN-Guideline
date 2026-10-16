@@ -1,0 +1,30 @@
+{
+ "page": "COL-2A",
+ "note": "Typed as a footnote page by its code; the PDF page is the workup of suspected or proven metastatic colon adenocarcinoma (arrow from COL-2) and splits by MMR status into COL-5 (pMMR/MSS) and COL-14 (dMMR/MSI-H or POLE/POLD1). Boxes, arrows and conditions written from the PDF page image and text.",
+ "footnotes": {
+  "a": "All patients with colon cancer should be counseled for family history and considered for risk assessment. For patients with suspected LS, FAP, and attenuated FAP, see the NCCN Guidelines for Genetic/Familial High-Risk Assessment: Colorectal, Endometrial, and Gastric.",
+  "b": "Principles of Imaging (COL-A).",
+  "f": "Principles of Pathologic Review (COL-B).",
+  "i": "For tools to aid in optimal assessment and care of older adults with cancer, see the NCCN Guidelines for Older Adult Oncology.",
+  "j": "The FDA added a Boxed warning recommending to test patients for genetic variants of DPYD prior to initiating capecitabine or fluorouracil unless immediate treatment is necessary. Furthermore, use should be avoided in patients with certain homozygous or compound heterozygous DPYD variants that result in complete DPD deficiency. However, no specific test is recommended and there are insufficient data to inform dose adjustments for many of the DPYD variants. See Principles of Pharmacogenetics (COL-I) and DPYD Testing and Fluoropyrimidine-Associated Toxicity within the Discussion section for more information.",
+  "m": "Tissue- or blood-based analysis using MGPT have the ability to pick up rare and actionable mutations and gene fusions."
+ },
+ "boxes": [
+  {"key": "h_pres", "header": true, "region": [20, 84, 120, 116]},
+  {"key": "h_work", "header": true, "region": [144, 82, 205, 104]},
+  {"key": "start", "region": [20, 238, 125, 282], "decision_type": "condition",
+   "predicate": {"fact": "metastatic_suspected_or_proven", "op": "==", "value": true}},
+  {"key": "workup", "region": [135, 142, 535, 380]},
+  {"key": "pmmr", "region": [550, 176, 620, 196], "decision_type": "condition",
+   "predicate": {"fact": "tumor_genomic_class", "op": "==", "value": "pMMR_MSS"}},
+  {"key": "to5", "region": [690, 176, 730, 196]},
+  {"key": "dmmr", "region": [552, 288, 652, 382], "decision_type": "condition",
+   "predicate": {"fact": "tumor_genomic_class", "op": "==", "value": "dMMR_MSI_H_or_POLE_ultrahypermutated"}},
+  {"key": "to14", "region": [690, 325, 736, 347]}
+ ],
+ "edges": [
+  ["start", "workup"],
+  ["workup", "pmmr"], ["workup", "dmmr"],
+  ["pmmr", "to5"], ["dmmr", "to14"]
+ ]
+}
