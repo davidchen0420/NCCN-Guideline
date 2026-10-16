@@ -1,0 +1,8 @@
+{
+ "page": "AE-1",
+ "note": "Principles of emesis control for the patient with cancer (PDF page 13): bulleted principles, no arrows. Patients enter at the first body box; the indented lists (risk factors, other causes) are separate boxes of the same text. Selection rule: the page's first body box, each box that opens a titled section of the page and each box that continues into another algorithm page (it carries the flow); the other boxes are the same text split by indentation or by link lines and stay loose notes. decision_type other: a principles page is not a condition on the patient, so the entry takes none from the boxes that link to it.",
+ "decision_type": "other",
+ "entries": [
+  "AE-1:n106_24"
+ ]
+}

@@ -355,6 +355,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
 | Workup & first treatment | Symptomatic bone lesion | BONE-1 (Workup) | symptomatic_bone_lesion=true |
+|  | Multidisciplinary Team | TEAM-1  |  |
 
 ## Breast Cancer · v6.2026 (`breast`)
 
@@ -952,15 +953,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Ethmoid Sinus Tumors | ETHM-1  |  |
-|  | Cancer of the Glottic Larynx | GLOT-1  |  |
-|  | Cancer of the Hypopharynx | HYPO-1  |  |
-|  | Maxillary Sinus Tumors | MAXI-1  |  |
-|  | Neck mass | OCC-1 (Presentation) |  |
-|  | Buccal mucosa, floor of mouth, oral tongue, alveolar ridge, retromolar trigone, hard palatea | OR-1  |  |
-|  | Clinical Presentation | SALI-1  |  |
-|  | Cancer of the Supraglottic Larynx | SUPRA-1  |  |
-| Metastatic or advanced | Very Advanced Head and Neck Cancer | ADV-1  |  |
+| Workup & first treatment | Multidisciplinary Team | TEAM-1  |  |
 
 ### Very Advanced Head and Neck Cancer
 
@@ -1592,6 +1585,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
+| Workup & first treatment | Principles of Fertility | SF-1  |  |
 | Follow-up | Standards for Survivorship Care | SURV-2  |  |
 | Later-line therapy | Screening for Subsequent New Primary Cancers | SURV-4  |  |
 
@@ -1629,6 +1623,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
+| Workup & first treatment | General Principles of Working and Returning to Work After a Cancer Diagnosis | SWORK-1  |  |
 | Follow-up | Standards for Survivorship Care | SURV-2  |  |
 | Later-line therapy | Screening for Subsequent New Primary Cancers | SURV-4  |  |
 
