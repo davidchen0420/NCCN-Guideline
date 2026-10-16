@@ -4,7 +4,7 @@ import { useApp } from "../store";
 import { useSource, type SrcTarget } from "../source";
 import type { AiWalkResult, TrailOption, TrailStep } from "../lib/aiWalk";
 import type { Pathway } from "../lib/pathways";
-import { clipText, decisionSteps, favouredByAi, percent, questionParts, readable, trailStats, trailSummary, trimToRoute } from "../lib/trailView";
+import { clipText, decisionSteps, favouredByAi, isPendingDecision, offeredOptions, percent, questionParts, readable, trailStats, trailSummary, trimToRoute } from "../lib/trailView";
 import { label } from "../lib/factMeta";
 import type { Graph } from "../lib/graph";
 import "../styles/trail.css";
@@ -118,7 +118,9 @@ function Stop({ quiet, t }: { quiet: boolean; t: AiWalkResult }) {
   const q = clip(parts.heading, 220);
   const pg = g.node(t.end)?.page;
   const where = pg ? <p className="tr-fine">On the NCCN page {g.bundle.pages[pg]?.title ? `${g.bundle.pages[pg].title} (${pg})` : pg}.</p> : null;
-  const options = t.options ?? [];
+  // an arm the answers rule out is never offered as the decision or counted among those that fit
+  if (!isPendingDecision(t)) return null;
+  const options = offeredOptions(t);
   const missing = (t.missing ?? []).slice(0, 8);
   const fits = options.filter((o) => o.verdict === true).length;
   const list = (
@@ -187,7 +189,7 @@ function Stop({ quiet, t }: { quiet: boolean; t: AiWalkResult }) {
 export function useRouteStop(p?: Pathway): { t: AiWalkResult; show: boolean; quiet: boolean } {
   const { ai } = useApp();
   const t = useMemo(() => (p ? trimToRoute(ai.trail, new Set(p.steps.map((x) => x.node))) : ai.trail), [ai.trail, p]);
-  const stopped = t.stoppedFor === "ask" || t.stoppedFor === "not-enough";
+  const stopped = isPendingDecision(t);
   const aiDone = ai.on && !!ai.ai;
   return { t, show: stopped && !t.optionArms && !ai.loading, quiet: !aiDone };
 }
@@ -218,7 +220,7 @@ export function DecisionTrail({ p, stopInCard = false }: { p?: Pathway; stopInCa
   const t = useMemo(() => (p ? trimToRoute(ai.trail, new Set(p.steps.map((x) => x.node))) : ai.trail), [ai.trail, p]);
   const steps = useMemo(() => decisionSteps(t), [t]);
   const st = useMemo(() => trailStats(t), [t]);
-  const stopped = t.stoppedFor === "ask" || t.stoppedFor === "not-enough";
+  const stopped = isPendingDecision(t);
   const aiDone = ai.on && !!ai.ai;   // the AI has answered for these answers (the trail is not the rules-only stand-in)
   const stopHere = stopped && !(stopInCard && !t.optionArms);
   if (!steps.length && !stopped && !(ai.on && ai.failed)) return null;

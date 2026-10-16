@@ -84,7 +84,7 @@ export function Summary({ p, onClose }: { p: Pathway; onClose: () => void }) {
       options, aiUsed,
       next: p.end === "later" ? p.next.map((id) => clip(pl(id), 140)) : [],
       missing: p.missing.map(label),
-      match: usedCount(p) === 0 ? "Possible starting point · Not based on your answers yet" : `${matchWord(p.likelihood)} · ${supportPhrase(p.missing.length)}`,
+      match: usedCount(p) === 0 ? (Object.entries(s.facts).some(([k, v]) => k !== bundle.sections?.variable && !k.endsWith("_stated") && v !== undefined && v !== null && v !== "" && v !== "unknown") ? "Where the guideline starts for this patient" : "Possible starting point · Not based on your answers yet") : `${matchWord(p.likelihood)} · ${supportPhrase(p.missing.length)}`,
       scores: `${likelihoodWord(p.likelihood)} (${pct(p.likelihood)} of open routes) · patient data ${dataWord(p).toLowerCase()} (${p.met} of ${p.met + p.open} criteria) · extraction ${extractionWord(p).toLowerCase()} (${Math.round(p.encoding * 100)}%)`,
     };
   }, [g, s.facts, s.age, p, bundle, adv, ai.trail, ai.on, ai.model, ai.threshold, ranking]);

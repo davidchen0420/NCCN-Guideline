@@ -1251,29 +1251,29 @@
     "edges_by_evidence": {
      "two_methods": 181,
      "single_source": 3,
-     "image_checked": 13
+     "image_checked": 14
     },
-    "decision_boxes": 111,
+    "decision_boxes": 110,
     "predicate_status": {
      "model_reviewed": 73,
      "none": 32,
-     "inherited_from_link": 6
+     "inherited_from_link": 5
     },
     "decision_types": {
      "condition": 73,
-     "option": 34,
+     "option": 33,
      "other": 1,
      "null": 3
     },
-    "entries": 35,
-    "entries_with_predicate": 35,
-    "entries_reached_by_link": 29,
+    "entries": 34,
+    "entries_with_predicate": 34,
+    "entries_reached_by_link": 28,
     "roles": {
      "column_header": 5,
      "leaf": 44,
      "decision": 20,
-     "step": 96,
-     "entry": 35,
+     "step": 97,
+     "entry": 34,
      "page_heading": 18,
      "note": 21
     },

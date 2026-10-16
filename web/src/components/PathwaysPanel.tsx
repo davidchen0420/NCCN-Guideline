@@ -383,6 +383,22 @@ const andMore = (xs: string[], n = 2) => (xs.length <= n ? xs.join(" and ") : `$
 
 const unanswered = (facts: Record<string, unknown>, k: string) => facts[k] === undefined || facts[k] === null || facts[k] === "";
 
+/**
+ * Is this still the blank start: nothing the clinician answered (the disease chosen does not count) and
+ * questions left to ask? Only then is a route that rests on no answer "a possible starting point" that
+ * asks for answers. Once the patient has answers, or when no detail changes the answer, the card says
+ * where the guideline goes instead.
+ */
+function useBlankStart(): boolean {
+  const { g, s, ranking } = useApp();
+  return useMemo(() => {
+    const sv = g.bundle.sections?.variable;
+    const answered = enteredFacts(s.facts, s.stale).some(([k]) => k !== sv);
+    if (answered) return false;
+    return openDetails(g, s.facts, s.start, { ranking, overrides: s.overrides }).length > 0;
+  }, [g, s.facts, s.stale, s.start, s.overrides, ranking]);
+}
+
 // ---- AI on: the chip next to the recommendation and the first-use notice
 
 const AI_NOTICE_KEY = "oc-ai-notice-seen";
@@ -483,6 +499,7 @@ interface CardProps { p: Pathway; tied: number; isTop: boolean; share: number }
 function RecoCard({ p, tied, isTop, share }: CardProps) {
   const { g, go, set, s, isPhone, focusFact, ai, ranking } = useApp();
   const { pdf, open } = useSource();
+  const blank = useBlankStart();
   const rec = useMemo(() => recommendationOf(g, p, ranking.paths), [g, p, ranking]);
   const stop = useRouteStop(p);
   // "AI-assisted": the decisions on the way to this recommendation that the AI chose
@@ -515,17 +532,21 @@ function RecoCard({ p, tied, isTop, share }: CardProps) {
   const skipped = p.missing.filter((m) => !unanswered(s.facts, m)).map(label);
   const missing = allMissing ? ask : ask.slice(0, 6);
   // Be honest about support, from this route's own answers: a route that used none is only where the guideline starts.
-  const start = used.length === 0;
+  const start = used.length === 0 && blank;
+  const placed = used.length === 0 && !blank;
   const yours = p.steps.filter((st, i) => i > 0 && s.overrides[p.steps[i - 1].node] === st.node);
   const word = matchWord(share);
   const lead_ = ask.map(label);
   const eyebrow = start ? "Possible starting point"
+    : placed ? "Where the guideline starts for this patient"
     : yours.length ? "Based on your choice"
     : tied > 0 ? `One of ${tied + 1} possible recommendations`
     : isTop ? (ask.length ? `Likely, once you answer ${andMore(lead_)}` : "Best match")
     : word === "Best match" ? "Also possible" : word;
   const action = isActionBox(g, id);
   const several = rec.options.length > 1;
+  // the page the route goes on to after this box, when the box itself does not say where
+  const nextPage = placed && !rec.then.some((x) => gotoPage(g, x)) ? p.steps.slice(rec.index + 1).map((x) => x.node.split(":")[0]).find((pg) => pg !== n.page) : undefined;
   const lead = !action ? "Context on this page, not a treatment recommendation"
     : several ? "NCCN lists these options"
     : start || tied > 0 ? "NCCN lists" : isTop || yours.length ? "NCCN recommends" : "NCCN also lists";
@@ -558,6 +579,7 @@ function RecoCard({ p, tied, isTop, share }: CardProps) {
         {(n.footnotes.length > 0 || rec.then.length > 0 || rec.alongside.length > 0) && (
           <div className="rc-more">
             <ThenList rec={rec} />
+            {nextPage && <p className="reco-then rc-then"><b>Next:</b> <button type="button" className="linkish rc-tap" onClick={() => toDiagram(nextPage)}>{pageName(nextPage, g.bundle.pages[nextPage]?.title)} <ArrowRight size={12} aria-hidden /></button></p>}
             {rec.alongside.length > 0 && (
               <details className="rc-also">
                 <summary>Also on this page ({rec.alongside.length})</summary>
@@ -752,6 +774,7 @@ function ClinicianView() {
   const groups = useMemo(() => distinctRecommendations(g, ranking), [g, ranking]);
   const p = shownRoute(g, ranking, s.pathSel);
   const stop = useRouteStop(p ?? undefined);
+  const blank = useBlankStart();
   if (!p) return null;
   const reaches = reachesRecommendation(g, p);
   // a route that hands over to another page: the card says where the next step is
@@ -779,7 +802,7 @@ function ClinicianView() {
       {others.length > 0 && (
         <section id="rc-others" className="rc-others" aria-label="Other possible recommendations">
           <h3 className="rc-h2">Other possible recommendations ({others.length}){reaches && tied > 0 && tied === others.length && " — equally possible from your answers"}</h3>
-          <ol className="plist">{shown.map((x) => <OtherItem key={x.key} group={x} start={x.route.used.length === 0} onPick={() => pick(x.route.id)} />)}</ol>
+          <ol className="plist">{shown.map((x) => <OtherItem key={x.key} group={x} start={blank && x.route.used.length === 0} onPick={() => pick(x.route.id)} />)}</ol>
           {others.length > 4 && <button type="button" className="btn ghost small wide" onClick={() => setAll(!all)}>{all ? "Show fewer" : `Show all ${others.length}`}</button>}
         </section>
       )}
