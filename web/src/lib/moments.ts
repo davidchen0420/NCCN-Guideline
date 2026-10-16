@@ -81,10 +81,16 @@ export function momentsFor(g: Graph, all: Moment[], facts: Facts): Moment[] {
   // The disease's own pages begin its new-diagnosis moment; the shared diagnostic-testing page
   // that lists every disease does not.
   const starts = typeof v === "string" ? sectionStartPages(g, v) : [];
-  const own = starts.filter((p) => !mine.some((m) => m.page === p));
+  // (a page that a later-stage page leads to — recurrence, follow-up — is not where the disease starts)
+  const phaseAt = (p: string): Phase => phaseOf(g.bundle.pages[p].title || "") ?? entryClass(g, p) ?? "diagnosis";
+  // (and a first-workup page that a first-workup page already leads to is part of that workup, not a start)
+  const own = starts.filter((p) => !mine.some((m) => m.page === p) && !all.some((m) => m.phase !== "diagnosis" && m.page !== p && reaches(g, m.page, p))
+    && !(phaseAt(p) === "diagnosis" && mine.some((m) => m.phase === "diagnosis" && m.page !== p && reaches(g, m.page, p))));
   if (own.length && !mine.some((m) => m.phase === "diagnosis" && secOf(m.page) === v)) {
-    const dx = own.map((p): Moment => ({ page: p, title: g.bundle.pages[p].title || p, phase: phaseOf(g.bundle.pages[p].title || "") ?? "diagnosis" }));
-    return [...mine.filter((m) => !(m.phase === "diagnosis" && secOf(m.page) === null)), ...dx].sort((x, y) => order(x.page, y.page));
+    const dx = own.map((p): Moment => ({ page: p, title: g.bundle.pages[p].title || p, phase: phaseAt(p) }));
+    // shared pages give way only to the disease's own first workup, not to its metastatic or later pages
+    const ownFirst = dx.some((m) => m.phase === "diagnosis");
+    return [...mine.filter((m) => !(ownFirst && m.phase === "diagnosis" && secOf(m.page) === null)), ...dx].sort((x, y) => order(x.page, y.page));
   }
   return mine.length ? mine : all;
 }
@@ -313,7 +319,8 @@ export function settingsFor(g: Graph, list: Moment[], need: Phase): Setting[] {
 /** The need a start setting belongs to ("auto" and pages that are not moments: none). */
 export function needOf(g: Graph, start: string): Phase | null {
   if (start === "auto" || !g.bundle.pages[start]) return null;
-  return phaseOf(g.bundle.pages[start].title || "") ?? moments(g).find((m) => m.page === start)?.phase ?? null;
+  // (a disease's own start page is not a moment of the whole guideline: its entry boxes say what it is for)
+  return phaseOf(g.bundle.pages[start].title || "") ?? moments(g).find((m) => m.page === start)?.phase ?? entryClass(g, start);
 }
 
 /* ---------------- no recommendation fits: which gate says so ---------------- */
