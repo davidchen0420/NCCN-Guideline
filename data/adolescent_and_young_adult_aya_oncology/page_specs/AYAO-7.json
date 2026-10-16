@@ -1,0 +1,20 @@
+{
+ "page": "AYAO-7",
+ "note": "PDF page 17 is printed AYAO-7 (individual psychosocial evaluation -> supportive care services). The page-label detector read the reference 'AYAO-8' printed in its link column instead of the corner label, so pdf pages 17 and 18 shared the code AYAO-8 and the boxes of page 17 were filed under page 18. Both pages are relabelled (AYAO-7, AYAO-8) so each keeps its own boxes; the page is one evaluation list with an arrow to its list of services, plus pointers to AYAO-8, AYAO-9 and AYAO-11. No patient-specific conditions.",
+ "relabel": [
+  {"page": "AYAO-8 1 of 2", "code": "AYAO-7", "nodes_from": "AYAO-8 2 of 2"},
+  {"page": "AYAO-8 2 of 2", "code": "AYAO-8"}
+ ],
+ "footnotes": {},
+ "boxes": [
+  {"key": "h_title", "header": true, "region": [100, 84, 680, 104]},
+  {"key": "h_eval", "header": true, "region": [20, 99, 110, 118]},
+  {"key": "h_sup", "header": true, "region": [380, 101, 660, 120]},
+  {"key": "eval", "region": [20, 120, 335, 555], "entry": true, "role": "entry", "decision_type": "other"},
+  {"key": "sup", "region": [345, 121, 775, 518]},
+  {"key": "to8", "region": [590, 521, 775, 539], "role": "link"},
+  {"key": "to9", "region": [590, 541, 775, 556], "role": "link"},
+  {"key": "to11", "region": [585, 557, 775, 572], "role": "link"}
+ ],
+ "edges": [["eval", "sup"]]
+}

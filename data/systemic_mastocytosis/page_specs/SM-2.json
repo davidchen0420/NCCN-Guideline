@@ -1,0 +1,29 @@
+{
+ "page": "SM-2",
+ "note": "Workup for suspected systemic mastocytosis with the classification it leads to. The old extraction held the whole page as loose notes (the workup list and the five classification boxes were not joined, footnote text m and n sat in boxes), so no entry box existed. The workup list is the entry; an arrow fans out to ISM, SSM, ASM, SM-AHN and MCL, each pointing at its page (SM-4 to SM-9). Classification predicates repeat what the entry boxes of those pages use.",
+ "footnotes": {
+  "i": "Diagnostic Criteria for the Variants of Systemic Mastocytosis (SM-D).",
+  "j": "Recommendations for Histopathology Analysis and KIT D816V Mutation Testing in Systemic Mastocytosis (SM-H).",
+  "k": "Preferred on the bone marrow, as yield from the peripheral blood may be lower; exceptions may be patients with SM-AHN or MCL. See SM-H 2 of 3.",
+  "l": "Adverse Prognostic Variables and Risk Stratification in Systemic Mastocytosis (SM-I)",
+  "m": "Refer to the NCCN Guidelines for Distress Thermometer and Problem List, which includes social determinants of health. See NCCN Guidelines for Distress Management (DIS-A).",
+  "n": "IWG-MRT-ECNM and modified IWG-MRT-ECNM criteria are used to establish eligible organ damage findings for clinical trial enrollment and to adjudicate response to therapy. The proposed ECNM-AIM response criteria use the same organ damage to assess response (SM-G). B- and C-findings are used for the diagnosis of the WHO subtype of SM (SM-D, SM-E, SM-F).",
+  "o": "van Anrooij D, et al. Allergy 2016;71:1585-1593. MSAF and MQLQ have been validated only in patients with ISM, not in patients with more advanced forms of mast cell disease. To access the questionnaires for MSAF and MQLQ, select \"Supporting Information\" and \"See Appendix S1 and Appendix S2.\""
+ },
+ "boxes": [
+  {"key": "h_work", "header": true, "region": [20, 84, 345, 101]},
+  {"key": "h_class", "header": true, "region": [610, 84, 725, 102]},
+  {"key": "work", "region": [20, 103, 372, 480], "decision_type": "condition"},
+  {"key": "ism", "region": [610, 170, 775, 205], "decision_type": "condition",
+   "predicate": {"fact": "sm_b_finding_class", "op": "==", "value": "ISM"}},
+  {"key": "ssm", "region": [610, 213, 775, 248], "decision_type": "condition",
+   "predicate": {"fact": "sm_b_finding_class", "op": "==", "value": "SSM"}},
+  {"key": "asm", "region": [610, 260, 775, 286], "decision_type": "condition",
+   "predicate": {"fact": "asmi_criteria_met", "op": "==", "value": true}},
+  {"key": "ahn", "region": [610, 289, 775, 333], "decision_type": "condition",
+   "predicate": {"fact": "ahn_present", "op": "==", "value": true}},
+  {"key": "mcl", "region": [610, 345, 775, 380], "decision_type": "condition",
+   "predicate": {"fact": "mcl_present", "op": "==", "value": true}}
+ ],
+ "edges": [["work", "ism"], ["work", "ssm"], ["work", "asm"], ["work", "ahn"], ["work", "mcl"]]
+}

@@ -1,0 +1,23 @@
+{
+ "page": "HIV-2",
+ "note": "Two columns of recommendation text without arrows (cervical dysplasia / cervical cancer screening in PWH; cervical cancer in PWH), the page INTRO-1 sends cervical cancer to. The old extraction cut the columns into loose fragments and left no entry box; each column is one list box that patients enter. The screening column holds general recommendations (no condition); the cervical cancer column applies when the primary cancer is cervical cancer.",
+ "footnotes": {
+  "e": "Polizzotto MN, et al. Clin Infect Dis 2016;62:730-738.",
+  "f": "Uldrick TS, et al. JAMA Oncol 2019;5:1332-1339.",
+  "g": "Fujita K, et al. Open Forum Infect Dis 2020;7:ofaa067.",
+  "h": "Bae S, et al. J Immunother Cancer 2021;9:e002960.",
+  "i": "Zaemes J, et al. Eur J Cancer 2020;132:168-175.",
+  "j": "Suliman AM, et al. Cancer Immunol Immunother 2021;70:935-944.",
+  "k": "Anidi IU, et al. Open Forum Infect Dis 2024;11:ofae183.",
+  "l": "Bouvard V, et al. N Engl J Med 2021;385:1908-1918.",
+  "m": "WHO guideline for screening and treatment of cervical pre-cancer lesions for cervical cancer prevention, 2nd edition.",
+  "n": "Perkins RB, et al. J Low Genit Tract Dis 2020;24:102-131.",
+  "o": "Kocken M, et al. Lancet Oncol 2011;12:441-450."
+ },
+ "boxes": [
+  {"key": "screen", "region": [20, 84, 330, 455], "entry": true, "role": "entry", "decision_type": "other"},
+  {"key": "cancer", "region": [335, 84, 775, 478], "entry": true, "role": "entry", "decision_type": "condition",
+   "predicate": {"fact": "primary_cancer_type", "op": "==", "value": "cervical_cancer"}}
+ ],
+ "edges": []
+}

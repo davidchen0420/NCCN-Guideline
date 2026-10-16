@@ -1,0 +1,5 @@
+{
+ "page": "FT-3",
+ "note": "Screening page of the fatigue algorithm. Patients enter at 'Screen every patient for fatigue at regular intervals' (left of the page); the old extraction counted it as having a parent because 'Ongoing evaluation' loops back to it (the arrow along the top of the page), so no entry box was named. Boxes and arrows were already extracted and agree with the image.",
+ "entries": ["FT-3:n177_24"]
+}

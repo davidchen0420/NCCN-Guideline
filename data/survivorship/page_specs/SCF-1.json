@@ -1,0 +1,12 @@
+{
+ "page": "SCF-1",
+ "note": "Cognitive function following cancer treatment, general principles: a recommendation list without arrows that SANXDE-7, SHRS-3 and SWORK-2 point to. The old extraction held it as loose notes; it is one list box that patients enter.",
+ "footnotes": {
+  "a": "Folstein MF, Folstein SE, McHugh PR. “Mini-mental state”: A practical method for grading the cognitive state of patients for the clinician. J Psychiatr Res 1975;12:189-198."
+ },
+ "boxes": [
+  {"key": "h_title", "header": true, "region": [200, 84, 620, 104]},
+  {"key": "list", "region": [20, 105, 775, 330], "entry": true, "role": "entry", "decision_type": "other"}
+ ],
+ "edges": []
+}

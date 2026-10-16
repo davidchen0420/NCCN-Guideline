@@ -1,0 +1,23 @@
+{
+ "page": "HIV-3",
+ "note": "Classic Hodgkin lymphoma in PWH: one recommendation list printed in two columns, without arrows. The old extraction cut it into loose fragments and left no entry box. The two columns are two list boxes (measuring one box over both columns would interleave their lines), both entered when the primary cancer is classic Hodgkin lymphoma (the INTRO-1 link).",
+ "footnotes": {
+  "e": "Polizzotto MN, et al. Clin Infect Dis 2016;62:730-738.",
+  "f": "Uldrick TS, et al. JAMA Oncol 2019;5:1332-1339.",
+  "g": "Fujita K, et al. Open Forum Infect Dis 2020;7:ofaa067.",
+  "h": "Bae S, et al. J Immunother Cancer 2021;9:e002960.",
+  "i": "Zaemes J, et al. Eur J Cancer 2020;132:168-175.",
+  "j": "Suliman AM, et al. Cancer Immunol Immunother 2021;70:935-944.",
+  "k": "Anidi IU, et al. Open Forum Infect Dis 2024;11:ofae183.",
+  "p": "Rubinstein P, et al. Lancet Haematol 2023;10:e624-e632.",
+  "q": "Herrera AF, et al. N Engl J Med 2024;391:1379-1389.",
+  "r": "Alvarnas JC, et al. Blood 2016;128:1050-1058."
+ },
+ "boxes": [
+  {"key": "left", "region": [20, 84, 425, 455], "entry": true, "role": "entry", "decision_type": "condition",
+   "predicate": {"fact": "primary_cancer_type", "op": "==", "value": "classic_hodgkin_lymphoma"}},
+  {"key": "right", "region": [430, 84, 775, 500], "entry": true, "role": "entry", "decision_type": "condition",
+   "predicate": {"fact": "primary_cancer_type", "op": "==", "value": "classic_hodgkin_lymphoma"}}
+ ],
+ "edges": []
+}

@@ -1,0 +1,19 @@
+{
+ "page": "HIV-4",
+ "note": "Non-small cell lung cancer in PWH: one full-width recommendation list without arrows. The old extraction cut it into loose fragments and left no entry box; it is one list box entered when the primary cancer is non-small cell lung cancer (the INTRO-1 link, which also covers Kaposi sarcoma).",
+ "footnotes": {
+  "e": "Polizzotto MN, et al. Clin Infect Dis 2016;62:730-738.",
+  "f": "Uldrick TS, et al. JAMA Oncol 2019;5:1332-1339.",
+  "g": "Fujita K, et al. Open Forum Infect Dis 2020;7:ofaa067.",
+  "h": "Bae S, et al. J Immunother Cancer 2021;9:e002960.",
+  "i": "Zaemes J, et al. Eur J Cancer 2020;132:168-175.",
+  "j": "Suliman AM, et al. Cancer Immunol Immunother 2021;70:935-944.",
+  "k": "Anidi IU, et al. Open Forum Infect Dis 2024;11:ofae183.",
+  "s": "Sigel K, et al. Curr HIV/AIDS Rep 2011;8:142-152."
+ },
+ "boxes": [
+  {"key": "nsclc", "region": [20, 84, 775, 485], "entry": true, "role": "entry", "decision_type": "condition",
+   "predicate": {"fact": "primary_cancer_type", "op": "==", "value": "non_small_cell_lung_cancer"}}
+ ],
+ "edges": []
+}

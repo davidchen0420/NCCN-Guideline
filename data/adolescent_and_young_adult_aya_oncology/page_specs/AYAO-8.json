@@ -1,0 +1,19 @@
+{
+ "page": "AYAO-8",
+ "note": "PDF page 18, printed AYAO-8 (individual behavioral evaluation -> supportive care services); its boxes were lost because the code was shared with pdf page 17, which is AYAO-7 (see AYAO-7.json). One evaluation list with an arrow to the list of services, plus pointers to AYAO-9 and AYAO-11. No patient-specific conditions.",
+ "footnotes": {
+  "q": "Stout NL, et al. Cancer 2020;126:2750-2758.",
+  "r": "https://integrativeonc.org/practice-guidelines",
+  "s": "https://www.cancer.gov/about-cancer/treatment/cam/hp/dietary-interactions-pdq"
+ },
+ "boxes": [
+  {"key": "h_title", "header": true, "region": [20, 84, 560, 104]},
+  {"key": "h_eval", "header": true, "region": [20, 101, 100, 120]},
+  {"key": "h_sup", "header": true, "region": [230, 101, 505, 120]},
+  {"key": "eval", "region": [20, 125, 175, 505], "entry": true, "role": "entry", "decision_type": "other"},
+  {"key": "sup", "region": [178, 122, 775, 510]},
+  {"key": "to9", "region": [640, 535, 775, 555], "role": "link"},
+  {"key": "to11", "region": [585, 556, 775, 572], "role": "link"}
+ ],
+ "edges": [["eval", "sup"]]
+}
