@@ -1,0 +1,7 @@
+{
+ "page": "NMZL-4",
+ "note": "Algorithm page with boxes but no entry box: patients enter at 'C/A/P CT scan with contrast' on the left (the response assessment; NMZL-2 and NMZL-3 link here). That box only has an incoming arrow from the second-line therapy box at the right (the line looping back along the bottom of the page, checked on the page image), so no box was without a parent.",
+ "entries": [
+  "NMZL-4:n244_7"
+ ]
+}

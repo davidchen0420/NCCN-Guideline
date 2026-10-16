@@ -1,0 +1,7 @@
+{
+ "page": "EMZLG-3",
+ "note": "Algorithm page with boxes but no entry box: patients enter at 'Evaluate for indications for treatment' (EMZLG-2 and EMZLG-6 link here). That box only has an incoming arrow from 'Active surveillance' (the line looping back over the top of the page, checked on the page image), so no box was without a parent.",
+ "entries": [
+  "EMZLG-3:n171_26"
+ ]
+}
