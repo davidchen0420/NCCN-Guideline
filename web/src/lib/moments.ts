@@ -570,13 +570,19 @@ export function isLaterDetail(g: Graph, fact: string): boolean {
  * only matters after a later stage (follow-up pages, the pathologic details after surgery) is
  * left out for a patient who is not there yet.
  */
-export function askableQuestions(g: Graph, ranking: Ranking, facts: Facts, start: string, keep: (fact: string) => boolean = () => true, limit = 8): Decider[] {
+/** Which of the details found open are worth asking at this start: unanswered, kept by the caller, not
+ * about a later stage, and (at a first workup) not defined by the data as found only later. */
+export function askFilter(g: Graph, facts: Facts, start: string, keep: (fact: string) => boolean = () => true): (d: Decider) => boolean {
   const vars = g.bundle.schema?.variables ?? {};
   const known = (f: string) => facts[f] !== undefined && facts[f] !== null && facts[f] !== "";
   // at a first workup (not after surgery), what the data itself defines as found on restaging, on
   // re-evaluation or in the resected specimen cannot be known yet
   const first = start !== "auto" && !!g.bundle.pages[start] && !isPostSurgical(g, start) && pageNeeds(g, start).every((n) => n === "diagnosis" || n === "advanced");
-  const ok = (d: Decider) => !!vars[d.fact] && !known(d.fact) && keep(d.fact) && !isLaterStage(g, start, d.page) && !(first && isLaterDetail(g, d.fact));
+  return (d) => !!vars[d.fact] && !known(d.fact) && keep(d.fact) && !isLaterStage(g, start, d.page) && !(first && isLaterDetail(g, d.fact));
+}
+
+export function askableQuestions(g: Graph, ranking: Ranking, facts: Facts, start: string, keep: (fact: string) => boolean = () => true, limit = 8): Decider[] {
+  const ok = askFilter(g, facts, start, keep);
   const base = decidingFacts(g, ranking, facts, 24).filter(ok);
   if (base.length || !ranking.paths.length) return base.slice(0, limit);
   return questionsAhead(g, ranking, facts).filter(ok).slice(0, limit);

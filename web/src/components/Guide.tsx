@@ -68,7 +68,7 @@ export function GuideBar() {
         ? <><b>Best next question:</b> <button type="button" className="need" onClick={() => focusFact(ranking.nextBest!.fact)}>{label(ranking.nextBest.fact)}</button>{s.advanced ? <> (open on routes holding {pct(ranking.nextBest.share)} of the fit)</> : null}. </>
         : <>That is enough to narrow it down. </>}
       {n > 0
-        ? <button type="button" className="guide-go" onClick={() => set({ rightTab: "paths" })}>See {n} possible {n === 1 ? T.recommendation : T.recommendations} <ArrowRight size={12} aria-hidden /></button>
+        ? <span>The button below opens the {T.recommendation}.</span>
         : <span>No {T.recommendation} fits these answers yet.</span>}
     </>);
   } else if (s.rightTab === "paths" && s.pathSel === null) {

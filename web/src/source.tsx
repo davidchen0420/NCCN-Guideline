@@ -447,7 +447,8 @@ export function PageCrop({ t, width = 300 }: { t: SrcTarget; width?: number }) {
   if (r === "none") return null;
   if (!r) return <div className="page-loading crop" style={{ width }}>Rendering page…</div>;
   const b = t.bbox ?? [0, 0, r.w, r.h];
-  const cw = Math.min(r.w, Math.max(b[2] - b[0] + 90, 320)), ch = Math.min(r.h, Math.max(b[3] - b[1] + 60, cw * 0.5));
+  // the window holds the whole highlighted box with room around it, and is centred on it (pushed back inside the page at its edges)
+  const cw = Math.min(r.w, Math.max(b[2] - b[0] + 120, 380)), ch = Math.min(r.h, Math.max(b[3] - b[1] + 90, cw * 0.6));
   const x0 = Math.min(Math.max(0, (b[0] + b[2]) / 2 - cw / 2), r.w - cw), y0 = Math.min(Math.max(0, (b[1] + b[3]) / 2 - ch / 2), r.h - ch);
   const pct = (v: number, d: number) => `${(v / d) * 100}%`;
   return (

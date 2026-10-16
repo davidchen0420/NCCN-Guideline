@@ -4,13 +4,15 @@ import type { Facts, Schema, VarSpec } from "../types";
 import { derive } from "../lib/predicates";
 import { GROUPS, filledCount, formatNumber, groupOf, label, meta, numberText, parseNumber, unitLabel } from "../lib/factMeta";
 import { factText, sectionLabeller, vlabel } from "../lib/valueText";
-import { contradictions, plausibility, whyNothingFits, previewAnswer, previewValues, remainingQuestions, type Decider, type Preview } from "../lib/formAssist";
+import { contradictions, plausibility, whyNothingFits, previewAnswer, previewValues, type Decider, type Preview } from "../lib/formAssist";
+import { openDetails } from "../lib/openDetails";
+import { distinctRecommendations } from "../lib/pathways";
 import { applyFound, extractFacts, type Found } from "../lib/extract";
 import type { Graph } from "../lib/graph";
 import type { Ranking } from "../lib/pathways";
 import { resolveRef } from "../lib/graph";
 import { SrcChip } from "../source";
-import { PHASES, askableQuestions, followsDisease, gateSentence, impliedBySection, isLaterStage, momentsFor, momentsOf, needOf, nextPageOf, reachableFacts, settingsFor, startPhase, type Phase } from "../lib/moments";
+import { PHASES, askFilter, askableQuestions, followsDisease, gateSentence, impliedBySection, momentsFor, momentsOf, needOf, nextPageOf, reachableFacts, settingsFor, startPhase, type Phase } from "../lib/moments";
 import { T, countRecs, pageName } from "../lib/terms";
 import { readPref, writePref } from "../lib/prefs";
 import { ArrowRight, ChevronDown, ClipboardPaste, RotateCcw, Save, Search as SearchIcon, Trash2, X } from "lucide-react";
@@ -329,7 +331,15 @@ export function PatientPanel() {
   // Nothing fits what was entered (or the setting chosen): no question can help, so none is asked
   const stuck = ranking.paths.length === 0 && (s.start !== "auto" || Object.keys(s.facts).some((k) => s.facts[k] !== undefined));
   const keep = useCallback((f: string) => f !== sectionVar && !staleSet.has(f) && inScope(f), [sectionVar, staleSet, inScope]);
-  const deciders = useMemo(() => (stuck || needSetting ? [] : askableQuestions(g, ranking, s.facts, s.start, keep)), [g, ranking, s.facts, s.start, keep, stuck, needSetting]);
+  // What is still open, defined once (lib/openDetails): the details that decide the routes still open (and, at a page that only
+  // lists steps, what decides where it leads on), then whatever else the recommendation or the decision trail would still want.
+  const deciders = useMemo(() => {
+    if (stuck || needSetting) return [];
+    const base = askableQuestions(g, ranking, s.facts, s.start, keep);
+    const ok = askFilter(g, s.facts, s.start, keep);
+    const extra = openDetails(g, s.facts, s.start, { ranking, overrides: s.overrides }).filter((d) => ok(d) && !base.some((b) => b.fact === d.fact));
+    return [...base, ...extra].slice(0, 12);
+  }, [g, ranking, s.facts, s.start, s.overrides, keep, stuck, needSetting]);
   const gate = useMemo(() => (stuck ? whyNothingFits(g, s.facts, s.start) : null), [stuck, g, s.facts, s.start]);
   const gateText = gate ? gateSentence(g, gate, s.facts) : "";
   // a question whose answer only restates the chosen subtype (pMMR/MSS colon cancer answers the
@@ -359,11 +369,9 @@ export function PatientPanel() {
   }, [g, sectionVar, secValue, s.facts, vars, setFacts]);
   const previews = usePreviews(g, s.facts, deciders, ranking, s.start);
   // an honest count for the interview: the questions still open on the routes that matter, asked the way the questions are
-  const remainingFacts = useMemo(() => {
-    if (stuck || needSetting) return [];
-    const r = remainingQuestions(g, ranking, s.facts).filter((d) => keep(d.fact) && vars[d.fact] && !isLaterStage(g, s.start, d.page)).map((d) => d.fact);
-    return r.length ? r : deciders.map((d) => d.fact);
-  }, [g, ranking, s.facts, s.start, keep, vars, stuck, needSetting, deciders]);
+  const remainingFacts = useMemo(() => deciders.map((d) => d.fact), [deciders]);
+  // the number of different recommendations (options listed side by side are one)
+  const nRecs = useMemo(() => distinctRecommendations(g, ranking).length, [g, ranking]);
   // After the last answer the recommendation is the next thing to see: its tab takes the focus
   const toPaths = useCallback(() => {
     set({ rightTab: "paths" });
@@ -493,7 +501,7 @@ export function PatientPanel() {
               : <button type="button" onClick={() => setModeKeep("interview")} data-testid="mode-interview">One at a time</button>}
           </div>
           {mode === "interview" ? (
-            <Interview deciders={deciders} remainingFacts={remainingFacts} previews={previews} subtype={typeof secValue === "string" ? secValue : undefined} answer={set1} onPage={onPage} routes={ranking.paths.length} toPaths={toPaths} stuck={stuck} nextPage={nextPage} openNext={openNext} />
+            <Interview deciders={deciders} remainingFacts={remainingFacts} previews={previews} subtype={typeof secValue === "string" ? secValue : undefined} answer={set1} onPage={onPage} routes={ranking.paths.length} recs={nRecs} toPaths={toPaths} stuck={stuck} nextPage={nextPage} openNext={openNext} />
           ) : (<>
             <p className="note" id="dec-note">{stuck ? "Nothing fits these answers, so no further question can change the result."
               : anyFacts
@@ -574,7 +582,7 @@ export function PatientPanel() {
         </details>
       </>)}
 
-      <NextStep count={needSetting ? 0 : ranking.paths.length} stuck={stuck && !needSetting} text={gateText} onSee={idle ? toFirst : toPaths} onFix={fix} idle={idle && !needSetting} next={nextPage ? { title: pageTitle(g, nextPage), open: openNext } : null} />
+      <NextStep n={nRecs} count={needSetting ? 0 : ranking.paths.length} stuck={stuck && !needSetting} text={gateText} onSee={idle ? toFirst : toPaths} onFix={fix} idle={idle && !needSetting} next={nextPage ? { title: pageTitle(g, nextPage), open: openNext } : null} />
     </div>
   );
 }
@@ -583,7 +591,7 @@ export function PatientPanel() {
 
 /** A footer that stays in view in both modes: the way to the recommendation when there is one,
  * or what is wrong when nothing fits and the way to fix it. */
-function NextStep({ count, stuck, text, onSee, onFix, idle, next }: { count: number; stuck: boolean; text: string; onSee: () => void; onFix: () => void; idle: boolean; next: { title: string; open: () => void } | null }) {
+function NextStep({ n, count, stuck, text, onSee, onFix, idle, next }: { n: number; count: number; stuck: boolean; text: string; onSee: () => void; onFix: () => void; idle: boolean; next: { title: string; open: () => void } | null }) {
   if (!count && !stuck && !idle) return null;
   if (next) {
     // nothing to ask and no recommendation to show yet: the page itself is the way on
@@ -600,7 +608,7 @@ function NextStep({ count, stuck, text, onSee, onFix, idle, next }: { count: num
         <button type="button" className="btn primary" data-testid="fix-this" onClick={onFix}>Fix this</button>
       </>) : (
         <button type="button" className="btn primary" data-testid="see-reco" onClick={onSee}>
-          See the recommendation <ArrowRight size={15} aria-hidden />
+          See the recommendation{n > 1 ? <span className="ns-n"> ({n})</span> : null} <ArrowRight size={15} aria-hidden />
         </button>
       )}
     </div>
@@ -906,9 +914,9 @@ function PasteRecord({ schema }: { schema: Schema }) {
 
 /* ---------------- one question at a time ---------------- */
 
-function Interview({ deciders, remainingFacts, previews, subtype, answer, onPage, routes, toPaths, stuck, nextPage, openNext }: {
+function Interview({ deciders, remainingFacts, previews, subtype, answer, onPage, routes, recs, toPaths, stuck, nextPage, openNext }: {
   deciders: Decider[]; remainingFacts: string[]; previews: Map<string, Preview[]>; subtype?: string; answer: (f: string, v: unknown) => void;
-  onPage: (p: string) => void; routes: number; toPaths: () => void; stuck: boolean; nextPage: string | null; openNext: () => void;
+  onPage: (p: string) => void; routes: number; recs: number; toPaths: () => void; stuck: boolean; nextPage: string | null; openNext: () => void;
 }) {
   const { bundle, s } = useApp();
   const vars = bundle.schema.variables;
@@ -938,7 +946,7 @@ function Interview({ deciders, remainingFacts, previews, subtype, answer, onPage
     return (
       <div className="interview done none" data-testid="no-questions">
         <p className="iv-q">No patient details change the answer here: read the page.</p>
-        <p className="note">{routes ? countRecs(routes) + "." : ""}</p>
+        <p className="note">{recs ? countRecs(recs) + "." : ""}</p>
         <div className="iv-actions"><button type="button" className="btn" onClick={nextPage ? openNext : toPaths}>{nextPage ? "Open the page in the diagram" : "Read the recommendation"} <ArrowRight size={14} aria-hidden /></button></div>
       </div>
     );
@@ -947,7 +955,7 @@ function Interview({ deciders, remainingFacts, previews, subtype, answer, onPage
     return (
       <div className="interview done">
         <p className="iv-q">That's every question that changes the recommendation.</p>
-        <p className="note">{routes ? countRecs(routes) + "." : ""}{skipped.length > 0 && <> You skipped {skipped.length}: <button type="button" className="linkish" onClick={() => setSkipped([])}>ask them again</button>.</>}</p>
+        <p className="note">{recs ? countRecs(recs) + "." : ""}{skipped.length > 0 && <> You skipped {skipped.length}: <button type="button" className="linkish" onClick={() => setSkipped([])}>ask them again</button>.</>}</p>
       </div>
     );
   }
