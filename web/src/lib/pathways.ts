@@ -18,7 +18,7 @@
  *   extractor only) and the condition's review status.
  */
 import type { Facts, Pred } from "../types";
-import { entryHeadsByGroup, resolveRef, sectionStartPages, stateOfEntries, stateOfTitle, type Graph } from "./graph";
+import { entryHeadsByGroup, resolveRef, sectionStartPages, stateOfEntries, statesOfTitle, stateOfTitle, type Graph } from "./graph";
 import { derive, evaluate } from "./predicates";
 import { stripMarks } from "./adapt";
 import { matchWord } from "./terms";
@@ -390,7 +390,11 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     const roots = g.bundle.roots[page] ?? [];
     const split = roots.length > 1 && roots.every((r) => g.preds[r]);
     const late = !!(stateOfTitle(g.bundle.pages[page]?.title ?? "") || stateOfEntries(g, page));
-    if (late) return (own === true || lcv === true) && openAbove(id);
+    // A page for a recurrence is where the patient is after the treatment: the way into it runs through the
+    // initial presentation (localized, M0), which the patient's current details (M1) may well contradict.
+    // Other later states (advanced, follow-up) must still be reachable by a way no answer rules out.
+    const recurrent = !!(statesOfTitle(g.bundle.pages[page]?.title ?? "").includes("recurrence") || stateOfEntries(g, page));
+    if (late) return (own === true || lcv === true) && (recurrent || openAbove(id));
     // An answered detail constrains the way in: a page that is reached only through boxes the
     // details rule out ("Rectal cancer without distant metastases" -> clinical stage REC-6 for a
     // patient with distant metastases) is not somewhere this patient can be, even when its own
@@ -830,7 +834,10 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
       const mine = support(p);
       return !cands0.some((q) => q !== p && reaches(q, p) && !reaches(p, q) && [...mine].every((f) => support(q).has(f)));
     });
-    const later = cands.filter((p) => !cands.some((q) => q !== p && reaches(p, q)));
+    // (pages that lead into each other, PSA recurrence after prostatectomy and after radiation, are equally late)
+    // (of such pages the first in the guideline: the walk from it reaches the others)
+    const pdfOf = (p: string) => g.bundle.pages[p]?.pdf ?? 0;
+    const later = cands.filter((p) => !cands.some((q) => q !== p && ((reaches(p, q) && !reaches(q, p)) || (reaches(p, q) && reaches(q, p) && pdfOf(q) < pdfOf(p)))));
     follow = true;
     ruledOut = 0;
     explore(entries);

@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import type { Facts, Pred } from "../src/types";
 import { adaptGuideline, stripMarks } from "../src/lib/adapt";
-import { buildGraph, type Graph } from "../src/lib/graph";
+import { buildGraph, stateOfEntries, statesOfTitle, type Graph } from "../src/lib/graph";
 import { boxClass, distinctRecommendations, isCriteriaBox, missingFacts, namedStatusFacts, rankPathways, recommendationOf, shownRoute, statusSnippet, usedFacts } from "../src/lib/pathways";
 import { derive, evaluate } from "../src/lib/predicates";
 import { aiWalk, rulesOnlyTrail } from "../src/lib/aiWalk";
@@ -309,7 +309,10 @@ describe("N1 an answered detail that appears in an entry or link condition const
               const ps = (g.parents[x] ?? []).filter((q) => !after(x.split(":")[0], q.split(":")[0]) && !(isRoot && q.split(":")[0] === x.split(":")[0]));
               return !ps.length || ps.some((q) => !(g.preds[q] && evaluate(g.preds[q], full) === false && usedFacts(g, g.preds[q], facts).size > 0) && open(q));
             };
-            if (!open(first)) bad.push(`${slug} {${f}=${String(v)}}: route starts at ${first}, which every way in rules out`);
+            // (a page for a recurrence is where the patient is after treatment: the way in is the initial presentation, which current details may contradict)
+            const fp = first.split(":")[0];
+            const recurrence = statesOfTitle(g.bundle.pages[fp]?.title ?? "").includes("recurrence") || !!stateOfEntries(g, fp);
+            if (!recurrence && !open(first)) bad.push(`${slug} {${f}=${String(v)}}: route starts at ${first}, which every way in rules out`);
           }
         }
       }
@@ -395,6 +398,17 @@ describe("AI calls: only where the walk needs the model, remembered by node and 
     expect(answers.length).toBeGreaterThan(6);
     expect(calls.length).toBeLessThanOrEqual(needed);
     expect(calls.length).toBeLessThan(answers.length);
+  });
+});
+
+describe("a patient past the initial treatment does not start at the initial-diagnosis page", () => {
+  it("prostate: radical prostatectomy and a PSA recurrence with metastases starts at PROS-9, not PROS-1", () => {
+    const g = load("prostate");
+    const facts = { life_expectancy_years: 10, definitive_treatment_received: "radical_prostatectomy", psa_status: "recurrence", m_category: "M1", bone_metastases_count: 9, visceral_metastases_present: true, metastasis_timing: "metachronous" } as Facts;
+    const r = rankPathways(g, facts, "auto");
+    expect(r.entries.length).toBeGreaterThan(0);
+    expect(r.entries.every((e) => e.startsWith("PROS-9:")), r.entries.join(",")).toBe(true);
+    expect(pagesOf(r.paths[0].steps.map((x) => x.node))[0]).toBe("PROS-9");
   });
 });
 
