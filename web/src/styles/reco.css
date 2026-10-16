@@ -107,6 +107,10 @@
 .rc-start .btn { min-height: 32px; font-size: var(--fs-sm); }
 .gets-judge { display: block; font-size: var(--fs-xs); font-weight: 500; color: var(--open); }
 
+.rc-next { margin: 0 0 4px; font-family: var(--serif); font-size: 20px; font-weight: 500; line-height: 1.35; }
+.rc-next b { font-weight: 700; }
+.reco-card.continues .rc-src-actions { margin-top: 12px; }
+.reco-card.continues .rc-src-actions .btn.primary { margin-top: 0; }
 .rc-needs-h { margin: 0; font-family: var(--serif); font-size: 18px; font-weight: 600; line-height: 1.4; }
 .rc-below { margin: 8px 0 0; }
 .pcard.other .pc-end { font-size: var(--fs-md); line-height: 1.4; }

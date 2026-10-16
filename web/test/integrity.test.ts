@@ -14,7 +14,19 @@ import { boxClass, isRecommendationEnd, PAGE_REF, rankPathways } from "../src/li
 /** Boxes with nothing after them that point at a page with no entry boxes (an empty algorithm
  * page, or a footnote page that carries a flow). Lower this as the data agent re-extracts those
  * pages; it must never go up. */
-const EMPTY_TARGET_BASELINE = 131;
+const EMPTY_TARGET_BASELINE = 106;
+
+/** Guidelines whose pages are being re-extracted by other work; they wire their own leaf boxes
+ * when that lands (page_spec wire --all). Take a slug out of this list once it is done. */
+const WIRING_PENDING = new Set([
+  "b_cell_lymphomas", "hodgkin_lymphoma", "t_cell_lymphomas", "cutaneous_lymphomas",
+  "chronic_lymphocytic_leukemia_small_lymphocytic_l", "pediatric_aggressive_mature_b_cell_lymphomas",
+  "pediatric_hodgkin_lymphoma", "castleman_disease", "histiocytic_neoplasms", "survivorship", "in_people_with_hiv",
+  "kaposi_sarcoma", "adolescent_and_young_adult_aya_oncology", "palliative_care", "related_fatigue", "smoking_cessation",
+  "systemic_mastocytosis", "biliary_tract", "genetic_familial_high_risk_assessment_breast_ova",
+  "genetic_familial_high_risk_assessment_colorectal", "ovarian_cancer_fallopian_tube_cancer_primary_per", "prostate",
+  "prostate_early_detection", "thyroid_carcinoma",
+]);
 
 const slugs = readdirSync("../data").filter((d) => existsSync(`../data/${d}/guideline.json`)).sort();
 const all = new Map<string, Graph>();
@@ -100,6 +112,48 @@ describe("library integrity", () => {
             if (p.end === "leaf") expect(boxClass(g, p.steps[p.steps.length - 1].node), p.id).toBe("recommendation");
             if (p.end === "continues") expect(p.continuesTo, p.id).toBeTruthy();
           }
+        }
+      }
+    }
+    expect(runs).toBeGreaterThan(1000);
+    expect(bad).toEqual([]);
+  }, 120_000);
+
+  it("(d) no leaf box names an algorithm page with entry boxes and stops there (outside the guidelines being re-extracted)", () => {
+    const bad: string[] = [];
+    for (const slug of slugs) {
+      if (WIRING_PENDING.has(slug)) continue;
+      const g = load(slug), b = g.bundle;
+      for (const [page, fp] of Object.entries(b.pages)) {
+        for (const n of fp.nodes) {
+          const full = `${page}:${n.id}`;
+          // notes ("For X, see BINV-20"), headings and column headers are pointers, not steps
+          if (n.kind === "header" || /^(note|page_heading|column_header)$/.test(n.role ?? "") || (b.children[full] ?? []).length) continue;
+          for (const l of n.links) if (l !== page && (b.roots[l] ?? []).length) bad.push(`${slug} ${full} -> ${l}`);
+        }
+      }
+    }
+    expect(bad).toEqual([]);
+  }, 120_000);
+
+  it("(e) with each guideline's example patients, no moment's top route is a bare page reference ending as a recommendation", () => {
+    const bad: string[] = [];
+    let runs = 0;
+    for (const slug of slugs) {
+      const g = load(slug), b = g.bundle;
+      const file = `../data/${slug}/vignettes/examples.json`;
+      const examples = [...(b.examples ?? []), ...(existsSync(file) ? (JSON.parse(readFileSync(file, "utf8")) as { id: string; facts: Record<string, unknown> }[]) : [])];
+      const values = b.sections ? b.sections.values : [null];
+      for (const m of moments(g)) {
+        // the guideline's own example patients; where it has none, a patient who has only chosen the disease
+        const patients = examples.length ? examples.map((e) => ({ id: e.id, facts: e.facts })) : values.map((v) => ({ id: String(v), facts: v ? { [b.sections!.variable]: v } : {} }));
+        for (const pt of patients) {
+          runs++;
+          const top = rankPathways(g, pt.facts as never, m.page).paths[0];
+          if (!top) continue;
+          const last = g.node(top.steps[top.steps.length - 1].node);
+          const ref = !!last && (PAGE_REF.test(last.text) || HEADING.test(last.role ?? "") || last.kind === "header");
+          if (ref && isRecommendationEnd(top)) bad.push(`${slug} ${m.page} (${pt.id}): ${last!.id} "${last!.text.slice(0, 40)}" ends ${top.end}`);
         }
       }
     }

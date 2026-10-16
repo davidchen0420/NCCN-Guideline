@@ -137,10 +137,14 @@ export function SourceProvider({ children, bundle: given }: { children: ReactNod
       for (const url of candidates ?? []) {
         try {
           const r = await fetch(url);
-          if (r.ok && (r.headers.get("content-type") ?? "").includes("pdf")) {
+          if (!r.ok) continue;
+          // a PDF by its content type, or by its first bytes (servers often send octet-stream)
+          const buf = await r.arrayBuffer();
+          const magic = String.fromCharCode(...new Uint8Array(buf, 0, Math.min(4, buf.byteLength)));
+          if ((r.headers.get("content-type") ?? "").includes("pdf") || magic === "%PDF") {
             if (off) return;
             loadedFor.current = `${key}|${url}`;
-            await use(await r.arrayBuffer(), url.split("/").pop()!, false);
+            await use(buf, url.split("/").pop()!, false);
             return;
           }
         } catch { /* try the next one */ }

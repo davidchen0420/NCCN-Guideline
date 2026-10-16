@@ -9,7 +9,7 @@
    "version_date": "July 24, 2026",
    "pdf_sha256": "5d663657ebafe07240e7920df1c1206c390a924f082924e7f53d300e55b740d6",
    "path": "acute_lymphoblastic_leukemia/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 170,
     "algorithm_pages": 8,
@@ -32,7 +32,7 @@
     },
     "entries": 8,
     "entries_with_predicate": 5,
-    "entries_reached_by_link": 5,
+    "entries_reached_by_link": 6,
     "roles": {
      "page_heading": 10,
      "leaf": 12,
@@ -122,7 +122,7 @@
    "version_date": "July 13, 2026",
    "pdf_sha256": "d52695c92aacf33d549c8e7405b615cc3c69e9d75623865d5976413cc441a2fc",
    "path": "adult_pain/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 128,
     "algorithm_pages": 7,
@@ -146,7 +146,7 @@
     },
     "entries": 12,
     "entries_with_predicate": 10,
-    "entries_reached_by_link": 9,
+    "entries_reached_by_link": 12,
     "roles": {
      "page_heading": 10,
      "note": 14,
@@ -174,7 +174,7 @@
    "version_date": "July 15, 2026",
    "pdf_sha256": "9e9ba2ced9183abd3a28cdf9f6abf9a697e48ef4c8565f3e51717e28844a24e4",
    "path": "aml/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 213,
     "algorithm_pages": 23,
@@ -189,8 +189,8 @@
     "predicate_status": {
      "section_only": 1,
      "model_reviewed": 71,
-     "inherited_from_link": 15,
-     "none": 32,
+     "inherited_from_link": 16,
+     "none": 31,
      "rejected": 1
     },
     "decision_types": {
@@ -200,8 +200,8 @@
      "null": 3
     },
     "entries": 33,
-    "entries_with_predicate": 32,
-    "entries_reached_by_link": 28,
+    "entries_with_predicate": 33,
+    "entries_reached_by_link": 30,
     "roles": {
      "entry": 31,
      "leaf": 41,
@@ -237,7 +237,7 @@
    "version_date": "February 10, 2026",
    "pdf_sha256": "8ab7128ca216825ec8f9d15bb386bf479eb685b65c934606c5e7ac1a235f1dfb",
    "path": "ampullary_adenocarcinoma/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 81,
     "algorithm_pages": 7,
@@ -283,7 +283,7 @@
    "version_date": "April 7, 2026",
    "pdf_sha256": "724bf53f9b18870221de4c9a54b339f54c2b3ed36b0cbbbc2e2a8621c6408d01",
    "path": "anal_carcinoma/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 69,
     "algorithm_pages": 4,
@@ -334,7 +334,7 @@
    "version_date": "June 24, 2026",
    "pdf_sha256": "4fb565f0a8c79d4226f81c59c697e5df7532dc901625b9812bcc10ac0408ac75",
    "path": "antiemesis/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 111,
     "algorithm_pages": 31,
@@ -358,7 +358,7 @@
     },
     "entries": 33,
     "entries_with_predicate": 33,
-    "entries_reached_by_link": 13,
+    "entries_reached_by_link": 18,
     "roles": {
      "note": 55,
      "page_heading": 45,
@@ -447,7 +447,7 @@
    "version_date": "May 5, 2026",
    "pdf_sha256": "2a6b8edfed2a0a780ee5a9b9a24c40a51a78a4fc84ba2a279b7fd7363b0e5f9d",
    "path": "associated_venous_thromboembolic_disease/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 147,
     "algorithm_pages": 13,
@@ -519,8 +519,8 @@
     "decision_boxes": 325,
     "predicate_status": {
      "model_reviewed": 262,
-     "none": 40,
-     "inherited_from_link": 12,
+     "none": 38,
+     "inherited_from_link": 14,
      "rejected": 2,
      "section_only": 9
     },
@@ -531,8 +531,8 @@
      "option": 28
     },
     "entries": 75,
-    "entries_with_predicate": 72,
-    "entries_reached_by_link": 40,
+    "entries_with_predicate": 74,
+    "entries_reached_by_link": 66,
     "roles": {
      "page_heading": 80,
      "leaf": 145,
@@ -565,7 +565,7 @@
    "version_date": "March 11, 2026",
    "pdf_sha256": "dd61e6ace28dfbc656003005621f8c3bb8aed132f10848f1c29760a481517714",
    "path": "basal_cell_skin/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 59,
     "algorithm_pages": 6,
@@ -673,7 +673,7 @@
    "version_date": "June 22, 2026",
    "pdf_sha256": "5bdf22e4e1db37997fbb9ec0c7638ad12b271cfb0e104ff832838e7573feba1a",
    "path": "bladder/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 142,
     "algorithm_pages": 19,
@@ -688,8 +688,8 @@
     "decision_boxes": 122,
     "predicate_status": {
      "model_reviewed": 84,
-     "none": 28,
-     "inherited_from_link": 5,
+     "inherited_from_link": 6,
+     "none": 27,
      "section_only": 3,
      "rejected": 2
     },
@@ -699,8 +699,8 @@
      "other": 1
     },
     "entries": 24,
-    "entries_with_predicate": 23,
-    "entries_reached_by_link": 8,
+    "entries_with_predicate": 24,
+    "entries_reached_by_link": 19,
     "roles": {
      "page_heading": 39,
      "note": 16,
@@ -734,7 +734,7 @@
    "version_date": "July 21, 2026",
    "pdf_sha256": "01f00f0004b356324646446fb3946457dd67abc69e70057b244c120864510846",
    "path": "bone/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 129,
     "algorithm_pages": 19,
@@ -747,17 +747,17 @@
     "decision_boxes": 105,
     "predicate_status": {
      "model_reviewed": 81,
-     "none": 17,
+     "none": 15,
      "section_only": 2,
-     "inherited_from_link": 5
+     "inherited_from_link": 7
     },
     "decision_types": {
      "condition": 91,
      "option": 14
     },
     "entries": 28,
-    "entries_with_predicate": 26,
-    "entries_reached_by_link": 12,
+    "entries_with_predicate": 28,
+    "entries_reached_by_link": 20,
     "roles": {
      "note": 8,
      "page_heading": 34,
@@ -786,7 +786,7 @@
    "version_date": "July 29, 2026",
    "pdf_sha256": "70d31870ba9fd52fd4db90595bcb5ccbc7e12fd4fb615c9e068f07b644a54cc3",
    "path": "breast/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 278,
     "algorithm_pages": 37,
@@ -812,7 +812,7 @@
     },
     "entries": 54,
     "entries_with_predicate": 51,
-    "entries_reached_by_link": 27,
+    "entries_reached_by_link": 46,
     "roles": {
      "page_heading": 49,
      "step": 179,
@@ -846,7 +846,7 @@
    "version_date": "August 29, 2025",
    "pdf_sha256": "7a201504f1423a36d1e335ca2357b8942575982a249a3562a129ea3325519712",
    "path": "breast_risk_reduction/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 63,
     "algorithm_pages": 8,
@@ -867,7 +867,7 @@
     },
     "entries": 19,
     "entries_with_predicate": 19,
-    "entries_reached_by_link": 2,
+    "entries_reached_by_link": 17,
     "roles": {
      "note": 1,
      "entry": 19,
@@ -894,7 +894,7 @@
    "version_date": "March 5, 2026",
    "pdf_sha256": "a34bbf60f2e5871507f882b9c71228be908db9492c2772976627baa7813fcf78",
    "path": "breast_screening_and_diagnosis/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 100,
     "algorithm_pages": 18,
@@ -919,7 +919,7 @@
     },
     "entries": 31,
     "entries_with_predicate": 28,
-    "entries_reached_by_link": 12,
+    "entries_reached_by_link": 27,
     "roles": {
      "page_heading": 26,
      "leaf": 80,
@@ -1005,7 +1005,7 @@
    "version_date": "June 10, 2026",
    "pdf_sha256": "5be240ed1d2e10708034e26470a381a57dbf99533fb55e04267c6f59cae6fbf8",
    "path": "central_nervous_system/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 246,
     "algorithm_pages": 45,
@@ -1031,7 +1031,7 @@
     },
     "entries": 57,
     "entries_with_predicate": 51,
-    "entries_reached_by_link": 27,
+    "entries_reached_by_link": 41,
     "roles": {
      "note": 30,
      "page_heading": 95,
@@ -1062,7 +1062,7 @@
    "version_date": "November 10, 2025",
    "pdf_sha256": "f252a40a50615458ad9c79750b43ccd6afe2d2ea60b1daadbead6eea040951ad",
    "path": "cervical/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 138,
     "algorithm_pages": 14,
@@ -1085,7 +1085,7 @@
     },
     "entries": 24,
     "entries_with_predicate": 23,
-    "entries_reached_by_link": 21,
+    "entries_reached_by_link": 22,
     "roles": {
      "leaf": 53,
      "entry": 24,
@@ -1169,7 +1169,7 @@
    "version_date": "July 10, 2026",
    "pdf_sha256": "51ca9b5e3944e8cece17c1c4483656918abdf938c4e86f1dc2637ae2a208bc5e",
    "path": "chronic_myeloid_leukemia/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 118,
     "algorithm_pages": 6,
@@ -1195,7 +1195,7 @@
     },
     "entries": 6,
     "entries_with_predicate": 5,
-    "entries_reached_by_link": 3,
+    "entries_reached_by_link": 5,
     "roles": {
      "page_heading": 7,
      "step": 18,
@@ -1254,7 +1254,7 @@
     },
     "entries": 35,
     "entries_with_predicate": 35,
-    "entries_reached_by_link": 25,
+    "entries_reached_by_link": 29,
     "roles": {
      "column_header": 5,
      "leaf": 44,
@@ -1286,7 +1286,7 @@
    "version_date": "April 23, 2026",
    "pdf_sha256": "65ea223af4f0beebe974c0530aa3350e951d06c801572af10d5beac5fd6d2294",
    "path": "colorectal_screening/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 106,
     "algorithm_pages": 17,
@@ -1309,7 +1309,7 @@
     },
     "entries": 28,
     "entries_with_predicate": 28,
-    "entries_reached_by_link": 10,
+    "entries_reached_by_link": 21,
     "roles": {
      "entry": 28,
      "leaf": 52,
@@ -1400,7 +1400,7 @@
    "version_date": "October 24, 2025",
    "pdf_sha256": "54caf49a388291761a3e3e7dbee14491a39f900e1c3d189c686170e34241feb0",
    "path": "dermatofibrosarcoma_protuberans/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 23,
     "algorithm_pages": 3,
@@ -1421,7 +1421,7 @@
     },
     "entries": 3,
     "entries_with_predicate": 0,
-    "entries_reached_by_link": 1,
+    "entries_reached_by_link": 2,
     "roles": {
      "page_heading": 8,
      "step": 11,
@@ -1446,7 +1446,7 @@
    "version_date": "April 24, 2026",
    "pdf_sha256": "a5ad958a09c86f1e90059d42195f225abeb1433078798f5e2a3875799e224104",
    "path": "distress_management/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 85,
     "algorithm_pages": 26,
@@ -1460,9 +1460,9 @@
     },
     "decision_boxes": 122,
     "predicate_status": {
-     "none": 15,
+     "none": 14,
      "model_reviewed": 104,
-     "inherited_from_link": 2,
+     "inherited_from_link": 3,
      "rejected": 1
     },
     "decision_types": {
@@ -1472,8 +1472,8 @@
      "null": 1
     },
     "entries": 30,
-    "entries_with_predicate": 25,
-    "entries_reached_by_link": 8,
+    "entries_with_predicate": 26,
+    "entries_reached_by_link": 16,
     "roles": {
      "page_heading": 66,
      "note": 22,
@@ -1504,7 +1504,7 @@
    "version_date": "June 3, 2026",
    "pdf_sha256": "ba9a5c6bf902928a57d4340769e621df6a19c1fb13aa61b541c3277c723e57e5",
    "path": "esophageal_and_esophagogastric_junction/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 172,
     "algorithm_pages": 21,
@@ -1528,7 +1528,7 @@
     },
     "entries": 37,
     "entries_with_predicate": 35,
-    "entries_reached_by_link": 23,
+    "entries_reached_by_link": 36,
     "roles": {
      "page_heading": 50,
      "entry": 37,
@@ -1557,7 +1557,7 @@
    "version_date": "June 3, 2026",
    "pdf_sha256": "0fe0526db3255a623b9f750f93ac3fbb0adfbbb92f2fbe9f1fdac49da777b7fc",
    "path": "gastric/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 140,
     "algorithm_pages": 10,
@@ -1581,7 +1581,7 @@
     },
     "entries": 22,
     "entries_with_predicate": 20,
-    "entries_reached_by_link": 17,
+    "entries_reached_by_link": 21,
     "roles": {
      "page_heading": 18,
      "entry": 22,
@@ -1610,7 +1610,7 @@
    "version_date": "January 13, 2026",
    "pdf_sha256": "7e6de8733865bb77b152993f1462a4c21e55999140aa10e2831057011e96fb0c",
    "path": "gastrointestinal_stromal_tumors/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 54,
     "algorithm_pages": 5,
@@ -1776,7 +1776,7 @@
    "version_date": "November 21, 2025",
    "pdf_sha256": "e29ca26ab6a0c269e9abb825abd5bfc0c20cdb81ba9a4a69ce702c9b99abd51d",
    "path": "gestational_trophoblastic_neoplasia/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 56,
     "algorithm_pages": 7,
@@ -1827,7 +1827,7 @@
    "version_date": "July 24, 2026",
    "pdf_sha256": "dadfaa34b0a451aef31f289203553027d9b5de4eebfded061209c8a82bce075e",
    "path": "hairy_cell_leukemia/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 34,
     "algorithm_pages": 2,
@@ -1848,7 +1848,7 @@
     },
     "entries": 2,
     "entries_with_predicate": 1,
-    "entries_reached_by_link": 0,
+    "entries_reached_by_link": 1,
     "roles": {
      "page_heading": 5,
      "step": 9,
@@ -1875,7 +1875,7 @@
    "version_date": "May 12, 2026",
    "pdf_sha256": "cd5937df2a8ce8b24067d20879bba75558e46937a8f5905b3ab47c615c6e1c69",
    "path": "head_and_neck/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 276,
     "algorithm_pages": 57,
@@ -1902,7 +1902,7 @@
     },
     "entries": 74,
     "entries_with_predicate": 73,
-    "entries_reached_by_link": 48,
+    "entries_reached_by_link": 66,
     "roles": {
      "page_heading": 114,
      "note": 50,
@@ -1932,7 +1932,7 @@
    "version_date": "July 30, 2026",
    "pdf_sha256": "0cb42d280a71b7d297c1c05edf1a9923e8e0d1d9afbecf597ce8375f58dbdba6",
    "path": "hematopoietic_cell_transplantation/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 114,
     "algorithm_pages": 8,
@@ -1956,7 +1956,7 @@
     },
     "entries": 11,
     "entries_with_predicate": 8,
-    "entries_reached_by_link": 4,
+    "entries_reached_by_link": 8,
     "roles": {
      "entry": 10,
      "leaf": 14,
@@ -1987,7 +1987,7 @@
    "version_date": "December 5, 2025",
    "pdf_sha256": "43733ec081bec5b5666c23d4e8938648cb298f10d1826cbb96094880a0604868",
    "path": "hematopoietic_growth_factors/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 105,
     "algorithm_pages": 15,
@@ -2010,7 +2010,7 @@
     },
     "entries": 20,
     "entries_with_predicate": 19,
-    "entries_reached_by_link": 4,
+    "entries_reached_by_link": 10,
     "roles": {
      "page_heading": 32,
      "note": 15,
@@ -2040,7 +2040,7 @@
    "version_date": "March 10, 2026",
    "pdf_sha256": "74766a1feb3702e8a132bc66557a1d8bf1a2a7d2c97215b27ea07c11f354c2fd",
    "path": "hepatocellular_carcinoma/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 115,
     "algorithm_pages": 6,
@@ -2314,7 +2314,7 @@
    "version_date": "July 1, 2026",
    "pdf_sha256": "b53176d230f99463f1fb98d43deb61271b78a73a99d9af5ce8827a3d5fabd881",
    "path": "kidney/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 100,
     "algorithm_pages": 5,
@@ -2333,7 +2333,7 @@
     },
     "entries": 7,
     "entries_with_predicate": 7,
-    "entries_reached_by_link": 2,
+    "entries_reached_by_link": 5,
     "roles": {
      "page_heading": 11,
      "note": 3,
@@ -2359,7 +2359,7 @@
    "version_date": "September 16, 2025",
    "pdf_sha256": "c5988e8e517dfa3e0dc81c9de346cfa0cf2bd83d2d619d2335980ca91a6221e5",
    "path": "lung_screening/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 90,
     "algorithm_pages": 11,
@@ -2382,7 +2382,7 @@
     },
     "entries": 13,
     "entries_with_predicate": 12,
-    "entries_reached_by_link": 10,
+    "entries_reached_by_link": 12,
     "roles": {
      "page_heading": 19,
      "entry": 13,
@@ -2410,7 +2410,7 @@
    "version_date": "November 11, 2025",
    "pdf_sha256": "adc30be5dc67155f8d2da111d229375169d7bd12e17aba5729dbff268cd30d10",
    "path": "management_of_car_t_cell_and_lymphocyte_engager/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 54,
     "algorithm_pages": 17,
@@ -2433,7 +2433,7 @@
     },
     "entries": 17,
     "entries_with_predicate": 15,
-    "entries_reached_by_link": 1,
+    "entries_reached_by_link": 6,
     "roles": {
      "page_heading": 20,
      "note": 16,
@@ -2466,7 +2466,7 @@
    "version_date": "October 23, 2025",
    "pdf_sha256": "6e3aedbc358901aa577db2d45dbe5bce0058a23bc4bdafce98e277c0af10a557",
    "path": "management_of_immune_checkpoint_inhibitor_relate/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 139,
     "algorithm_pages": 46,
@@ -2489,7 +2489,7 @@
     },
     "entries": 52,
     "entries_with_predicate": 46,
-    "entries_reached_by_link": 6,
+    "entries_reached_by_link": 22,
     "roles": {
      "page_heading": 74,
      "table_root": 5,
@@ -2521,7 +2521,7 @@
    "version_date": "April 17, 2026",
    "pdf_sha256": "b2d2d87f01bc8a320f6a000bc917bbf8c970cb96746e1b5237c27d17d1d61812",
    "path": "melanoma_cutaneous/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 260,
     "algorithm_pages": 17,
@@ -2546,7 +2546,7 @@
     },
     "entries": 23,
     "entries_with_predicate": 18,
-    "entries_reached_by_link": 17,
+    "entries_reached_by_link": 19,
     "roles": {
      "page_heading": 45,
      "leaf": 42,
@@ -2581,7 +2581,7 @@
    "version_date": "March 18, 2026",
    "pdf_sha256": "cbd07f6fdf3b1817a3663f6f9c7dfdec2389dd2bd0e7b2bc90206100358176e5",
    "path": "melanoma_uveal/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 96,
     "algorithm_pages": 6,
@@ -2605,7 +2605,7 @@
     },
     "entries": 7,
     "entries_with_predicate": 6,
-    "entries_reached_by_link": 5,
+    "entries_reached_by_link": 6,
     "roles": {
      "note": 2,
      "page_heading": 11,
@@ -2638,7 +2638,7 @@
    "version_date": "October 24, 2025",
    "pdf_sha256": "d0bcf8e3a7c0c4d308c6b451337cd419e3f4b1871a25e5f4f130bdc28b2dbcb9",
    "path": "merkel_cell_carcinoma/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 72,
     "algorithm_pages": 6,
@@ -2661,7 +2661,7 @@
     },
     "entries": 6,
     "entries_with_predicate": 6,
-    "entries_reached_by_link": 4,
+    "entries_reached_by_link": 5,
     "roles": {
      "page_heading": 24,
      "decision": 12,
@@ -2689,7 +2689,7 @@
    "version_date": "October 3, 2025",
    "pdf_sha256": "ea72ad3be2bde815634ec6ff3e588364ebe53f672a7a490e0e5636f25b73c239",
    "path": "mesothelioma_peritoneal/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 42,
     "algorithm_pages": 2,
@@ -2734,7 +2734,7 @@
    "version_date": "July 8, 2026",
    "pdf_sha256": "d34c5841c81fc93a6d70d5cb009087518299ca4e2b90f7c616c03929443f37da",
    "path": "mesothelioma_pleural/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 58,
     "algorithm_pages": 3,
@@ -2756,7 +2756,7 @@
     },
     "entries": 3,
     "entries_with_predicate": 2,
-    "entries_reached_by_link": 1,
+    "entries_reached_by_link": 2,
     "roles": {
      "step": 25,
      "entry": 3,
@@ -2781,7 +2781,7 @@
    "version_date": "January 9, 2026",
    "pdf_sha256": "12bd37ee90a51b6595cb3d38a78a9a3a941f06d9c43a5e90719a60a379148847",
    "path": "multiple_myeloma/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 141,
     "algorithm_pages": 15,
@@ -2796,17 +2796,17 @@
     "decision_boxes": 87,
     "predicate_status": {
      "model_reviewed": 27,
-     "none": 58,
+     "none": 57,
      "rejected": 1,
-     "inherited_from_link": 1
+     "inherited_from_link": 2
     },
     "decision_types": {
      "condition": 57,
      "other": 30
     },
     "entries": 19,
-    "entries_with_predicate": 11,
-    "entries_reached_by_link": 8,
+    "entries_with_predicate": 12,
+    "entries_reached_by_link": 15,
     "roles": {
      "leaf": 22,
      "entry": 17,
@@ -2837,7 +2837,7 @@
    "version_date": "January 12, 2026",
    "pdf_sha256": "03473e87ad36865657ef37460c4d31e44b2e3df3af5292b412971ff581eda0cb",
    "path": "myelodysplastic_syndromes/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 123,
     "algorithm_pages": 8,
@@ -2862,7 +2862,7 @@
     },
     "entries": 12,
     "entries_with_predicate": 10,
-    "entries_reached_by_link": 3,
+    "entries_reached_by_link": 4,
     "roles": {
      "page_heading": 13,
      "decision": 17,
@@ -2896,7 +2896,7 @@
    "version_date": "October 3, 2025",
    "pdf_sha256": "5694b8e162ed2f3d6b0941afac1b851255c665e7d932de174c8ae23be95df392",
    "path": "myeloid_lymphoid_neoplasms_with_eosinophilia_and/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 51,
     "algorithm_pages": 11,
@@ -2922,7 +2922,7 @@
     },
     "entries": 16,
     "entries_with_predicate": 11,
-    "entries_reached_by_link": 8,
+    "entries_reached_by_link": 16,
     "roles": {
      "note": 28,
      "page_heading": 15,
@@ -2953,7 +2953,7 @@
    "version_date": "June 16, 2026",
    "pdf_sha256": "bdd583464381fe533f9c9e6ee98825aaed5a330f54dbfac9694dbac1d4b7323d",
    "path": "myeloproliferative_neoplasms/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 125,
     "algorithm_pages": 9,
@@ -2978,7 +2978,7 @@
     },
     "entries": 11,
     "entries_with_predicate": 10,
-    "entries_reached_by_link": 3,
+    "entries_reached_by_link": 6,
     "roles": {
      "page_heading": 3,
      "step": 43,
@@ -3007,7 +3007,7 @@
    "version_date": "April 28, 2026",
    "pdf_sha256": "bb0e90691fd74ac58f0d94a19404be8aee67f8095b9b6c494d9235e4db4d8741",
    "path": "neuroblastoma/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 93,
     "algorithm_pages": 12,
@@ -3031,7 +3031,7 @@
     },
     "entries": 13,
     "entries_with_predicate": 10,
-    "entries_reached_by_link": 4,
+    "entries_reached_by_link": 5,
     "roles": {
      "page_heading": 20,
      "note": 7,
@@ -3060,7 +3060,7 @@
    "version_date": "April 21, 2026",
    "pdf_sha256": "23015d9d50d0f80149cd8b4cc79070b360454c06b9f402655d16a51ed969e04f",
    "path": "neuroendocrine_and_adrenal_tumors/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 237,
     "algorithm_pages": 35,
@@ -3087,7 +3087,7 @@
     },
     "entries": 42,
     "entries_with_predicate": 40,
-    "entries_reached_by_link": 14,
+    "entries_reached_by_link": 27,
     "roles": {
      "table_root": 2,
      "table_condition": 40,
@@ -3123,7 +3123,7 @@
    "version_date": "June 12, 2026",
    "pdf_sha256": "72396f3528e61fcef5160a2c25c880b6bdc059c4c7b4a488a74e96de2b438b3a",
    "path": "nsclc/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 302,
     "algorithm_pages": 43,
@@ -3150,7 +3150,7 @@
     },
     "entries": 59,
     "entries_with_predicate": 59,
-    "entries_reached_by_link": 55,
+    "entries_reached_by_link": 57,
     "roles": {
      "page_heading": 66,
      "note": 20,
@@ -3183,7 +3183,7 @@
    "version_date": "May 4, 2026",
    "pdf_sha256": "06328a2e070178ee02dc648ad8cb105840136056654705a5dd8beacb34f06f53",
    "path": "occult_primary/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 86,
     "algorithm_pages": 15,
@@ -3205,7 +3205,7 @@
     },
     "entries": 19,
     "entries_with_predicate": 18,
-    "entries_reached_by_link": 7,
+    "entries_reached_by_link": 17,
     "roles": {
      "page_heading": 33,
      "step": 83,
@@ -3236,7 +3236,7 @@
    "version_date": "February 11, 2026",
    "pdf_sha256": "0d9f1230cc6be0c79fe452bf8902ac02ab2759954d8340200b54e0be4dba7e75",
    "path": "older_adult_oncology/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 109,
     "algorithm_pages": 10,
@@ -3409,7 +3409,7 @@
    "version_date": "April 22, 2026",
    "pdf_sha256": "14836731d2f94e12d99a7f06882adc6bbb658838eca288668d67d3683d000b1d",
    "path": "pancreatic_adenocarcinoma/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 171,
     "algorithm_pages": 12,
@@ -3460,7 +3460,7 @@
    "version_date": "August 11, 2025",
    "pdf_sha256": "6e5a774ba11e13fa63b676e0028051ffc366d031df236ed3cf760d62d915f738",
    "path": "pediatric_acute_lymphoblastic_leukemia/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 172,
     "algorithm_pages": 11,
@@ -3484,7 +3484,7 @@
     },
     "entries": 11,
     "entries_with_predicate": 9,
-    "entries_reached_by_link": 4,
+    "entries_reached_by_link": 10,
     "roles": {
      "page_heading": 15,
      "step": 65,
@@ -3572,7 +3572,7 @@
    "version_date": "November 25, 2025",
    "pdf_sha256": "c09be018ea98489b5b0479c7217343f31dadd88535a096835bb2783ff252637a",
    "path": "pediatric_central_nervous_system/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 89,
     "algorithm_pages": 8,
@@ -3594,7 +3594,7 @@
     },
     "entries": 9,
     "entries_with_predicate": 9,
-    "entries_reached_by_link": 3,
+    "entries_reached_by_link": 6,
     "roles": {
      "page_heading": 10,
      "step": 37,
@@ -3693,7 +3693,7 @@
    "version_date": "February 17, 2026",
    "pdf_sha256": "05dd33ebf10a76b8eeb4df66f1bdb0a500bccdfdf6fd83d59678f7fc550bdef2",
    "path": "pediatric_soft_tissue_sarcoma/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 51,
     "algorithm_pages": 15,
@@ -3715,7 +3715,7 @@
     },
     "entries": 14,
     "entries_with_predicate": 14,
-    "entries_reached_by_link": 3,
+    "entries_reached_by_link": 13,
     "roles": {
      "step": 69,
      "decision": 25,
@@ -3741,7 +3741,7 @@
    "version_date": "June 5, 2026",
    "pdf_sha256": "63b428fd220d57396ce28d3793ef6311464cf040b5cec94b987fdc5c517cb616",
    "path": "penile/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 59,
     "algorithm_pages": 10,
@@ -3792,7 +3792,7 @@
    "version_date": "March 11, 2026",
    "pdf_sha256": "5a727271ded59ad1ae07e3feb4113e15d6404e1be5e96147304e98e785ea7b2d",
    "path": "prevention_and_treatment_of_related_infections/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 179,
     "algorithm_pages": 26,
@@ -3817,7 +3817,7 @@
     },
     "entries": 38,
     "entries_with_predicate": 30,
-    "entries_reached_by_link": 27,
+    "entries_reached_by_link": 31,
     "roles": {
      "page_heading": 37,
      "note": 19,
@@ -3988,7 +3988,7 @@
     },
     "entries": 40,
     "entries_with_predicate": 38,
-    "entries_reached_by_link": 32,
+    "entries_reached_by_link": 37,
     "roles": {
      "page_heading": 34,
      "leaf": 68,
@@ -4081,7 +4081,7 @@
    "version_date": "July 1, 2026",
    "pdf_sha256": "9fe5f54bffb245a8a7d976927b3de231762d512e64058134f5154b5ca1802d06",
    "path": "sclc/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 93,
     "algorithm_pages": 8,
@@ -4131,7 +4131,7 @@
    "version_date": "April 7, 2026",
    "pdf_sha256": "a6cf8dbf04ee04e8cfcd4a47e685d1a06399838dcb7ca9968cbb8a24439677cb",
    "path": "small_bowel_adenocarcinoma/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 68,
     "algorithm_pages": 8,
@@ -4152,7 +4152,7 @@
     },
     "entries": 10,
     "entries_with_predicate": 10,
-    "entries_reached_by_link": 4,
+    "entries_reached_by_link": 8,
     "roles": {
      "page_heading": 18,
      "leaf": 25,
@@ -4234,7 +4234,7 @@
    "version_date": "July 23, 2026",
    "pdf_sha256": "b63dad509daa8acc225bce97b01913e070bac932dcc9898806a669c6c11ea76c",
    "path": "soft_tissue_sarcoma/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 144,
     "algorithm_pages": 23,
@@ -4259,7 +4259,7 @@
     },
     "entries": 28,
     "entries_with_predicate": 26,
-    "entries_reached_by_link": 13,
+    "entries_reached_by_link": 26,
     "roles": {
      "note": 4,
      "decision": 24,
@@ -4289,7 +4289,7 @@
    "version_date": "March 17, 2026",
    "pdf_sha256": "d2deaeeac066f27651ff9d1b1d377a46c6d378a4b088da636cf604c49435a9e9",
    "path": "squamous_cell_skin/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 103,
     "algorithm_pages": 11,
@@ -4314,7 +4314,7 @@
     },
     "entries": 14,
     "entries_with_predicate": 14,
-    "entries_reached_by_link": 9,
+    "entries_reached_by_link": 12,
     "roles": {
      "column_header": 4,
      "page_heading": 26,
@@ -4419,7 +4419,7 @@
    "version_date": "March 16, 2026",
    "pdf_sha256": "297280a5cd137a92cb11797b0d6034cad4bde5b6e7561bb671c2eee3be488fc4",
    "path": "systemic_light_chain_amyloidosis/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 42,
     "algorithm_pages": 4,
@@ -4441,7 +4441,7 @@
     },
     "entries": 4,
     "entries_with_predicate": 3,
-    "entries_reached_by_link": 3,
+    "entries_reached_by_link": 4,
     "roles": {
      "note": 1,
      "table_root": 1,
@@ -4585,7 +4585,7 @@
    "version_date": "June 16, 2026",
    "pdf_sha256": "fd7fc074ac12e71711f1a69edb9659400d1c85983221b9af7af7be0f46e7cd99",
    "path": "testicular/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 95,
     "algorithm_pages": 19,
@@ -4637,7 +4637,7 @@
    "version_date": "April 10, 2026",
    "pdf_sha256": "17f0ec55781ca1eb155bcdbd2eb55b5c156b4d12cf4005acffcc5cd90f61629e",
    "path": "thymomas_and_thymic_carcinomas/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 56,
     "algorithm_pages": 4,
@@ -4743,7 +4743,7 @@
    "version_date": "June 16, 2026",
    "pdf_sha256": "45a8e58d93940957091d556e98ef0da3ccddefc4b33a01049337789dfbc4b8d4",
    "path": "uterine_neoplasms/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 151,
     "algorithm_pages": 20,
@@ -4768,7 +4768,7 @@
     },
     "entries": 22,
     "entries_with_predicate": 21,
-    "entries_reached_by_link": 20,
+    "entries_reached_by_link": 21,
     "roles": {
      "page_heading": 31,
      "leaf": 51,
@@ -4802,7 +4802,7 @@
    "version_date": "December 4, 2025",
    "pdf_sha256": "7b82a0eacb7cd2e86fab570ca3cf678f36f2a770958e471b3dea468af8621b32",
    "path": "vaginal/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 67,
     "algorithm_pages": 6,
@@ -4825,7 +4825,7 @@
     },
     "entries": 7,
     "entries_with_predicate": 6,
-    "entries_reached_by_link": 5,
+    "entries_reached_by_link": 6,
     "roles": {
      "page_heading": 11,
      "entry": 7,
@@ -4851,7 +4851,7 @@
    "version_date": "January 6, 2026",
    "pdf_sha256": "f589d476dcfa1d19dbd315fe9fc7dc4a550be89ed5843bd4fb65bbac0f71cef1",
    "path": "vulvar/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 88,
     "algorithm_pages": 13,
@@ -4875,7 +4875,7 @@
     },
     "entries": 19,
     "entries_with_predicate": 19,
-    "entries_reached_by_link": 14,
+    "entries_reached_by_link": 16,
     "roles": {
      "page_heading": 32,
      "entry": 19,
@@ -4899,13 +4899,13 @@
   },
   {
    "slug": "waldenstrom_macroglobulinemia_lymphoplasmacytic",
-   "title": "Waldenstr\u00f6m Macroglobulinemia_Lymphoplasmacytic Lymphoma",
+   "title": "Waldenström Macroglobulinemia_Lymphoplasmacytic Lymphoma",
    "category": "Treatment",
    "version": "2.2026",
    "version_date": "March 3, 2026",
    "pdf_sha256": "5200e5fc5a574f76d5ccb6d20f4030e95d3cafae34add11271de8896f157a67a",
    "path": "waldenstrom_macroglobulinemia_lymphoplasmacytic/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 40,
     "algorithm_pages": 4,
@@ -4981,7 +4981,7 @@
     },
     "entries": 20,
     "entries_with_predicate": 20,
-    "entries_reached_by_link": 14,
+    "entries_reached_by_link": 18,
     "roles": {
      "page_heading": 61,
      "note": 15,
