@@ -1,0 +1,5 @@
+{
+ "page": "PHL-6",
+ "entries": ["PHL-6:n208_71", "PHL-6:n351_71"],
+ "note": "Algorithm page with boxes but no entry box: NLPHL patients enter at the two stage boxes on the left (Stage IA complete resection, single node, confirmed by FDG-PET/CT; or IA or IIA incomplete resection / stage IA-IIA with bulk, IB-IIB, III, IV). Both have an incoming arrow only from the 'Restage and see Primary Treatment' box (the line looping back over the top of the page), so no box was without a parent."
+}

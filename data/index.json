@@ -959,25 +959,26 @@
      "two_methods": 42,
      "image_checked": 30
     },
-    "decision_boxes": 39,
+    "decision_boxes": 40,
     "predicate_status": {
      "none": 6,
-     "model_reviewed": 33
+     "model_reviewed": 33,
+     "inherited_from_link": 1
     },
     "decision_types": {
-     "condition": 36,
+     "condition": 37,
      "option": 3
     },
-    "entries": 6,
-    "entries_with_predicate": 4,
-    "entries_reached_by_link": 4,
+    "entries": 7,
+    "entries_with_predicate": 5,
+    "entries_reached_by_link": 5,
     "roles": {
      "page_heading": 6,
      "step": 43,
-     "entry": 6,
+     "entry": 7,
      "leaf": 12,
      "note": 1,
-     "decision": 10
+     "decision": 9
     },
     "links": {
      "page": 20
@@ -1110,51 +1111,54 @@
    "version_date": "December 22, 2025",
    "pdf_sha256": "f9a89b1fe8665d5108ce837eddd03d95dfcc4e7b91ccaf90f15460e9c2ea37b9",
    "path": "chronic_lymphocytic_leukemia_small_lymphocytic_l/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 118,
-    "algorithm_pages": 9,
-    "boxes": 101,
-    "boxes_text_found_in_pdf_at_bbox": "101/101",
+    "algorithm_pages": 10,
+    "boxes": 103,
+    "boxes_text_found_in_pdf_at_bbox": "103/103",
     "edges_by_evidence": {
      "two_methods": 71,
-     "image_checked": 12,
+     "image_checked": 13,
      "single_source": 1
     },
-    "decision_boxes": 45,
+    "decision_boxes": 46,
     "predicate_status": {
      "none": 9,
      "model_reviewed": 31,
-     "inherited_from_link": 1,
+     "inherited_from_link": 2,
      "rejected": 4
     },
     "decision_types": {
      "other": 4,
-     "condition": 35,
+     "condition": 36,
      "option": 6
     },
-    "entries": 15,
-    "entries_with_predicate": 8,
-    "entries_reached_by_link": 8,
+    "entries": 16,
+    "entries_with_predicate": 9,
+    "entries_reached_by_link": 9,
     "roles": {
      "note": 15,
-     "entry": 15,
-     "leaf": 18,
+     "entry": 16,
+     "leaf": 19,
      "step": 43,
      "decision": 8,
-     "page_heading": 9,
+     "page_heading": 10,
      "column_header": 2
     },
     "links": {
-     "page": 26,
+     "page": 27,
      "external_guideline": 2
     },
     "footnote_refs_by_resolution": {
      "printed_pointer": 53,
-     "own_page": 33,
+     "own_page": 36,
      "null": 3
     },
-    "clinician_validated": false
+    "clinician_validated": false,
+    "reextracted_pages": [
+     "CSLL-5A"
+    ]
    }
   },
   {
@@ -1335,10 +1339,10 @@
    "version_date": "February 13, 2026",
    "pdf_sha256": "e5f159780f9bf4e0de316e5232e865723317a9323045fef0b49582fb453512b6",
    "path": "cutaneous_lymphomas/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 148,
-    "algorithm_pages": 30,
+    "algorithm_pages": 31,
     "boxes": 271,
     "boxes_text_found_in_pdf_at_bbox": "253/271",
     "edges_by_evidence": {
@@ -1347,30 +1351,30 @@
      "table_text_checked": 204,
      "single_source": 1
     },
-    "decision_boxes": 284,
+    "decision_boxes": 285,
     "predicate_status": {
      "section_only": 3,
      "model_reviewed": 122,
-     "inherited_from_link": 2,
+     "inherited_from_link": 3,
      "none": 153,
      "rejected": 4
     },
     "decision_types": {
      "other": 43,
-     "condition": 232,
+     "condition": 233,
      "option": 9
     },
-    "entries": 23,
-    "entries_with_predicate": 21,
-    "entries_reached_by_link": 10,
+    "entries": 24,
+    "entries_with_predicate": 22,
+    "entries_reached_by_link": 11,
     "roles": {
      "page_heading": 28,
      "note": 56,
-     "entry": 20,
+     "entry": 21,
      "decision": 42,
      "leaf": 43,
      "column_header": 4,
-     "step": 106,
+     "step": 105,
      "table_root": 3,
      "table_title": 4,
      "table_condition": 82,
@@ -2081,48 +2085,55 @@
    "version_date": "July 15, 2026",
    "pdf_sha256": "d9086985868c4d2fd6f5b76f4e9e17dc5245625f79ce9862e184b9d5df786f57",
    "path": "histiocytic_neoplasms/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 95,
-    "algorithm_pages": 16,
-    "boxes": 114,
-    "boxes_text_found_in_pdf_at_bbox": "114/114",
+    "algorithm_pages": 21,
+    "boxes": 138,
+    "boxes_text_found_in_pdf_at_bbox": "138/138",
     "edges_by_evidence": {
      "two_methods": 101,
-     "image_checked": 1
+     "image_checked": 16
     },
-    "decision_boxes": 58,
+    "decision_boxes": 63,
     "predicate_status": {
      "section_only": 3,
      "model_reviewed": 49,
      "inherited_from_link": 3,
-     "none": 2,
+     "none": 7,
      "rejected": 1
     },
     "decision_types": {
-     "other": 6,
+     "other": 11,
      "condition": 50,
      "null": 2
     },
-    "entries": 18,
+    "entries": 23,
     "entries_with_predicate": 18,
-    "entries_reached_by_link": 7,
+    "entries_reached_by_link": 13,
     "roles": {
-     "entry": 18,
-     "step": 56,
-     "leaf": 24,
-     "page_heading": 17,
+     "entry": 23,
+     "step": 66,
+     "leaf": 29,
+     "page_heading": 22,
      "decision": 7,
-     "note": 9
+     "note": 13
     },
     "links": {
      "page": 41,
-     "external_guideline": 2
+     "external_guideline": 4
     },
     "footnote_refs_by_resolution": {
-     "own_page": 64
+     "own_page": 93
     },
-    "clinician_validated": false
+    "clinician_validated": false,
+    "reextracted_pages": [
+     "ADULCH-1A",
+     "ECD-1A",
+     "MHN-1A",
+     "PEDLCH-1A",
+     "RDD-1A"
+    ]
    }
   },
   {
@@ -2136,36 +2147,36 @@
    "built": "2026-10-16",
    "quality": {
     "pages": 124,
-    "algorithm_pages": 20,
-    "boxes": 236,
-    "boxes_text_found_in_pdf_at_bbox": "232/236",
+    "algorithm_pages": 24,
+    "boxes": 313,
+    "boxes_text_found_in_pdf_at_bbox": "309/313",
     "edges_by_evidence": {
      "two_methods": 134,
      "table_text_checked": 79,
-     "image_checked": 66
+     "image_checked": 142
     },
-    "decision_boxes": 136,
+    "decision_boxes": 169,
     "predicate_status": {
-     "model_reviewed": 76,
-     "none": 55,
+     "model_reviewed": 91,
+     "none": 70,
      "rejected": 1,
-     "inherited_from_link": 4
+     "inherited_from_link": 7
     },
     "decision_types": {
-     "condition": 104,
+     "condition": 134,
      "other": 8,
-     "option": 24
+     "option": 27
     },
-    "entries": 22,
-    "entries_with_predicate": 19,
-    "entries_reached_by_link": 10,
+    "entries": 26,
+    "entries_with_predicate": 23,
+    "entries_reached_by_link": 14,
     "roles": {
-     "page_heading": 27,
-     "decision": 31,
-     "step": 106,
-     "leaf": 31,
-     "entry": 17,
-     "note": 50,
+     "page_heading": 28,
+     "decision": 47,
+     "step": 142,
+     "leaf": 41,
+     "entry": 21,
+     "note": 61,
      "table_root": 5,
      "table_condition": 46,
      "table_ref": 5,
@@ -2176,19 +2187,23 @@
     },
     "links": {
      "external_guideline": 4,
-     "page": 50
+     "page": 67
     },
     "footnote_refs_by_resolution": {
      "footnote_page": 12,
-     "own_page": 207,
+     "own_page": 270,
      "null": 8,
      "nearest_same_prefix": 7
     },
     "clinician_validated": false,
     "reextracted_pages": [
+     "HODG-5B",
      "HODG-6A",
      "HODG-6B",
-     "HODG-7A"
+     "HODG-7A",
+     "HODG-7B",
+     "HODG-7C",
+     "HODG-7D"
     ]
    }
   },
@@ -3637,21 +3652,21 @@
      "other": 14,
      "option": 38
     },
-    "entries": 15,
-    "entries_with_predicate": 8,
-    "entries_reached_by_link": 10,
+    "entries": 17,
+    "entries_with_predicate": 10,
+    "entries_reached_by_link": 15,
     "roles": {
      "page_heading": 33,
      "note": 22,
      "leaf": 32,
-     "entry": 14,
-     "step": 104,
+     "entry": 16,
+     "step": 103,
      "column_header": 2,
      "table_root": 1,
      "table_title": 2,
      "table_condition": 11,
      "table_value": 55,
-     "decision": 21,
+     "decision": 20,
      "link": 1
     },
     "links": {
@@ -4502,7 +4517,7 @@
    "version_date": "February 13, 2026",
    "pdf_sha256": "1e893cd0246e8ee27f43a59a7b15ead7e1f9f26009b37e9a462b159d56e9bf5e",
    "path": "t_cell_lymphomas/guideline.json",
-   "built": "2026-10-14",
+   "built": "2026-10-16",
    "quality": {
     "pages": 209,
     "algorithm_pages": 28,
@@ -4513,29 +4528,29 @@
      "image_checked": 29,
      "table_text_checked": 30
     },
-    "decision_boxes": 139,
+    "decision_boxes": 140,
     "predicate_status": {
      "section_only": 7,
      "model_reviewed": 95,
      "none": 34,
-     "inherited_from_link": 3
+     "inherited_from_link": 4
     },
     "decision_types": {
      "other": 15,
-     "condition": 120,
+     "condition": 121,
      "null": 1,
      "option": 3
     },
-    "entries": 31,
-    "entries_with_predicate": 30,
-    "entries_reached_by_link": 14,
+    "entries": 32,
+    "entries_with_predicate": 31,
+    "entries_reached_by_link": 15,
     "roles": {
-     "entry": 30,
+     "entry": 31,
      "leaf": 51,
      "note": 29,
      "page_heading": 51,
      "step": 108,
-     "decision": 29,
+     "decision": 28,
      "column_header": 1,
      "table_root": 1,
      "table_condition": 5,

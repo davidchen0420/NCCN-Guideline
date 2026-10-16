@@ -1,0 +1,5 @@
+{
+ "page": "CUTB-3",
+ "entries": ["CUTB-3:n238_25"],
+ "note": "Algorithm page with boxes but no entry box: patients enter at 'Generalized disease (skin only), T3' (CUTB-2 links here from its T3 and extracutaneous boxes). That box only has an incoming arrow from the PCFCL / PCMZL box at the right (the line looping back over the top of the page), so no box was without a parent."
+}

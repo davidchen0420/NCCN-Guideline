@@ -1,0 +1,5 @@
+{
+ "page": "CD-3",
+ "entries": ["CD-3:n259_23"],
+ "note": "Algorithm page with boxes but no entry box: patients with unicentric Castleman disease enter at the UCD box (CD-2 links here from the UCD subtype). The box only has incoming arrows from the two Recurrence boxes (arrows from Recurrence back to UCD, checked on the page image), so no box was without a parent."
+}

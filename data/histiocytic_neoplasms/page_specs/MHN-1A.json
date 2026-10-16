@@ -1,0 +1,93 @@
+{
+ "page": "MHN-1A",
+ "note": "Typed as a footnote page by its code; the PDF page is the tissue biopsy analysis for malignant histiocytic neoplasms that the workup on the previous page names (ADULCH-1 / PEDLCH-1 / ECD-1 / RDD-1 / MHN-1). Boxes, arrows and conditions written from the PDF page image and text. The page is a plain chain (tissue biopsy, morphology, IHC, molecular testing) with no patient condition, so no box has a predicate; the workup box on the linking page names this page inside its list and keeps its own children, so it is not given a continuation.",
+ "section": "Malignant Histiocytic Neoplasms",
+ "boxes": [
+  {
+   "key": "h",
+   "region": [
+    140,
+    84,
+    550,
+    104
+   ],
+   "header": true
+  },
+  {
+   "key": "tb",
+   "region": [
+    18,
+    268,
+    75,
+    302
+   ],
+   "decision_type": "other"
+  },
+  {
+   "key": "morph",
+   "region": [
+    128,
+    190,
+    235,
+    380
+   ],
+   "extra_links": [
+    {
+     "code": null,
+     "part": null,
+     "type": "external_guideline",
+     "guideline": "acute_lymphoblastic_leukemia",
+     "page": null
+    },
+    {
+     "code": null,
+     "part": null,
+     "type": "external_guideline",
+     "guideline": "b_cell_lymphomas",
+     "page": null
+    }
+   ]
+  },
+  {
+   "key": "ihc",
+   "region": [
+    256,
+    104,
+    560,
+    452
+   ]
+  },
+  {
+   "key": "mol",
+   "region": [
+    585,
+    242,
+    750,
+    326
+   ]
+  }
+ ],
+ "edges": [
+  [
+   "tb",
+   "morph"
+  ],
+  [
+   "morph",
+   "ihc"
+  ],
+  [
+   "ihc",
+   "mol"
+  ]
+ ],
+ "footnotes": {
+  "j": "Biopsy of additional sites may be needed if clinical suspicion of secondary concomitant malignancy.",
+  "k": "Surgical biopsy (preferred) or multiple cores in separate cassettes if surgical biopsy is not feasible.",
+  "l": "PU.1 can be used as part of a panel to support histiocytic lineage, but it is less specific than CD163 and CD68 and is also expressed by lymphomas.",
+  "m": "At minimum, the IHC panel should include CD163, CD1a, Langerin, S100, +/- CD68, +/- CD4. MS/AML often show monocytic differentiation and may be negative for CD34, CD117, and MPO; consider AML-appropriate molecular testing and bone marrow biopsy (see NCCN Guidelines for Acute Myeloid Leukemia).",
+  "n": "Ravindran A, et al. Leuk Lymphoma 2025;66:2675-2684.",
+  "o": "Lymphoma-associated MHNs may also carry lymphoma-associated rearrangements such as IGH::BCL2 and clonal immunoglobulin gene rearrangements.",
+  "p": "Principles of Molecular Testing (HIST-H)."
+ }
+}

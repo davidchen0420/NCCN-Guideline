@@ -1,0 +1,55 @@
+{
+ "page": "CSLL-5A",
+ "note": "Typed as a footnote page by its code; the PDF page continues CSLL-4 / CSLL-5 (relapsed or refractory disease after prior cBTKi or ncBTKi and BCL2i-containing regimens: clinical trial, CAR T-cell therapy, ncBTKi, other recommended regimens, allogeneic HCT) and also prints FOOTNOTES FOR CSLL-4 and CSLL-5. Boxes and arrow written from the PDF page image and text. The entry has no condition of its own (it takes the one of the boxes that link to it): relapse after both a BTK inhibitor and a BCL2 inhibitor needs sequential treatment history the schema does not hold (prior_regimen_class describes one regimen).",
+ "boxes": [
+  {
+   "key": "h",
+   "region": [
+    200,
+    82,
+    440,
+    104
+   ],
+   "header": true
+  },
+  {
+   "key": "start",
+   "region": [
+    20,
+    130,
+    160,
+    212
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "opts",
+   "region": [
+    200,
+    106,
+    700,
+    236
+   ]
+  }
+ ],
+ "edges": [
+  [
+   "start",
+   "opts"
+  ]
+ ],
+ "footnotes": {
+  "r": "Clinical trial is preferred when available.",
+  "s": "Supportive Care for Patients with CLL/SLL (CSLL-C).",
+  "t": "Time-limited treatment with BCL2i + cBTKi ± CD20 mAb may be fixed-duration or MRD-guided (based on undetectable MRD [uMRD]-stopping criteria as described in clinical trials). See MRD Assessment (CSLL-E).",
+  "u": "See Discussion for iwCLL response criteria.",
+  "v": "Adverse reactions can be managed by following the recommended dose modifications in the FDA-approved package insert (https://www.accessdata.fda.gov/scripts/ cder/daf/index.cfm).",
+  "w": "If progression with indication for subsequent therapy: Re-evaluate with FISH for del(17p)/TP53 mutation status and CpG-stimulated metaphase karyotype, prior to initiation of subsequent therapy.",
+  "x": "Consider the possibility of histologic transformation in patients with progressive disease. Biopsy is recommended to confirm histologic transformation. If histologic transformation see HT-1.",
+  "y": "Testing for BTK and PLCG2 mutations may be useful in patients with disease progression or no response while on BTKi therapy including if poor adherence is considered as a possible cause. BTK and PLCG2 mutation status alone is not an indication to change treatment in absence of disease progression. Alternate cBTKi (acalabrutinib, ibrutinib, or zanubrutinib) could be considered for intolerance in absence of disease progression. ncBTKi can be considered for resistance or intolerance to prior cBTKi-based regimens.",
+  "z": "In patients with disease responding to therapy: Continue the same BTKi until progression and/or intolerance. At time of disease progression, transition to next therapy as soon as possible. Treatment-free interval should be as short as possible. It is safe to overlap with venetoclax while on a BTKi. If treated with BCL2i-containing time- limited treatment, observe until relapse with indications for retreatment.",
+  "aa": "Patients with CLL/SLL without del(17p)/TP53 mutation who discontinue a cBTKi for intolerance can remain off treatment (if there is no disease progression) for an extended period of time and alternate BTKi can be reinitiated when symptomatic.",
+  "bb": "Venetoclax ± anti-CD20 mAb (obinutuzumab preferred) or venetoclax + cBTKi is a treatment option for relapse after a period of remission. Single agent venetoclax (continuous) can also be considered as a treatment option for relapse after a period of remission.",
+  "cc": "In patients with no intolerance, cBTKi can be continued until disease progression while following recommended dose modification guidance as needed."
+ }
+}
