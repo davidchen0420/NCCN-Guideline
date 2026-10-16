@@ -218,7 +218,7 @@ export function Welcome() {
           </button>
         </div>
         </div>
-        <p className="wl-fine wl-foot">{T.prototype} <button type="button" className="linkish" onClick={() => close({ help: true })}>How to use it</button></p>
+        <p className="wl-fine wl-foot"><span className="wl-disc">{T.prototype}</span> <button type="button" className="linkish" onClick={() => close({ help: true })}>How to use it</button></p>
       </div>
     </div>
   );

@@ -2,18 +2,27 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { useApp, useAdvanced } from "../store";
 import type { Facts, Schema, VarSpec } from "../types";
 import { derive } from "../lib/predicates";
-import { GROUPS, factValue, filledCount, formatNumber, groupOf, label, meta, numberText, parseNumber, unitLabel, valueLabel } from "../lib/factMeta";
-import { contradictions, decidingFacts, plausibility, whyNothingFits, previewAnswer, previewValues, remainingQuestions, type Decider, type Preview } from "../lib/formAssist";
+import { GROUPS, filledCount, formatNumber, groupOf, label, meta, numberText, parseNumber, unitLabel } from "../lib/factMeta";
+import { factText, sectionLabeller, vlabel } from "../lib/valueText";
+import { contradictions, plausibility, whyNothingFits, previewAnswer, previewValues, remainingQuestions, type Decider, type Preview } from "../lib/formAssist";
 import { applyFound, extractFacts, type Found } from "../lib/extract";
 import type { Graph } from "../lib/graph";
 import type { Ranking } from "../lib/pathways";
 import { resolveRef } from "../lib/graph";
 import { SrcChip } from "../source";
-import { PHASES, followsDisease, gateSentence, moments, momentsFor, needOf, reachableFacts, settingsFor, startPhase, type Phase } from "../lib/moments";
+import { PHASES, askableQuestions, followsDisease, gateSentence, impliedBySection, isLaterStage, momentsFor, momentsOf, needOf, nextPageOf, reachableFacts, settingsFor, startPhase, type Phase } from "../lib/moments";
 import { T, countRecs, pageName } from "../lib/terms";
 import { readPref, writePref } from "../lib/prefs";
 import { ArrowRight, ChevronDown, ClipboardPaste, RotateCcw, Save, Search as SearchIcon, Trash2, X } from "lucide-react";
 import "../styles/patient.css";
+
+
+/** Touch screens have no number keys to press. */
+const clipT = (t: string, n = 56) => (t.length > n ? t.slice(0, n).trimEnd() + "…" : t);
+const touchOnly = () => { try { return window.matchMedia("(hover: none), (pointer: coarse)").matches; } catch { return false; } };
+
+
+const pageTitle = (g: Graph, code: string) => { const t = g.bundle.pages[code]?.title; return t && t !== code ? `${clipT(t, 50)} (${code})` : code; };
 
 /** A page shown title first with its code after: "Low-Risk Group (PROS-3)". */
 function usePageName() {
@@ -59,9 +68,9 @@ function Decides({ why, onPage }: { why: Decider; onPage?: (page: string) => voi
 }
 
 /** Enum options that fit on one row as buttons; longer lists use a menu. */
-const asButtons = (values: string[]) => values.length <= 6 && values.map(valueLabel).join("").length <= 44;
+const asButtons = (values: string[], labelOf: (v: unknown) => string = vlabel) => values.length <= 6 && values.map(labelOf).join("").length <= 44;
 
-function Segmented({ id, name, values, value, onChange }: { id: string; name: string; values: (string | boolean)[]; value: unknown; onChange: (v: unknown) => void }) {
+function Segmented({ id, name, values, value, onChange, labelOf = vlabel }: { id: string; name: string; values: (string | boolean)[]; value: unknown; onChange: (v: unknown) => void; labelOf?: (v: unknown) => string }) {
   return (
     <div className="seg-row" role="radiogroup" aria-labelledby={`${id}-l`} id={id}
       onKeyDown={(e) => {
@@ -83,7 +92,7 @@ function Segmented({ id, name, values, value, onChange }: { id: string; name: st
         return (
           <button key={String(v)} type="button" role="radio" aria-checked={on} tabIndex={on || (value === undefined && i === 0) ? 0 : -1}
             title={on ? "Click again to clear" : i < 9 ? `Key ${i + 1}` : undefined} onClick={() => onChange(on ? undefined : v)}>
-            {valueLabel(v)}
+            {labelOf(v)}
           </button>
         );
       })}
@@ -128,11 +137,16 @@ interface FieldProps {
   now?: boolean;
   /** carried over from diagnosis: confirm or clear */
   stale?: { keep: () => void; clear: () => void } | null;
+  /** how a value reads (default: the shared label) */
+  labelOf?: (v: unknown) => string;
+  /** the question as asked, when it is not the detail's own name ("Which topic?") */
+  title?: string;
 }
 
-function Field({ name, spec, value, onChange, needed, used, why, previews, quiet, onPage, now, stale }: FieldProps) {
+function Field({ name, spec, value, onChange, needed, used, why, previews, quiet, onPage, now, stale, labelOf, title }: FieldProps) {
   const id = `fact-${name}`;
-  const m = meta(name);
+  const m = title ? { ...meta(name), label: title } : meta(name);
+  const vl = labelOf ?? vlabel;
   const values = spec.type === "bool" ? [true, false] : spec.values ?? [];
   const check = value !== undefined ? plausibility(name, spec, value) : null;
   return (
@@ -144,12 +158,12 @@ function Field({ name, spec, value, onChange, needed, used, why, previews, quiet
       </label>
       {why && why.node && <Decides why={why} onPage={onPage} />}
       {spec.type === "number" ? <NumberInput id={id} value={value} unit={spec.unit} onChange={onChange} />
-        : asButtons(values.map(String)) || spec.type === "bool"
-          ? <Segmented id={id} name={m.label} values={values} value={value} onChange={onChange} />
+        : asButtons(values.map(String), vl) || spec.type === "bool"
+          ? <Segmented id={id} name={m.label} values={values} value={value} onChange={onChange} labelOf={vl} />
           : (
             <select id={id} className="sel" value={value === undefined ? "" : String(value)} onChange={(e) => onChange(e.target.value || undefined)}>
               <option value="">Not known</option>
-              {values.map((v) => <option key={String(v)} value={String(v)}>{valueLabel(v)}</option>)}
+              {values.map((v) => <option key={String(v)} value={String(v)}>{vl(v)}</option>)}
             </select>
           )}
       {stale && (
@@ -176,7 +190,7 @@ function Previews({ previews, skip, onPick }: { previews: Preview[]; skip: (stri
       {shown.map((p) => (
         <li key={String(p.value)}>
           <button type="button" onClick={() => onPick(p.value)} title="Choose this answer">
-            <b>{valueLabel(p.value)}</b><ArrowRight size={12} aria-hidden />
+            <b>{vlabel(p.value)}</b><ArrowRight size={12} aria-hidden />
             <Leads p={p} />
           </button>
         </li>
@@ -309,13 +323,18 @@ export function PatientPanel() {
 
   const sectionVar = bundle.sections?.variable && vars[bundle.sections.variable] ? bundle.sections.variable : null;
   const needDisease = sectionVar !== null && s.facts[sectionVar] === undefined;
+  // a need with several settings was chosen but not the setting: no question is asked until it is
+  const [pending, setPending] = useState<Phase | null>(null);
+  const needSetting = pending !== null && s.start === "auto";
   // Nothing fits what was entered (or the setting chosen): no question can help, so none is asked
   const stuck = ranking.paths.length === 0 && (s.start !== "auto" || Object.keys(s.facts).some((k) => s.facts[k] !== undefined));
-  const deciders = useMemo(() => (stuck ? [] : decidingFacts(g, ranking, s.facts).filter((d) => d.fact !== sectionVar && vars[d.fact] && !staleSet.has(d.fact) && inScope(d.fact))), [g, ranking, s.facts, sectionVar, vars, staleSet, inScope, stuck]);
+  const keep = useCallback((f: string) => f !== sectionVar && !staleSet.has(f) && inScope(f), [sectionVar, staleSet, inScope]);
+  const deciders = useMemo(() => (stuck || needSetting ? [] : askableQuestions(g, ranking, s.facts, s.start, keep)), [g, ranking, s.facts, s.start, keep, stuck, needSetting]);
   const gate = useMemo(() => (stuck ? whyNothingFits(g, s.facts, s.start) : null), [stuck, g, s.facts, s.start]);
   const gateText = gate ? gateSentence(g, gate, s.facts) : "";
-  // a question whose answer only restates the chosen subtype (a histology list that holds the
-  // subtype itself) is answered for it, so it is not asked; it shows in "Entered so far" and can be cleared
+  // a question whose answer only restates the chosen subtype (pMMR/MSS colon cancer answers the
+  // mismatch repair status) is answered for it, so it is not asked; it shows in "Entered so far"
+  // only until it is cleared, and is taken back when the subtype changes
   const secValue = sectionVar ? s.facts[sectionVar] : undefined;
   const autoSet = useRef<Record<string, unknown>>({});
   const autoFor = useRef<unknown>(undefined);
@@ -329,31 +348,44 @@ export function PatientPanel() {
       autoSet.current = {}; autoFor.current = secValue;
       if (changed) { setFacts(f); return; }
     }
-    if (secValue === undefined) return;
-    const norm = (x: unknown) => String(x).toLowerCase().replace(/[^a-z0-9]/g, "");
+    if (typeof secValue !== "string") return;
     const f: Facts = { ...s.facts };
     let changed = false;
-    for (const d of deciders) {
-      const spec = vars[d.fact];
-      if (spec.type !== "enum" || d.fact in autoSet.current) continue;
-      const hit = (spec.values ?? []).find((v) => norm(v) === norm(secValue));
-      if (hit !== undefined) { f[d.fact] = hit; autoSet.current[d.fact] = hit; changed = true; }
+    for (const [k, v] of Object.entries(impliedBySection(g, secValue))) {
+      if (k in autoSet.current || f[k] !== undefined || !vars[k]) continue;
+      f[k] = v; autoSet.current[k] = v; changed = true;
     }
     if (changed) setFacts(f);
-  }, [sectionVar, secValue, deciders, s.facts, vars, setFacts]);
+  }, [g, sectionVar, secValue, s.facts, vars, setFacts]);
   const previews = usePreviews(g, s.facts, deciders, ranking, s.start);
   // an honest count for the interview: the questions still open on the routes that matter, asked the way the questions are
-  const remainingFacts = useMemo(() => (stuck ? [] : remainingQuestions(g, ranking, s.facts).map((d) => d.fact)
-    .filter((f) => f !== sectionVar && vars[f] && !staleSet.has(f) && inScope(f))), [g, ranking, s.facts, sectionVar, vars, staleSet, inScope, stuck]);
-  const toPaths = useCallback(() => set({ rightTab: "paths" }), [set]);
+  const remainingFacts = useMemo(() => {
+    if (stuck || needSetting) return [];
+    const r = remainingQuestions(g, ranking, s.facts).filter((d) => keep(d.fact) && vars[d.fact] && !isLaterStage(g, s.start, d.page)).map((d) => d.fact);
+    return r.length ? r : deciders.map((d) => d.fact);
+  }, [g, ranking, s.facts, s.start, keep, vars, stuck, needSetting, deciders]);
+  // After the last answer the recommendation is the next thing to see: its tab takes the focus
+  const toPaths = useCallback(() => {
+    set({ rightTab: "paths" });
+    window.setTimeout(() => document.getElementById("tab-paths")?.focus({ preventScroll: true }), 60);
+  }, [set]);
   // nothing entered and nothing to ask (no question decides where it starts): start at the first page, so there is still a way on
   const idle = ranking.paths.length === 0 && !stuck && deciders.length === 0;
   const toFirst = useCallback(() => {
-    const list = momentsFor(g, moments(g), s.facts);
+    const list = momentsFor(g, momentsOf(g), s.facts);
     const first = settingsFor(g, list, "diagnosis")[0] ?? list[0];
     if (first) setStart(first.page);
-    set({ rightTab: "paths" });
-  }, [g, s.facts, setStart, set]);
+    toPaths();
+  }, [g, s.facts, setStart, toPaths]);
+  // nothing to ask and what the routes lead to is not a recommendation (a table, a heading, a page elsewhere):
+  // the way on is the next page in the diagram, not a recommendation card that sends back to the questions
+  const nextPage = useMemo(() => {
+    if (stuck || idle || needDisease || needSetting || deciders.length > 0 || !ranking.paths.length) return null;
+    // (a route the answers support is a recommendation to read; one they do not touch is "where the guideline starts")
+    if (ranking.paths[0].used.length) return null;
+    return nextPageOf(g, ranking);
+  }, [stuck, idle, needDisease, needSetting, deciders.length, ranking, g]);
+  const openNext = useCallback(() => { if (nextPage) go({ kind: "flow", page: nextPage }); }, [nextPage, go]);
   const fix = useCallback(() => {
     // the answer that closes the gate; else the setting; else the latest answer
     const known = (gate?.facts ?? []).filter((f) => s.facts[f] !== undefined);
@@ -403,7 +435,7 @@ export function PatientPanel() {
 
   const statedOk = Object.entries(schema.derived ?? {}).filter(([, d]) => d.type === "enum" && !d.rules.some((r) => JSON.stringify(r.if).includes("_stated")));
   const computed = Object.entries(derived).filter(([k, v]) => schema.derived?.[k] && !(k in s.facts) && v !== undefined && v !== null && !k.startsWith("gt5y") && !k.includes("_or_"));
-  const filled = filledCount(s.facts, schema);
+  const filled = filledCount(s.facts, schema) - Object.keys(autoSet.current).filter((k) => s.facts[k] !== undefined && JSON.stringify(s.facts[k]) === JSON.stringify(autoSet.current[k])).length;
   const examples = bundle.examples ?? [];
   const anyFacts = filled > 0;
   const moreCount = groups.reduce((n, gr) => n + (gr.key === "stated" ? 0 : gr.names.length), 0);
@@ -417,10 +449,13 @@ export function PatientPanel() {
       {n === "life_expectancy_years" && <LifeExpectancyHelper age={s.age} onApply={(y) => set1(n, y)} />}
     </div>
   );
+  // sections that are diseases or subtypes are "which disease"; the rest (a survivorship topic, an adult or child programme) are topics
+  const topicWord = followsDisease(bundle.title) ? "disease or subtype" : "topic";
+  const secLabel = useMemo(() => sectionLabeller(bundle.sections?.values ?? []), [bundle.sections]);
   const diseasePicker = sectionVar && (
     <>
-      <Field name={sectionVar} spec={{ ...vars[sectionVar], definition: undefined }} value={s.facts[sectionVar]} onChange={(v) => set1(sectionVar, v)} needed={needed.has(sectionVar) && s.facts[sectionVar] === undefined} used={used.has(sectionVar)} />
-      <p className="hint">This guideline covers {bundle.sections!.values.length} diseases or subtypes. Choose the one that applies: each has its own recommendations.</p>
+      <Field name={sectionVar} spec={{ ...vars[sectionVar], definition: undefined }} value={s.facts[sectionVar]} onChange={(v) => set1(sectionVar, v)} needed={needed.has(sectionVar) && s.facts[sectionVar] === undefined} used={used.has(sectionVar)} labelOf={secLabel} title={`Which ${topicWord}?`} />
+      <p className="hint">This guideline covers {bundle.sections!.values.length} {topicWord === "topic" ? "topics" : "diseases or subtypes"}. Choose the one that applies: each has its own recommendations.</p>
     </>
   );
 
@@ -435,7 +470,7 @@ export function PatientPanel() {
         </div>
       )}
 
-      <WhereNow count={scoped} disease={diseasePicker || null} />
+      <WhereNow count={scoped} disease={diseasePicker || null} pending={pending} setPending={setPending} topic={topicWord} />
       {s.stale.length > 0 && (
         <fieldset className="fgroup carried" data-testid="carried">
           <legend>Carried over from diagnosis<em>{s.stale.length}</em></legend>
@@ -446,9 +481,11 @@ export function PatientPanel() {
       )}
 
       <fieldset className="fgroup deciders" aria-describedby="dec-note">
-        <legend>{T.questions}{mode === "form" && !needDisease && <em>{deciders.length} {deciders.length === 1 ? "question" : "questions"}</em>}</legend>
+        <legend>{T.questions}{mode === "form" && !needDisease && !needSetting && <em>{deciders.length} {deciders.length === 1 ? "question" : "questions"}</em>}</legend>
         {needDisease ? (
-          <p className="note" id="dec-note">Choose the disease or subtype above to see the questions.</p>
+          <p className="note" id="dec-note">Choose the {topicWord} above to see the questions.</p>
+        ) : needSetting ? (
+          <p className="note" id="dec-note">Choose the setting above to see the questions that matter for it.</p>
         ) : (<>
           <div className="mode-switch" role="group" aria-label="How to answer">
             {mode === "interview"
@@ -456,7 +493,7 @@ export function PatientPanel() {
               : <button type="button" onClick={() => setModeKeep("interview")} data-testid="mode-interview">One at a time</button>}
           </div>
           {mode === "interview" ? (
-            <Interview deciders={deciders} remainingFacts={remainingFacts} previews={previews} subtype={typeof secValue === "string" ? secValue : undefined} answer={set1} onPage={onPage} routes={ranking.paths.length} toPaths={toPaths} stuck={stuck} />
+            <Interview deciders={deciders} remainingFacts={remainingFacts} previews={previews} subtype={typeof secValue === "string" ? secValue : undefined} answer={set1} onPage={onPage} routes={ranking.paths.length} toPaths={toPaths} stuck={stuck} nextPage={nextPage} openNext={openNext} />
           ) : (<>
             <p className="note" id="dec-note">{stuck ? "Nothing fits these answers, so no further question can change the result."
               : anyFacts
@@ -478,7 +515,7 @@ export function PatientPanel() {
               {computed.map(([k, v]) => (
                 <div key={k}>
                   <dt>{label(k)}</dt>
-                  <dd>{schema.variables[k]?.type === "number" ? formatNumber(v) : valueLabel(v)}</dd>
+                  <dd>{schema.variables[k]?.type === "number" ? formatNumber(v) : vlabel(v)}</dd>
                   {advanced && statedOk.some(([n]) => n === k) && <button type="button" className="linkish ovr" onClick={() => { setMoreOpen(true); window.setTimeout(() => focusFact(k), 30); }}>override</button>}
                 </div>
               ))}
@@ -537,7 +574,7 @@ export function PatientPanel() {
         </details>
       </>)}
 
-      <NextStep count={ranking.paths.length} stuck={stuck} text={gateText} onSee={idle ? toFirst : toPaths} onFix={fix} idle={idle} />
+      <NextStep count={needSetting ? 0 : ranking.paths.length} stuck={stuck && !needSetting} text={gateText} onSee={idle ? toFirst : toPaths} onFix={fix} idle={idle && !needSetting} next={nextPage ? { title: pageTitle(g, nextPage), open: openNext } : null} />
     </div>
   );
 }
@@ -546,8 +583,16 @@ export function PatientPanel() {
 
 /** A footer that stays in view in both modes: the way to the recommendation when there is one,
  * or what is wrong when nothing fits and the way to fix it. */
-function NextStep({ count, stuck, text, onSee, onFix, idle }: { count: number; stuck: boolean; text: string; onSee: () => void; onFix: () => void; idle: boolean }) {
+function NextStep({ count, stuck, text, onSee, onFix, idle, next }: { count: number; stuck: boolean; text: string; onSee: () => void; onFix: () => void; idle: boolean; next: { title: string; open: () => void } | null }) {
   if (!count && !stuck && !idle) return null;
+  if (next) {
+    // nothing to ask and no recommendation to show yet: the page itself is the way on
+    return (
+      <div className="next-step" data-testid="next-step" role="region" aria-label="Next step">
+        <button type="button" className="btn primary" data-testid="open-next" onClick={next.open}>Open {next.title} in the diagram <ArrowRight size={15} aria-hidden /></button>
+      </div>
+    );
+  }
   return (
     <div className={`next-step${stuck ? " stuck" : ""}`} data-testid="next-step" role="region" aria-label="Next step">
       {stuck ? (<>
@@ -555,7 +600,7 @@ function NextStep({ count, stuck, text, onSee, onFix, idle }: { count: number; s
         <button type="button" className="btn primary" data-testid="fix-this" onClick={onFix}>Fix this</button>
       </>) : (
         <button type="button" className="btn primary" data-testid="see-reco" onClick={onSee}>
-          See the recommendation{count > 1 ? <span className="ns-n"> ({count})</span> : null} <ArrowRight size={15} aria-hidden />
+          See the recommendation <ArrowRight size={15} aria-hidden />
         </button>
       )}
     </div>
@@ -564,7 +609,6 @@ function NextStep({ count, stuck, text, onSee, onFix, idle }: { count: number; s
 
 /* ---------------- what the clinician needs ---------------- */
 
-const clipT = (t: string, n = 56) => (t.length > n ? t.slice(0, n).trimEnd() + "…" : t);
 
 /** What the clinician needs (workup and first treatment, follow-up, recurrence, metastatic or
  * advanced disease, a later line), then, only where a need has several start pages, the setting
@@ -577,22 +621,22 @@ const clipT = (t: string, n = 56) => (t.length > n ? t.slice(0, n).trimEnd() + "
 /** What each guideline's start setting filled in, kept across the panel being closed and reopened. */
 const filledByGraph = new WeakMap<object, { start: string; facts: Facts }>();
 
-function WhereNow({ count, disease }: { count: number; disease: ReactNode }) {
+function WhereNow({ count, disease, pending, setPending, topic }: { count: number; disease: ReactNode; pending: Phase | null; setPending: (p: Phase | null) => void; topic: string }) {
   const { s, g, setStart, setFacts } = useApp();
   const advanced = useAdvanced();
-  const all = useMemo(() => moments(g), [g]);
+  const all = useMemo(() => momentsOf(g), [g]);
   const list = useMemo(() => momentsFor(g, all, s.facts), [g, all, s.facts]);
   const sec = g.bundle.sections;
   const secVal = sec ? s.facts[sec.variable] : undefined;
-  // a need chosen whose setting is not chosen yet
-  const [pending, setPending] = useState<Phase | null>(null);
-  useEffect(() => { if (s.start !== "auto") setPending(null); }, [s.start]);
+  const [picked, setPicked] = useState<Phase | null>(null);
+  // (a need chosen whose setting is not chosen yet is `pending`, held by the panel: no question is asked until it is)
+  useEffect(() => { if (s.start !== "auto") setPending(null); }, [s.start, setPending]);
   // the setting list was asked for again ("Fix this" when the setting does not fit the answers)
   useEffect(() => {
-    const f = () => { setPending(needOf(g, s.start)); setStart("auto"); };
+    const f = () => { setPending(picked ?? needOf(g, s.start)); setStart("auto"); };
     window.addEventListener("oc-reopen-setting", f);
     return () => window.removeEventListener("oc-reopen-setting", f);
-  }, [g, s.start, setStart]);
+  }, [g, s.start, setStart, setPending, picked]);
   // a start page left over from another disease or subtype would leave nothing that fits
   useEffect(() => {
     if (s.start === "auto" || !sec || secVal === undefined) return;
@@ -605,16 +649,21 @@ function WhereNow({ count, disease }: { count: number; disease: ReactNode }) {
   const chips = follows && present.length >= 2;
   const extra = follows && !chips && secVal !== undefined && list.length > 0;
   const isMoment = list.some((m) => m.page === s.start);
-  const current = isMoment ? needOf(g, s.start) : null;
+  const current = isMoment ? (picked && list.some((m) => m.page === s.start && m.phase === picked) ? picked : needOf(g, s.start)) : null;
   const active = pending ?? current;
-  const pages = useMemo(() => (chips ? (active ? settingsFor(g, list, active) : []) : extra ? present.flatMap((p) => settingsFor(g, list, p.id)) : []),
-    [g, list, chips, extra, active, present]);
-  const only = extra && pages.length === 1 ? pages[0] : null;
+  const pages = useMemo(() => {
+    if (chips) return active ? settingsFor(g, list, active) : [];
+    // (a page that serves two needs is listed once)
+    const seen = new Set<string>();
+    return extra ? present.flatMap((p) => settingsFor(g, list, p.id)).filter((m) => !seen.has(m.page) && !!seen.add(m.page)) : [];
+  }, [g, list, chips, extra, active, present]);
   const choosing = pages.length > 1 && !pages.some((m) => m.page === s.start);
   const chosen = useMemo(() => (current ? settingsFor(g, list, current).find((m) => m.page === s.start) ?? null : null), [g, list, current, s.start]);
   const pickPhase = (p: Phase) => {
     const ps = settingsFor(g, list, p);
+    setPicked(p);
     if (ps.length === 1) { setPending(null); setStart(ps[0].page); }
+    else if (ps.some((m) => m.page === s.start)) setPending(null);   // (the page already started at is one of this need's settings)
     else if (current !== p) { setPending(p); setStart("auto"); }
   };
   // The setting itself states a detail ("no distant metastases"): it is not asked again. What it
@@ -628,19 +677,20 @@ function WhereNow({ count, disease }: { count: number; disease: ReactNode }) {
     let changed = false;
     for (const [k, v] of Object.entries(prev.facts)) if (JSON.stringify(f[k]) === JSON.stringify(v)) { delete f[k]; changed = true; }
     const said: Facts = {};
-    const now = s.start === "auto" ? null : settingsFor(g, list, needOf(g, s.start) ?? "diagnosis").find((m) => m.page === s.start);
+    const now = s.start === "auto" ? null : settingsFor(g, list, current ?? needOf(g, s.start) ?? "diagnosis").find((m) => m.page === s.start);
     for (const [k, v] of Object.entries(now?.implied ?? {})) if (f[k] === undefined) { f[k] = v; said[k] = v; changed = true; }
     rec.start = s.start; rec.facts = said;
     if (changed) setFacts(f);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [s.start]);
-  const showMoments = (chips || only || pages.length > 1) && (!sec || secVal !== undefined);
+  // (a single setting with nothing to choose is not offered: the hint would claim a start that was never set)
+  const showMoments = (chips || pages.length > 1) && (!sec || secVal !== undefined);
   if (!disease && !showMoments) return null;
   const nameOf = (page: string, max = 70) => { const t = g.bundle.pages[page]?.title ?? ""; return pageName(page, t && t !== page ? clipT(t, max) : null); };
   return (<>
     {disease && (
       <fieldset className="fgroup section-pick" data-testid="disease">
-        <legend>Which disease or subtype?</legend>
+        <legend>Which {topic}?</legend>
         <div className="pt-disease">{disease}</div>
       </fieldset>
     )}
@@ -649,7 +699,7 @@ function WhereNow({ count, disease }: { count: number; disease: ReactNode }) {
         <legend>What do you need?</legend>
         {chips && (
           <div className="moment-chips" role="group" aria-label="What do you need?">
-            <button type="button" aria-pressed={s.start === "auto" && !pending} onClick={() => { setPending(null); setStart("auto"); }} title="Let your answers decide where the recommendation starts">Not sure — let the questions decide</button>
+            <button type="button" aria-pressed={s.start === "auto" && !pending} onClick={() => { setPending(null); setPicked(null); setStart("auto"); }} title="Let your answers decide where the recommendation starts">Not sure — let the questions decide</button>
             {present.map((p) => (
               <button key={p.id} type="button" aria-pressed={active === p.id} title={p.hint} onClick={() => pickPhase(p.id)}>{p.label}</button>
             ))}
@@ -671,9 +721,7 @@ function WhereNow({ count, disease }: { count: number; disease: ReactNode }) {
             ))}
           </div>
         </>))}
-        <p className={`hint${choosing ? " prompt" : ""}`}>{only
-          ? <>Starting at <b>{nameOf(only.page)}</b>{only.byTitle ? "" : <> — {only.label}</>}.</>
-          : choosing ? "Choose the setting that fits."
+        <p className={`hint${choosing ? " prompt" : ""}`}>{choosing ? "Choose the setting that fits."
           : s.start === "auto"
             ? `Your answers decide where the recommendation starts. Pick ${chips ? "what you need" : "a setting"} to see only the questions that matter then.`
             : <>Starting at <b>{nameOf(s.start)}</b>{chosen && !chosen.byTitle ? <> — {chosen.label}</> : null}. {advanced ? `${count} ${count === 1 ? "question applies" : "questions apply"} from here.` : "Showing the questions that matter from here."}</>}</p>
@@ -685,7 +733,7 @@ function WhereNow({ count, disease }: { count: number; disease: ReactNode }) {
 /* ---------------- top bar, the More menu, saved patients ---------------- */
 
 function Summary({ filled, slug, examples, focus }: { filled: number; slug: string; examples: { id: string; label: string; facts: Facts; age?: number }[]; focus: (f: string) => void }) {
-  const { s, set, setFacts, bundle } = useApp();
+  const { s, set, setFacts, bundle, g } = useApp();
   const schema = bundle.schema;
   const [saved, setSaved] = useState<Saved[]>(() => readSaved(slug));
   const [naming, setNaming] = useState<string | null>(null);
@@ -699,7 +747,11 @@ function Summary({ filled, slug, examples, focus }: { filled: number; slug: stri
     document.addEventListener("mousedown", f); document.addEventListener("keydown", k);
     return () => { document.removeEventListener("mousedown", f); document.removeEventListener("keydown", k); };
   }, [menu]);
-  const chips = Object.keys(s.facts).filter((k) => s.facts[k] !== undefined && (schema.variables[k] || schema.derived?.[k]));
+  // what the chosen disease already says ("Diagnosis category: Invasive breast cancer" beside the disease itself) is not listed again
+  const sv = bundle.sections?.variable;
+  const said = typeof sv === "string" && typeof s.facts[sv] === "string" ? impliedBySection(g, s.facts[sv] as string) : {};
+  const secLabel = useMemo(() => sectionLabeller(bundle.sections?.values ?? []), [bundle.sections]);
+  const chips = Object.keys(s.facts).filter((k) => s.facts[k] !== undefined && (schema.variables[k] || schema.derived?.[k]) && !(k in said && said[k] === s.facts[k]));
   const clear1 = (k: string) => { const f = { ...s.facts }; delete f[k]; setFacts(f); set({ pathSel: null }); };
   const save = (name: string) => {
     const list = [{ id: String(Date.now()), name: name.trim() || `Patient ${saved.length + 1}`, facts: s.facts, age: s.age, at: new Date().toISOString() }, ...saved].slice(0, 30);
@@ -758,7 +810,7 @@ function Summary({ filled, slug, examples, focus }: { filled: number; slug: stri
           {s.age !== null && <li><span>Age {s.age}</span></li>}
           {chips.map((k) => (
             <li key={k} className={s.stale.includes(k) ? "held" : undefined}>
-              <button type="button" onClick={() => focus(k)} title={s.stale.includes(k) ? "Carried over from diagnosis: confirm or update" : "Change this answer"}>{(meta(k).short ?? label(k))}: <b>{factValue(k, s.facts[k], schema)}</b></button>
+              <button type="button" onClick={() => focus(k)} title={s.stale.includes(k) ? "Carried over from diagnosis: confirm or update" : "Change this answer"}>{(meta(k).short ?? label(k))}: <b>{k === sv ? secLabel(s.facts[k]) : factText(k, s.facts[k], schema)}</b></button>
               <button type="button" className="chip-x" aria-label={`Clear ${label(k)}`} onClick={() => clear1(k)}><X size={12} /></button>
             </li>
           ))}
@@ -816,7 +868,7 @@ function PasteRecord({ schema }: { schema: Schema }) {
     set({ pathSel: null, stale: s.stale.filter((k) => !fresh.has(k) && JSON.stringify(facts[k]) === JSON.stringify(s.facts[k])), ...(age !== null ? { age } : {}) });
     setFound(null); setText(""); setOpen(false);
   };
-  const shown = (f: Found) => (f.fact === "__age" ? `${f.value} years` : factValue(f.fact, f.value, schema));
+  const shown = (f: Found) => (f.fact === "__age" ? `${f.value} years` : factText(f.fact, f.value, schema));
   return (
     <details className="paste" ref={box} open={open} onToggle={(e) => setOpen((e.target as HTMLDetailsElement).open)}>
       <summary><ClipboardPaste size={15} aria-hidden /> Paste a note <span className="paste-sub">· fill in answers automatically</span></summary>
@@ -837,7 +889,7 @@ function PasteRecord({ schema }: { schema: Schema }) {
                   <input type="checkbox" checked={pick.has(i)} onChange={(e) => { const p = new Set(pick); if (e.target.checked) p.add(i); else p.delete(i); setPick(p); }} />
                   <span className="fd-k">{f.fact === "__age" ? "Age" : label(f.fact)}</span>
                   <b>{shown(f)}</b>
-                  {before !== undefined && before !== null && JSON.stringify(before) !== JSON.stringify(f.value) && <em className="fd-was">replaces {f.fact === "__age" ? String(before) : factValue(f.fact, before, schema)}</em>}
+                  {before !== undefined && before !== null && JSON.stringify(before) !== JSON.stringify(f.value) && <em className="fd-was">replaces {f.fact === "__age" ? String(before) : factText(f.fact, before, schema)}</em>}
                 </label>
                 <q>{f.evidence}</q>
               </li>
@@ -854,9 +906,9 @@ function PasteRecord({ schema }: { schema: Schema }) {
 
 /* ---------------- one question at a time ---------------- */
 
-function Interview({ deciders, remainingFacts, previews, subtype, answer, onPage, routes, toPaths, stuck }: {
+function Interview({ deciders, remainingFacts, previews, subtype, answer, onPage, routes, toPaths, stuck, nextPage, openNext }: {
   deciders: Decider[]; remainingFacts: string[]; previews: Map<string, Preview[]>; subtype?: string; answer: (f: string, v: unknown) => void;
-  onPage: (p: string) => void; routes: number; toPaths: () => void; stuck: boolean;
+  onPage: (p: string) => void; routes: number; toPaths: () => void; stuck: boolean; nextPage: string | null; openNext: () => void;
 }) {
   const { bundle, s } = useApp();
   const vars = bundle.schema.variables;
@@ -881,6 +933,16 @@ function Interview({ deciders, remainingFacts, previews, subtype, answer, onPage
       </div>
     );
   }
+  if (!cur && asked.length === 0 && skipped.length === 0) {
+    // nothing was asked: no patient detail changes the answer here, so there is no "every question" to speak of
+    return (
+      <div className="interview done none" data-testid="no-questions">
+        <p className="iv-q">No patient details change the answer here: read the page.</p>
+        <p className="note">{routes ? countRecs(routes) + "." : ""}</p>
+        <div className="iv-actions"><button type="button" className="btn" onClick={nextPage ? openNext : toPaths}>{nextPage ? "Open the page in the diagram" : "Read the recommendation"} <ArrowRight size={14} aria-hidden /></button></div>
+      </div>
+    );
+  }
   if (!cur) {
     return (
       <div className="interview done">
@@ -901,7 +963,7 @@ function Interview({ deciders, remainingFacts, previews, subtype, answer, onPage
   const go = (v: unknown) => { answeredNow.current = true; setAsked([...asked, cur]); answer(cur, v); };
   return (
     <div className="interview" aria-live="polite">
-      <p className="iv-n">Question {asked.length + 1}{more >= 1 ? ` · about ${more} more` : ""}</p>
+      <p className="iv-n">Question {asked.length + skipped.length + 1}{more >= 1 ? ` · about ${more} more` : ""}</p>
       <p className="iv-q" id="iv-q">{m.label}{spec.time === "at_diagnosis" ? " (at diagnosis)" : spec.time === "history" ? " (history)" : ""}</p>
       {d?.node && <Decides why={d} onPage={onPage} />}
       {m.hint && <p className="hint">{m.hint}</p>}
@@ -916,13 +978,13 @@ function Interview({ deciders, remainingFacts, previews, subtype, answer, onPage
             return (
               <button key={String(v)} type="button" onClick={() => go(v)}>
                 <span className="iv-k" aria-hidden>{i + 1}</span>
-                <b>{valueLabel(v)}</b>
+                <b>{vlabel(v)}</b>
                 {p && lead.includes(p) && <span className="iv-to"><Leads p={p} /></span>}
               </button>
             );
           })}
         </div>
-        {values.length > 0 && values.length <= 9 && <p className="iv-tip">Tip: press the number key to answer.</p>}
+        {values.length > 0 && values.length <= 9 && !touchOnly() && <p className="iv-tip">Tip: press the number key to answer.</p>}
       </>)}
       <div className="iv-actions">
         {back}
@@ -943,7 +1005,7 @@ function IvSearch({ values, pv, subtype, onPick }: { values: unknown[]; pv: Prev
   // answers that share a word with the chosen subtype come first
   const sub = useMemo(() => new Set(subtype ? words(subtype) : []), [subtype]);
   const ranked = useMemo(() => (sub.size ? values.map((v, i) => ({ v, i, n: words(v).filter((w) => sub.has(w)).length })).sort((a, b) => b.n - a.n || a.i - b.i).map((x) => x.v) : values), [values, sub]);
-  const shown = ranked.filter((v) => !t || valueLabel(v).toLowerCase().includes(t));
+  const shown = ranked.filter((v) => !t || vlabel(v).toLowerCase().includes(t));
   return (
     <div className="iv-search">
       <input type="search" autoFocus value={q} onChange={(e) => setQ(e.target.value)} aria-label={`Find an answer among ${values.length}`} placeholder={`Type to find one of ${values.length} answers`}
@@ -953,13 +1015,13 @@ function IvSearch({ values, pv, subtype, onPick }: { values: unknown[]; pv: Prev
           const p = pv.find((x) => x.value === v);
           return (
             <li key={String(v)}>
-              <button type="button" onClick={() => onPick(v)}><b>{valueLabel(v)}</b>{p && <span className="iv-to"><Leads p={p} /></span>}</button>
+              <button type="button" onClick={() => onPick(v)}><b>{vlabel(v)}</b>{p && <span className="iv-to"><Leads p={p} /></span>}</button>
             </li>
           );
         })}
         {shown.length === 0 && <li className="iv-none">No answer matches “{q}”.</li>}
       </ul>
-      {shown.length > 0 && t && <p className="iv-tip">Press Enter to choose the first match.</p>}
+      {shown.length > 0 && t && !touchOnly() && <p className="iv-tip">Press Enter to choose the first match.</p>}
     </div>
   );
 }

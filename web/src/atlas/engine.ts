@@ -186,11 +186,23 @@ export class Engine {
     this.mqs = [dark, motion];
     this.cleanupMq = () => { dark.removeEventListener("change", onDark); motion.removeEventListener("change", onMotion); };
     this.resize();
-    document.fonts?.ready.then(() => this.request());
+    // Label widths change when the fonts arrive, so the sites-first decision made before that can be wrong
+    // (the home layout flipped between loads): decide again, and if the view is still the home view, move it to the new one.
+    document.fonts?.ready.then(() => {
+      if (this.destroyed) return;
+      const wasHome = Math.abs(this.t.k - this.transformOf(this.homeViewFor(this.siteMode)).k) < 1e-6 && this.focus.level === 0 && !this.focus.site;
+      const before = this.siteMode;
+      this.modeKey = ""; this.siteLabelCache = null;
+      this.decideSiteMode();
+      if (wasHome && this.siteMode !== before) this.jump(this.homeViewFor(this.siteMode));
+      this.request();
+    });
   }
+  private destroyed = false;
   private cleanupMq = () => {};
 
   destroy() {
+    this.destroyed = true;
     cancelAnimationFrame(this.raf);
     this.ro.disconnect();
     this.cleanupMq();

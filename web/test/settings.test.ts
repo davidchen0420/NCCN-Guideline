@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { adaptGuideline } from "../src/lib/adapt";
 import { buildGraph } from "../src/lib/graph";
-import { PHASES, moments, momentsFor, onlyCodes, reaches, settingsFor, type Setting } from "../src/lib/moments";
+import { PHASES, hasOwnEntry, moments, momentsFor, onlyCodes, reaches, settingsFor, type Setting } from "../src/lib/moments";
 
 const slugs = readdirSync("../data").filter((d) => existsSync(`../data/${d}/guideline.json`)).sort();
 const load = (slug: string) => buildGraph(adaptGuideline(JSON.parse(readFileSync(`../data/${slug}/guideline.json`, "utf8"))));
@@ -36,7 +36,7 @@ describe("the need and setting offered for every guideline", () => {
   it("no setting is a page another setting of the same need leads to; labels are plain text", () => {
     for (const m of mapped) for (const v of m.variants) for (const n of v.needs) {
       const where = `${m.slug} [${v.section}] ${n.need}`;
-      for (const a of n.settings) for (const b of n.settings) if (a.page !== b.page) expect(reaches(m.g, a.page, b.page), `${where}: ${a.page} leads to ${b.page}`).toBe(false);
+      for (const a of n.settings) for (const b of n.settings) if (a.page !== b.page && (!b.post || a.post) && !reaches(m.g, b.page, a.page) && !hasOwnEntry(m.g, b.page, a.page)) expect(reaches(m.g, a.page, b.page), `${where}: ${a.page} leads to ${b.page}`).toBe(false);
       expect(new Set(n.settings.map((s) => s.page)).size, `${where}: a page twice`).toBe(n.settings.length);
       for (const s of n.settings) {
         expect(s.label.trim().length, `${where} ${s.page}: empty label`).toBeGreaterThan(2);

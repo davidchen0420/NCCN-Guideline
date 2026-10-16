@@ -87,7 +87,16 @@ export function buildGraph(bundle: Bundle): Graph {
   (Object.keys(docCodes) as (keyof Graph["docCodes"])[]).forEach((k) => docCodes[k].sort(natural));
 
   const kids = (id: string) => (id.endsWith(":START") ? bundle.roots[id.split(":")[0]] ?? [] : bundle.children[id] ?? []);
-  return { bundle, nodes, parents, preds, parsed, refIndex, flowPages, docCodes, kids, node: (id) => nodes.get(id) };
+  const graph: Graph = { bundle, nodes, parents, preds, parsed, refIndex, flowPages, docCodes, kids, node: (id) => nodes.get(id) };
+  // The first page of the algorithm (or of a disease) is entered from the start, whatever the boxes
+  // that lead back to it say: its only entry box carries the conditions of those boxes ("inherited
+  // from the link": NSCL-1 "NSCLC" requires N0 and M1a, the stage IVA box of NSCL-11 that loops back),
+  // which would rule the page out for every patient who starts there.
+  for (const h of entryHeads(graph)) {
+    const roots = bundle.roots[h] ?? [];
+    if (roots.length === 1 && nodes.get(roots[0])?.review === "inherited") delete preds[roots[0]];
+  }
+  return graph;
 }
 
 /** Where a page code ("PROS-9", "PROS-F", "PROS-9A", "MS-12", "ST-1") leads. */
@@ -115,6 +124,30 @@ export function stateOfTitle(title: string): PageState | null {
   if (/subsequent|second-line|later line/.test(t)) return "later";
   return null;
 }
+
+/** Words that make "recurrence" part of a risk, a score or a finding rather than a state ("high risk for systemic recurrence"). */
+const RISK_OF_RECURRENCE = /\b(?:risk|high[- ]risk|low[- ]risk|probability|chance)\b[^.;,()]{0,25}\brecurren\w*|\brecurrence[- ](?:free|score|risk)\b/gi;
+export const withoutRisk = (t: string) => t.replace(RISK_OF_RECURRENCE, " ");
+
+/**
+ * Every state a page title names, in the order recurrence, advanced, follow-up, later. A title can
+ * name two ("Stage IV (M1) or Recurrent Disease"), and the page then serves both needs.
+ */
+export function statesOfTitle(title: string): PageState[] {
+  const t = withoutRisk(title.toLowerCase());
+  const out: PageState[] = [];
+  if (/recurren|relaps|refractor|progress|persist|second biochemical|bcr2|transformation/.test(t)) out.push("recurrence");
+  if (/metasta|stage iv|\badvanced\b|castration|crpc|\bm1\b|unresectable/.test(t)) out.push("advanced");
+  // (follow-up and later line are what is left when the title names no disease state: "Stage IV
+  // Surveillance" is about the disease, "Subsequent Treatment" after locally advanced disease is not a later line)
+  if (!out.length && /surveillance|follow-?up|post-?treatment|survivorship/.test(t)) out.push("followup");
+  if (!out.length && /subsequent|second-line|later line/.test(t)) out.push("later");
+  return out;
+}
+
+/** Does a page title say the patient has had surgery (pathologic stage, findings at surgery, postoperative)? */
+export const isPostSurgicalTitle = (title: string) =>
+  /pathologic|post-?surg|post-?operative|after (?:upfront |initial )?(?:surgery|resection|\w+ectomy)|findings at surgery|surgical findings/i.test(title);
 
 /**
  * The state a page belongs to by what its entry boxes say, when its title does not: a page titled
@@ -162,6 +195,29 @@ export function sectionStartPages(g: Graph, section: string): string[] {
   return out;
 }
 
+/**
+ * The first pages of the algorithm, group by group: those of the pages that belong to no disease
+ * (nothing at all leads to them) and, in a multi-disease guideline, those of each disease (nothing
+ * of its own leads to them: the shared pages ahead of them do not count). One list per group.
+ */
+export function entryHeadGroups(g: Graph): string[][] {
+  const sec = g.bundle.sections;
+  const secOf = (p: string) => (sec?.pages?.[p] ?? null) as string | null;
+  const later = (p: string) => statesOfTitle(g.bundle.pages[p]?.title || "").length > 0;
+  if (!sec) return [startHeads(g, g.flowPages, { later })];
+  return [
+    startHeads(g, g.flowPages, { later }).filter((p) => secOf(p) === null),
+    ...sec.values.map((v) => startHeads(g, g.flowPages.filter((p) => secOf(p) === v), { later })),
+  ];
+}
+const headCache = new WeakMap<Graph, string[][]>();
+export const entryHeadsByGroup = (g: Graph): string[][] => {
+  let groups = headCache.get(g);
+  if (!groups) headCache.set(g, (groups = entryHeadGroups(g)));
+  return groups;
+};
+export const entryHeads = (g: Graph): string[] => entryHeadsByGroup(g).flat();
+
 /** Ancestors and descendants of the selected answers (across linked pages). */
 export function pathSets(g: Graph, answers: Iterable<string>) {
   const nodes = new Set<string>(), edges = new Set<string>();
@@ -178,4 +234,82 @@ export function pathSets(g: Graph, answers: Iterable<string>) {
   };
   for (const a of answers) { walk(a, (x) => g.bundle.children[x] ?? [], true); walk(a, (x) => g.parents[x] ?? [], false); }
   return { nodes, edges };
+}
+
+/* ---------------- where a guideline (or one of its diseases) starts ---------------- */
+
+/** Page-to-page leads: arrows between boxes of different pages, and the box links. */
+const linkCache = new WeakMap<Graph, Map<string, Set<string>>>();
+export function pageLeads(g: Graph): Map<string, Set<string>> {
+  let m = linkCache.get(g);
+  if (m) return m;
+  m = new Map();
+  const link = (q: string, p: string) => { if (p !== q && g.bundle.pages[p] && g.bundle.pages[q]) (m!.get(q) ?? m!.set(q, new Set()).get(q)!).add(p); };
+  for (const [id, ks] of Object.entries(g.bundle.children)) ks.forEach((k) => link(id.split(":")[0], k.split(":")[0]));
+  g.bundle.links.forEach(([q, p]) => link(q, p));
+  linkCache.set(g, m);
+  return m;
+}
+
+/**
+ * The first pages of the algorithm among `scope` (a guideline's pages, or those of one disease):
+ * the pages with entry boxes that nothing else in the scope leads to, and, where the first page is
+ * led back to by later pages (a loop: "NSCL-11 -> NSCL-1"), the earliest page of that loop. Pages
+ * without entry boxes (a table that only continues) are passed through. A page is never a head
+ * because of the pages outside the scope that lead to it.
+ */
+export function startHeads(g: Graph, scope: string[], opts: { later?: (p: string) => boolean } = {}): string[] {
+  const inScope = new Set(scope);
+  const leads = pageLeads(g);
+  const rooted = scope.filter((p) => (g.bundle.roots[p] ?? []).length);
+  if (!rooted.length) return [];
+  const isRooted = new Set(rooted);
+  // leads between pages with entry boxes, through the ones without
+  const out = new Map<string, Set<string>>();
+  for (const q of rooted) {
+    const seen = new Set<string>([q]), st = [q];
+    const to = new Set<string>();
+    while (st.length) for (const n of leads.get(st.pop()!) ?? []) {
+      if (!inScope.has(n) || seen.has(n)) continue;
+      seen.add(n);
+      if (isRooted.has(n)) to.add(n); else st.push(n);
+    }
+    out.set(q, to);
+  }
+  // strongly connected groups (Tarjan)
+  const index = new Map<string, number>(), low = new Map<string, number>(), on = new Set<string>(), stack: string[] = [];
+  const comp = new Map<string, number>(); let n = 0, nc = 0;
+  const visit = (v: string) => {
+    // iterative to stay clear of the call-stack limit on long chains
+    const work: [string, string[], number][] = [[v, [...(out.get(v) ?? [])], 0]];
+    index.set(v, n); low.set(v, n); n++; stack.push(v); on.add(v);
+    while (work.length) {
+      const top = work[work.length - 1];
+      const [x, nbr] = top;
+      if (top[2] < nbr.length) {
+        const y = nbr[top[2]++];
+        if (!index.has(y)) { index.set(y, n); low.set(y, n); n++; stack.push(y); on.add(y); work.push([y, [...(out.get(y) ?? [])], 0]); }
+        else if (on.has(y)) low.set(x, Math.min(low.get(x)!, index.get(y)!));
+      } else {
+        work.pop();
+        if (work.length) { const px = work[work.length - 1][0]; low.set(px, Math.min(low.get(px)!, low.get(x)!)); }
+        if (low.get(x) === index.get(x)) { let w: string; do { w = stack.pop()!; on.delete(w); comp.set(w, nc); } while (w !== x); nc++; }
+      }
+    }
+  };
+  for (const v of rooted) if (!index.has(v)) visit(v);
+  const members = new Map<number, string[]>();
+  for (const [p, c] of comp) (members.get(c) ?? members.set(c, []).get(c)!).push(p);
+  const hasInbound = new Set<number>();
+  for (const [q, to] of out) for (const p of to) if (comp.get(q) !== comp.get(p)) hasInbound.add(comp.get(p)!);
+  const pos = (p: string) => g.bundle.pages[p].pdf ?? Number.MAX_SAFE_INTEGER;
+  const early = (a: string, b: string) => pos(a) - pos(b) || natural(a, b);
+  const heads: string[] = [];
+  for (const [c, ps] of members) {
+    if (hasInbound.has(c)) continue;
+    if (ps.length === 1) { heads.push(ps[0]); continue; }
+    const first = ps.filter((p) => !opts.later?.(p));
+    heads.push([...(first.length ? first : ps)].sort(early)[0]);
+  }
+  return heads.sort(natural);
 }

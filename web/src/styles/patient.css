@@ -72,7 +72,7 @@
 
 .patient .situations button { display: grid; gap: 1px; }
 .patient .sit-t i { font-style: normal; color: var(--muted); font-size: var(--fs-sm); }
-.patient .sit-h { font-size: var(--fs-sm); color: var(--muted); line-height: 1.35; }
+.patient .sit-h { font-size: var(--fs-sm); color: var(--muted); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .patient .situations button[aria-checked=true] .sit-t { font-weight: 600; }
 .patient .hint.prompt { color: var(--ink); font-weight: 600; }
 
@@ -152,6 +152,8 @@
 .patient .interview.done .iv-q { font-size: var(--fs-lg); }
 .patient .interview.done .btn.primary { justify-self: start; margin-top: 4px; min-height: 38px; font-size: var(--fs-md); }
 .patient .interview.wait { color: var(--ink-2); }
+.patient .interview.none .iv-actions { justify-content: flex-start; }
+.patient .interview.none .iv-q { font-size: var(--fs-lg); }
 
 /* paste from the note: a quiet shortcut */
 .patient .paste { margin-top: 18px; padding: 6px 12px; }

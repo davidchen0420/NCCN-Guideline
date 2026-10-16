@@ -196,10 +196,19 @@ await step("where is the patient now: a later moment starts there, holds details
   await panel.locator(".paste textarea").fill("64-year-old man, cT2a, Gleason 3+4, PSA 8 ng/mL, life expectancy 15 years.");
   await panel.getByRole("button", { name: "Read the note" }).click();
   await panel.getByTestId("apply-found").click();
-  // a need with a single start page (recurrence: PROS-8, the pages it leads to are not offered) starts there at once
+  // a need with a single start page (workup: PROS-1, the pages it leads to are not offered) starts there at once
   assert.equal(await moment.getByTestId("situations").count(), 0);
-  await moment.getByRole("button", { name: "Recurrence or relapse" }).click();
+  await moment.getByRole("button", { name: "Workup & first treatment" }).click();
   assert.equal(await moment.getByTestId("situations").count(), 0, "one setting: no list");
+  assert.match(await moment.innerText(), /Starting at [^\n]*\(PROS-1\)/);
+  // recurrence has several settings (PROS-9 and PROS-10 are also entered from other pages): the list is shown, and
+  // the hint says nothing about a start that has not been chosen; no question is asked until the setting is
+  await moment.getByRole("button", { name: "Recurrence or relapse" }).click();
+  assert.ok(await moment.getByTestId("situations").getByRole("radio").count() >= 2, "several settings");
+  assert.doesNotMatch(await moment.locator(".hint").innerText(), /Starting at/);
+  assert.equal(await panel.locator(".interview .iv-q").count(), 0, "no question before the setting is chosen");
+  assert.match(await panel.locator(".fgroup.deciders").innerText(), /Choose the setting above/);
+  await moment.getByTestId("situations").getByRole("radio").first().click();
   assert.match(await moment.innerText(), /Starting at [^\n]*\(PROS-8\)/);
   await moment.getByRole("button", { name: "Workup & first treatment" }).click();
   await moment.getByRole("button", { name: "Not sure" }).click();
@@ -221,6 +230,7 @@ await step("where is the patient now: a later moment starts there, holds details
   assert.doesNotMatch(await moment.locator(".hint").innerText(), /\d+ questions? apply/, "no alarming count outside Advanced");
   assert.ok((await moment.locator(".hint").innerText()).includes(title2.slice(0, 20)), "the hint names the chosen situation");
   await moment.getByRole("button", { name: "Recurrence or relapse" }).click();
+  await moment.getByTestId("situations").getByRole("radio").first().click();
   assert.match(await moment.innerText(), /Starting at [^\n]*\(PROS-8\)/);
   await page.locator("#tab-paths").click();
   await page.locator(".reco-card, .empty").first().waitFor();   // the start-from picker is an Advanced tool; the moment above already chose PROS-8
@@ -312,7 +322,8 @@ await step("rectal cancer: subtype, what you need, the setting in plain words, a
   await moment.getByRole("button", { name: "Workup & first treatment" }).click();
   const sit = moment.getByTestId("situations");
   const labels = await sit.getByRole("radio").locator(".sit-t").allInnerTexts();
-  assert.equal(labels.length, 2, labels.join(" | "));
+  assert.equal(labels.length, 4, labels.join(" | "));
+  assert.equal(labels.filter((t) => /^After surgery: /.test(t)).length, 2, "the pages after surgery (pathologic stage) are settings of their own: " + labels.join(" | "));
   assert.ok(labels.some((t) => /Malignant polyp \(invasive cancer in a polyp\)/.test(t)), labels.join(" | "));
   assert.ok(labels.some((t) => /Rectal cancer, no distant metastases \(localized or locally advanced\)/.test(t)), labels.join(" | "));
   assert.ok(!labels.some((t) => /REC-6|Clinical Stage/i.test(t)), "REC-6 is reached through the workup page: not offered");
@@ -349,7 +360,7 @@ await step("rectal cancer: subtype, what you need, the setting in plain words, a
   // a setting that the answers contradict: nothing fits, and the way to fix it is one button
   await page.locator("#tab-patient").click();
   await moment.getByRole("button", { name: "Metastatic or advanced" }).click();
-  assert.match(await moment.locator(".hint").innerText(), /Starting at .*\(REC-7\)/);
+  assert.match(await moment.locator(".hint").innerText(), /Starting at .*\(REC-2A\)/);
   await panel.getByTestId("next-step").waitFor();
   await panel.locator(".chips-strip li", { hasText: /Distant/ }).locator("button").first().click();
   const dm = page.locator("#fact-distant_metastases_suspected_or_proven");
@@ -360,7 +371,7 @@ await step("rectal cancer: subtype, what you need, the setting in plain words, a
   await fixBar.getByRole("button", { name: "Fix this" }).waitFor();
   const msg = await fixBar.innerText();
   assert.match(msg, /Nothing fits these answers/);
-  assert.match(msg, /\(REC-7\)’ is for metastatic \(M1\) disease; you answered No to distant metastases/i, msg);
+  assert.match(msg, /\(REC-2A\)’ is for rectal cancer with suspected or proven distant metastases; you answered No to distant metastases/i, msg);
   assert.equal(await fixBar.getByRole("button", { name: /^See the recommendation/ }).count(), 0);
   await page.screenshot({ path: process.env.SHOTS ? `${process.env.SHOTS}/rectal-4-nothing-fits-${process.env.TAG ?? "x"}.png` : "/dev/null" }).catch(() => {});
   await fixBar.getByRole("button", { name: "Fix this" }).click();
