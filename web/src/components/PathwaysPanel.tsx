@@ -1,12 +1,12 @@
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Check, CircleDashed, CircleHelp, GitFork, ArrowRight, LocateFixed, Minus, FileText, ChevronDown, ChevronRight, ExternalLink, Sparkles } from "lucide-react";
 import { useApp, useAdvanced } from "../store";
-import type { Pathway, PStep } from "../lib/pathways";
-import { isRecommendationEnd, likelihoodWord, startingFacts } from "../lib/pathways";
+import type { Pathway, PStep, RecGroup, Recommendation } from "../lib/pathways";
+import { distinctRecommendations, isActionBox, likelihoodWord, reachesRecommendation, recommendationOf, shownRoute, startingFacts } from "../lib/pathways";
 import { conditionTree, type CondNode } from "../lib/humanize";
 import { derive } from "../lib/predicates";
 import { factValue, label } from "../lib/factMeta";
-import { remainingQuestions } from "../lib/formAssist";
+import { openDetails } from "../lib/openDetails";
 import { Blocks, Linked } from "./Rich";
 import { PageCrop, SrcChip, useSource, useSrc, type SrcTarget } from "../source";
 import { resolveRef, type Graph } from "../lib/graph";
@@ -14,8 +14,8 @@ import { gateSentence } from "../lib/moments";
 import { whyNothingFits } from "../lib/formAssist";
 import type { Block, Inline, Item } from "../lib/parseBox";
 import { Summary } from "./Summary";
-import { DecisionTrail } from "./Trail";
-import { aiAssistedLine, trailStats, trimToRoute } from "../lib/trailView";
+import { DecisionTrail, TrailStop, useRouteStop } from "./Trail";
+import { aiAssistedLine, percent, trailStats, trimToRoute } from "../lib/trailView";
 import { T, matchWord, pageName, supportPhrase } from "../lib/terms";
 import "../styles/reco.css";
 
@@ -47,23 +47,16 @@ const hasTags = (g: Graph, id: string) => {
 
 export interface Focus { key: PStep; follow: PStep | null; choice: PStep | null; parentOfChoice: string | null }
 /**
- * The box to headline for a route: after the route's last decision, the last box that carries
- * recommendation tags (Preferred, category); else the last box that is not just a page
- * reference; else the final box. Whatever follows it (monitoring, a page link) is "then".
+ * The box to headline for a route: the recommendation for the patient now (the first treatment
+ * box after the route's last settled decision, see pathways.recommendationOf). Whatever follows it
+ * (restaging, surveillance, a page link) is "then".
  */
-export function routeFocus(g: Graph, p: Pathway): Focus {
-  const s = p.steps;
-  let lastCond = -1;
-  s.forEach((st, i) => { if (isCondition(g, st)) lastCond = i; });
-  const after = s.slice(lastCond + 1);
-  const key = [...after].reverse().find((st) => hasTags(g, st.node))
-    ?? [...after].reverse().find((st) => !gotoPage(g, st.node))
-    ?? s[s.length - 1];
-  const last = s[s.length - 1];
-  let ci = -1;
-  s.forEach((st, i) => { if (st.kind === "option" || st.kind === "inferred") ci = i; });
-  return { key, follow: last !== key ? last : null, choice: ci > 0 ? s[ci] : null, parentOfChoice: ci > 0 ? s[ci - 1].node : null };
+export function routeFocus(g: Graph, p: Pathway, paths: Pathway[] = []): Focus {
+  const rec = recommendationOf(g, p, paths);
+  const last = p.steps[p.steps.length - 1];
+  return { key: rec.key, follow: last !== rec.key ? last : null, choice: rec.parent ? rec.key : null, parentOfChoice: rec.parent };
 }
+export { reachesRecommendation };
 
 // ---------------------------------------------------------------- score words
 
@@ -364,31 +357,6 @@ export function tidyBlocks(g: Graph, id: string, blocks: Block[]): Block[] {
 
 const keyId = (g: Graph, p: Pathway) => routeFocus(g, p).key.node;
 const keyText = (g: Graph, p: Pathway) => cleanText(g, keyId(g, p), plain(g, keyId(g, p)));
-const normText = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, "");
-
-/** Does the route get as far as a recommendation, or does it stop at a criteria box / an open branch? */
-export function reachesRecommendation(g: Graph, p: Pathway): boolean {
-  const key = routeFocus(g, p).key;
-  // a route that hands over to another page, or stops at an open branch, ends in no recommendation (never a page heading)
-  if (!isRecommendationEnd(p)) return false;
-  if (key.kind === "unknown" || key.kind === "uncoded") return false;
-  const kn = g.node(key.node);
-  if (g.bundle.structured) return kn?.decision !== "condition" && !/condition/.test(kn?.role ?? "");
-  return !(key === p.steps[p.steps.length - 1] && isCondition(g, key));
-}
-
-const BANDS = ["Best match", "Also possible", "Less likely", "Unlikely"];
-/** NCCN preference of an option: 0 preferred, then category 1, 2A, 2B, 3, then the rest. */
-function preference(g: Graph, p: Pathway): number {
-  const id = keyId(g, p);
-  const parsed = g.parsed.get(id);
-  const tags = parsed?.tags ?? [];
-  if (tags.includes("Preferred") || /\bpreferred\b/i.test(parsed?.plain ?? "")) return 0;
-  const cat = tags.find((t) => t.startsWith("Category"));
-  if (!cat) return 9;
-  const c = /\d/.exec(cat);
-  return c ? 1 + Number(c[0]) + (/B/.test(cat) ? 0.5 : 0) : 9;
-}
 const sameUsed = (a: Pathway, b: Pathway) => a.used.length === b.used.length && a.used.every((x) => b.used.includes(x));
 
 /** How many of the patient's answers decided a step on this route (the route's own list). */
@@ -410,15 +378,118 @@ function routePages(p: Pathway) {
   return out;
 }
 
-interface CardProps { p: Pathway; tied: number; isTop: boolean }
+/** "A and B", "A, B and 2 more". */
+const andMore = (xs: string[], n = 2) => (xs.length <= n ? xs.join(" and ") : `${xs.slice(0, n).join(", ")} and ${xs.length - n} more`);
 
-function RecoCard({ p, tied, isTop }: CardProps) {
-  const { g, go, set, s, isPhone, focusFact, ai } = useApp();
+const unanswered = (facts: Record<string, unknown>, k: string) => facts[k] === undefined || facts[k] === null || facts[k] === "";
+
+// ---- AI on: the chip next to the recommendation and the first-use notice
+
+const AI_NOTICE_KEY = "oc-ai-notice-seen";
+const noticeSeen = () => { try { return localStorage.getItem(AI_NOTICE_KEY) === "1"; } catch { return false; } };
+const markNoticeSeen = () => { try { localStorage.setItem(AI_NOTICE_KEY, "1"); } catch { /* storage blocked: the notice shows again next time */ } };
+
+/** Shown once, the first time AI decision support has weighed a branch: what is sent, and where to switch it off. */
+function AiNotice() {
+  const { ai } = useApp();
+  const [seen, setSeen] = useState(noticeSeen);
+  if (!ai.on || !ai.ai || seen) return null;
+  const close = () => { markNoticeSeen(); setSeen(true); };
+  return (
+    <aside className="ai-notice" aria-label="AI decision support is on" data-testid="ai-notice">
+      <p><Sparkles size={13} aria-hidden /> <b>AI decision support is on.</b> To weigh branches the guideline leaves open, the answers you entered (as labelled answers, never free text) and the text of the NCCN page are sent to a language model through the local server. The NCCN page header says its content may not be used with AI tools: check that this fits your terms of use, or switch AI off.</p>
+      <div className="ai-notice-act">
+        <button type="button" className="btn small" onClick={close}>Keep AI on</button>
+        <button type="button" className="btn small" onClick={() => { ai.setOn(false); close(); }}>Turn AI off</button>
+      </div>
+    </aside>
+  );
+}
+
+function AiChip() {
+  const { ai } = useApp();
+  if (!ai.on) return null;
+  return <span className="ai-chip" title={`AI decision support is on${ai.model ? ` (${ai.model})` : ""}: it weighs branches the guideline rules leave open. Settings turns it off.`}><Sparkles size={11} aria-hidden /> AI on</span>;
+}
+
+// ---- the headline: capped, with the full text a click away
+
+function Headline({ id }: { id: string }) {
+  const { g } = useApp();
+  const hover = useSrc(boxSrc(g, id), { click: false });
+  const ref = useRef<HTMLDivElement>(null);
+  const [long, setLong] = useState(false);
+  const [full, setFull] = useState(false);
+  useLayoutEffect(() => { const el = ref.current; if (el) setLong(el.scrollHeight > 88); }, [id]);
+  return (
+    <>
+      <div ref={ref} className={`reco-box${long && !full ? " clamp" : ""}`} tabIndex={0} {...hover}><Blocks blocks={tidyBlocks(g, id, g.parsed.get(id)!.blocks)} /></div>
+      {long && <button type="button" className="linkish rc-tap" aria-expanded={full} onClick={() => setFull(!full)}>{full ? "Show less" : "Show full text"}</button>}
+    </>
+  );
+}
+
+/** Every option the guideline lists at the step of the recommendation, with the model's probability when it scored them. */
+function OptionList({ rec, p }: { rec: Recommendation; p: Pathway }) {
+  const { g, ranking, showPath, ai } = useApp();
+  const prefix = p.steps.slice(0, rec.index).map((x) => x.node).join(">");
+  const routeFor = (opt: string) => ranking.paths.find((q) => q.steps[rec.index]?.node === opt && q.steps.slice(0, rec.index).map((x) => x.node).join(">") === prefix);
+  return (
+    <ul className="rc-opts" aria-label="Options the guideline lists at this step">
+      {rec.options.map((opt) => {
+        const mine = opt === rec.key.node;
+        const r = mine ? p : routeFor(opt);
+        const prob = ai.on && rec.parent ? ai.edgeProb?.get(`${rec.parent}>${opt}`) : undefined;
+        return (
+          <li key={opt} className={mine ? "this" : ""}>
+            <div className="rc-opt-t">
+              {clip(cleanText(g, opt, plain(g, opt)), 260)}
+              <Tags id={opt} />
+              {typeof prob === "number" && <span className="tr-badge ai" title="How appropriate the AI judged this option for this patient (options are scored independently)">AI {percent(prob)}</span>}
+            </div>
+            {mine ? <span className="alt-tag">followed below</span> : r && <button type="button" className="linkish rc-tap" onClick={() => showPath(r.id)} aria-label={`Follow this option: ${clip(plain(g, opt), 70)}`}>Follow this option</button>}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+function ThenList({ rec }: { rec: Recommendation }) {
+  const { g, go, set, isPhone } = useApp();
+  if (!rec.then.length) return null;
+  const toDiagram = (page: string) => { go({ kind: "flow", page }); if (isPhone) set({ sheet: false }); };
+  return (
+    <div className="reco-then rc-then">
+      <b>Then:</b>
+      <ol>
+        {rec.then.slice(0, 3).map((id) => {
+          const goto = gotoPage(g, id);
+          return (
+            <li key={id}>
+              {goto
+                ? <>continues on <button type="button" className="linkish rc-tap" onClick={() => toDiagram(goto)}>{pageName(goto, g.bundle.pages[goto]?.title)} <ArrowRight size={12} aria-hidden /></button></>
+                : clip(cleanText(g, id, plain(g, id)), 150)}
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  );
+}
+
+interface CardProps { p: Pathway; tied: number; isTop: boolean; share: number }
+
+function RecoCard({ p, tied, isTop, share }: CardProps) {
+  const { g, go, set, s, isPhone, focusFact, ai, ranking } = useApp();
   const { pdf, open } = useSource();
-  const f = routeFocus(g, p);
+  const rec = useMemo(() => recommendationOf(g, p, ranking.paths), [g, p, ranking]);
+  const stop = useRouteStop(p);
   // "AI-assisted": the decisions on the way to this recommendation that the AI chose
-  const aiLine = useMemo(() => (ai.on && ai.ai ? aiAssistedLine(trailStats(trimToRoute(ai.ai, new Set(p.steps.map((x) => x.node))))) : null), [ai.on, ai.ai, p]);
-  const id = f.key.node;
+  const onRoute = useMemo(() => (ai.on && ai.ai ? trimToRoute(ai.ai, new Set(p.steps.map((x) => x.node))) : null), [ai.on, ai.ai, p]);
+  const aiLine = useMemo(() => (onRoute ? aiAssistedLine(trailStats(onRoute)) : null), [onRoute]);
+  const assumed = useMemo(() => [...new Set((onRoute?.steps ?? []).filter((x) => x.by === "ai").flatMap((x) => x.assumed ?? []))], [onRoute]);
+  const id = rec.key.node;
   const n = g.node(id)!;
   const src = boxSrc(g, id);
   const hover = useSrc(src, { click: false });
@@ -426,47 +497,73 @@ function RecoCard({ p, tied, isTop }: CardProps) {
   const used = p.used;
   const entered = useMemo(() => enteredFacts(s.facts, s.stale), [s.facts, s.stale]);
   const why = useMemo(() => used.filter((k) => s.facts[k] !== undefined && s.facts[k] !== null).map((k) => [label(k), factValue(k, s.facts[k], schema)] as [string, string]), [used, s.facts, schema]);
-  const notUsed = useMemo(() => entered.filter(([k]) => !used.includes(k)).map(([k]) => label(k)), [entered, used]);
+  // answers this route does not rest on: some other possible recommendation does, or none does
+  const otherUsed = useMemo(() => new Set(ranking.paths.flatMap((q) => q.used)), [ranking]);
+  const notUsed = useMemo(() => entered.filter(([k]) => !used.includes(k)).map(([k]) => k), [entered, used]);
+  const elsewhere = notUsed.filter((k) => otherUsed.has(k)).map(label);
+  const never = notUsed.filter((k) => !otherUsed.has(k)).map(label);
   const [allWhy, setAllWhy] = useState(false);
   const [allMissing, setAllMissing] = useState(false);
   const [allUnused, setAllUnused] = useState(false);
   const [fn, setFn] = useState(false);
   const [summary, setSummary] = useState(false);
-  const goto = gotoPage(g, id) ?? (f.follow ? gotoPage(g, f.follow.node) : null);
   const title = g.bundle.pages[n.page]?.title;
   const name = pageName(n.page, title);
   const toDiagram = (page: string, node?: string) => { go({ kind: "flow", page, node }); if (isPhone) set({ sheet: false }); };
-  const missing = allMissing ? p.missing : p.missing.slice(0, 6);
+  // details still to answer (those marked "don't know" are not asked again, but noted)
+  const ask = p.missing.filter((m) => unanswered(s.facts, m));
+  const skipped = p.missing.filter((m) => !unanswered(s.facts, m)).map(label);
+  const missing = allMissing ? ask : ask.slice(0, 6);
   // Be honest about support, from this route's own answers: a route that used none is only where the guideline starts.
   const start = used.length === 0;
-  const word = matchWord(p.likelihood);
-  const eyebrow = start ? "Possible starting point" : tied > 0 ? `One of ${tied + 1} possible recommendations` : word;
-  const lead = !start && !tied && word === "Best match" ? "NCCN recommends" : start || tied > 0 ? "NCCN lists" : "NCCN also lists";
-  const support = p.missing.length ? supportPhrase(p.missing.length) : isTop ? "Matches your answers" : word === "Also possible" ? "Also fits your answers" : "";
+  const yours = p.steps.filter((st, i) => i > 0 && s.overrides[p.steps[i - 1].node] === st.node);
+  const word = matchWord(share);
+  const lead_ = ask.map(label);
+  const eyebrow = start ? "Possible starting point"
+    : yours.length ? "Based on your choice"
+    : tied > 0 ? `One of ${tied + 1} possible recommendations`
+    : isTop ? (ask.length ? `Likely, once you answer ${andMore(lead_)}` : "Best match")
+    : word === "Best match" ? "Also possible" : word;
+  const action = isActionBox(g, id);
+  const several = rec.options.length > 1;
+  const lead = !action ? "Context on this page, not a treatment recommendation"
+    : several ? "NCCN lists these options"
+    : start || tied > 0 ? "NCCN lists" : isTop || yours.length ? "NCCN recommends" : "NCCN also lists";
+  const support = isTop || yours.length ? (ask.length ? "" : "Matches your answers") : ask.length ? supportPhrase(ask.length) : word === "Also possible" ? "Also fits your answers" : "";
   const shownWhy = allWhy ? why : why.slice(0, 4);
-  const unused = allUnused ? notUsed : notUsed.slice(0, 6);
+  const lists = (allUnused ? never : never.slice(0, 6));
   return (
     <section className="reco reco-card" aria-label="Recommendation">
       <div className="rc-top">
         <span className="rc-match">{eyebrow}</span>
-        {!start && support && <span className={`rc-support${p.missing.length ? " open" : ""}`}>{support}</span>}
+        {!start && support && <span className={`rc-support${ask.length ? " open" : ""}`}>{support}</span>}
+        <AiChip />
       </div>
+      {yours.length > 0 && <p className="rc-yours">You chose: {yours.slice(0, 2).map((st) => clip(cleanText(g, st.node, plain(g, st.node)), 90)).join("; ")}{yours.length > 2 ? ` and ${yours.length - 2} more` : ""}. <a href="#rc-trail" className="linkish" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("oc-open-trail")); }}>Review or take back</a></p>}
       {start && (
         <div className="rc-start">
           <p className="rc-none">Not based on your answers yet — answer the questions to narrow it down</p>
           <button type="button" className="btn small" onClick={() => set({ rightTab: "patient" })}>Go to the patient questions <ArrowRight size={13} aria-hidden /></button>
         </div>
       )}
+      {stop.show && (
+        <div className="rc-provisional">
+          <p className="rc-prov" role="note"><b>Provisional:</b> this depends on the decision below.</p>
+          <TrailStop p={p} />
+        </div>
+      )}
       <div className="rc-main">
         <span className="rc-label">{lead}</span>
-        <div className="reco-box" tabIndex={0} {...hover}><Blocks blocks={tidyBlocks(g, id, g.parsed.get(id)!.blocks)} /></div>
-        {(n.footnotes.length > 0 || f.follow || goto) && (
+        {several ? <OptionList rec={rec} p={p} /> : <Headline id={id} />}
+        {(n.footnotes.length > 0 || rec.then.length > 0 || rec.alongside.length > 0) && (
           <div className="rc-more">
-            {goto ? (
-              <p className="reco-then">
-                <b>Then:</b> continues on <button type="button" className="linkish rc-tap" onClick={() => toDiagram(goto)}>{pageName(goto, g.bundle.pages[goto]?.title)} <ArrowRight size={12} aria-hidden /></button>
-              </p>
-            ) : f.follow && <p className="reco-then"><b>Then:</b> {cleanText(g, f.follow.node, plain(g, f.follow.node))}</p>}
+            <ThenList rec={rec} />
+            {rec.alongside.length > 0 && (
+              <details className="rc-also">
+                <summary>Also on this page ({rec.alongside.length})</summary>
+                <ul>{rec.alongside.map((a) => <li key={a}>{clip(cleanText(g, a, plain(g, a)), 240)}</li>)}</ul>
+              </details>
+            )}
             {n.footnotes.length > 0 && (
               <button type="button" className="linkish rc-tap" aria-expanded={fn} onClick={() => setFn(!fn)}>
                 {fn ? <ChevronDown size={13} aria-hidden /> : <ChevronRight size={13} aria-hidden />} Notes ({n.footnotes.length})
@@ -482,6 +579,7 @@ function RecoCard({ p, tied, isTop }: CardProps) {
           <Sparkles size={13} aria-hidden />
           <span>{aiLine.replace(/ Review in How we got here\.$/, "")}</span>
           <button type="button" className="linkish rc-tap" onClick={() => window.dispatchEvent(new CustomEvent("oc-open-trail"))}>Review in How we got here.</button>
+          {assumed.length > 0 && <span className="rc-assumed">Assumed, not entered: {andMore(assumed.map(label))}. <button type="button" className="linkish rc-tap" onClick={() => focusFact(assumed[0])}>Answer {assumed.length === 1 ? "it" : "the first"}</button></span>}
         </p>
       )}
 
@@ -510,22 +608,26 @@ function RecoCard({ p, tied, isTop }: CardProps) {
             {why.length > 4 && <button type="button" className="linkish rc-tap" aria-expanded={allWhy} onClick={() => setAllWhy(!allWhy)}>{allWhy ? "Show fewer" : `Show all ${why.length}`}</button>}
           </>
         ) : <p className="rc-none">Nothing you have entered is needed yet: this is where the guideline starts for this patient.</p>}
-        {notUsed.length > 0 && (
+        {elsewhere.length > 0 && <p className="rc-none">Used by other possible recommendations: {elsewhere.join(", ")}.</p>}
+        {never.length > 0 && (
           <p className="rc-none">
-            Not used for this recommendation: {unused.join(", ")}
-            {notUsed.length > 6 && !allUnused && <> and <button type="button" className="linkish rc-tap" onClick={() => setAllUnused(true)}>{notUsed.length - 6} more</button></>}
+            Not used for this recommendation: {lists.join(", ")}
+            {never.length > 6 && !allUnused && <> and <button type="button" className="linkish rc-tap" onClick={() => setAllUnused(true)}>{never.length - 6} more</button></>}
           </p>
         )}
       </div>
 
-      {p.missing.length > 0 && (
+      {(ask.length > 0 || skipped.length > 0) && (
         <div className="rc-sec">
           <h4 className="rc-h">Still unknown</h4>
-          <p className="rc-none">Answering {p.missing.length === 1 ? "this" : "these"} could change the recommendation.</p>
-          <div className="rc-qs">
-            {missing.map((m) => <button key={m} type="button" className="rc-q" onClick={() => focusFact(m)}>{label(m)}</button>)}
-            {p.missing.length > 6 && <button type="button" className="linkish rc-tap" aria-expanded={allMissing} onClick={() => setAllMissing(!allMissing)}>{allMissing ? "Show fewer" : `${p.missing.length - 6} more`}</button>}
-          </div>
+          {ask.length > 0 && <p className="rc-none">Answering {ask.length === 1 ? "this" : "these"} could change the recommendation.</p>}
+          {ask.length > 0 && (
+            <div className="rc-qs">
+              {missing.map((m) => <button key={m} type="button" className="rc-q" onClick={() => focusFact(m)}>{label(m)}</button>)}
+              {ask.length > 6 && <button type="button" className="linkish rc-tap" aria-expanded={allMissing} onClick={() => setAllMissing(!allMissing)}>{allMissing ? "Show fewer" : `${ask.length - 6} more`}</button>}
+            </div>
+          )}
+          {skipped.length > 0 && <p className="rc-none">Marked “don’t know”: {skipped.join(", ")}.</p>}
         </div>
       )}
       {p.uncoded > 0 && (
@@ -593,35 +695,40 @@ function ContinuesCard({ p, to }: { p: Pathway; to: string }) {
 function NeedsCard({ p }: { p: Pathway }) {
   const { g, set, s, ranking, focusFact } = useApp();
   const [all, setAll] = useState(false);
+  // the same definition of "still open" as the interview and the decision trail
   const questions = useMemo(() => {
-    const names = [...remainingQuestions(g, ranking, s.facts).map((d) => d.fact), ...p.missing, ...p.laterMissing];
-    return [...new Set(names)].filter((f) => g.bundle.schema.variables[f]);
-  }, [g, ranking, s.facts, p]);
+    const names = [...openDetails(g, s.facts, s.start, { ranking, overrides: s.overrides }).map((d) => d.fact), ...p.missing, ...p.laterMissing];
+    return [...new Set(names)].filter((f) => g.bundle.schema.variables[f] && unanswered(s.facts, f));
+  }, [g, ranking, s.facts, s.start, s.overrides, p]);
   const shown = all ? questions : questions.slice(0, 6);
   return (
     <section className="reco reco-card needs" aria-label="More answers needed">
-      <div className="rc-top"><span className="rc-match">More answers needed</span></div>
-      <p className="rc-needs-h">Answer these to reach a recommendation:</p>
+      <div className="rc-top"><span className="rc-match">More answers needed</span><AiChip /></div>
+      <p className="rc-needs-h">{questions.length ? "Answer these to reach a recommendation:" : "No patient detail changes the answer here: read the NCCN page."}</p>
       {questions.length > 0 && (
         <div className="rc-qs">
           {shown.map((m) => <button key={m} type="button" className="rc-q" onClick={() => focusFact(m)}>{label(m)}</button>)}
           {questions.length > 6 && <button type="button" className="linkish rc-tap" aria-expanded={all} onClick={() => setAll(!all)}>{all ? "Show fewer" : `${questions.length - 6} more`}</button>}
         </div>
       )}
-      <div className="rc-start"><button type="button" className="btn small" onClick={() => set({ rightTab: "patient" })}>Go to the patient questions <ArrowRight size={13} aria-hidden /></button></div>
+      {questions.length > 0 && <div className="rc-start"><button type="button" className="btn small" onClick={() => set({ rightTab: "patient" })}>Go to the patient questions <ArrowRight size={13} aria-hidden /></button></div>}
       <div className="rc-foot"><p className="rc-fine">{T.prototype}</p></div>
     </section>
   );
 }
 
-function OtherItem({ p, onPick, start }: { p: Pathway; onPick: () => void; start: boolean }) {
-  const { g } = useApp();
-  const id = keyId(g, p);
+function OtherItem({ group, onPick, start }: { group: RecGroup; onPick: () => void; start: boolean }) {
+  const { g, s } = useApp();
+  const p = group.route;
+  const id = group.rec.key.node;
   const n = g.node(id)!;
-  const word = matchWord(p.likelihood);
-  const text = keyText(g, p);
-  // each card's phrase comes from its own route; "Matches your answers" is the top card's alone
-  const support = p.missing.length ? supportPhrase(p.missing.length) : p.used.length && word === "Also possible" ? "Also fits your answers" : "";
+  // the best match is the top card's alone
+  const word = matchWord(group.share) === "Best match" ? "Also possible" : matchWord(group.share);
+  const several = group.rec.options.length > 1;
+  const text = several ? `Options: ${group.rec.options.slice(0, 3).map((o) => clip(cleanText(g, o, plain(g, o)), 60)).join(" · ")}${group.rec.options.length > 3 ? ` · +${group.rec.options.length - 3} more` : ""}` : keyText(g, p);
+  const ask = p.missing.filter((m) => unanswered(s.facts, m));
+  // each card's phrase comes from its own route
+  const support = ask.length ? supportPhrase(ask.length) : p.used.length && word === "Also possible" ? "Also fits your answers" : "";
   return (
     <li>
       <button type="button" className="pcard other" onClick={onPick} aria-label={`${start ? "Possible" : word}: ${text}. Show this recommendation`}>
@@ -630,7 +737,7 @@ function OtherItem({ p, onPick, start }: { p: Pathway; onPick: () => void; start
           {!start && support && <span className="pc-support">{support}</span>}
         </span>
         <span className="pc-end">{text}</span>
-        <Tags id={id} />
+        {!several && <Tags id={id} />}
         <span className="pc-where">{pageName(n.page, g.bundle.pages[n.page]?.title)}</span>
       </button>
     </li>
@@ -640,50 +747,32 @@ function OtherItem({ p, onPick, start }: { p: Pathway; onPick: () => void; start
 function ClinicianView() {
   const { g, go, set, s, isPhone, ranking, showPath } = useApp();
   const [all, setAll] = useState(false);
-  const top = ranking.paths[0];
-  // Distinct recommendations that reach one: identical wording counts once; within a likelihood band, NCCN-preferred first.
-  const ordered = useMemo(() => {
-    const seen = new Set<string>();
-    const list: { p: Pathway; i: number }[] = [];
-    ranking.paths.forEach((x, i) => {
-      if (!reachesRecommendation(g, x)) return;
-      const k = normText(keyText(g, x));
-      if (seen.has(k)) return;
-      seen.add(k);
-      list.push({ p: x, i });
-    });
-    const band = (x: Pathway) => BANDS.indexOf(matchWord(x.likelihood));
-    return list.sort((a, b) => band(a.p) - band(b.p) || preference(g, a.p) - preference(g, b.p) || a.i - b.i).map((x) => x.p);
-  }, [g, ranking]);
-  const picked = s.pathSel ? ranking.paths.find((x) => x.id === s.pathSel) : undefined;
-  const p = picked ?? (top && !reachesRecommendation(g, top) ? top : ordered[0] ?? top);
+  // One list for the card, the "other" list and every count: routes that differ only in which of
+  // the options the guideline lists side by side they follow are one recommendation.
+  const groups = useMemo(() => distinctRecommendations(g, ranking), [g, ranking]);
+  const p = shownRoute(g, ranking, s.pathSel);
+  const stop = useRouteStop(p ?? undefined);
   if (!p) return null;
   const reaches = reachesRecommendation(g, p);
   // a route that hands over to another page: the card says where the next step is
   const next = reaches || p.end !== "continues" ? null : p.continuesTo ?? null;
-  const mine = normText(keyText(g, p));
-  const others = reaches ? ordered.filter((x) => x.id !== p.id && normText(keyText(g, x)) !== mine) : ordered;
+  const mine = groups.find((x) => x.routes.some((r) => r.id === p.id));
+  const others = reaches ? groups.filter((x) => x !== mine) : groups;
   const shown = all ? others : others.slice(0, 4);
+  const share = mine?.share ?? p.likelihood;
   // Same likelihood band and the same answers behind them: the app has no basis to rank them, so none is presented as the advice.
-  const tiedWith = others.filter((x) => matchWord(x.likelihood) === matchWord(p.likelihood) && sameUsed(x, p));
-  const tied = reaches ? tiedWith.length : 0;
+  const tied = reaches ? others.filter((x) => matchWord(x.share) === matchWord(share) && sameUsed(x.route, p)).length : 0;
   const pages = routePages(p);
   const pick = (id: string) => { showPath(id); document.getElementById("rp-panel")?.scrollTo({ top: 0 }); };
-  const toOthers = () => {
-    const el = document.getElementById("rc-others"), sc = document.getElementById("rp-panel");
-    if (el && sc) sc.scrollTo({ top: sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top - 8, behavior: "smooth" });
-  };
   return (
     <>
-      {reaches ? <RecoCard key={p.id} p={p} tied={tied} isTop={p.id === ordered[0]?.id} /> : next ? <ContinuesCard key={p.id} p={p} to={next} /> : <NeedsCard key={p.id} p={p} />}
-      <DecisionTrail p={p} />
-      {reaches && others.length > 0 && (
-        <button type="button" className="linkish rc-tap rc-below" onClick={toOthers}>{others.length} other possible recommendation{others.length === 1 ? "" : "s"} below <ChevronDown size={13} aria-hidden /></button>
-      )}
+      <AiNotice />
+      {reaches ? <RecoCard key={p.id} p={p} tied={tied} isTop={!mine || mine === groups[0]} share={share} /> : next ? <ContinuesCard key={p.id} p={p} to={next} /> : <NeedsCard key={p.id} p={p} />}
+      <DecisionTrail p={p} stopInCard={reaches && stop.show} />
       {others.length > 0 && (
         <section id="rc-others" className="rc-others" aria-label="Other possible recommendations">
           <h3 className="rc-h2">Other possible recommendations ({others.length}){reaches && tied > 0 && tied === others.length && " — equally possible from your answers"}</h3>
-          <ol className="plist">{shown.map((x) => <OtherItem key={x.id} p={x} start={x.used.length === 0} onPick={() => pick(x.id)} />)}</ol>
+          <ol className="plist">{shown.map((x) => <OtherItem key={x.key} group={x} start={x.route.used.length === 0} onPick={() => pick(x.route.id)} />)}</ol>
           {others.length > 4 && <button type="button" className="btn ghost small wide" onClick={() => setAll(!all)}>{all ? "Show fewer" : `Show all ${others.length}`}</button>}
         </section>
       )}

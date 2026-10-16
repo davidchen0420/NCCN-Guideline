@@ -4,7 +4,7 @@ import { adaptGuideline } from "../src/lib/adapt";
 import { buildGraph, type Graph } from "../src/lib/graph";
 import {
   MAX_QUESTIONS, PAGE_CHARS, aiStatus, branchChildren, buildInput, buildQuestions, clearDecideCache, factLines,
-  boxText, isScorable, pageText, predicateInWords, resetAiStatus, scorableNodes, scoreBranches, scoreBranchesDetailed,
+  boxText, isLocalHost, isScorable, pageText, predicateInWords, resetAiStatus, scorableNodes, scoreBranches, scoreBranchesDetailed,
   type Answer, type ChoiceQuestion, type Question,
 } from "../src/lib/decide";
 
@@ -332,5 +332,10 @@ describe("aiStatus", () => {
     expect(await aiStatus({ fetch: down })).toBeNull();
     // a failed network call is not remembered
     expect(await aiStatus({ fetch: json({ enabled: false, model: "m" }) })).toEqual({ enabled: false, model: "m" });
+  });
+
+  it("is only asked on this machine or its own network (a hosted copy has no server, so no 404)", async () => {
+    expect(["localhost", "127.0.0.1", "[::1]", "192.168.1.20", "10.0.0.5", "172.20.1.1", "laptop.local"].every(isLocalHost)).toBe(true);
+    expect(["example.github.io", "oncocarta.example.com", "8.8.8.8", "172.32.0.1"].some(isLocalHost)).toBe(false);
   });
 });

@@ -241,6 +241,13 @@ export class DecideError extends Error {
   constructor(message: string, readonly status: number = 0) { super(message); this.name = "DecideError"; }
 }
 
+/** This machine or its own network: localhost, loopback, private ranges, ".local" names. */
+export function isLocalHost(host: string): boolean {
+  const h = host.toLowerCase().replace(/^\[|\]$/g, "");
+  return h === "" || h === "localhost" || h.endsWith(".localhost") || h.endsWith(".local") || h === "::1" || h.startsWith("127.")
+    || h.startsWith("10.") || h.startsWith("192.168.") || /^172\.(1[6-9]|2\d|3[01])\./.test(h) || h.startsWith("169.254.") || /^f[cd][0-9a-f]{2}:/.test(h);
+}
+
 let statusMemo: Promise<AiStatus | null> | null = null;
 /** Forget the remembered status (tests; or after the server was started). */
 export const resetAiStatus = () => { statusMemo = null; };
@@ -254,7 +261,10 @@ export function aiStatus(opts: DecideOptions = {}): Promise<AiStatus | null> {
   if (statusMemo) return statusMemo;
   const f = opts.fetch ?? (typeof fetch === "function" ? fetch : undefined);
   const onFile = typeof location !== "undefined" && location.protocol === "file:";
-  if (!f || (onFile && !opts.baseUrl)) return (statusMemo = Promise.resolve(null));
+  // The AI server is the local one (python -m nccn_nav.serve): a copy hosted on a public name has
+  // none, and asking it would only put a 404 in the console.
+  const hosted = typeof location !== "undefined" && !onFile && !isLocalHost(location.hostname);
+  if (!f || ((onFile || hosted) && !opts.baseUrl)) return (statusMemo = Promise.resolve(null));
   const p = (async () => {
     try {
       const r = await f(`${opts.baseUrl ?? ""}/api/decide/status`, { signal: opts.signal, headers: { Accept: "application/json" } });

@@ -21,6 +21,7 @@ import type { Facts, Pred } from "../types";
 import { resolveRef, sectionStartPages, stateOfEntries, stateOfTitle, type Graph } from "./graph";
 import { derive, evaluate } from "./predicates";
 import { stripMarks } from "./adapt";
+import { matchWord } from "./terms";
 
 export type StepKind = "met" | "otherwise" | "unknown" | "uncoded" | "option" | "inferred" | "flow";
 export type EdgeKind = "agreed" | "verified" | "unsure" | "link" | "entry";
@@ -55,6 +56,9 @@ export interface Pathway {
   /** Raw facts still unknown that would decide the later event the route stops before
    * ("Recurrence", "PSA persistence/recurrence"); empty unless the route ends on one. */
   laterMissing: string[];
+  /** Boxes printed beside the route's branches that apply alongside it, not instead of it (the
+   * aspirin row next to a treatment table's condition rows): never a competing route. */
+  alongside: string[];
 }
 export interface Ranking {
   paths: Pathway[]; ruledOut: number; entries: string[]; truncated: boolean;
@@ -91,6 +95,18 @@ export function boxClass(g: Graph, id: string): BoxClass {
   if (PAGE_REF.test(n.text) || ((role === "table_ref" || role === "link") && !n.ext?.length) || (!bare && n.links.length)) return "pageref";
   if ((n.decision === "condition" || /condition/.test(role)) && !ACTION.test(n.text)) return "condition";
   return "recommendation";
+}
+
+/**
+ * The children of a box split into the branches of the route and the items printed beside them. In
+ * a treatment table the condition rows are the branches; a recommendation row hanging off the same
+ * box with no condition or option type (the "start aspirin" row next to the stage rows) applies
+ * alongside whichever row fits: it is not an alternative route, however short.
+ */
+export function splitAlongside(g: Graph, kids: string[]): { main: string[]; alongside: string[] } {
+  if (!kids.some((k) => g.node(k)?.role === "table_condition")) return { main: kids, alongside: [] };
+  const main = kids.filter((k) => g.node(k)?.role === "table_condition" || !!g.preds[k] || !!g.node(k)?.decision);
+  return { main, alongside: kids.filter((k) => !main.includes(k)) };
 }
 
 export const hasFacts = (f: Facts) => Object.values(f).some((v) => v !== null && v !== undefined && v !== "");
@@ -252,6 +268,7 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
       met, open, options: steps.filter((s) => s.kind === "option").length, uncoded: steps.filter((s) => s.kind === "uncoded").length,
       coverage, encoding, confidence: Math.round(100 * coverage * encoding), missing,
       used: [...new Set(steps.flatMap((s) => s.used))], laterMissing,
+      alongside: [...new Set(steps.flatMap((s) => splitAlongside(g, g.kids(s.node)).alongside))].filter((x) => !steps.some((s) => s.node === x)),
     });
   };
 
@@ -392,6 +409,10 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
       else if (isEvent(k)) gate(k).preds.filter((p) => evaluate(p, facts) === true).forEach((p) => usedFacts(g, p, raw, out));
     } else if (kind === "otherwise") sibs.filter((x) => x !== k).forEach((x) => usedFacts(g, g.preds[x], raw, out));
     else if (kind === "inferred") usedFacts(g, g.node(k)?.received, raw, out);
+    // How the box is reached counts too: an entry box selected by the conditions of the boxes that
+    // lead there (its link condition) rests on those details when they hold.
+    const lc = g.node(k)?.linkCond;
+    if (lc && kind !== "unknown" && kind !== "uncoded" && evaluate(lc, facts) === true) usedFacts(g, lc, raw, out);
     return [...out];
   };
   const stepFor = (parent: string | null, k: string, kind: StepKind, share: number, sibs: string[] = []): PStep => ({
@@ -455,7 +476,7 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
   const dfs = (id: string, steps: PStep[], weight: number, seen: Set<string>) => {
     if (truncated) return;
     if (steps.length > MAX_DEPTH) return finish(steps, weight, "limit");
-    let kids = g.kids(id).filter((k) => !seen.has(k) && inSection(k.split(":")[0]));
+    let kids = splitAlongside(g, g.kids(id)).main.filter((k) => !seen.has(k) && inSection(k.split(":")[0]));
     // A box that only refers to another page, without an arrow in the data, goes on to that
     // page's entry boxes (gated by their conditions like any entry).
     let jumped = false;
@@ -476,9 +497,13 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     const pass = cond || tableCell || linksOut(id) || (steps.length > 1 && isCond(steps[steps.length - 2].node, steps.length - 2));
     const groups = g.bundle.structured ? kids.map((id) => ({ id, pre: [] as string[] })) : rowGroups(kids);
     const sibs = groups.map((gr) => gr.id);
+    // the details that ruled out the arms not taken here: they gated this route as well
+    let ruled: string[] = [];
     const go = (gr: Group, kind: StepKind, share: number) => {
       const nx = new Set(seen); gr.pre.forEach((p) => nx.add(p)); nx.add(gr.id);
-      const add = [...preSteps(id, gr), stepFor(id, gr.id, targetKind(gr, kind), share, sibs)];
+      const step = stepFor(id, gr.id, targetKind(gr, kind), share, sibs);
+      if (ruled.length) step.used = [...new Set([...step.used, ...ruled])];
+      const add = [...preSteps(id, gr), step];
       dfs(gr.id, [...steps, ...add], weight * share, nx);
     };
     // The clinician chose this branch: it is the route, whatever the conditions say.
@@ -496,6 +521,7 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
       }
     }
     const v = groups.map((gr) => gVerdict(gr));
+    ruled = [...new Set(groups.flatMap((gr, i) => (v[i] === false ? [...usedFacts(g, g.preds[gr.id], raw)] : [])))];
     if (v.every((x) => x === false)) {
       ruledOut += groups.length;
       // Out of a condition box, no arm fits: this route contradicts the facts. Out of a
@@ -521,8 +547,13 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     // The clinician chose the starting point (the page's virtual START box).
     const pickedEntry = Object.entries(opts?.overrides ?? {}).find(([k, v]) => k.endsWith(":START") && entries.includes(v))?.[1];
     if (pickedEntry) return dfs(pickedEntry, [stepFor(null, pickedEntry, verdict(pickedEntry) === true ? "met" : "flow", 1, entries)], 1, new Set([pickedEntry]));
-    split(entries.map((id) => ({ id, pre: [] })), false).forEach((o) =>
-      dfs(o.gr.id, [stepFor(null, o.gr.id, o.kind, o.share, entries)], o.share, new Set([o.gr.id])));
+    // the details that ruled out the other entries gated every route from here
+    const ruled = [...new Set(entries.flatMap((id) => (verdict(id) === false ? [...usedFacts(g, g.preds[id], raw)] : [])))];
+    split(entries.map((id) => ({ id, pre: [] })), false).forEach((o) => {
+      const step = stepFor(null, o.gr.id, o.kind, o.share, entries);
+      if (ruled.length) step.used = [...new Set([...step.used, ...ruled])];
+      dfs(o.gr.id, [step], o.share, new Set([o.gr.id]));
+    });
   };
 
   let entries: string[];
@@ -632,6 +663,209 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
 /** Likelihood band in words, so the number is not read as a clinical probability. */
 export const likelihoodWord = (x: number) => (x >= 0.5 ? "Most likely" : x >= 0.2 ? "Possible" : x >= 0.05 ? "Less likely" : "Unlikely");
 export const confidenceWord = (c: number) => (c >= 75 ? "High" : c >= 45 ? "Moderate" : "Low");
+
+// ---------------------------------------------------------------- what the route recommends now
+
+/** What kind of step a box is, for choosing the headline: the treatment itself, other advice, a
+ * workup, or follow-up (surveillance, monitoring) that comes after the treatment. */
+export type StepTier = "treatment" | "other" | "workup" | "followup";
+const FOLLOWUP = /^\W*(?:(?:post-?treatment|long-term|ongoing|routine)\s+)?(?:surveillance|follow-?up|monitoring|re-?evaluat\w*\s+(?:disease\s+)?status|history and physical|H&P|clinical (?:exam|evaluation) every)\b/i;
+const TREATMENT = new RegExp(["\\b(?:therapy|therapies|chemo\\w*|radiat\\w*|radiotherapy|RT|SBRT|brachytherapy|resection|surgery|surgical|excision|ablation|transplant\\w*",
+  "immunotherapy|inhibitors?|[a-z]{4,}mab|[a-z]{3,}tinib|[a-z]{3,}ciclib|ADT|prostatectomy|lumpectomy|mastectomy|cystectomy|nephrectomy|colectomy",
+  "embolization|endocrine|hormone\\w*|androgen|regimens?|FOLFOX|CAPEOX|FOLFIRI\\w*|FOLFIRINOX|observation|active surveillance|start|initiate|administer",
+  "supplementation|prophylaxis|antiemetic\\w*|cessation|palliative|best supportive care|BSC|transfusion|TNT|stenting|ostomy)\\b"].join("|"), "i");
+const WORKUP = /\b(?:workup|biopsy|biopsies|imaging|MRI|CT|PET|ultrasound|labs?|laboratory|testing|tests?|evaluat\w*|assess\w*|exam|H&P|history|screening|colonoscopy|endoscopy|mammogra\w*|genetic|counseling)\b/i;
+
+/** A page that is only about follow-up ("Surveillance Following Operative Management"), not one that also covers treatment ("Pathologic Stage, Adjuvant Treatment, and Surveillance"). */
+export function isFollowPage(g: Graph, page: string): boolean {
+  const title = g.bundle.pages[page]?.title ?? "";
+  return stateOfTitle(title) === "followup" && !/treat|therap|work-?up|adjuvant|primary|stag(e|ing)\b/i.test(title);
+}
+
+/** Is a box the follow-up that comes after treatment (surveillance, monitoring), by its words or by
+ * the page it is printed on ("Surveillance Following Operative Management")? */
+export function isFollowUp(g: Graph, id: string): boolean {
+  const n = g.node(id);
+  if (!n) return false;
+  const t = stripMarks(n.text).trim();
+  if (/^\W*active surveillance/i.test(t)) return false;
+  return FOLLOWUP.test(t) || (isFollowPage(g, n.page) && !TREATMENT.test(t));
+}
+export function stepTier(g: Graph, id: string): StepTier {
+  const n = g.node(id);
+  const t = stripMarks(n?.text ?? "");
+  if (isFollowUp(g, id)) return "followup";
+  if (n?.decision === "option" || TREATMENT.test(t)) return "treatment";
+  if (WORKUP.test(t)) return "workup";
+  return "other";
+}
+const TIER_ORDER: Record<StepTier, number> = { treatment: 0, other: 1, workup: 2, followup: 3 };
+
+/** A box that can be what the patient is told to do: a recommendation, not a condition, heading,
+ * page pointer or table row naming a patient group. */
+export function isActionBox(g: Graph, id: string): boolean {
+  const n = g.node(id);
+  if (!n || boxClass(g, id) !== "recommendation") return false;
+  if (n.decision === "condition" || n.decision === "other" || (g.preds[id] && n.decision !== "option")) return false;
+  return !/^table_(condition|title|root|value)$/.test(n.role ?? "") && n.role !== "note";
+}
+
+export interface Recommendation {
+  /** index in `steps` of the headline box */
+  index: number;
+  /** the headline is a box that says what to do; false when nothing after the last decision does and the last box stands in */
+  found: boolean;
+  key: PStep;
+  /** index of the last step the entered facts settle (-1: none) */
+  settled: number;
+  tier: StepTier;
+  /** the boxes the guideline lists as options at the headline's step (the headline's siblings that
+   * the facts leave open), most likely first; just the headline when there is a single choice */
+  options: string[];
+  /** the box the options hang from (their shared parent on the route); null for a single choice */
+  parent: string | null;
+  /** the recommendation boxes that follow the headline on this route, in order */
+  then: string[];
+  /** items printed beside the route's branches on the headline's page (apply alongside) */
+  alongside: string[];
+}
+
+/**
+ * The recommendation for the patient now: the first treatment box on the route after the last
+ * decision the entered facts settle. Whatever follows it (restaging, surgery, surveillance) is
+ * "then". Where no treatment box exists, the first other advice, then the first workup, and only
+ * then follow-up. A box is not looked for beyond follow-up: what lies past surveillance happens
+ * after a later event. When the guideline lists several options at that step they are all
+ * returned (`options`), taken from `paths` (the ranking) so those the facts rule out are left out.
+ */
+export function recommendationOf(g: Graph, p: Pathway, paths: Pathway[] = []): Recommendation {
+  const s = p.steps;
+  const isSettled = (st: PStep) => st.kind === "met" || st.kind === "otherwise" || st.kind === "inferred";
+  // Where follow-up begins on the route (a surveillance box, or the first box of a surveillance
+  // page): decisions made there choose the follow-up schedule, not the treatment, so the treatment
+  // is looked for ahead of it first.
+  const firstFollow = s.findIndex((st) => isFollowPage(g, st.node.split(":")[0]) || (isActionBox(g, st.node) && stepTier(g, st.node) === "followup"));
+  let followAt = firstFollow;
+  // the follow-up page's own entry box belongs to it
+  while (followAt > 0 && s[followAt - 1].node.split(":")[0] === s[firstFollow].node.split(":")[0] && !isActionBox(g, s[followAt - 1].node)) followAt--;
+  const scan = (until: number) => {
+    let settled = -1;
+    s.forEach((st, i) => { if (i < until && isSettled(st)) settled = i; });
+    // an "inferred" step is a treatment the patient already had: the advice comes after it
+    const cands: number[] = [];
+    // a met option box (an entry that is itself the treatment) is the recommendation, not only the decision before it
+    const from = settled >= 0 && g.node(s[settled].node)?.decision === "option" && isActionBox(g, s[settled].node) ? settled : settled + 1;
+    for (let i = from; i < until; i++) {
+      if (!isActionBox(g, s[i].node)) continue;
+      cands.push(i);
+      if (stepTier(g, s[i].node) === "followup") break;
+    }
+    return { settled, cands };
+  };
+  let { settled, cands } = scan(followAt >= 0 ? followAt : s.length);
+  if (!cands.length && followAt >= 0) ({ settled, cands } = scan(s.length));
+  let index = cands.length ? cands.reduce((best, i) => (TIER_ORDER[stepTier(g, s[i].node)] < TIER_ORDER[stepTier(g, s[best].node)] ? i : best), cands[0]) : -1;
+  if (index < 0) {
+    // nothing recommends anything after the last decision: the last box that is not a bare page reference, else the last box
+    index = s.length - 1;
+    for (let i = s.length - 1; i > settled; i--) if (boxClass(g, s[i].node) !== "pageref") { index = i; break; }
+  }
+  const found = cands.length > 0;
+  const key = s[index];
+  const kn = g.node(key.node);
+  let options = [key.node], parent: string | null = null;
+  if (index > 0 && (key.kind === "option" || key.kind === "inferred" || kn?.decision === "option")) {
+    parent = s[index - 1].node;
+    const prefix = s.slice(0, index).map((x) => x.node).join(">");
+    const sibs = paths.filter((q) => q.steps.length > index && q.steps.slice(0, index).map((x) => x.node).join(">") === prefix)
+      .sort((a, b) => b.likelihood - a.likelihood).map((q) => q.steps[index].node);
+    options = [...new Set([key.node, ...sibs])].filter((x) => x === key.node || isActionBox(g, x));
+    options = options.map((x, i) => [x, i] as const).sort(([a, i], [b, j]) => optionPreference(g, a) - optionPreference(g, b) || i - j).map(([x]) => x);
+    if (options.length < 2) parent = null;
+  }
+  const then: string[] = [];
+  for (let i = index + 1; i < s.length && then.length < 4; i++) {
+    const id = s[i].node;
+    if (g.preds[id] && g.node(id)?.decision !== "option") continue;
+    if (/^table_(condition|title|root)$/.test(g.node(id)?.role ?? "")) continue;
+    const c = boxClass(g, id);
+    if (c === "recommendation" || c === "pageref") then.push(id);
+  }
+  const page = key.node.split(":")[0];
+  return { index, found, key, settled, tier: stepTier(g, key.node), options, parent, then, alongside: p.alongside.filter((x) => x.split(":")[0] === page) };
+}
+
+/** NCCN preference of a box: 0 preferred, then category 1, 2A, 2B, 3, then the rest. */
+export function optionPreference(g: Graph, id: string): number {
+  const parsed = g.parsed.get(id);
+  const tags = parsed?.tags ?? [];
+  if (tags.includes("Preferred") || /\bpreferred\b/i.test(parsed?.plain ?? "")) return 0;
+  const cat = tags.find((t) => t.startsWith("Category"));
+  if (!cat) return 9;
+  const c = /\d/.exec(cat);
+  return c ? 1 + Number(c[0]) + (/B/.test(cat) ? 0.5 : 0) : 9;
+}
+
+/** Does the route get as far as a recommendation, or does it stop at a criteria box / an open branch? */
+export function reachesRecommendation(g: Graph, p: Pathway): boolean {
+  const rec = recommendationOf(g, p);
+  // a treatment after the last decision is a recommendation, wherever the route ends
+  if (rec.found && rec.tier === "treatment") return true;
+  // a route that hands over to another page, or stops at an open branch, ends in no recommendation (never a page heading)
+  if (!isRecommendationEnd(p)) return false;
+  const key = rec.key;
+  if (key.kind === "unknown" || key.kind === "uncoded") return false;
+  const kn = g.node(key.node);
+  if (g.bundle.structured) return kn?.decision !== "condition" && !/condition/.test(kn?.role ?? "");
+  return !(key === p.steps[p.steps.length - 1] && !!g.preds[key.node]);
+}
+
+export interface RecGroup {
+  /** one per distinct recommendation: the set of options the guideline lists at the step, or the headline's wording */
+  key: string;
+  /** the route that stands for the group (its most likely, NCCN-preferred first) */
+  route: Pathway;
+  rec: Recommendation;
+  /** every route that ends in this recommendation */
+  routes: Pathway[];
+  /** their share of the fit */
+  share: number;
+}
+const BANDS = ["Best match", "Also possible", "Less likely", "Unlikely"];
+const normText = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, "");
+
+/**
+ * The distinct recommendations the ranking offers, best first. Routes that differ only in which of
+ * the options the guideline lists side by side they follow are ONE recommendation (the options are
+ * all shown); identical headlines count once. Routes that stop before a recommendation are not here.
+ * Within a likelihood band, NCCN-preferred comes first.
+ */
+export function distinctRecommendations(g: Graph, ranking: Ranking): RecGroup[] {
+  const groups = new Map<string, RecGroup>();
+  ranking.paths.forEach((p) => {
+    if (!reachesRecommendation(g, p)) return;
+    const rec = recommendationOf(g, p, ranking.paths);
+    const key = rec.options.length > 1 ? `opts:${[...rec.options].sort().join("|")}` : `txt:${normText(stripMarks(g.node(rec.key.node)?.text ?? rec.key.node))}`;
+    const have = groups.get(key);
+    if (have) { have.routes.push(p); have.share += p.likelihood; }
+    else groups.set(key, { key, route: p, rec, routes: [p], share: p.likelihood });
+  });
+  const list = [...groups.values()];
+  const idx = new Map(list.map((x, i) => [x.key, i] as const));
+  const band = (x: RecGroup) => BANDS.indexOf(matchWord(x.share));
+  const pref = (x: RecGroup) => Math.min(...x.rec.options.map((o) => optionPreference(g, o)));
+  return list.sort((a, b) => band(a) - band(b) || pref(a) - pref(b) || b.share - a.share || idx.get(a.key)! - idx.get(b.key)!);
+}
+
+/** The route the recommendation card is about: the one the clinician picked, else the top route when it stops short of a recommendation, else the best distinct recommendation. */
+export function shownRoute(g: Graph, ranking: Ranking, pathSel: string | null): Pathway | null {
+  const top = ranking.paths[0];
+  if (!top) return null;
+  const picked = pathSel ? ranking.paths.find((x) => x.id === pathSel) : undefined;
+  if (picked) return picked;
+  if (!reachesRecommendation(g, top)) return top;
+  return distinctRecommendations(g, ranking)[0]?.route ?? top;
+}
 
 /** The raw facts that decide where a patient enters the guideline (for "start with ..." hints). */
 export function startingFacts(g: Graph, limit = 6): string[] {

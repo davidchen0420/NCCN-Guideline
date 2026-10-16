@@ -3,7 +3,8 @@ import { createPortal } from "react-dom";
 import { Copy, Printer, X } from "lucide-react";
 import { useApp, useAdvanced } from "../store";
 import type { Pathway } from "../lib/pathways";
-import { likelihoodWord } from "../lib/pathways";
+import { likelihoodWord, recommendationOf } from "../lib/pathways";
+import { byTag, decisionByChosen, percent, trimToRoute } from "../lib/trailView";
 import { T, matchWord, pageName, supportPhrase } from "../lib/terms";
 import { derive } from "../lib/predicates";
 import { factValue, label, valueLabel } from "../lib/factMeta";
@@ -36,7 +37,7 @@ const KIND_PLAIN: Record<string, string> = { unknown: "needs more answers", unco
 
 /** A one-page record of the route for a note or a case discussion: copy as text, or print. */
 export function Summary({ p, onClose }: { p: Pathway; onClose: () => void }) {
-  const { g, s, bundle } = useApp();
+  const { g, s, bundle, ai, ranking } = useApp();
   const adv = useAdvanced();
   const [copied, setCopied] = useState(false);
   const box = useRef<HTMLDivElement>(null);
@@ -55,7 +56,11 @@ export function Summary({ p, onClose }: { p: Pathway; onClose: () => void }) {
     if (s.age !== null) entered.unshift(["Age", `${s.age} y`]);
     const worked = Object.entries(facts).filter(([k, v]) => schema.derived?.[k] && !(k in s.facts) && v !== null && v !== undefined && !k.includes("_or_") && !k.startsWith("gt5y"))
       .map(([k, v]) => [label(k), valueLabel(v)] as [string, string]);
-    const f = routeFocus(g, p);
+    const f = routeFocus(g, p, ranking.paths);
+    const rec = recommendationOf(g, p, ranking.paths);
+    // who decided each step: the guideline rule, the AI (with its probability), or the clinician
+    const decided = decisionByChosen(trimToRoute(ai.trail, new Set(p.steps.map((x) => x.node))));
+    const aiSteps = [...decided.values()].filter((d) => d.by === "ai");
     const pl = (id: string) => (adv ? plain(g, id) : cleanText(g, id, plain(g, id)));   // clinicians see text without glued footnote marks
     const blocksOf = (id: string) => (adv ? g.parsed.get(id)?.blocks ?? [] : tidyBlocks(g, id, g.parsed.get(id)?.blocks ?? []));
     const page = (id: string) => {
@@ -65,18 +70,24 @@ export function Summary({ p, onClose }: { p: Pathway; onClose: () => void }) {
     const steps = p.steps.map((st) => ({
       text: clip(pl(st.node), 220), where: page(st.node), kind: (adv ? KIND_WORD : KIND_PLAIN)[st.kind] ?? "",
       cond: g.preds[st.node] ? conditionText(g, st.node, facts) : "",
+      by: decided.has(st.node) ? byTag(decided.get(st.node)!) : "",
+      assumed: (decided.get(st.node)?.by === "ai" ? decided.get(st.node)!.assumed ?? [] : []).map(label),
     }));
+    const aiUsed = ai.on ? `AI used: ${ai.model ?? "language model"}, threshold ${percent(ai.threshold)}${aiSteps.length ? `; it chose ${aiSteps.length} step${aiSteps.length === 1 ? "" : "s"} on this route (lowest ${percent(Math.min(...aiSteps.map((d) => d.prob ?? 1)))})` : "; it chose no step on this route"}. The model weighs only branches the guideline rules leave open.` : "";
+    const options = rec.options.length > 1 ? rec.options.map((o) => clip(pl(o), 200)) : [];
+    const thens = rec.then.slice(0, 3).map((id) => { const to = gotoPage(g, id); return to ? `continues on ${adv ? to : pageName(to, bundle.pages[to]?.title)}` : clip(pl(id), 160); });
     const goto = f.follow ? gotoPage(g, f.follow.node) : null;
     return {
       entered, worked, steps,
       reco: pl(f.key.node), recoLines: blocksText(blocksOf(f.key.node)), recoBlocks: blocksOf(f.key.node), recoWhere: page(f.key.node),
-      then: f.follow ? pl(f.follow.node) + (goto ? ` (continues on ${adv ? goto : pageName(goto, bundle.pages[goto]?.title)})` : "") : "",
+      then: thens.join(" → ") || (f.follow ? pl(f.follow.node) + (goto ? ` (continues on ${adv ? goto : pageName(goto, bundle.pages[goto]?.title)})` : "") : ""),
+      options, aiUsed,
       next: p.end === "later" ? p.next.map((id) => clip(pl(id), 140)) : [],
       missing: p.missing.map(label),
       match: usedCount(p) === 0 ? "Possible starting point · Not based on your answers yet" : `${matchWord(p.likelihood)} · ${supportPhrase(p.missing.length)}`,
       scores: `${likelihoodWord(p.likelihood)} (${pct(p.likelihood)} of open routes) · patient data ${dataWord(p).toLowerCase()} (${p.met} of ${p.met + p.open} criteria) · extraction ${extractionWord(p).toLowerCase()} (${Math.round(p.encoding * 100)}%)`,
     };
-  }, [g, s.facts, s.age, p, bundle, adv]);
+  }, [g, s.facts, s.age, p, bundle, adv, ai.trail, ai.on, ai.model, ai.threshold, ranking]);
 
   const date = new Date().toISOString().slice(0, 10);
   const text = [
@@ -87,14 +98,15 @@ export function Summary({ p, onClose }: { p: Pathway; onClose: () => void }) {
     ...(data.worked.length ? ["", adv ? "WORKED OUT FROM THE ENTRIES" : "WORKED OUT FROM THE DETAILS", ...data.worked.map(([k, v]) => `- ${k}: ${v}`)] : []),
     "",
     adv ? `RECOMMENDED AT THIS POINT [${data.recoWhere}]` : `RECOMMENDATION [${data.recoWhere}]`,
-    ...data.recoLines,
+    ...(data.options.length ? ["The guideline lists these options at this step:", ...data.options.map((o) => `- ${o}`)] : data.recoLines),
     ...(data.then ? [`Then: ${data.then}`] : []),
     ...(adv ? ["", `FIT: ${data.scores}`] : [data.match]),
     ...(data.missing.length ? ["", adv ? `OPEN QUESTIONS: ${data.missing.join("; ")}` : `STILL UNKNOWN: ${data.missing.join("; ")}`] : []),
+    ...(data.aiUsed ? ["", data.aiUsed] : []),
     ...(p.uncoded ? [adv ? `JUDGMENT CALLS: ${p.uncoded} step(s) without an encoded condition` : `${p.uncoded} step(s) rely on your clinical judgment`] : []),
     "",
     adv ? "ROUTE" : "HOW THE PATIENT GETS HERE",
-    ...data.steps.map((st, i) => `${i + 1}. ${st.text} [${st.where}]${st.kind ? ` — ${st.kind}` : ""}${st.cond ? ` (${st.cond})` : ""}`),
+    ...data.steps.map((st, i) => `${i + 1}. ${st.text} [${st.where}]${st.kind ? ` — ${st.kind}` : ""}${st.by ? ` (${st.by})` : ""}${st.assumed.length ? ` [assumed, not entered: ${st.assumed.join(", ")}]` : ""}${st.cond ? ` (${st.cond})` : ""}`),
     ...(data.next.length ? ["", "WHAT COMES NEXT DEPENDS ON", ...data.next.map((x) => `- ${x}`)] : []),
     "",
     T.prototype,
@@ -118,9 +130,13 @@ export function Summary({ p, onClose }: { p: Pathway; onClose: () => void }) {
         <div className="sum-doc print-area">
           <p className="sum-meta">{bundle.title} · {date}</p>
           <h3>{adv ? "Recommended at this point" : "Recommendation"}</h3>
-          <div className="sum-reco"><Blocks blocks={data.recoBlocks} /><span className="sum-src">{data.recoWhere}</span></div>
+          <div className="sum-reco">
+            {data.options.length ? <><p>The guideline lists these options at this step:</p><ul>{data.options.map((o) => <li key={o}>{o}</li>)}</ul></> : <Blocks blocks={data.recoBlocks} />}
+            <span className="sum-src">{data.recoWhere}</span>
+          </div>
           {data.then && <p><b>Then:</b> {data.then}</p>}
           {adv ? <p className="sum-scores">{data.scores}</p> : <p className="sum-match">{data.match}</p>}
+          {data.aiUsed && <p className="sum-match">{data.aiUsed}</p>}
           <h3>{adv ? "Patient details entered" : "Patient details"}</h3>
           <dl className="sum-dl">{data.entered.map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
           {data.worked.length > 0 && <><h3>{adv ? "Worked out from the entries" : "Worked out from the details"}</h3><dl className="sum-dl">{data.worked.map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl></>}
@@ -132,7 +148,7 @@ export function Summary({ p, onClose }: { p: Pathway; onClose: () => void }) {
           )}
           <h3>{adv ? "Route" : "How the patient gets here"}</h3>
           <ol className="sum-route">
-            {data.steps.map((st, i) => <li key={i}>{st.text} <span className="sum-src">{st.where}</span>{st.kind && <em> — {st.kind}</em>}{st.cond && <div className="sum-cond">{st.cond}</div>}</li>)}
+            {data.steps.map((st, i) => <li key={i}>{st.text} <span className="sum-src">{st.where}</span>{st.kind && <em> — {st.kind}</em>}{st.by && <em> ({st.by})</em>}{st.assumed.length > 0 && <em> [assumed, not entered: {st.assumed.join(", ")}]</em>}{st.cond && <div className="sum-cond">{st.cond}</div>}</li>)}
           </ol>
           {data.next.length > 0 && <><h3>What comes next depends on</h3><ul>{data.next.map((x) => <li key={x}>{x}</li>)}</ul></>}
           <p className="sum-fine">{T.prototype}</p>

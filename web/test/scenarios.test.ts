@@ -4,11 +4,11 @@
  * Each block loads the real encoded guideline and states what a clinician would expect.
  */
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import type { Bundle } from "../src/types";
-import { adaptGuideline } from "../src/lib/adapt";
+import { adaptGuideline, stripMarks } from "../src/lib/adapt";
 import { buildGraph } from "../src/lib/graph";
-import { boxClass, isRecommendationEnd, PAGE_REF, rankPathways, type Pathway } from "../src/lib/pathways";
+import { boxClass, distinctRecommendations, isActionBox, isRecommendationEnd, PAGE_REF, rankPathways, recommendationOf, shownRoute, stepTier, type Pathway } from "../src/lib/pathways";
 import { extractFacts, applyFound } from "../src/lib/extract";
 import { decidingFacts, previewAnswer, remainingQuestions, whyNothingFits } from "../src/lib/formAssist";
 import { moments, momentsFor, phaseOf, startPhase } from "../src/lib/moments";
@@ -375,4 +375,129 @@ describe("10. page references and headings are never presented as the recommenda
     }
     expect(routes).toBeGreaterThan(0);
   });
+});
+
+// ---------------------------------------------------------------- the recommendation is the treatment
+
+describe("11. the headline is the treatment, not the follow-up or a side row", () => {
+  const text = (g: ReturnType<typeof load>, id: string) => stripMarks(g.node(id)!.text).replace(/\s+/g, " ");
+  /** What the first recommendation card shows: the headline box and every option the guideline lists at that step. */
+  const top = (g: ReturnType<typeof load>, facts: Record<string, unknown>, start = "auto") => {
+    const r = rankPathways(g, facts, start);
+    const groups = distinctRecommendations(g, r);
+    expect(groups.length, "a recommendation").toBeGreaterThan(0);
+    const rec = groups[0].rec;
+    return { r, group: groups[0], rec, texts: rec.options.map((o) => text(g, o)), page: rec.key.node.split(":")[0] };
+  };
+
+  it("rectal pMMR cT3N1M0: long-course chemoRT or short-course RT, and TNT, on REC-6; aspirin is only alongside", () => {
+    const g = load("rectal");
+    const facts = { guideline_section: "pMMR/MSS Rectal Cancer", distant_metastases_suspected_or_proven: false, clinical_t_category: "T3", clinical_n_category: "N1", mismatch_repair_status: "pMMR_MSS" };
+    const { rec, texts, page, group } = top(g, facts);
+    expect(page).toBe("REC-6");
+    expect(rec.tier).toBe("treatment");
+    expect(rec.options.length).toBeGreaterThanOrEqual(3);
+    expect(texts.some((t) => /Long-course chemo\/RT/.test(t) && /Short-course RT/.test(t))).toBe(true);
+    expect(texts.some((t) => /^Chemotherapy \(12–16 wk\) • FOLFOX or CAPEOX/.test(t))).toBe(true);   // chemotherapy first, then chemoRT: total neoadjuvant therapy
+    expect(rec.alongside.map((a) => text(g, a)).join(" ")).toMatch(/aspirin/i);
+    expect(texts.join(" ")).not.toMatch(/aspirin/i);
+    expect(rec.then.length).toBeGreaterThan(0);
+  });
+
+  it("rectal dMMR cT3: the checkpoint inhibitor is among the options, not buried behind the re-evaluation schedule", () => {
+    const g = load("rectal");
+    const facts = { guideline_section: "dMMR/MSI-H Rectal Cancer", distant_metastases_suspected_or_proven: false, clinical_t_category: "T3", clinical_n_category: "N1", mismatch_repair_status: "dMMR_MSI_H" };
+    const { rec, texts } = top(g, facts);
+    expect(texts.some((t) => /checkpoint inhibitor/i.test(t))).toBe(true);
+    expect(rec.tier).toBe("treatment");
+    expect(texts.join(" ")).not.toMatch(/Re-evaluate disease status/i);
+  });
+
+  it("colon pMMR T3 N1 M0 after resection: adjuvant chemotherapy, never the surveillance schedule", () => {
+    const g = load("colon");
+    const facts = { guideline_section: "pMMR/MSS Colon Cancer", primary_diagnosis: "colon_adenocarcinoma", t_category: "T3", n_category: "N1", m_category: "M0", mismatch_repair_status: "pMMR_MSS" };
+    for (const start of ["auto", "COL-4"]) {
+      const { rec, texts, page } = top(g, facts, start);
+      expect(["COL-4", "COL-10"], start).toContain(page);
+      expect(rec.tier, start).toBe("treatment");
+      expect(texts.join(" "), start).toMatch(/CAPEOX|FOLFOX|capecitabine|fluorouracil/i);
+      expect(texts.join(" "), start).not.toMatch(/History and physical/i);
+    }
+  });
+
+  it("prostate unfavorable intermediate (cT2b, GG3, PSA 12, LE 12 y): RP and RT + ADT are both shown as options", () => {
+    const g = load("prostate");
+    const facts = { clinical_t_category: "T2b", grade_group: "3", psa_ng_ml: 12, life_expectancy_years: 12, n_category: "N0", m_category: "M0" };
+    const { rec, texts, page } = top(g, facts);
+    expect(page).toBe("PROS-5");
+    expect(texts.some((t) => /^RP\b/.test(t))).toBe(true);
+    expect(texts.some((t) => /RT\+ ?ADT/.test(t))).toBe(true);
+    expect(rec.options.length).toBe(2);
+  });
+
+  it("the card's route stands for the whole group: the options are one recommendation, not several", () => {
+    const g = load("prostate");
+    const r = rankPathways(g, { clinical_t_category: "T2b", grade_group: "3", psa_ng_ml: 12, life_expectancy_years: 12, n_category: "N0", m_category: "M0" });
+    const groups = distinctRecommendations(g, r);
+    expect(groups.length).toBe(1);
+    expect(groups[0].routes.length).toBe(2);
+    expect(shownRoute(g, r, null)!.id).toBe(groups[0].route.id);
+  });
+});
+
+describe("12. library-wide: the headline of the top routes", () => {
+  const slugs = readdirSync("../data").filter((d) => existsSync(`../data/${d}/guideline.json`)).sort();
+  /** Deterministic details for every schema variable: the first enum value, true, a middling number. */
+  const filled = (g: ReturnType<typeof load>) => {
+    const out: Record<string, unknown> = {};
+    for (const [k, spec] of Object.entries(g.bundle.schema?.variables ?? {})) {
+      if (spec.type === "bool") out[k] = true;
+      else if (spec.type === "number") out[k] = 10;
+      else if (spec.values?.length) out[k] = spec.values[0];
+    }
+    return out;
+  };
+  const SETTLED = new Set(["met", "otherwise", "inferred"]);
+
+  it("is never a follow-up box when an earlier treatment box follows the last settled decision, and never a side row beside a table's condition rows", () => {
+    let routes = 0, followups = 0, sideRowsAvoided = 0;
+    for (const slug of slugs) {
+      const g = load(slug);
+      const starts = ["auto", ...moments(g).map((m) => m.page).slice(0, 5)];
+      for (const facts of [filled(g), {}] as Record<string, unknown>[]) {
+        for (const start of new Set(starts)) {
+          const r = rankPathways(g, facts as never, start);
+          for (const p of r.paths.slice(0, 6)) {
+            routes++;
+            const rec = recommendationOf(g, p, r.paths);
+            const label = `${slug} ${start} ${p.id.slice(-40)}`;
+            if (rec.tier === "followup") {
+              followups++;
+              let settled = -1;
+              p.steps.forEach((s, i) => { if (i < rec.index && SETTLED.has(s.kind)) settled = i; });
+              for (let j = settled + 1; j < rec.index; j++)
+                expect(isActionBox(g, p.steps[j].node) && stepTier(g, p.steps[j].node) === "treatment", `${label}: ${p.steps[j].node} is a treatment ahead of the follow-up headline`).toBe(false);
+            }
+            // a recommendation row printed beside a treatment table's condition rows is alongside, never a route of its own
+            for (const s of p.steps) {
+              const parents = g.parents[s.node] ?? [];
+              const n = g.node(s.node)!;
+              if (n.role === "table_rec" && !n.decision && !g.preds[s.node] && parents.some((q) => g.kids(q).some((k) => g.node(k)?.role === "table_condition"))) {
+                expect(false, `${label}: side row ${s.node} is on a route`).toBe(true);
+              }
+            }
+            for (const a of p.alongside) {
+              expect(p.steps.some((s) => s.node === a), `${label}: ${a} is both on the route and alongside`).toBe(false);
+              sideRowsAvoided++;
+            }
+            if (rec.options.length > 1) expect(new Set(rec.options).size).toBe(rec.options.length);
+            expect(rec.options).toContain(rec.key.node);
+          }
+        }
+      }
+    }
+    expect(routes).toBeGreaterThan(500);
+    expect(sideRowsAvoided).toBeGreaterThan(0);
+    console.log("headline library stats", JSON.stringify({ routes, followups, sideRowsAvoided }));
+  }, 600_000);
 });

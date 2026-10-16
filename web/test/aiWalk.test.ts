@@ -11,7 +11,7 @@ import { buildGraph, type Graph } from "../src/lib/graph";
 import { moments } from "../src/lib/moments";
 import { rankPathways } from "../src/lib/pathways";
 import { DecideError, NONE } from "../src/lib/decide";
-import { aiWalk, edgeProbFromTrail, entryNode, rulesOnlyTrail, walkChildren, type ScoreFn, type TrailStep } from "../src/lib/aiWalk";
+import { AUTO_MARGIN, aiWalk, edgeProbFromTrail, entryNode, rulesOnlyTrail, walkChildren, type ScoreFn, type TrailStep } from "../src/lib/aiWalk";
 
 const sample = buildGraph(JSON.parse(readFileSync(new URL("../public/sample-bundle.json", import.meta.url), "utf8")) as Bundle);
 const load = (slug: string) => buildGraph(adaptGuideline(JSON.parse(readFileSync(`../data/${slug}/guideline.json`, "utf8"))));
@@ -365,14 +365,82 @@ describe("library-wide", () => {
 
   it("a clinician override at any step of a real walk is honoured and the walk goes on", async () => {
     const g = load("prostate");
-    const base = await aiWalk(g, {}, "auto", { score: everyChild, maxSteps: 60 });
+    const base = await aiWalk(g, {}, "auto", { score: firstChild, maxSteps: 60 });
     const branch = base.steps.find((s) => s.by === "ai" && s.options.length > 1);   // (the entry step has no options)
     expect(branch).toBeDefined();
     const other = branch!.options.find((o) => o.child !== branch!.chosen)!.child;
-    const forced = await aiWalk(g, {}, "auto", { score: everyChild, maxSteps: 60, overrides: { [branch!.node]: other } });
+    const forced = await aiWalk(g, {}, "auto", { score: firstChild, maxSteps: 60, overrides: { [branch!.node]: other } });
     const step = forced.steps.find((s) => s.node === branch!.node && s.by !== "entry")!;
     expect(step).toMatchObject({ chosen: other, by: "clinician" });
     expect(forced.steps.map((s) => s.node)).not.toContain(branch!.chosen);
     check(g, forced, 60, "forced");
   }, 60_000);
+});
+
+// ---------------------------------------------------------------- options are never picked; condition arms need a margin
+
+describe("auto-follow needs a clear lead over the runner-up", () => {
+  it("the margin is a constant", () => { expect(AUTO_MARGIN).toBe(0.15); });
+
+  it("0.90 against 0.05 is followed; 0.90 against 0.80 asks (both above the threshold, no clear lead)", async () => {
+    const clear = await aiWalk(sample, {}, "SAMPLE-1", { score: mock({ [S1.n2]: { [S1.high]: 0.9, [S1.low]: 0.05 } }).score });
+    expect(clear.steps.find((s) => s.node === S1.n2)).toMatchObject({ chosen: S1.high, by: "ai" });
+    const close = await aiWalk(sample, {}, "SAMPLE-1", { score: mock({ [S1.n2]: { [S1.high]: 0.9, [S1.low]: 0.8 } }).score });
+    expect(close.stoppedFor).toBe("ask");
+    expect(close.end).toBe(S1.n2);
+    expect(close.steps.some((s) => s.node === S1.n2)).toBe(false);
+    expect(close.options!.map((o) => o.prob)).toEqual([0.9, 0.8]);
+  });
+
+  it("exactly the margin is enough", async () => {
+    const r = await aiWalk(sample, {}, "SAMPLE-1", { score: mock({ [S1.n2]: { [S1.high]: 0.95, [S1.low]: 0.8 } }).score });
+    expect(r.steps.find((s) => s.node === S1.n2)).toMatchObject({ chosen: S1.high, by: "ai" });
+  });
+
+  it("an AI choice that rests on a detail never entered says so", async () => {
+    const r = await aiWalk(sample, {}, "SAMPLE-1", { score: mock({ [S1.n2]: { [S1.high]: 0.9, [S1.low]: 0.05 } }).score });
+    expect(r.steps.find((s) => s.node === S1.n2)!.assumed).toEqual(["score"]);
+  });
+});
+
+describe("treatment options are all shown, never one picked by the model", () => {
+  const g = load("prostate");
+  const facts = { clinical_t_category: "T2b", grade_group: "3", psa_ng_ml: 12, life_expectancy_years: 12, n_category: "N0", m_category: "M0" };
+  /** Independent predicates: each option is appropriate with its own probability (they do not sum to 1). */
+  const independent: ScoreFn = async (gg, _f, ids) =>
+    new Map(ids.map((id) => [id, new Map<string, number>(walkChildren(gg, id).map((k, i) => [k, i === 0 ? 0.89 : 0.12] as const))] as const));
+
+  it("unfavorable intermediate risk: RP 89% and RT + ADT 12% are both listed and the walk stops there", async () => {
+    const r = await aiWalk(g, facts, "auto", { score: independent });
+    expect(r.stoppedFor).toBe("ask");
+    expect(r.optionArms).toBe(true);
+    expect(r.end).toBe("PROS-5:n279_23");
+    const texts = r.options!.map((o) => o.text);
+    expect(texts.some((t) => /^RP\b/.test(t))).toBe(true);
+    expect(texts.some((t) => /RT\+ ?ADT/.test(t))).toBe(true);
+    expect(r.options!.every((o) => typeof o.prob === "number")).toBe(true);
+    expect(r.steps.every((s) => s.node !== "PROS-5:n279_23")).toBe(true);   // no option was chosen
+  });
+
+  it("even at 99% against 1% an option is not chosen for the clinician", async () => {
+    const sure: ScoreFn = async (gg, _f, ids) =>
+      new Map(ids.map((id) => [id, new Map<string, number>(walkChildren(gg, id).map((k, i) => [k, i === 0 ? 0.99 : 0.01] as const))] as const));
+    const r = await aiWalk(g, facts, "auto", { score: sure });
+    expect(r.optionArms).toBe(true);
+    expect(r.steps.some((s) => s.by === "ai" && /^PROS-5:/.test(s.chosen))).toBe(false);
+  });
+
+  it("the clinician can still choose one, and the walk goes on from it", async () => {
+    const base = await aiWalk(g, facts, "auto", { score: independent });
+    const rt = base.options!.find((o) => /RT\+ ?ADT/.test(o.text))!.child;
+    const r = await aiWalk(g, facts, "auto", { score: independent, overrides: { [base.end]: rt } });
+    expect(r.steps.find((s) => s.node === base.end)).toMatchObject({ chosen: rt, by: "clinician" });
+  });
+
+  it("the probabilities of every option reach the ranking", async () => {
+    const base = await aiWalk(g, facts, "auto", { score: independent });
+    const probs = edgeProbFromTrail(base);
+    const kids = base.options!.map((o) => probs.get(`${base.end}>${o.child}`));
+    expect(kids.every((p) => typeof p === "number")).toBe(true);
+  });
 });

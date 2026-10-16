@@ -175,7 +175,14 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
   }, [g]);
   const [s, dispatch] = useReducer(reducer, init);
 
-  useEffect(() => { try { history.replaceState(null, "", locToHash(s.loc, prefix)); } catch { /* file:// may refuse */ } }, [s.loc, prefix]);
+  useEffect(() => {
+    try {
+      // the address already names another guideline (the library is switching): do not pull it back
+      const h = decodeURIComponent(location.hash.replace(/^#/, ""));
+      if (prefix && h && !h.startsWith(prefix) && h !== prefix.slice(0, -1)) return;
+      history.replaceState(null, "", locToHash(s.loc, prefix));
+    } catch { /* file:// may refuse */ }
+  }, [s.loc, prefix]);
   useEffect(() => {
     if (!slug) return;
     try { sessionStorage.setItem(patientKey(slug), JSON.stringify({ facts: s.facts, age: s.age, start: s.start, stale: s.stale, overrides: s.overrides })); } catch { /* storage blocked */ }

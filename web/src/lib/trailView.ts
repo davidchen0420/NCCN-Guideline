@@ -79,22 +79,37 @@ const BARE_CODE = /^[A-Z]{2,6}-\d+[A-Z]?$/;
 const TRAILING_CODE = /\s*\(([A-Z]{2,6}-\d+[A-Z]?)\)\s*$/;
 const letters = (t: string) => t.replace(/[^A-Za-z]/g, "");
 
+/** Private-use glyphs (the PDF's bullets and symbols, which no font draws) and the replacement character, removed. */
+export const stripGlyphs = (t: string): string => t.replace(/[-\u0017�]/g, "").replace(/[ \t]{2,}/g, " ");
+/** Cut a text to `n` characters without splitting a character (code points, not UTF-16 units), with an ellipsis. */
+export function clipText(t: string, n: number): string {
+  const cps = Array.from(stripGlyphs(t));
+  return cps.length > n ? cps.slice(0, n - 1).join("").trimEnd() + "…" : cps.join("");
+}
+
+/** A page title with its code after it, once: "Low-Risk Group (PROS-3)", never "NSCL-20 (NSCL-20)". */
+function titled(title: string | undefined, code: string): string {
+  const t = (title ?? "").trim();
+  if (!t || t === code) return code;
+  return t.includes(`(${code})`) ? t : `${t} (${code})`;
+}
+
 /**
  * A box's text as a heading reads: a bare page code ("PROS-3") becomes that page's title with the
  * code after it, and text printed in capitals that is a page's title ("INITIAL RISK STRATIFICATION
- * (PROS-2)") is written as the title is. Anything else is the box's own text.
+ * (PROS-2)") is written as the title is. Anything else is the box's own text. Private-use glyphs are dropped.
  */
 export function readable(g: Graph, text: string): string {
-  const t = text.trim();
-  if (BARE_CODE.test(t)) { const title = g.bundle.pages[t]?.title; return title ? `${title} (${t})` : t; }
+  const t = stripGlyphs(text).trim();
+  if (BARE_CODE.test(t)) return titled(g.bundle.pages[t]?.title, t);
   const l = letters(t);
   if (l.length > 6 && l === l.toUpperCase()) {
     const code = TRAILING_CODE.exec(t)?.[1];
     const bare = t.replace(TRAILING_CODE, "").trim().toLowerCase();
     const hit = Object.entries(g.bundle.pages).find(([c, p]) => (code ? c === code : true) && (p.title ?? "").trim().toLowerCase() === bare);
-    if (hit) return `${hit[1].title} (${hit[0]})`;
+    if (hit) return titled(hit[1].title, hit[0]);
   }
-  return text;
+  return stripGlyphs(text);
 }
 
 /** The question a decision answers: the parent box's text, footnote marks removed; the page's virtual start reads as a question. */
@@ -102,6 +117,20 @@ export function questionText(g: Graph, node: string): string {
   if (node.endsWith(":START")) return "Which starting point applies?";
   const n = g.node(node);
   return n ? readable(g, boxText(n.text) || node) : node;
+}
+
+/**
+ * A decision's heading: the box's text when it is a question; otherwise (a bullet list, a patient
+ * group, a heading in capitals, a page code) "Choice on <page title> (CODE)", with the box's own
+ * text kept for "Show text" instead of standing in as the question.
+ */
+export function questionParts(g: Graph, node: string): { heading: string; text: string | null } {
+  if (node.endsWith(":START")) return { heading: "Which starting point applies?", text: null };
+  const n = g.node(node);
+  if (!n) return { heading: node, text: null };
+  const text = questionText(g, node);
+  if (/\?\s*$/.test(text) && text.length <= 200) return { heading: text, text: null };
+  return { heading: `Choice on ${titled(g.bundle.pages[n.page]?.title, n.page)}`, text };
 }
 
 /** The option the AI favoured most, when it is not the one followed (for the disagreement note). */
@@ -126,6 +155,18 @@ export function edgeTags(r: Pick<AiWalkResult, "steps">, threshold: number): Map
     out.set(`${s.node}>${s.chosen}`, { text, low: p !== undefined && p < threshold });
   }
   return out;
+}
+
+/** The decision that led to each box of the trail (keyed by the box chosen): who decided, with what probability. */
+export function decisionByChosen(r: Pick<AiWalkResult, "steps">): Map<string, TrailStep> {
+  return new Map(decisionSteps(r).map((s) => [s.chosen, s] as const));
+}
+
+/** How a decision was made, in the words of a summary: "(rule)", "(AI 93%)", "(you chose)", "(AI 93%, assumed …)". */
+export function byTag(s: TrailStep): string {
+  if (s.by === "clinician") return "you chose";
+  if (s.by === "ai") return `AI ${typeof s.prob === "number" ? percent(s.prob) : ""}`.trim();
+  return "guideline rule";
 }
 
 /**
