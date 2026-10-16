@@ -12,7 +12,7 @@ import type { Graph } from "../lib/graph";
 import type { Ranking } from "../lib/pathways";
 import { resolveRef } from "../lib/graph";
 import { SrcChip } from "../source";
-import { PHASES, askFilter, askableQuestions, followsDisease, gateSentence, impliedBySection, momentsFor, momentsOf, needOf, nextPageOf, reachableFacts, settingsFor, startPhase, type Phase } from "../lib/moments";
+import { PHASES, askFilter, askableQuestions, followsDisease, gateSentence, impliedBySection, leadsCondition, momentsFor, momentsOf, needOf, nextPageOf, reachableFacts, settingChoices, settingsFor, startPhase, type Phase, type Setting } from "../lib/moments";
 import { T, countRecs, pageName } from "../lib/terms";
 import { readPref, writePref } from "../lib/prefs";
 import { ArrowRight, ChevronDown, ClipboardPaste, RotateCcw, Save, Search as SearchIcon, Trash2, X } from "lucide-react";
@@ -37,19 +37,22 @@ function usePageName() {
 
 /** The answers worth a line: only when they lead to different places, never back to the page the
  * question is on or the page the recommendation starts at, and nothing for an answer that changes nothing. */
-function informative(pvs: Preview[], skip: (string | undefined)[]): Preview[] {
-  const key = (p: Preview) => (p.routes === 0 ? "none" : p.decides ? `page:${p.decides.page}` : "same");
+/** A preview and what must still hold for its page to be the one reached (details not yet answered). */
+type LeadPreview = Preview & { cond?: string };
+
+function informative(pvs: LeadPreview[], skip: (string | undefined)[]): LeadPreview[] {
+  const key = (p: LeadPreview) => (p.routes === 0 ? "none" : p.decides ? `page:${p.decides.page}` : "same");
   if (pvs.length < 2 || new Set(pvs.map(key)).size < 2) return [];
   return pvs.filter((p) => p.routes === 0 || (p.decides && !skip.includes(p.decides.page)));
 }
 
 /** Where an answer leads, in words: the page it reaches (title first), or that no recommendation fits. */
-function Leads({ p }: { p: Preview }) {
+function Leads({ p }: { p: LeadPreview }) {
   const name = usePageName();
   if (p.routes === 0) return <span className="pv-none">{T.noneFits}</span>;
   if (!p.decides) return null;
   const n = name(p.decides.page);
-  return <span className="pv-to">Leads to: <span className="pv-page">{n.title ? <>{n.title} <i>({n.code})</i></> : n.code}</span></span>;
+  return <span className="pv-to">Leads to: <span className="pv-page">{n.title ? <>{n.title} <i>({n.code})</i></> : n.code}</span>{p.cond && <span className="pv-if"> {p.cond}</span>}</span>;
 }
 
 /** "Decides: Page title (PROS-5)"; Advanced also shows the box text and how much of the fit it is open on. */
@@ -131,7 +134,7 @@ interface FieldProps {
   /** the branch this detail decides (deciding details only) */
   why?: Decider | null;
   /** where each answer leads (deciding details only) */
-  previews?: Preview[] | null;
+  previews?: LeadPreview[] | null;
   /** shown dimmed: changes none of the routes that are open */
   quiet?: boolean;
   onPage?: (page: string) => void;
@@ -183,7 +186,7 @@ function Field({ name, spec, value, onChange, needed, used, why, previews, quiet
 }
 
 /** Where each answer leads: the page its branch reaches on the best-matching recommendation. */
-function Previews({ previews, skip, onPick }: { previews: Preview[]; skip: (string | undefined)[]; onPick: (v: unknown) => void }) {
+function Previews({ previews, skip, onPick }: { previews: LeadPreview[]; skip: (string | undefined)[]; onPick: (v: unknown) => void }) {
   const { s } = useApp();
   const shown = informative(previews, [...skip, s.start]);
   if (!shown.length) return null;
@@ -241,14 +244,14 @@ function LifeExpectancyHelper({ age, onApply }: { age: number | null; onApply: (
 
 /* ---------------- previews, computed a few at a time so typing stays smooth ---------------- */
 
-function usePreviews(g: Graph, facts: Facts, deciders: Decider[], ranking: Ranking, start: string): Map<string, Preview[]> {
-  const [out, setOut] = useState<Map<string, Preview[]>>(new Map());
-  const cache = useRef(new Map<string, Preview>());
+function usePreviews(g: Graph, facts: Facts, deciders: Decider[], ranking: Ranking, start: string): Map<string, LeadPreview[]> {
+  const [out, setOut] = useState<Map<string, LeadPreview[]>>(new Map());
+  const cache = useRef(new Map<string, LeadPreview>());
   useEffect(() => {
     const vars = g.bundle.schema.variables;
     const fkey = JSON.stringify(facts);
     const jobs = deciders.flatMap((d) => previewValues(vars[d.fact]).map((v) => ({ fact: d.fact, v })));
-    const result = new Map<string, Preview[]>();
+    const result = new Map<string, LeadPreview[]>();
     const flush = () => setOut(new Map(result));
     let i = 0, off = false;
     const step = () => {
@@ -258,7 +261,11 @@ function usePreviews(g: Graph, facts: Facts, deciders: Decider[], ranking: Ranki
         const { fact, v } = jobs[i++];
         const key = `${start}|${fkey}|${fact}|${JSON.stringify(v)}`;
         let p = cache.current.get(key);
-        if (!p) { p = previewAnswer(g, facts, fact, v, ranking, start); cache.current.set(key, p); }
+        if (!p) {
+          const pv = previewAnswer(g, facts, fact, v, ranking, start);
+          p = { ...pv, cond: pv.decides ? leadsCondition(g, facts, fact, v, pv.decides.node) : "" };
+          cache.current.set(key, p);
+        }
         result.set(fact, [...(result.get(fact) ?? []), p]);
       }
       flush();
@@ -694,6 +701,13 @@ function WhereNow({ count, disease, pending, setPending, topic }: { count: numbe
   // (a single setting with nothing to choose is not offered: the hint would claim a start that was never set)
   const showMoments = (chips || pages.length > 1) && (!sec || secVal !== undefined);
   if (!disease && !showMoments) return null;
+  const choices = settingChoices(pages);
+  const situationButton = (m: Setting) => (
+    <button key={m.page} type="button" role="radio" aria-checked={s.start === m.page} onClick={() => setStart(m.page)}>
+      <span className="sit-t">{m.label}{m.byTitle && <> <i>({m.page})</i></>}</span>
+      {m.sub && <span className="sit-h">{m.sub}</span>}
+    </button>
+  );
   const nameOf = (page: string, max = 70) => { const t = g.bundle.pages[page]?.title ?? ""; return pageName(page, t && t !== page ? clipT(t, max) : null); };
   return (<>
     {disease && (
@@ -716,17 +730,20 @@ function WhereNow({ count, disease, pending, setPending, topic }: { count: numbe
         {pages.length > 1 && (advanced ? (
           <select className="sel small" aria-label="Which page" value={pages.some((m) => m.page === s.start) ? s.start : ""} onChange={(e) => e.target.value && setStart(e.target.value)}>
             {choosing && <option value="">Choose a page…</option>}
-            {pages.map((m) => <option key={m.page} value={m.page}>{pageName(m.page, clipT(m.title))}</option>)}
+            {choices.map((c) => c.group
+              ? <optgroup key={c.group.id} label={c.group.label}>{c.settings.map((m) => <option key={m.page} value={m.page}>{pageName(m.page, clipT(m.title))}</option>)}</optgroup>
+              : <option key={c.setting.page} value={c.setting.page}>{pageName(c.setting.page, clipT(c.setting.title))}</option>)}
           </select>
         ) : (<>
           <p className="pt-sublabel" id="sit-l">Which setting?</p>
-          <div className="situations" role="radiogroup" aria-labelledby="sit-l" data-testid="situations">
-            {pages.map((m) => (
-              <button key={m.page} type="button" role="radio" aria-checked={s.start === m.page} onClick={() => setStart(m.page)}>
-                <span className="sit-t">{m.label}{m.byTitle && <> <i>({m.page})</i></>}</span>
-                {m.sub && <span className="sit-h">{m.sub}</span>}
-              </button>
-            ))}
+          <div className="situations" role={choices.some((c) => c.group) ? "group" : "radiogroup"} aria-labelledby="sit-l" data-testid="situations">
+            {choices.map((c) => c.group ? (
+              // (many settings picked by the same detail: one line that opens the list, open when one of them is the start)
+              <details key={`${c.group.id}:${c.settings.some((m) => m.page === s.start)}`} className="sit-group" open={c.settings.some((m) => m.page === s.start)} data-testid="situation-group">
+                <summary><span className="sit-t">{c.group.label}</span><span className="sit-h">{c.settings.length} starting points</span></summary>
+                <div className="sit-members" role="radiogroup" aria-label={c.group.label}>{c.settings.map(situationButton)}</div>
+              </details>
+            ) : situationButton(c.setting))}
           </div>
         </>))}
         <p className={`hint${choosing ? " prompt" : ""}`}>{choosing ? "Choose the setting that fits."
@@ -915,7 +932,7 @@ function PasteRecord({ schema }: { schema: Schema }) {
 /* ---------------- one question at a time ---------------- */
 
 function Interview({ deciders, remainingFacts, previews, subtype, answer, onPage, routes, recs, toPaths, stuck, nextPage, openNext }: {
-  deciders: Decider[]; remainingFacts: string[]; previews: Map<string, Preview[]>; subtype?: string; answer: (f: string, v: unknown) => void;
+  deciders: Decider[]; remainingFacts: string[]; previews: Map<string, LeadPreview[]>; subtype?: string; answer: (f: string, v: unknown) => void;
   onPage: (p: string) => void; routes: number; recs: number; toPaths: () => void; stuck: boolean; nextPage: string | null; openNext: () => void;
 }) {
   const { bundle, s } = useApp();
@@ -1007,7 +1024,7 @@ function Interview({ deciders, remainingFacts, previews, subtype, answer, onPage
 /** More than nine choices: type to narrow the list (number keys only reach 1 to 9). */
 const GENERIC = new Set(["lymphoma", "lymphomas", "cell", "large", "disorders", "related", "other", "type", "with", "cancer", "disease"]);
 const words = (x: unknown) => String(x).toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length >= 4 && !GENERIC.has(w));
-function IvSearch({ values, pv, subtype, onPick }: { values: unknown[]; pv: Preview[]; subtype?: string; onPick: (v: unknown) => void }) {
+function IvSearch({ values, pv, subtype, onPick }: { values: unknown[]; pv: LeadPreview[]; subtype?: string; onPick: (v: unknown) => void }) {
   const [q, setQ] = useState("");
   const t = q.trim().toLowerCase();
   // answers that share a word with the chosen subtype come first

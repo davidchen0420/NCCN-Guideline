@@ -221,7 +221,11 @@ await step("where is the patient now: a later moment starts there, holds details
   assert.match(await moment.innerText(), /Which setting\?/);
   assert.doesNotMatch(await moment.innerText(), /Starting at/);
   assert.equal(await panel.getByTestId("carried").count(), 0, "nothing is held before a page is chosen");
-  assert.ok((await sit.getByRole("radio").first().locator(".sit-h").innerText()).length > 10, "each situation says what it is for");
+  // each situation has a name; a second line, when there is one, is a short whole description (no cut-off fragment, no bullets)
+  for (const r of await sit.getByRole("radio").all()) {
+    assert.ok((await r.locator(".sit-t").innerText()).trim().length > 4, "each situation has a name");
+    for (const h of await r.locator(".sit-h").allInnerTexts()) assert.ok(h.length <= 80 && !/…$|[•◦▪]|;\s*$/.test(h), `second line: "${h}"`);
+  }
   const second = sit.getByRole("radio").nth(1);
   const title2 = (await second.locator(".sit-t").innerText()).replace(/\s*\(.*$/, "").trim();
   await second.click();
@@ -472,6 +476,58 @@ await step("a topic with nothing to ask says so plainly and opens the page; the 
   assert.match(await btn.innerText(), /^Open .+ in the diagram/);
   await btn.click();
   await page.waitForFunction(() => /#survivorship\/flow\/SLYMPH/.test(location.hash));
+});
+await step("colon, after surgery: the setting asks pathologic details, not the clinical-stage or pre-op ones", async () => {
+  await page.goto(base + "#colon/");
+  await page.reload();
+  await page.locator("[data-testid=card]").first().waitFor();
+  if (await panel.getByTestId("mode-form").count()) await panel.getByTestId("mode-form").click();
+  await page.locator("#fact-guideline_section").getByRole("radio", { name: "pMMR/MSS Colon Cancer" }).click();
+  const moment = panel.getByTestId("moment");
+  await moment.getByRole("button", { name: "Workup & first treatment" }).click();
+  await moment.getByTestId("situations").getByRole("radio", { name: /After surgery: Pathologic Stage/ }).click();
+  assert.match(await moment.locator(".hint").innerText(), /Starting at .*\(COL-4\)/);
+  // its second line is a short whole description
+  assert.equal(await moment.getByTestId("situations").getByRole("radio", { name: /After surgery: Pathologic Stage/ }).locator(".sit-h").innerText(), "Treatment after surgery, by the pathologic stage");
+  if (await panel.getByTestId("mode-form").count()) await panel.getByTestId("mode-form").click();
+  await panel.locator(".pf .flabel").nth(1).waitFor();
+  const fields = (await panel.locator(".pf .flabel").allInnerTexts()).map((t) => t.replace(/\s+/g, " ").trim()).join(" | ");
+  assert.match(fields, /N Category/, fields);
+  for (const bad of [/Locally Unresectable/, /Medically Inoperable/, /Bulky Nodal/]) assert.doesNotMatch(fields, bad, "a pre-op question after surgery: " + fields);
+});
+await step("pediatric sarcoma: eight first pages are two choices, the sites in one group that opens; every setting still starts its own page", async () => {
+  await page.goto(base + "#pediatric_soft_tissue_sarcoma/");
+  await page.reload();
+  await page.locator("[data-testid=card]").first().waitFor();
+  if (await panel.getByTestId("mode-form").count()) await panel.getByTestId("mode-form").click();
+  const moment = panel.getByTestId("moment");
+  await moment.getByRole("button", { name: "Workup & first treatment" }).click();
+  const sit = moment.getByTestId("situations");
+  const group = sit.getByTestId("situation-group");
+  assert.equal(await group.count(), 1);
+  assert.match(await group.locator("summary").innerText(), /By presenting site[\s\S]*7 starting points/);
+  assert.equal(await sit.locator(":scope > button, :scope > details").count() <= 6, true, "at most six choices");
+  assert.equal(await group.getAttribute("open"), null, "closed until asked");
+  await group.locator("summary").click();
+  const members = await group.getByRole("radio").locator(".sit-t").allInnerTexts();
+  assert.equal(members.length, 7, members.join(" | "));
+  assert.ok(members.some((t) => /Head or neck mass/.test(t)), members.join(" | "));
+  await group.getByRole("radio", { name: /Head or neck mass/ }).click();
+  assert.match(await moment.locator(".hint").innerText(), /Starting at .*\(PRMS-3\)/);
+  assert.notEqual(await sit.getByTestId("situation-group").getAttribute("open"), null, "open while one of its settings is the start");
+});
+await step("a touch screen gets toggles at least 24px tall", async () => {
+  const touch = await browser.newContext({ viewport: { width: 420, height: 900 }, hasTouch: true, isMobile: true });
+  const tp = await touch.newPage();
+  await tp.addInitScript(() => { try { localStorage.setItem("nav-help", "1"); localStorage.setItem("oc-canvas-hint", "1"); } catch { /* */ } });
+  await tp.goto(base + "#prostate/");
+  await tp.locator("[data-testid=card]").first().waitFor();
+  const heights = await tp.evaluate(() => [...document.querySelectorAll(".switch i")].map((i) => Math.round(i.getBoundingClientRect().height)).filter((h) => h > 0));
+  // (some toggles are folded away on a phone: any that are drawn are tall enough)
+  for (const h of heights) assert.ok(h >= 24, "toggle height " + h);
+  const probe = await tp.evaluate(() => { const i = document.createElement("label"); i.className = "switch"; i.innerHTML = '<input type="checkbox"><i></i><span>x</span>'; document.body.append(i); const h = i.querySelector("i").getBoundingClientRect().height; i.remove(); return h; });
+  assert.ok(probe >= 24, "a toggle on touch is " + probe + "px");
+  await touch.close();
 });
 await browser.close();
 server.close();

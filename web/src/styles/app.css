@@ -747,6 +747,12 @@ button.wl-choice:hover { border-color: var(--ink-2); }
 .pdf-btn { min-height: 32px; }
 .pm-btn { min-height: 36px; }
 .switch { min-height: 32px; }
+/* on touch the toggle itself is at least 24px tall (the track), not only its label */
+@media (hover: none), (pointer: coarse) {
+  .switch i { width: 44px; height: 24px; border-radius: 12px; }
+  .switch i::after { top: 2px; left: 2px; width: 20px; height: 20px; }
+  .switch input:checked + i::after { transform: translateX(20px); }
+}
 .ib.sm { width: 32px; height: 32px; }
 .zbox button { width: 32px; height: 32px; }
 .zbox { padding: 2px; }

@@ -128,3 +128,69 @@ describe("which guidelines offer the choice", () => {
     expect(followsDisease("Cancer-Related Fatigue")).toBe(false);
   });
 });
+
+describe("the questions of a start page are the details reachable from it, not those of the pages before it", () => {
+  it("colon, after surgery (COL-4): no clinical-stage or pre-op question, while the pathologic ones stay", async () => {
+    const { askableQuestions, askFilter, impliedBySection } = await import("../src/lib/moments");
+    const { rankPathways } = await import("../src/lib/pathways");
+    const { openDetails } = await import("../src/lib/openDetails");
+    const colon = load("colon");
+    const sec = colon.bundle.sections!;
+    const facts = { [sec.variable]: "pMMR/MSS Colon Cancer", ...impliedBySection(colon, "pMMR/MSS Colon Cancer") };
+    const scope = reachableFacts(colon, ["COL-4"]);
+    for (const f of ["locally_unresectable", "medically_inoperable", "bulky_nodal_disease"]) expect(scope.has(f), f).toBe(false);
+    const ranking = rankPathways(colon, facts, "COL-4");
+    const keep = (f: string) => f !== sec.variable && scope.has(f);
+    const base = askableQuestions(colon, ranking, facts, "COL-4", keep);
+    const ok = askFilter(colon, facts, "COL-4", keep);
+    const extra = openDetails(colon, facts, "COL-4", { ranking }).filter((d) => ok(d));
+    const asked = [...base, ...extra].map((d) => d.fact);
+    for (const f of ["locally_unresectable", "medically_inoperable", "bulky_nodal_disease"]) expect(asked, f).not.toContain(f);
+    expect(asked).toEqual(expect.arrayContaining(["n_category", "t_category", "resection_margin"]));
+  });
+});
+
+describe("where an answer leads, and what that still depends on", () => {
+  it("prostate: M0 reaches the regional page only if N is N1; M1 is settled", async () => {
+    const { leadsCondition } = await import("../src/lib/moments");
+    const { rankPathways } = await import("../src/lib/pathways");
+    const { previewAnswer } = await import("../src/lib/formAssist");
+    const base = rankPathways(pros, {}, "PROS-1");
+    const m0 = previewAnswer(pros, {}, "m_category", "M0", base, "PROS-1");
+    expect(m0.decides?.page).toBe("PROS-7");
+    expect(leadsCondition(pros, {}, "m_category", "M0", m0.decides?.node)).toBe("if N Category is N1");
+    const m1 = previewAnswer(pros, {}, "m_category", "M1", base, "PROS-1");
+    expect(leadsCondition(pros, {}, "m_category", "M1", m1.decides?.node)).toBe("");
+  });
+
+  it("antiemesis: 'None' reaches the oral-agents page only if the agent route is oral", async () => {
+    const { leadsCondition, impliedBySection } = await import("../src/lib/moments");
+    const { rankPathways } = await import("../src/lib/pathways");
+    const { previewAnswer } = await import("../src/lib/formAssist");
+    const ae = load("antiemesis");
+    const sec = ae.bundle.sections!;
+    const facts = { [sec.variable]: "Adult Antiemesis", ...impliedBySection(ae, "Adult Antiemesis") };
+    const base = rankPathways(ae, facts, "auto");
+    const none = previewAnswer(ae, facts, "presenting_symptom", "none", base, "auto");
+    expect(none.decides?.page).toBe("AE-11");
+    expect(leadsCondition(ae, facts, "presenting_symptom", "none", none.decides?.node)).toMatch(/^if Anticancer Agent Route is Oral/);
+    const any = previewAnswer(ae, facts, "presenting_symptom", "any_nausea_or_vomiting", base, "auto");
+    expect(leadsCondition(ae, facts, "presenting_symptom", "any_nausea_or_vomiting", any.decides?.node)).toBe("");
+  });
+});
+
+describe("a setting's second line", () => {
+  it("is a short whole description: never cut off, never a bullet fragment, never the label again", async () => {
+    const { settingsFor, shortTitle, entryPhrase } = await import("../src/lib/moments");
+    const colon = load("colon");
+    const sec = colon.bundle.sections!;
+    const list = momentsFor(colon, moments(colon), { [sec.variable]: "pMMR/MSS Colon Cancer" });
+    const post = settingsFor(colon, list, "diagnosis").find((s) => s.page === "COL-4")!;
+    expect(post.label).toBe("After surgery: Pathologic Stage");
+    expect(post.sub).toBe("Treatment after surgery, by the pathologic stage");
+    expect(shortTitle("FOLLOW-UP After Induction Therapy with Lower Intensity Therapy (Intensive Induction Ineligible or Declines)")).toBe("FOLLOW-UP After Induction Therapy with Lower Intensity Therapy");
+    expect(entryPhrase(load("hematopoietic_cell_transplantation"), "GVHD-1")).toBe("Acute GVHD suspected / Chronic GVHD suspected");
+    // a list of workup steps is no description
+    expect(entryPhrase(load("cervical"), "CERV-1")).toBe("");
+  });
+});
