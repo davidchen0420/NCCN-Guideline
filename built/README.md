@@ -29,3 +29,32 @@ PDFs kept elsewhere can be copied into `data/<slug>/pdf/<slug>.pdf` with `PYTHON
 Served from the repository (with `Guideline/` at its top), the page loads each guideline's PDF itself, so "Verify on the NCCN page" and the hover previews show the original page. A hosted copy serves them as `pdfs/<slug>.pdf` next to the page. Without them, the reader shows "Connect the NCCN PDF": choose the guideline's PDF once (kept in your browser) or drop it on the page. With Advanced tools on (Settings), "Source PDFs" can also connect a whole folder of NCCN PDFs at once, matched to every guideline by SHA-256.
 
 **Licensing note.** The offline file and the data it reads contain processed NCCN guideline text. NCCN's PDF header says the content may not be distributed or used with an AI model or tool; make sure your agreement with NCCN allows publishing this before keeping the repository public.
+
+## AI decisions (optional)
+
+OncoCarta can ask a language model how likely each outgoing branch of a decision box is for the patient entered, using OpenAI's Decisions API (public beta). The scores are suggestions: the app shows them for review next to the guideline's own encoded conditions, and a branch is followed automatically only above a threshold (default 0.85) that you can change. Without AI everything works as before.
+
+Start the local server instead of `python -m http.server`:
+
+```
+OPENAI_API_KEY=sk-... PYTHONPATH=src python -m nccn_nav.serve [--port 8000] [--root .] [--host 127.0.0.1]
+```
+
+then open http://localhost:8000/built/oncocarta.html. The server serves the repository exactly as `http.server` does (PDFs, guideline scripts) and adds `/api/decide`. The key stays on the server; the page never sees it. It listens on this computer only unless you pass `--host`. Without `OPENAI_API_KEY` it still serves the files and the page shows AI as off.
+
+| Variable | Meaning | Default |
+|---|---|---|
+| `OPENAI_API_KEY` | Turns AI on. | unset (AI off) |
+| `OPENAI_DECISIONS_MODEL` | Model id sent to the Decisions API. | `gpt-6-luna` |
+| `OPENAI_BASE_URL` | API address; point it at a mock for testing. | `https://api.openai.com/v1` |
+| `OCARTA_CACHE` | Folder for cached answers (git-ignored). | `.cache/decisions/` |
+
+**What is sent to OpenAI.** For each decision box being scored: the patient's structured answers as `label: value` lines taken from the guideline's fact schema (and the values derived from them), the text of the guideline page the box is on, and the question (the box's branches or options in words). Nothing typed as free text is ever sent: pasted notes are not forwarded, and a value that is not one of the schema's own choices is dropped. NCCN guideline text is sent, which your NCCN agreement must permit. The server limits a request to 16 questions and 200 KB, retries rate limits (429) and server errors (5xx) with backoff, and gives up after 30 s per attempt.
+
+**What stays on disk.** The cache holds only the model's answers, under the SHA-256 of the request: no patient values and no guideline text. The server logs method, path, status, cache hit/miss and the short hash, never request bodies or the key. The cache and `.git` are not served.
+
+**Privacy and data controls.** Structured answers about a patient are health information even without names. Whether the Decisions API is covered by Zero Data Retention or HIPAA arrangements (a BAA) is stated in OpenAI's data-controls documentation and your own agreement with OpenAI; it is a public beta, so check that before using real patient data and prefer synthetic cases until you have. This prototype makes no such claim.
+
+**Hosted and static copies** (a page opened from disk, GitHub Pages, any plain web server) have no `/api/decide`, so they run without AI and show nothing about it.
+
+Checking calibration: `node web/test/ai-eval.mjs --server http://localhost:8000 --limit 200` builds labelled cases from the encoded conditions, asks the model the same questions the app asks, and writes `reports/ai-decisions-eval.md` (accuracy, a reliability table and precision/recall of auto-follow at each threshold). `--mock --limit 50` runs the pipeline against a deterministic mock without a server or a key.
