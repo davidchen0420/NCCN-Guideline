@@ -80,7 +80,7 @@ const TRAILING_CODE = /\s*\(([A-Z]{2,6}-\d+[A-Z]?)\)\s*$/;
 const letters = (t: string) => t.replace(/[^A-Za-z]/g, "");
 
 /** Private-use glyphs (the PDF's bullets and symbols, which no font draws) and the replacement character, removed. */
-export const stripGlyphs = (t: string): string => t.replace(/[-\u0017�]/g, "").replace(/[ \t]{2,}/g, " ");
+export const stripGlyphs = (t: string): string => t.replace(/[\uE000-\uF8FF\u0017\uFFFD]/g, "").replace(/[ \t]{2,}/g, " ");
 /** Cut a text to `n` characters without splitting a character (code points, not UTF-16 units), with an ellipsis. */
 export function clipText(t: string, n: number): string {
   const cps = Array.from(stripGlyphs(t));
