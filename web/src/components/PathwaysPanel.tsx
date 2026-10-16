@@ -764,11 +764,18 @@ function ClinicianView() {
   const tied = reaches ? others.filter((x) => matchWord(x.share) === matchWord(share) && sameUsed(x.route, p)).length : 0;
   const pages = routePages(p);
   const pick = (id: string) => { showPath(id); document.getElementById("rp-panel")?.scrollTo({ top: 0 }); };
+  const toOthers = () => {
+    const el = document.getElementById("rc-others"), sc = document.getElementById("rp-panel");
+    if (el && sc) sc.scrollTo({ top: sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top - 8, behavior: "smooth" });
+  };
   return (
     <>
       <AiNotice />
       {reaches ? <RecoCard key={p.id} p={p} tied={tied} isTop={!mine || mine === groups[0]} share={share} /> : next ? <ContinuesCard key={p.id} p={p} to={next} /> : <NeedsCard key={p.id} p={p} />}
       <DecisionTrail p={p} stopInCard={reaches && stop.show} />
+      {reaches && others.length > 0 && (
+        <button type="button" className="linkish rc-tap rc-below" onClick={toOthers}>{others.length} other possible recommendation{others.length === 1 ? "" : "s"} below <ChevronDown size={13} aria-hidden /></button>
+      )}
       {others.length > 0 && (
         <section id="rc-others" className="rc-others" aria-label="Other possible recommendations">
           <h3 className="rc-h2">Other possible recommendations ({others.length}){reaches && tied > 0 && tied === others.length && " — equally possible from your answers"}</h3>

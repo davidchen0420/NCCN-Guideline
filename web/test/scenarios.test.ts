@@ -8,7 +8,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import type { Bundle } from "../src/types";
 import { adaptGuideline, stripMarks } from "../src/lib/adapt";
 import { buildGraph } from "../src/lib/graph";
-import { boxClass, distinctRecommendations, isActionBox, isRecommendationEnd, PAGE_REF, rankPathways, recommendationOf, shownRoute, stepTier, type Pathway } from "../src/lib/pathways";
+import { armPrior, boxClass, distinctRecommendations, isActionBox, isRecommendationEnd, PAGE_REF, rankPathways, recommendationOf, shownRoute, stepTier, type Pathway } from "../src/lib/pathways";
 import { extractFacts, applyFound } from "../src/lib/extract";
 import { decidingFacts, previewAnswer, remainingQuestions, whyNothingFits } from "../src/lib/formAssist";
 import { moments, momentsFor, phaseOf, startPhase } from "../src/lib/moments";
@@ -433,6 +433,42 @@ describe("11. the headline is the treatment, not the follow-up or a side row", (
     expect(texts.some((t) => /^RP\b/.test(t))).toBe(true);
     expect(texts.some((t) => /RT\+ ?ADT/.test(t))).toBe(true);
     expect(rec.options.length).toBe(2);
+  });
+
+  it("prostate BCR after RP, life expectancy and M unknown: EBRT ± ADT is not ranked below Observation by being split again by M0/M1", () => {
+    const g = load("prostate");
+    const r = rankPathways(g, { definitive_treatment_received: "radical_prostatectomy", psa_status: "recurrence" }, "PROS-9");
+    const groups = distinctRecommendations(g, r);
+    const ebrt = groups.findIndex((x) => x.rec.options.some((o) => /^EBRT/.test(text(g, o))));
+    const obs = groups.findIndex((x) => x.rec.options.some((o) => /^Observation/.test(text(g, o))));
+    expect(ebrt).toBeGreaterThanOrEqual(0);
+    expect(obs).toBeGreaterThanOrEqual(0);
+    expect(ebrt).toBeLessThan(obs);
+    expect(groups[ebrt].share).toBeGreaterThanOrEqual(groups[obs].share - 1e-9);
+  });
+
+  it("a treatment the patient already had is not the advice: after prostatectomy the recommendation is the monitoring that follows", () => {
+    const g = load("prostate");
+    const v1 = JSON.parse(readFileSync("../data/prostate/vignettes/examples.json", "utf8")).find((e: { id: string }) => e.id === "V1");
+    const r = rankPathways(g, v1.facts);
+    const first = distinctRecommendations(g, r)[0];
+    expect(text(g, first.rec.key.node)).toMatch(/Monitoring/);
+    expect(first.rec.options).toHaveLength(1);
+  });
+
+  it("the likelier side of an unknown detail gets the larger share (values of the detail, not arms, are counted)", () => {
+    const g = load("prostate");
+    expect(armPrior(g, { fact: "m_category", op: "!=", value: "M1" })).toBeGreaterThan(armPrior(g, { fact: "m_category", op: "==", value: "M1" }));
+    expect(armPrior(g, { not: { fact: "m_category", op: "!=", value: "M1" } })).toBeCloseTo(armPrior(g, { fact: "m_category", op: "==", value: "M1" }), 5);
+    expect(armPrior(g, { fact: "psa_ng_ml", op: ">", value: 10 })).toBe(0.5);   // a number has no countable values
+  });
+
+  it("NSCLC EGFR exon 19, discovery timing unknown: osimertinib (and its alternatives) is not outranked by the 'during first-line' arm", () => {
+    const g = load("nsclc");
+    const r = rankPathways(g, { histology: "adenocarcinoma", egfr_mutation: "exon19_deletion", m_category: "M1", pleural_or_disseminated_metastases: false });
+    const groups = distinctRecommendations(g, r);
+    expect(text(g, groups[0].rec.options[0])).toMatch(/Osimertinib/);
+    expect(groups[0].rec.options.length).toBeGreaterThan(1);
   });
 
   it("the card's route stands for the whole group: the options are one recommendation, not several", () => {

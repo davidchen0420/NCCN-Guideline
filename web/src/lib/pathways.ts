@@ -173,6 +173,34 @@ function textMatches(g: Graph, text: string, facts: Facts): { mine: boolean; oth
   return { mine, other };
 }
 
+/** The values a detail can take (null for a number or an unknown shape): the enum's values, a flag's two, a derived value's outcomes. "other" and "unknown" are not counted. */
+function valueDomain(g: Graph, name: string): unknown[] | null {
+  const schema = g.bundle.schema;
+  const v = schema.variables?.[name];
+  if (v) return v.type === "bool" ? [true, false] : v.type === "enum" ? (v.values ?? []).filter((x) => x !== "other" && x !== "unknown") : null;
+  const d = schema.derived?.[name];
+  if (!d) return null;
+  const outs = [...d.rules.map((r) => r.then), ...(d.else !== undefined ? [d.else] : [])].filter((x) => x !== null && x !== undefined);
+  return outs.length ? [...new Set(outs)] : null;
+}
+/**
+ * How plausible it is that an undecided condition holds, taking every possible value of the
+ * details it rests on as equally likely: the share of values that satisfy it (a conjunction
+ * multiplies, a disjunction combines, a negation complements). Kept away from 0 and 1: an arm the
+ * facts do not rule out is never impossible. 0.5 where the values are not countable.
+ */
+export function armPrior(g: Graph, pred: Pred | null | undefined): number {
+  const go = (p: Pred): number => {
+    if ("all" in p) return p.all.reduce((a, x) => a * go(x), 1);
+    if ("any" in p) return 1 - p.any.reduce((a, x) => a * (1 - go(x)), 1);
+    if ("not" in p) return 1 - go(p.not);
+    const dom = valueDomain(g, p.fact);
+    if (!dom?.length) return 0.5;
+    return dom.filter((val) => evaluate(p, { [p.fact]: val }) === true).length / dom.length;
+  };
+  return pred ? Math.min(0.95, Math.max(0.05, go(pred))) : 1;
+}
+
 /** Optional inputs of rankPathways. */
 export interface RankOptions {
   /**
@@ -353,7 +381,9 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     if (!tr.length && !unk.length && none.length === 1 && fl.length) return [{ gr: none[0], kind: "otherwise", share: 1 }] as Opt[];
     const out: Opt[] = [];
     tr.forEach((gr) => out.push({ gr, kind: "met", share: 1 }));
-    unk.forEach((gr) => out.push({ gr, kind: "unknown", share: tr.length ? RESIDUAL : 1 }));
+    // Arms that cannot be decided yet share the weight by how much of the details' possible values
+    // would satisfy each (not equally): "M ≠ M1" is the likelier side of an unknown M category than "M1".
+    unk.forEach((gr) => out.push({ gr, kind: "unknown", share: (tr.length ? RESIDUAL : 1) * armPrior(g, g.preds[gr.id]) }));
     // A box with no condition is "not encoded" (rather than a free option) when review rejected
     // its drafted condition, or when the data types it as a condition. Older bundles have no
     // decision types: there, conditioned siblings show the branch is decided by facts.
@@ -754,7 +784,8 @@ export function recommendationOf(g: Graph, p: Pathway, paths: Pathway[] = []): R
     // an "inferred" step is a treatment the patient already had: the advice comes after it
     const cands: number[] = [];
     // a met option box (an entry that is itself the treatment) is the recommendation, not only the decision before it
-    const from = settled >= 0 && g.node(s[settled].node)?.decision === "option" && isActionBox(g, s[settled].node) ? settled : settled + 1;
+    // (not an "inferred" one: that is a treatment the patient already had)
+    const from = settled >= 0 && s[settled].kind === "met" && g.node(s[settled].node)?.decision === "option" && isActionBox(g, s[settled].node) ? settled : settled + 1;
     for (let i = from; i < until; i++) {
       if (!isActionBox(g, s[i].node)) continue;
       cands.push(i);

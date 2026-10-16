@@ -221,7 +221,7 @@ export function DecisionTrail({ p, stopInCard = false }: { p?: Pathway; stopInCa
   const stopped = t.stoppedFor === "ask" || t.stoppedFor === "not-enough";
   const aiDone = ai.on && !!ai.ai;   // the AI has answered for these answers (the trail is not the rules-only stand-in)
   const stopHere = stopped && !(stopInCard && !t.optionArms);
-  if (!steps.length && !stopHere && !(ai.on && ai.failed)) return null;
+  if (!steps.length && !stopped && !(ai.on && ai.failed)) return null;
   const summary = steps.length ? trailSummary(st, ai.on) : "No decisions made yet";
   return (
     <section id="rc-trail" className="how-trail" aria-label="How we got here">
