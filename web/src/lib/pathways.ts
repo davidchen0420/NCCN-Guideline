@@ -221,6 +221,24 @@ export interface RankOptions {
 /** Lowest probability an arm keeps when an AI probability is used, so an unlikely route stays listed. */
 const MIN_PROB = 0.01;
 
+/**
+ * With a disease of a multi-disease guideline chosen: does a box lead only into pages of the
+ * other diseases (the "dMMR" arm that goes to the dMMR pages for a patient with pMMR disease)? The
+ * choice of disease already settled that branch.
+ */
+export function leadsOnlyElsewhere(g: Graph, id: string, section: string | null, depth = 0): boolean {
+  const sec = g.bundle.sections;
+  if (!sec || !section || depth > 3) return false;
+  const secOf = (p: string) => (sec.pages?.[p] ?? null) as string | null;
+  const ks = g.kids(id);
+  if (!ks.length) return false;
+  return ks.every((k) => {
+    const s = secOf(k.split(":")[0]);
+    if (s !== null) return s !== section;
+    return k.split(":")[0] === id.split(":")[0] && leadsOnlyElsewhere(g, k, section, depth + 1);
+  });
+}
+
 export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "auto", opts?: RankOptions): Ranking {
   const empty: Ranking = { paths: [], ruledOut: 0, entries: [], truncated: false, nextBest: null };
   if (start === "auto" && !hasFacts(raw)) return empty;
@@ -256,14 +274,26 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     const roots = g.bundle.roots[page] ?? [];
     const split = roots.length > 1 && roots.every((r) => g.preds[r]);
     const late = !!(stateOfTitle(g.bundle.pages[page]?.title ?? "") || stateOfEntries(g, page));
-    if (late || !split) return own === true || lcv === true;
+    if (late) return own === true || lcv === true;
+    // An answered detail constrains the way in: a page that is reached only through boxes the
+    // details rule out ("Rectal cancer without distant metastases" -> clinical stage REC-6 for a
+    // patient with distant metastases) is not somewhere this patient can be, even when its own
+    // entry box says nothing about it.
+    if (!split) return (own === true || lcv === true) && openAbove(id);
     if (lcv !== true && (lc || own === "none")) return false;
+    return openAbove(id);
+  };
+  /** Is there a way into `id` from the start of the guideline that no entered detail rules out? */
+  const openAbove = (id: string): boolean => {
+    // (the chosen disease is not a reason against a way in: its pages are reached as that disease's)
+    const sv = g.bundle.sections?.variable;
+    const here = sv ? derive({ ...raw, [sv]: undefined }, g.bundle.schema) : facts;
     const seen = new Set<string>();
     const open = (x: string): boolean => {
       if (seen.has(x)) return false;
       seen.add(x);
       const ps = g.parents[x] ?? [];
-      return !ps.length || ps.some((p) => !(g.preds[p] && evaluate(g.preds[p], facts) === false) && open(p));
+      return !ps.length || ps.some((p) => !(g.preds[p] && evaluate(g.preds[p], here) === false) && open(p));
     };
     return open(id);
   };
@@ -507,6 +537,13 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     if (truncated) return;
     if (steps.length > MAX_DEPTH) return finish(steps, weight, "limit");
     let kids = splitAlongside(g, g.kids(id)).main.filter((k) => !seen.has(k) && inSection(k.split(":")[0]));
+    // The disease was chosen: an arm that only goes into another disease's pages is not a branch
+    // for this patient (the choice of disease decided it).
+    let sectionSettled = false;
+    if (mySec && kids.length > 1) {
+      const own = kids.filter((k) => !leadsOnlyElsewhere(g, k, mySec));
+      if (own.length && own.length < kids.length) { kids = own; sectionSettled = follow; }
+    }
     // A box that only refers to another page, without an arrow in the data, goes on to that
     // page's entry boxes (gated by their conditions like any entry).
     let jumped = false;
@@ -522,9 +559,10 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     const isCond = (n: string, i: number) =>
       !!g.preds[n] || i === 0 || (g.bundle.roots[n.split(":")[0]] ?? []).includes(n) || /\?\s*$/.test(g.node(n)?.text ?? "");
     const cond = jumped || isCond(id, steps.length - 1);
+    const afterCond = steps.length > 1 && isCond(steps[steps.length - 2].node, steps.length - 2);
     // Cells of a structured table row (criteria, evaluation, "see PROS-4") read as one row.
     const tableCell = /^table_/.test(g.node(id)?.role ?? "");
-    const pass = cond || tableCell || linksOut(id) || (steps.length > 1 && isCond(steps[steps.length - 2].node, steps.length - 2));
+    const pass = cond || tableCell || linksOut(id) || afterCond;
     const groups = g.bundle.structured ? kids.map((id) => ({ id, pre: [] as string[] })) : rowGroups(kids);
     const sibs = groups.map((gr) => gr.id);
     // the details that ruled out the arms not taken here: they gated this route as well
@@ -547,11 +585,14 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
       if (!gs.some((x) => x.verdict === true)) {
         if (gs.every((x) => x.verdict === false)) ruledOut += groups.length;
         const open = [...new Set(gs.flatMap((x) => x.preds.flatMap((p) => missingFacts(g, p, facts))))];
-        return finish(steps, weight, "later", kids, open);
+        // on a heading or a page reference these arms are the next step itself, not a later event
+        const cls = boxClass(g, id);
+        return finish(steps, weight, cls === "pageref" || cls === "heading" ? "open" : "later", kids, open);
       }
     }
     const v = groups.map((gr) => gVerdict(gr));
     ruled = [...new Set(groups.flatMap((gr, i) => (v[i] === false ? [...usedFacts(g, g.preds[gr.id], raw)] : [])))];
+    if (sectionSettled && sec && isKnown(raw[sec.variable])) ruled.push(sec.variable);
     if (v.every((x) => x === false)) {
       ruledOut += groups.length;
       // Out of a condition box, no arm fits: this route contradicts the facts. Out of a
@@ -561,6 +602,8 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     if (groups.length === 1) {
       const gr = groups[0];
       if (v[0] === true) return go(gr, "met", 1);
+      // The disease the clinician chose is the only one this arm leads to: choosing it settled the arm.
+      if (v[0] === null && sectionSettled) return go(gr, "met", 1);
       // A page reference leads on to the page's first box even when its gate is still open.
       if (v[0] === null) return cond || (follow && linksOut(id)) ? go(gr, "unknown", 1) : stop(id, steps, weight, kids);
       return pass ? go(gr, "flow", 1) : stop(id, steps, weight, kids);
@@ -630,10 +673,24 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     // patient whose current state is a recurrence).
     const reachedNodes = new Set(shallow.flatMap((d) => d.steps.map((st) => st.node)));
     const reachedPages = new Set([...reachedNodes].map((n) => n.split(":")[0]));
-    const cands = g.flowPages.filter((p) => {
+    const cands0 = g.flowPages.filter((p) => {
       if (starts.includes(p) || !inSection(p) || [...reachedPages].some((q) => q !== p && out.get(q)?.has(p))) return false;
       if (textMatches(g, g.bundle.pages[p].title ?? "", raw).other) return false;
       return (g.bundle.roots[p] ?? []).some((r) => !reachedNodes.has(r) && startOk(r));
+    });
+    // The details that select a page: those its entry boxes (and the way into them) rest on.
+    const support = (p: string) => {
+      const out = new Set<string>();
+      for (const r of g.bundle.roots[p] ?? []) { usedFacts(g, g.preds[r], raw, out); usedFacts(g, g.node(r)?.linkCond, raw, out); }
+      return out;
+    };
+    // A page further down the guideline than another selected page counts as the patient's state only
+    // when it is selected by something the earlier page does not already rest on (a PSA recurrence
+    // after the initial treatment); selected by the same details, it is just where the earlier page
+    // leads, and the walk gets there itself.
+    const cands = cands0.filter((p) => {
+      const mine = support(p);
+      return !cands0.some((q) => q !== p && reaches(q, p) && !reaches(p, q) && [...mine].every((f) => support(q).has(f)));
     });
     const later = cands.filter((p) => !cands.some((q) => q !== p && reaches(p, q)));
     follow = true;
@@ -644,7 +701,7 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     // walk gets there: it may stop first, or be gated by a fact the patient has not given. When no
     // route enters the disease's pages, those pages start routes of their own.
     if (mySec && !ownStarts && !full.some((d) => d.steps.some((st) => secOf(st.node.split(":")[0]) === mySec))) {
-      const extra = sectionStartPages(g, mySec).flatMap((p) => g.bundle.roots[p] ?? []).filter((r) => !starts.includes(r.split(":")[0]));
+      const extra = sectionStartPages(g, mySec).flatMap((p) => g.bundle.roots[p] ?? []).filter((r) => !starts.includes(r.split(":")[0]) && openAbove(r));
       explore(extra);
       full.push(...done.splice(0));
       entries = entries.concat(extra);
