@@ -511,8 +511,8 @@
     "boxes": 670,
     "boxes_text_found_in_pdf_at_bbox": "668/670",
     "edges_by_evidence": {
-     "two_methods": 495,
-     "image_checked": 134,
+     "two_methods": 494,
+     "image_checked": 135,
      "single_source": 5
     },
     "decision_boxes": 340,
@@ -552,6 +552,7 @@
     },
     "clinician_validated": false,
     "reextracted_pages": [
+     "BCEL-2",
      "MANT-6A",
      "MANT-6B"
     ]
