@@ -2,8 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, ChevronRight, Sparkles } from "lucide-react";
 import { useApp } from "../store";
 import { useSource, type SrcTarget } from "../source";
-import type { TrailOption, TrailStep } from "../lib/aiWalk";
-import { decisionSteps, favouredByAi, percent, questionText, readable, trailStats, trailSummary } from "../lib/trailView";
+import type { AiWalkResult, TrailOption, TrailStep } from "../lib/aiWalk";
+import type { Pathway } from "../lib/pathways";
+import { decisionSteps, favouredByAi, percent, questionText, readable, trailStats, trailSummary, trimToRoute } from "../lib/trailView";
 import { label } from "../lib/factMeta";
 import type { Graph } from "../lib/graph";
 import "../styles/trail.css";
@@ -74,7 +75,7 @@ function Decision({ step, n }: { step: TrailStep; n: number }) {
   }, [step]);
   const shown = all ? options : options.slice(0, MORE_AFTER);
   return (
-    <li className="tr-step">
+    <li className="tr-step" data-page={step.page}>
       <div className="tr-q"><span className="tr-n" aria-hidden>{n}</span><span>{clip(questionText(g, step.node), 220)}</span></div>
       {fav && <p className="tr-warn" role="note">The AI favoured ‘{clip(fav.text, 90)}’ ({percent(fav.prob!)}); the guideline rule was followed.</p>}
       <ul className="tr-opts">
@@ -93,9 +94,8 @@ function Decision({ step, n }: { step: TrailStep; n: number }) {
 }
 
 /** Where the walk could not go on by itself: the clinician decides, or says what is missing. */
-function Stop({ quiet }: { quiet: boolean }) {
+function Stop({ quiet, t }: { quiet: boolean; t: AiWalkResult }) {
   const { g, ai, setOverride, focusFact } = useApp();
-  const t = ai.trail;
   if (!t.stoppedFor || t.stoppedFor === "error") return null;
   const q = clip(questionText(g, t.end), 220);
   const pg = g.node(t.end)?.page;
@@ -134,7 +134,7 @@ function Stop({ quiet }: { quiet: boolean }) {
     );
   }
   return (
-    <div className={`tr-stop${quiet ? " quiet" : ""}`} role="group" aria-label="Your decision needed">
+    <div className={`tr-stop${quiet ? " quiet" : ""}`} role="group" aria-label={quiet ? "Open choice" : "Your decision needed"}>
       <h4 className="tr-stop-h">{quiet ? "Still open" : "Your decision needed"}: {q}</h4>
       {where}
       {!quiet && <p className="tr-fine">The AI was not confident enough to choose for you (it needs at least {percent(ai.threshold)}).</p>}
@@ -148,7 +148,7 @@ function Stop({ quiet }: { quiet: boolean }) {
  * "How we got here": the decisions the guideline's rules, the AI and the clinician made on the
  * way to the recommendation, each with all of its options. Collapsed to one line by default.
  */
-export function DecisionTrail() {
+export function DecisionTrail({ p }: { p?: Pathway }) {
   const { ai } = useApp();
   const [open, setOpen] = useState(false);
   useEffect(() => {
@@ -159,7 +159,8 @@ export function DecisionTrail() {
     window.addEventListener("oc-open-trail", f);
     return () => window.removeEventListener("oc-open-trail", f);
   }, []);
-  const t = ai.trail;
+  // the decisions on the way to the recommendation shown (not the pages that follow it)
+  const t = useMemo(() => (p ? trimToRoute(ai.trail, new Set(p.steps.map((x) => x.node))) : ai.trail), [ai.trail, p]);
   const steps = useMemo(() => decisionSteps(t), [t]);
   const st = useMemo(() => trailStats(t), [t]);
   const stopped = t.stoppedFor === "ask" || t.stoppedFor === "not-enough";
@@ -167,8 +168,8 @@ export function DecisionTrail() {
   if (!steps.length && !stopped && !(ai.on && ai.failed)) return null;
   const summary = steps.length ? trailSummary(st, ai.on) : "No decisions made yet";
   return (
-    <section id="rc-trail" className="trail" aria-label="How we got here">
-      {aiDone && stopped && <Stop quiet={false} />}
+    <section id="rc-trail" className="how-trail" aria-label="How we got here">
+      {aiDone && stopped && <Stop quiet={false} t={t} />}
       {ai.on && ai.failed && <p className="tr-fine tr-muted">AI scoring unavailable — showing the guideline rules only.</p>}
       <button type="button" className="tr-head" aria-expanded={open} aria-controls="tr-body" onClick={() => setOpen(!open)}>
         {open ? <ChevronDown size={15} aria-hidden /> : <ChevronRight size={15} aria-hidden />}
@@ -179,7 +180,7 @@ export function DecisionTrail() {
       {open && (
         <div id="tr-body" className="tr-body">
           {steps.length > 0 && <ol className="tr-steps">{steps.map((s, i) => <Decision key={`${s.node}>${s.chosen}`} step={s} n={i + 1} />)}</ol>}
-          {!aiDone && !ai.loading && stopped && <Stop quiet />}
+          {!aiDone && !ai.loading && stopped && <Stop quiet t={t} />}
           {ai.on && ai.model && steps.some((s) => s.by === "ai") && <p className="tr-fine tr-muted">Scored by {ai.model}. The AI never overrides a guideline rule; below {percent(ai.threshold)} it asks you.</p>}
         </div>
       )}

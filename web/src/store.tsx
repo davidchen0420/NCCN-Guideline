@@ -255,7 +255,11 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
   }, []);
   const available = !!status?.enabled;
   const aiOn = available && aiPref;
-  const aiTrail = useAiTrail(g, live, s.start, s.overrides, { enabled: aiOn, threshold });
+  // The walk starts where the recommendation's route does: with "wherever the details point" the
+  // ranking may have picked a later point in care, which the first page's walk would not reach.
+  const baseRanking = useMemo(() => rankPathways(g, live, s.start, { overrides: s.overrides }), [g, live, s.start, s.overrides]);
+  const walkStart = s.start === "auto" && baseRanking.paths[0] ? baseRanking.paths[0].steps[0].node : s.start;
+  const aiTrail = useAiTrail(g, live, walkStart, s.overrides, { enabled: aiOn, threshold });
   // a choice that no longer applies (the route changed) is dropped once the walk has settled
   useEffect(() => {
     if (!aiTrail.settled || !Object.keys(s.overrides).length) return;
@@ -273,7 +277,9 @@ export function Provider({ bundle, children, slug = null, library = null }: { bu
     setThreshold: (t: number) => { const c = clampThreshold(t); writeAiThreshold(c); setThresholdState(c); },
   }), [aiTrail, available, aiOn, status, threshold]);
 
-  const ranking = useMemo(() => rankPathways(g, live, s.start, { edgeProb: aiOn ? aiTrail.edgeProb : undefined, overrides: s.overrides }), [g, live, s.start, aiOn, aiTrail.edgeProb, s.overrides]);
+  const ranking = useMemo(
+    () => (aiOn && aiTrail.edgeProb ? rankPathways(g, live, s.start, { edgeProb: aiTrail.edgeProb, overrides: s.overrides }) : baseRanking),
+    [g, live, s.start, aiOn, aiTrail.edgeProb, s.overrides, baseRanking]);
   const selected = useMemo(() => {
     if (!ranking.paths.length) return null;
     return ranking.paths.find((p) => p.id === s.pathSel) ?? ranking.paths[0];

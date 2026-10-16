@@ -15,7 +15,7 @@ import { whyNothingFits } from "../lib/formAssist";
 import type { Block, Inline, Item } from "../lib/parseBox";
 import { Summary } from "./Summary";
 import { DecisionTrail } from "./Trail";
-import { aiAssistedLine, trailStats } from "../lib/trailView";
+import { aiAssistedLine, trailStats, trimToRoute } from "../lib/trailView";
 import { T, matchWord, pageName, supportPhrase } from "../lib/terms";
 import "../styles/reco.css";
 
@@ -416,13 +416,8 @@ function RecoCard({ p, tied, isTop }: CardProps) {
   const { g, go, set, s, isPhone, focusFact, ai } = useApp();
   const { pdf, open } = useSource();
   const f = routeFocus(g, p);
-  // "AI-assisted": said only when the route shown goes through every step the AI chose
-  const aiLine = useMemo(() => {
-    if (!ai.on || !ai.ai) return null;
-    const nodes = new Set(p.steps.map((x) => x.node));
-    if (!ai.ai.steps.filter((x) => x.by === "ai").every((x) => nodes.has(x.chosen))) return null;
-    return aiAssistedLine(trailStats(ai.ai));
-  }, [ai.on, ai.ai, p]);
+  // "AI-assisted": the decisions on the way to this recommendation that the AI chose
+  const aiLine = useMemo(() => (ai.on && ai.ai ? aiAssistedLine(trailStats(trimToRoute(ai.ai, new Set(p.steps.map((x) => x.node))))) : null), [ai.on, ai.ai, p]);
   const id = f.key.node;
   const n = g.node(id)!;
   const src = boxSrc(g, id);
@@ -681,7 +676,7 @@ function ClinicianView() {
   return (
     <>
       {reaches ? <RecoCard key={p.id} p={p} tied={tied} isTop={p.id === ordered[0]?.id} /> : next ? <ContinuesCard key={p.id} p={p} to={next} /> : <NeedsCard key={p.id} p={p} />}
-      <DecisionTrail />
+      <DecisionTrail p={p} />
       {reaches && others.length > 0 && (
         <button type="button" className="linkish rc-tap rc-below" onClick={toOthers}>{others.length} other possible recommendation{others.length === 1 ? "" : "s"} below <ChevronDown size={13} aria-hidden /></button>
       )}
@@ -842,7 +837,7 @@ export function PathwaysPanel() {
           </ol>
           {r.paths.length > 5 && <button type="button" className="btn ghost small wide" onClick={() => setAll(!all)}>{all ? "Show top 5" : `Show all ${r.paths.length} routes`}</button>}
           <Detail p={selected} />
-          <DecisionTrail />
+          <DecisionTrail p={selected} />
         </>
       )}
     </div>

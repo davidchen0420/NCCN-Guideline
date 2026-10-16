@@ -7,12 +7,13 @@ import { describe, expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import { readFileSync } from "node:fs";
+import { adaptGuideline } from "../src/lib/adapt";
 import type { Bundle } from "../src/types";
 import { buildGraph } from "../src/lib/graph";
 import { rankPathways } from "../src/lib/pathways";
 import { NONE } from "../src/lib/decide";
 import { aiWalk, rulesOnlyTrail, type ScoreFn } from "../src/lib/aiWalk";
-import { aiAssistedLine, decisionSteps, edgeTags, favouredByAi, percent, questionText, staleOverrides, trailStats, trailSummary } from "../src/lib/trailView";
+import { aiAssistedLine, decisionSteps, edgeTags, favouredByAi, percent, questionText, staleOverrides, trailStats, trailSummary, trimToRoute } from "../src/lib/trailView";
 import { AI_THRESHOLD_DEFAULT, clampThreshold, readAiEnabled, readAiThreshold } from "../src/lib/prefs";
 import { cleanOverrides } from "../src/lib/patient";
 import { trailKey, useAiTrail, type AiTrail } from "../src/lib/useAiTrail";
@@ -99,6 +100,21 @@ describe("a clinician's choice", () => {
   });
 });
 
+describe("the trail follows the recommendation shown", () => {
+  it("keeps the decisions on the route and drops those after where it ends, and a stop it does not reach", async () => {
+    const r = await aiWalk(g, { score: 12 }, "SAMPLE-1", { score: mock({ [S2.entry]: { [S2.old]: 0.1, [S2.young]: 0.9 } }) });
+    const all = new Set(r.steps.map((s) => s.node).concat(r.steps.map((s) => s.chosen)));
+    expect(decisionSteps(trimToRoute(r, all))).toEqual(decisionSteps(r));
+    const upTo = new Set([S1.n1, S1.n2, S1.high]);
+    const cut = trimToRoute(r, upTo);
+    expect(decisionSteps(cut).map((s) => s.node)).toEqual([S1.n2]);
+    expect(trailStats(cut).ai).toBe(0);
+    const ask = await aiWalk(g, {}, "SAMPLE-1", { score: mock({}) });
+    expect(trimToRoute(ask, new Set([S1.n1])).stoppedFor).toBeUndefined();
+    expect(trimToRoute(ask, new Set([S1.n1, S1.n2])).stoppedFor).toBe("ask");
+  });
+});
+
 describe("labels on the diagram", () => {
   it("says who chose each arrow, and marks the ones the AI was less sure of than the threshold", async () => {
     const r = await aiWalk(g, { score: 12 }, "SAMPLE-1", { score: mock({ [S2.entry]: { [S2.old]: 0.4, [S2.young]: 0.6 } }), overrides: { [S2.entry]: S2.young } });
@@ -169,5 +185,18 @@ describe("useAiTrail", () => {
     expect(k({}, true, 0.85)).not.toBe(k({ a: "b" }, true, 0.85));
     expect(k({}, true, 0.85)).not.toBe(k({}, true, 0.9));
     expect(k({}, false, 0.85)).toBe(k({}, false, 0.9));
+  });
+});
+
+describe("the walk and the recommendation follow the same route", () => {
+  it("an option the patient already received is followed by its own rule (as rankPathways infers it)", () => {
+    const pros = buildGraph(adaptGuideline(JSON.parse(readFileSync("../data/prostate/guideline.json", "utf8"))));
+    const v1 = JSON.parse(readFileSync("../data/prostate/vignettes/examples.json", "utf8")).find((e: { id: string }) => e.id === "V1");
+    const r = rulesOnlyTrail(pros, v1.facts, "auto");
+    const top = rankPathways(pros, v1.facts, "auto").paths[0];
+    const onRoute = new Set(top.steps.map((s) => s.node));
+    const step = r.steps.find((s) => /^Radical prostatectomy/i.test(pros.node(s.chosen)?.text ?? ""));
+    expect(step).toMatchObject({ by: "rule" });
+    expect(onRoute.has(step!.chosen)).toBe(true);
   });
 });

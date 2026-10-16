@@ -1,7 +1,7 @@
 /* ---------- "How we got here": the decision trail under the recommendation ---------- */
 /* Tokens only, so light and dark follow the theme. */
 
-.trail { display: grid; gap: 8px; margin-top: 14px; }
+.how-trail { display: grid; gap: 8px; margin-top: 14px; }
 .tr-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; width: 100%; min-height: 40px; padding: 8px 10px; text-align: left; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r); color: var(--ink); }
 .tr-head:hover { border-color: var(--line-strong); }
 .tr-head svg { align-self: center; flex: none; color: var(--muted); }

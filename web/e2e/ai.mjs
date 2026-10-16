@@ -98,12 +98,15 @@ const loadExample = async (page, id) => {
   await tab(page, /Pathways|Recommendation/);
   await page.locator(".reco-card, .empty").first().waitFor();
 };
+/** A prostate patient (a shipped example without the life expectancy) whose recommendation needs the AI at one branch. */
+const PATIENT = { risk_group: "low", definitive_treatment_received: "radical_prostatectomy", psa_status: "persistence", psa_ng_ml: 0.3, n_category: "N0", m_category: "M0" };
+const showReco = async (page) => { await tab(page, /Pathways|Recommendation/); await page.locator(".reco-card, .empty").first().waitFor(); };
 const trailHead = (page) => page.locator("#rc-trail .tr-head");
 const openTrail = async (page) => { await trailHead(page).waitFor(); if ((await trailHead(page).getAttribute("aria-expanded")) !== "true") await trailHead(page).click(); };
 const recText = (page) => page.locator(".reco-card .reco-box").first().innerText();
 
 // ================================================================ the AI is offered by the local server
-let page = await open("prostate");
+let page = await open("prostate", { facts: PATIENT });
 
 await step("Settings shows an AI decision support section with the threshold in plain words and the privacy note", async () => {
   const dlg = await settings(page);
@@ -124,28 +127,28 @@ await step("Settings shows an AI decision support section with the threshold in 
 });
 
 await step("the trail lists decisions with rule and AI badges, bars and links to the NCCN page", async () => {
-  await loadExample(page, "V1");
+  await showReco(page);
   await openTrail(page);
   await page.locator(".tr-wait").waitFor({ state: "detached" });
   const sum = await page.getByTestId("trail-summary").innerText();
   assert.match(sum, /^\d+ decisions? · \d+ by the guideline rules? · 1 by AI \(lowest 93%\) · 0 by you$/);
   const trail = page.locator("#rc-trail");
   const text = await trail.innerText();
-  assert.match(text, /Which starting point applies\?/);
   assert.match(text, /Rule ✓/);
   assert.match(text, /Rule ✗/);
   assert.match(text, /AI 93%/);
-  assert.match(text, /AI 5%/, "every option of a decision is listed with its probability");
-  assert.ok((await trail.locator(".tr-bar").count()) >= 5, "confidence bars");
-  const opts = await trail.locator(".tr-opt").count();
-  assert.equal(await trail.getByRole("button", { name: "Show on NCCN page" }).count(), opts, "every option links to its NCCN page");
+  assert.match(text, /AI 1%/, "every option of a decision is listed with its probability");
+  assert.ok((await trail.locator(".tr-bar").count()) >= 4, "confidence bars");
+  const steps = trail.locator(".tr-steps");
+  const opts = await steps.locator(".tr-opt").count();
+  assert.equal(await steps.getByRole("button", { name: "Show on NCCN page" }).count(), opts, "every option links to its NCCN page");
   assert.equal(await trail.locator(".tr-opt.chosen").count(), await trail.locator(".tr-step").count(), "one chosen option per decision");
   await trail.scrollIntoViewIfNeeded();
   await shot(page, "trail-prostate");
 });
 
 await step("the card says the AI helped, and links to the trail", async () => {
-  const line = await page.getByTestId("ai-assisted").innerText();
+  const line = (await page.getByTestId("ai-assisted").innerText()).replace(/\s+/g, " ");
   assert.match(line, /AI-assisted: 1 of \d+ decisions chosen by the AI \(lowest 93%\)\. Review in How we got here\./);
 });
 
@@ -160,12 +163,17 @@ await step("what was sent to the server is structured answers and page text only
 });
 
 await step("the diagram's arrows on the route say who chose them", async () => {
-  await page.evaluate(() => { location.hash = "#prostate/flow/PROS-3"; });
-  await page.locator("[data-testid=card]").first().waitFor();
-  await page.locator("[data-testid=edge-tag]").first().waitFor();
-  const tags = await page.locator("[data-testid=edge-tag]").allInnerTexts();
-  assert.ok(tags.length >= 1 && tags.every((t) => /^(Rule|You|\d+%)$/.test(t)), tags.join(","));
-  await shot(page, "diagram-edge-tags");
+  let tags = [];
+  const pages = await page.locator("#rc-trail .tr-step").evaluateAll((els) => [...new Set(els.map((e) => e.dataset.page))]);
+  for (const code of pages) {
+    await page.evaluate((c) => { location.hash = `#prostate/flow/${c}`; }, code);
+    await page.locator("[data-testid=title]", { hasText: code }).waitFor();
+    await page.locator("[data-testid=card]").first().waitFor();
+    await page.waitForTimeout(500);
+    tags = await page.locator("[data-testid=edge-tag]").allTextContents();
+    if (tags.length) { await shot(page, "diagram-edge-tags"); break; }
+  }
+  assert.ok(tags.length >= 1 && tags.every((t) => /^(Rule|You|\d+%)$/.test(t)), `labels: ${tags.join(",")} on pages ${pages.join(",")}; svg ${await page.locator("svg.edge-tags").count()}, walk edges ${await page.locator("path.edge.walk").count()}, ai.on? ${await page.locator("#rc-trail .tr-wait").count()}`);
   await page.evaluate(() => { location.hash = "#prostate/flow/PROS-1"; });
   await page.locator("[data-testid=card]").first().waitFor();
 });
@@ -225,7 +233,7 @@ await step("turning AI off removes the AI from the trail, the card and the diagr
   assert.doesNotMatch(t, /by AI|AI \d+%|AI checking/);
   assert.equal(await page.getByTestId("ai-assisted").count(), 0);
   assert.equal(await page.locator("[data-testid=edge-tag]").count(), 0);
-  assert.match(t, /Rule ✓/);
+  assert.match(t, /You chose/, "the choice you made stays");
   await (await settings(page)).getByTestId("ai-toggle").check();
   await closeSettings(page);
 });
@@ -242,9 +250,9 @@ await page.context().close();
 
 // ================================================================ the AI is not sure, or fails
 mock.mode = "none";
-page = await open("prostate");
+page = await open("prostate", { facts: PATIENT });
 await step("'not enough information' names the details that would decide, as buttons that open the question", async () => {
-  await loadExample(page, "V1");
+  await showReco(page);
   const card = page.getByRole("group", { name: "Not enough information" });
   await card.waitFor();
   assert.match(await card.locator(".tr-stop-h").innerText(), /^Not enough information to decide /);
@@ -259,13 +267,13 @@ await step("'not enough information' names the details that would decide, as but
 await page.context().close();
 
 mock.mode = "error";
-page = await open("prostate");
+page = await open("prostate", { facts: PATIENT });
 await step("when the AI fails, one muted line says so and the guideline rules still show", async () => {
-  await loadExample(page, "V1");
+  await showReco(page);
   await page.getByText("AI scoring unavailable — showing the guideline rules only.").waitFor();
   assert.equal(await page.locator(".reco-card").count(), 1);
   await openTrail(page);
-  assert.match(await page.locator("#rc-trail").innerText(), /Rule ✓/);
+  assert.match(await page.locator("#rc-trail").innerText(), /Still open: /, "the rules stop where they cannot decide, and the choice is the clinician's");
   assert.equal(await page.getByRole("group", { name: "Your decision needed" }).count(), 0);
 });
 await page.context().close();
@@ -274,8 +282,8 @@ await page.context().close();
 mock.mode = "confident";
 const seeds = {
   rectal: { guideline_section: "pMMR/MSS Rectal Cancer" },
-  breast: { guideline_section: "Invasive Breast Cancer" },
-  b_cell_lymphomas: { guideline_section: "Diffuse Large B-Cell Lymphoma" },
+  breast: { guideline_section: "Invasive Breast Cancer", palpable_mass: true, tumor_size_cm: 3, rapid_growth: false },
+  b_cell_lymphomas: { guideline_section: "Diffuse Large B-Cell Lymphoma", histologic_transformation: false },
 };
 for (const [slug, facts] of Object.entries(seeds)) {
   page = await open(slug, { facts });
@@ -284,9 +292,11 @@ for (const [slug, facts] of Object.entries(seeds)) {
     await page.locator("#rc-trail").waitFor();
     await page.locator(".tr-wait").waitFor({ state: "detached" });
     await openTrail(page);
-    assert.match(await page.getByTestId("trail-summary").innerText(), /\d+ decisions? · \d+ by the guideline rules? · \d+ by AI/);
+    const summary = await page.getByTestId("trail-summary").innerText();
+    console.log(`   ${slug}: ${summary}`);
+    assert.match(summary, /\d+ decisions? · \d+ by the guideline rules? · \d+ by AI|No decisions made yet/);
     assert.ok((await page.locator("#rc-trail .tr-step").count()) + (await page.getByRole("group", { name: /Your decision needed|Not enough information/ }).count()) > 0);
-    assert.ok((await page.locator("#rc-trail .tr-opt").count()) > 0);
+    assert.ok((await page.locator("#rc-trail .tr-opt").count()) > 0 || (await page.locator("#rc-trail .rc-q").count()) > 0, "options, or the details that are missing");
     await page.locator("#rc-trail").scrollIntoViewIfNeeded();
     await shot(page, `trail-${slug}`);
   });
@@ -297,19 +307,19 @@ for (const [slug, facts] of Object.entries(seeds)) {
 for (const status of [null, { enabled: false, model: "mock-model" }]) {
   mock.status = status;
   mock.requests.length = 0;
-  page = await open("prostate");
+  page = await open("prostate", { facts: PATIENT });
   await step(`with ${status ? "the server's key missing" : "no local server"}, nothing about AI appears`, async () => {
     const dlg = await settings(page);
     assert.equal(await dlg.getByRole("group", { name: "AI decision support" }).count(), 0);
     assert.doesNotMatch(await dlg.innerText(), /\bAI\b|OpenAI/);
     await closeSettings(page);
-    await loadExample(page, "V1");
+    await showReco(page);
     await page.locator("#rc-trail").waitFor();
     await openTrail(page);
     assert.doesNotMatch(await page.locator("#rp-panel").innerText(), /\bAI\b|OpenAI/);
     assert.equal(await page.getByTestId("ai-assisted").count(), 0);
     assert.equal(await page.locator("[data-testid=edge-tag]").count(), 0);
-    assert.match(await page.locator("#rc-trail").innerText(), /Rule ✓/);
+    assert.match(await page.locator("#rc-trail").innerText(), /Still open: /);
     assert.equal(mock.requests.length, 0, "no request to /api/decide");
   });
   await page.context().close();

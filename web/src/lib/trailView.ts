@@ -127,3 +127,16 @@ export function edgeTags(r: Pick<AiWalkResult, "steps">, threshold: number): Map
   }
   return out;
 }
+
+/**
+ * The part of a walk that explains a recommendation: the decisions on the way to where its route
+ * ends (a walk goes on past a recommendation, into the pages that follow it, and may take another
+ * way where the clinician has picked another route). A decision stays when the route passes
+ * through the box it was made at (or the page's virtual start) and on to the arm chosen; a stop
+ * stays when the route reaches the box the walk stopped at or goes on through one of its arms.
+ */
+export function trimToRoute(r: AiWalkResult, nodes: Set<string>): AiWalkResult {
+  const steps = r.steps.filter((s) => nodes.has(s.chosen) && (nodes.has(s.node) || s.node.endsWith(":START")));
+  const stop = r.stoppedFor && r.stoppedFor !== "error" && (nodes.has(r.end) || (r.options ?? []).some((o) => nodes.has(o.child)));
+  return stop ? { ...r, steps } : { steps, end: r.end, ...(r.stoppedFor === "error" ? { stoppedFor: "error" as const } : {}) };
+}

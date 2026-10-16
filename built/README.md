@@ -40,7 +40,7 @@ Start the local server instead of `python -m http.server`:
 OPENAI_API_KEY=sk-... PYTHONPATH=src python -m nccn_nav.serve [--port 8000] [--root .] [--host 127.0.0.1]
 ```
 
-then open http://localhost:8000/built/oncocarta.html. The server serves the repository exactly as `http.server` does (PDFs, guideline scripts) and adds `/api/decide`. The key stays on the server; the page never sees it. It listens on this computer only unless you pass `--host`. Without `OPENAI_API_KEY` it still serves the files and the page shows AI as off.
+then open http://localhost:8000/ (it goes to `built/oncocarta.html`). The server serves the repository exactly as `http.server` does (PDFs, guideline scripts) and adds `/api/decide`. The key stays on the server; the page never sees it. It listens on this computer only unless you pass `--host`. Without `OPENAI_API_KEY` it still serves the files and the page shows AI as off.
 
 | Variable | Meaning | Default |
 |---|---|---|
@@ -49,9 +49,13 @@ then open http://localhost:8000/built/oncocarta.html. The server serves the repo
 | `OPENAI_BASE_URL` | API address; point it at a mock for testing. | `https://api.openai.com/v1` |
 | `OCARTA_CACHE` | Folder for cached answers (git-ignored). | `.cache/decisions/` |
 
+**In the app.** When the server reports a key, the reader shows AI help: in Settings, **AI decision support** has an on/off switch and a threshold (*Follow the AI automatically when it is at least 85% confident*), and the Recommendation tab gains **How we got here**, a list of the decisions behind the recommendation with a badge on every option (*Rule ✓*, *Rule ✗*, *AI 92%*, *You chose*), **Choose this instead** to override any step, and, where the AI is not sure enough, **Your decision needed**. The guideline's encoded rules always come first; the AI only helps where the answers leave a branch open, and it never overrides a rule. See `../docs/clinician-guide.md` for how to read it. In a calibration run (`../reports/ai-decisions-eval.md`: 300 branches where the rules give the answer) the default threshold of 0.85 followed 70% of branches with 99.5% agreement with the rules (expected calibration error 0.025).
+
 **What is sent to OpenAI.** For each decision box being scored: the patient's structured answers as `label: value` lines taken from the guideline's fact schema (and the values derived from them), the text of the guideline page the box is on, and the question (the box's branches or options in words). Nothing typed as free text is ever sent: pasted notes are not forwarded, and a value that is not one of the schema's own choices is dropped. NCCN guideline text is sent, which your NCCN agreement must permit. The server limits a request to 16 questions and 200 KB, retries rate limits (429) and server errors (5xx) with backoff, and gives up after 30 s per attempt.
 
 **What stays on disk.** The cache holds only the model's answers, under the SHA-256 of the request: no patient values and no guideline text. The server logs method, path, status, cache hit/miss and the short hash, never request bodies or the key. The cache and `.git` are not served.
+
+**In short: with AI on, the patient's structured answers and the guideline page text are sent to OpenAI to score branches. No names or free text are sent.** Check your organisation's data agreements with OpenAI (for example zero data retention) before using real patient data.
 
 **Privacy and data controls.** Structured answers about a patient are health information even without names. Whether the Decisions API is covered by Zero Data Retention or HIPAA arrangements (a BAA) is stated in OpenAI's data-controls documentation and your own agreement with OpenAI; it is a public beta, so check that before using real patient data and prefer synthetic cases until you have. This prototype makes no such claim.
 
