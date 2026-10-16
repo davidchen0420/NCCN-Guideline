@@ -1,0 +1,9 @@
+{
+ "page": "HL-1",
+ "note": "General principles of healthy lifestyles (PDF page 42): a bulleted principles page, no arrows. Patients enter at its two bullet blocks (the first leads to SNWM-2 and SPA-1, the second to SNWM-1, SSD-1, SIMIN-1 and SSUP-1). No box was named as an entry, so the Healthy Lifestyles section had no route at all. Selection rule: the page's first body box, each box that opens a titled section of the page and each box that continues into another algorithm page (it carries the flow); the other boxes are the same text split by indentation or by link lines and stay loose notes. decision_type other: a principles page is not a condition on the patient, so the entry takes none from the boxes that link to it.",
+ "decision_type": "other",
+ "entries": [
+  "HL-1:n106_24",
+  "HL-1:n212_24"
+ ]
+}
