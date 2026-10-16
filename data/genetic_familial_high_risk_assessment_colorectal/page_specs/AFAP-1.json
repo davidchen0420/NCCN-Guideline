@@ -1,0 +1,33 @@
+{
+ "page": "AFAP-1",
+ "note": "Attenuated FAP treatment and surveillance, personal history (PDF page 102, printed 'AFAP-1'): by adenoma burden (endoscopically manageable or not) to treatment, then one surveillance box. The page had no boxes because the code AFAP-1 was shared with PDF page 85 (see FAP-AFAP-1.json); AFAP-2, IAP-2, GENE-1 and the phenotype page refer to it as AFAP-1. No section (like FAP-1 and FAP-2): it is reached from the phenotype page (section APC-Associated Polyposis) as well as from AFAP-2 (Attenuated Familial Adenomatous Polyposis), and a section clause would shut one of the two routes.",
+ "section": null,
+ "footnotes": {
+  "a": "Small adenoma burden is defined (somewhat arbitrarily) as <20 adenomas, all <1 cm in diameter, and none with advanced histology, so that colonoscopy with polypectomy can be used to effectively eliminate the polyps. Colectomy may be indicated before this level of polyp burden, especially if colonoscopy is difficult and polyp control is uncertain. Surgery could be considered when polyp burden is >20 at any individual examination, when polyps have been previously ablated, when some polyps have reached a size >1 cm, or when advanced histology is encountered in any polyp.",
+  "b": "Surgical Options for Treating the Colon and Rectum in Patients with FAP (FAP-F).",
+  "c": "It is recommended that patients receive care by physicians or centers with expertise in FAP/AFAP and that care be individualized to account for genotype, phenotype, and personal considerations.",
+  "d": "Surveillance for upper GI findings for AFAP is similar to classical FAP.",
+  "e": "For management of thyroid nodules, see American Thyroid Association Guidelines and the American College of Radiology.",
+  "f": "Cap-assisted endoscopy may be adequate for visualization of the ampulla (Kallenberg F, et al. Endoscopy 2017;49:181-185)."
+ },
+ "boxes": [
+  {"key": "h_title", "header": true, "region": [20, 84, 450, 104]},
+  {"key": "h_burden", "header": true, "region": [122, 104, 222, 136]},
+  {"key": "h_treat", "header": true, "region": [258, 104, 340, 124]},
+  {"key": "h_surv", "header": true, "region": [472, 102, 582, 123]},
+  {"key": "personal", "region": [20, 248, 80, 296], "decision_type": "condition",
+   "predicate": {"fact": "personal_history_attenuated_fap", "op": "==", "value": true}},
+  {"key": "small", "region": [122, 162, 214, 218], "decision_type": "condition",
+   "predicate": {"fact": "adenoma_burden_endoscopically_manageable", "op": "==", "value": true}},
+  {"key": "large", "region": [122, 315, 224, 372], "decision_type": "condition",
+   "predicate": {"fact": "adenoma_burden_endoscopically_manageable", "op": "==", "value": false}},
+  {"key": "t_endo", "region": [258, 162, 440, 218]},
+  {"key": "t_surg", "region": [258, 300, 444, 384]},
+  {"key": "surv", "region": [472, 122, 782, 432], "marks": ["c", "d", "e", "f"]}
+ ],
+ "edges": [
+  ["personal", "small"], ["personal", "large"],
+  ["small", "t_endo"], ["large", "t_surg"],
+  ["t_endo", "surv"], ["t_surg", "surv"]
+ ]
+}

@@ -1,0 +1,42 @@
+{
+ "page": "GALL-4",
+ "note": "Gallbladder cancer, mass on imaging (PDF page 10): the page was empty because three pages shared the code GALL-4 (see GALL-3.json). Workup, resectable (resection, adjuvant treatment GALL-6) or unresectable (biopsy and biomarker testing, systemic therapy options, best supportive care). The entry 'Mass on imaging' has no condition (presentation_type has no value for it; 'symptomatic' is for pain/jaundice/obstruction) and is typed other so that it does not inherit the relapse condition of the GALL-6 boxes that link here.",
+ "section": "Gallbladder Cancer",
+ "footnotes": {
+  "b": "Principles of Imaging (BIL-A).",
+  "d": "Principles of Surgery (GALL-A).",
+  "e": "Principles of Pathology (GALL-B).",
+  "f": "Core biopsy is preferred over FNA.",
+  "g": "For patients with dMMR/MSI-H tumors or a family history suggestive of BRCA1/2 PVs, consider germline testing and/or referral to a genetic counselor.",
+  "h": "Principles of Biomarker Testing (BIL-B).",
+  "i": "Order does not indicate preference. The choice of treatment modality may depend on extent/location of disease and institutional capabilities.",
+  "j": "Principles of Systemic Therapy (BIL-C).",
+  "k": "Principles of Radiation Therapy (BIL-D).",
+  "l": "NCCN Guidelines for Palliative Care.",
+  "m": "For locoregionally advanced disease, consider neoadjuvant systemic therapy to rule out rapid progression and avoid futile surgery. There are limited clinical trial data to define a standard regimen or definitive benefit. See Principles of Systemic Therapy (BIL-C).",
+  "p": "CEA and CA 19-9 are baseline tests and should not be done to confirm diagnosis."
+ },
+ "boxes": [
+  {"key": "h_work", "header": true, "region": [20, 84, 200, 104]},
+  {"key": "h_treat", "header": true, "region": [488, 84, 626, 104]},
+  {"key": "mass", "region": [20, 192, 76, 228], "decision_type": "other", "predicate_status": "none"},
+  {"key": "workup", "region": [110, 125, 262, 295]},
+  {"key": "resect", "region": [262, 130, 346, 154], "decision_type": "condition",
+   "predicate": {"fact": "resectability_category", "op": "==", "value": "resectable"}},
+  {"key": "unres", "region": [262, 270, 346, 294], "decision_type": "condition",
+   "predicate": {"fact": "resectability_category", "op": "==", "value": "unresectable"}},
+  {"key": "chole", "region": [488, 105, 640, 166]},
+  {"key": "adj", "region": [670, 112, 762, 176]},
+  {"key": "biopsy", "region": [354, 264, 478, 302]},
+  {"key": "opts", "region": [488, 252, 662, 314], "decision_type": "condition",
+   "predicate": {"fact": "candidate_for_systemic_therapy", "op": "==", "value": true}},
+  {"key": "bsc", "region": [492, 314, 640, 338], "decision_type": "condition",
+   "predicate": {"fact": "candidate_for_systemic_therapy", "op": "==", "value": false}},
+  {"key": "assess", "region": [668, 196, 764, 366]}
+ ],
+ "edges": [
+  ["mass", "workup"], ["workup", "resect"], ["workup", "unres"],
+  ["resect", "chole"], ["chole", "adj"],
+  ["unres", "biopsy"], ["biopsy", "opts"], ["biopsy", "bsc"], ["opts", "assess"]
+ ]
+}

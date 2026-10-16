@@ -1,0 +1,9 @@
+{
+ "page": "GALL-3",
+ "note": "Gallbladder cancer, incidental finding on pathologic review (PDF page 9). The page-label detector read the reference 'GALL-4' printed in the corner text 'GALL-1, GALL-3, GALL-4 and GALL-5' of the later pages, so pdf pages 9, 10 and 11 all carried the code GALL-4 and the boxes of page 9 were filed under 'GALL-4 3 of 3'. The pages are relabelled GALL-3 (pdf 9, its boxes moved back), GALL-4 (pdf 10) and GALL-5 (pdf 11); see GALL-4.json and GALL-5.json.",
+ "relabel": [
+  {"page": "GALL-4 1 of 3", "code": "GALL-3", "nodes_from": "GALL-4 3 of 3"},
+  {"page": "GALL-4 2 of 3", "code": "GALL-4"},
+  {"page": "GALL-4 3 of 3", "code": "GALL-5"}
+ ]
+}

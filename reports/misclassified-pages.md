@@ -6,14 +6,14 @@ Review notes. `genuine` in the worklist is a heuristic (vector drawings and body
 
 - Footnote pages are recognised by their code (`<PREFIX>-<n>A`); `B`, `C` ... pages become kind `other`. Both can hold a flowchart.
 - Genuine footnote pages exist too (PROS-10A, PROS-9A, the ESOPH/GAST/LCS/ME/ICI footnote pages): they are not re-extracted, and the audit counts them under "Not listed".
-- Two pages with one printed code lose the first page's boxes (WILMS-5 / WILMS-11, AFAP-1, GALL-4, AYAO-8): fixed for WILMS, listed for the rest.
+- Two pages with one printed code lose the first page's boxes (WILMS-5 / WILMS-11, AFAP-1, GALL-4, AYAO-8): fixed for WILMS, AFAP-1 and GALL-4, listed for the rest.
 
-- 82 pages typed footnotes / other / principles / staging carry signals or are linked to (algorithm: 2, footnotes: 40, other: 29, principles: 11); 19 of them are re-extracted, 63 remain listed below (55 with strong signals).
-- 3 algorithm pages without any box and 40 algorithm pages with boxes but no entry box are linked to.
+- 87 pages typed footnotes / other / principles / staging carry signals or are linked to (algorithm: 7, footnotes: 40, other: 29, principles: 11); 24 of them are re-extracted, 63 remain listed below (55 with strong signals).
+- 1 algorithm pages without any box and 38 algorithm pages with boxes but no entry box are linked to.
 - Not listed: 158 lettered pages titled FOOTNOTES / REFERENCES with little body text (what their code says they are) and another 349 principles, staging or other reference pages that boxes link to without algorithm signals.
 
-- Dead-end link targets (a page with no entry box that boxes on algorithm pages link to; principles and staging pages are shown as documents and left out): 99 pages, 454 boxes; 44 carry algorithm content (worklist, about 525 boxes), 0 need a look, 55 are genuine footnote / reference pages that boxes link to on purpose.
-- 538 leaf boxes name an algorithm page that has entry boxes but have no continuation into it (`page_spec wire --all` adds them; not applied).
+- Dead-end link targets (a page with no entry box that boxes on algorithm pages link to; principles and staging pages are shown as documents and left out): 95 pages, 443 boxes; 40 carry algorithm content (worklist, about 463 boxes), 0 need a look, 55 are genuine footnote / reference pages that boxes link to on purpose.
+- 491 leaf boxes name an algorithm page that has entry boxes but have no continuation into it (`page_spec wire --all` adds them; not applied).
 
 ## Worklist per guideline
 
@@ -25,7 +25,6 @@ Review notes. `genuine` in the worklist is a heuristic (vector drawings and body
 | antiemesis | 1 | 2 | 0 | 0 | 0 | 1 | 9 |
 | b_cell_lymphomas | 4 | 13 | 4 | 67 | 0 | 0 | 51 |
 | basal_cell_skin | 0 | 0 | 0 | 0 | 0 | 0 | 3 |
-| biliary_tract | 1 | 2 | 1 | 17 | 0 | 0 | 1 |
 | bladder | 0 | 0 | 0 | 0 | 0 | 0 | 13 |
 | bone | 0 | 0 | 0 | 0 | 0 | 0 | 15 |
 | breast | 0 | 0 | 0 | 0 | 0 | 0 | 18 |
@@ -42,8 +41,8 @@ Review notes. `genuine` in the worklist is a heuristic (vector drawings and body
 | distress_management | 0 | 0 | 0 | 0 | 0 | 0 | 11 |
 | esophageal_and_esophagogastric_junction | 0 | 0 | 0 | 0 | 0 | 0 | 9 |
 | gastric | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
-| genetic_familial_high_risk_assessment_breast_ova | 1 | 1 | 1 | 10 | 0 | 0 | 3 |
-| genetic_familial_high_risk_assessment_colorectal | 8 | 29 | 1 | 12 | 0 | 7 | 6 |
+| genetic_familial_high_risk_assessment_breast_ova | 1 | 1 | 1 | 10 | 0 | 0 | 0 |
+| genetic_familial_high_risk_assessment_colorectal | 7 | 22 | 0 | 0 | 0 | 7 | 0 |
 | gestational_trophoblastic_neoplasia | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
 | head_and_neck | 5 | 88 | 0 | 0 | 0 | 5 | 22 |
 | hematopoietic_cell_transplantation | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
@@ -68,7 +67,7 @@ Review notes. `genuine` in the worklist is a heuristic (vector drawings and body
 | neuroendocrine_and_adrenal_tumors | 11 | 132 | 0 | 0 | 0 | 11 | 34 |
 | nsclc | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | occult_primary | 0 | 0 | 0 | 0 | 0 | 0 | 10 |
-| ovarian_cancer_fallopian_tube_cancer_primary_per | 1 | 2 | 1 | 9 | 0 | 0 | 17 |
+| ovarian_cancer_fallopian_tube_cancer_primary_per | 1 | 2 | 1 | 9 | 0 | 0 | 0 |
 | palliative_care | 1 | 3 | 1 | 2 | 0 | 0 | 8 |
 | pediatric_acute_lymphoblastic_leukemia | 0 | 0 | 0 | 0 | 0 | 0 | 6 |
 | pediatric_aggressive_mature_b_cell_lymphomas | 1 | 1 | 1 | 9 | 0 | 0 | 9 |
@@ -76,7 +75,6 @@ Review notes. `genuine` in the worklist is a heuristic (vector drawings and body
 | pediatric_hodgkin_lymphoma | 1 | 1 | 1 | 16 | 0 | 0 | 1 |
 | pediatric_soft_tissue_sarcoma | 0 | 0 | 0 | 0 | 0 | 0 | 4 |
 | prevention_and_treatment_of_related_infections | 0 | 0 | 0 | 0 | 0 | 0 | 4 |
-| prostate | 1 | 1 | 1 | 18 | 0 | 0 | 1 |
 | prostate_early_detection | 2 | 2 | 1 | 3 | 0 | 1 | 0 |
 | rectal | 0 | 0 | 0 | 0 | 0 | 0 | 6 |
 | related_fatigue | 1 | 3 | 1 | 7 | 0 | 0 | 3 |
@@ -88,7 +86,6 @@ Review notes. `genuine` in the worklist is a heuristic (vector drawings and body
 | survivorship | 17 | 82 | 5 | 35 | 0 | 12 | 7 |
 | systemic_mastocytosis | 1 | 2 | 1 | 10 | 0 | 0 | 3 |
 | t_cell_lymphomas | 5 | 6 | 3 | 27 | 0 | 2 | 12 |
-| thyroid_carcinoma | 1 | 1 | 1 | 15 | 0 | 0 | 19 |
 | uterine_neoplasms | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
 | vaginal | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
 | wilms_tumor_nephroblastoma | 0 | 0 | 0 | 0 | 0 | 0 | 4 |
@@ -107,7 +104,6 @@ Review notes. `genuine` in the worklist is a heuristic (vector drawings and body
 | b_cell_lymphomas | EMZLG-3 | algorithm | 3 | 31 | yes | 6 | add the missing entry box (boxes exist) | Active surveillance No indication Indication presentq Evaluate for indications for treatment: • Candidate for clinical t |  |
 | b_cell_lymphomas | NMZL-4 | algorithm | 3 | 42 | yes | 19 | add the missing entry box (boxes exist) | FOLLOW-UPn SECOND- LINE AND SUBSEQUENT THERAPY RESPONSE ASSESSMENTl AND ADDITIONAL THERAPY CRl No indication Active surv |  |
 | b_cell_lymphomas | MANT-6B | other | 3 | 56 | yes | 22 | re-extract (flowchart) | RELAPSED/REFRACTORY OR PROGRESSIVE DISEASE FOLLOW-UPl RELAPSE #2 OR GREATER CONSOLIDATION/ ADDITIONAL THERAPY Responsek  | algorithm continuation page (typed other). NOT re-extracted (page cap) |
-| biliary_tract | GALL-4 1 of 3 | algorithm | 2 | 9 | yes | 17 | re-extract (flowchart) | PRESENTATION POSTOPERATIVE WORKUPn PRIMARY TREATMENT Observe T1a (with negative margins) Adjuvant treatment and surveill | algorithm-typed page without boxes (three pages share the code GALL-4, the last page's boxes were kept); linked from 2 boxes. NOT fixed |
 | castleman_disease | CD-3 | algorithm | 1 | 8 | yes | 21 | add the missing entry box (boxes exist) | FIRST-LINE THERAPYk RELAPSED DISEASEk Observation Recurrence Complete resection Surgically resectable Asymptomatic Obser |  |
 | central_nervous_system | BRAIN-A 1 of 9 | other | 14 | 98 | no | 0 | none: principles page typed other (a document, not a flowchart) | PRINCIPLES OF BRAIN AND SPINE TUMOR IMAGING1 It is important that the treating provider be given the flexibility to dete |  |
 | central_nervous_system | BRAIN-C 1 of 10 | other | 1 | 110 | no | 0 | none: principles page typed other (a document, not a flowchart) | PRINCIPLES OF RADIATION THERAPY FOR BRAIN AND SPINAL CORD Adult Low-Grade Diffuse Glioma: WHO Grade 2 Oligodendroglioma  |  |
@@ -117,15 +113,14 @@ Review notes. `genuine` in the worklist is a heuristic (vector drawings and body
 | cutaneous_lymphomas | CUTB-3 | algorithm | 3 | 12 | yes | 14 | add the missing entry box (boxes exist) | PRIMARY CUTANEOUS MARGINAL ZONE LYMPHOMA OR FOLLICLE CENTER LYMPHOMAj STAGEk INITIAL THERAPYl RESPONSE/ADDITIONAL THERAP |  |
 | cutaneous_lymphomas | MFSS/INTRO-2 | algorithm | 1 | 17 | no | 3 | none: principles / reference text page typed algorithm | PRINCIPLES FOR MYCOSIS FUNGOIDES/SÉZARY SYNDROME (MF/SS) General Principles • Multidisciplinary team approach (hematolog |  |
 | cutaneous_lymphomas | MFSS-5 | algorithm | 2 | 24 | yes | 3 | add the missing entry box (boxes exist) | LYMPH NODE (LN) CLASSIFICATION IN MF AND SS NCI-VA Lymph Node Classification LN0: no atypical lymphocytes LN1: occasiona |  |
-| genetic_familial_high_risk_assessment_breast_ova | CRIT-8A | footnotes | 1 | 37 | list | 10 | re-extract (recommendation list: one entry box) | DIAGNOSTIC CRITERIA FOR COWDEN SYNDROME (CS)/PTEN HAMARTOMA TUMOR SYNDROME (PHTS)a,* Major criteria: • Breast cancer • E |  |
-| genetic_familial_high_risk_assessment_colorectal | EVAL-A 1 of 9 | other | 2 | 14 | no | 0 | none: principles page typed other (a document, not a flowchart) | PRINCIPLES OF CANCER RISK ASSESSMENT AND COUNSELING • Cancer risk assessment and genetic counseling are highly recommend |  |
-| genetic_familial_high_risk_assessment_colorectal | LS-A 1 of 10 | other | 1 | 35 | no | 0 | none: principles page typed other (a document, not a flowchart) | PRINCIPLES OF SCREENING FOR LYNCH SYNDROME AND OTHER HEREDITARY CANCER SYNDROMES • The Panel recommends universal LS ass |  |
-| genetic_familial_high_risk_assessment_colorectal | LS-B 1 of 6 | other | 4 | 46 | no | 0 | none: principles page typed other (a document, not a flowchart) | MLH1 LYNCH SYNDROME: CANCER RISKSa,b Comments and Cumulative Risk for Diagnosis Through Age Cumulative Risk for Diagnosi |  |
-| genetic_familial_high_risk_assessment_colorectal | LS-C 1 of 8 | other | 7 | 52 | no | 0 | none: principles page typed other (a document, not a flowchart) | MSH2 AND EPCAM 3' PATHOGENIC DELETIONS WITH MSH2 INVOLVEMENT LYNCH SYNDROME: CANCER RISKSa,b Comments and Cumulative Ris |  |
-| genetic_familial_high_risk_assessment_colorectal | LS-D 1 of 6 | other | 4 | 60 | no | 0 | none: principles page typed other (a document, not a flowchart) | MSH6 LYNCH SYNDROME: CANCER RISKSa,b Cumulative Risk for Comments and Cumulative Risk for Diagnosis Through Age Referenc |  |
-| genetic_familial_high_risk_assessment_colorectal | LS-E 1 of 4 | other | 3 | 66 | no | 0 | none: principles page typed other (a document, not a flowchart) | PMS2 LYNCH SYNDROME: CANCER RISKSa,b Cumulative Risk for Diagnosis Comments and Cumulative Risk for Diagnosis Through Ag |  |
-| genetic_familial_high_risk_assessment_colorectal | AFAP-1 1 of 2 | algorithm | 7 | 85 | yes | 12 | re-extract (flowchart) | PHENOTYPE RISK STATUS Personal history of classical FAP Treatment and Surveillance (FAP-1) Genetic Testing and Surveilla | algorithm-typed page without boxes (two pages share the code AFAP-1, the later page's boxes were kept); linked from 7 boxes. NOT fixed |
-| genetic_familial_high_risk_assessment_colorectal | GENE-20 | algorithm | 1 | 135 | no | 3 | none: principles / reference text page typed algorithm | REFERENCES BMPR1A Faughnan M, Palda V, Garcoa-Rsao G, et al. International guidelines for the GALNT12 Clarke E, Green RC |  |
+| genetic_familial_high_risk_assessment_breast_ova | CRIT-8A | footnotes | 1 | 37 | list | 10 | re-extract (recommendation list: one entry box) | DIAGNOSTIC CRITERIA FOR COWDEN SYNDROME (CS)/PTEN HAMARTOMA TUMOR SYNDROME (PHTS)a,* Major criteria: • Breast cancer • E | NOT an algorithm: diagnostic criteria for Cowden syndrome / PTEN hamartoma tumor syndrome (major and minor criteria, operational diagnosis), a reference page that CRIT-8 points to ('See major and minor criteria on CRIT-8A'); no arrows. Left alone |
+| genetic_familial_high_risk_assessment_colorectal | EVAL-A 1 of 9 | other | 2 | 14 | no | 0 | none: principles page typed other (a document, not a flowchart) | PRINCIPLES OF CANCER RISK ASSESSMENT AND COUNSELING • Cancer risk assessment and genetic counseling are highly recommend | NOT an algorithm: principles of cancer risk assessment and counseling (text document). Left alone |
+| genetic_familial_high_risk_assessment_colorectal | LS-A 1 of 10 | other | 1 | 35 | no | 0 | none: principles page typed other (a document, not a flowchart) | PRINCIPLES OF SCREENING FOR LYNCH SYNDROME AND OTHER HEREDITARY CANCER SYNDROMES • The Panel recommends universal LS ass | NOT an algorithm: principles of screening for Lynch syndrome (text document). Left alone |
+| genetic_familial_high_risk_assessment_colorectal | LS-B 1 of 6 | other | 4 | 46 | no | 0 | none: principles page typed other (a document, not a flowchart) | MLH1 LYNCH SYNDROME: CANCER RISKSa,b Comments and Cumulative Risk for Diagnosis Through Age Cumulative Risk for Diagnosi | NOT an algorithm: MLH1 Lynch syndrome cancer risk table (reference). Left alone |
+| genetic_familial_high_risk_assessment_colorectal | LS-C 1 of 8 | other | 7 | 52 | no | 0 | none: principles page typed other (a document, not a flowchart) | MSH2 AND EPCAM 3' PATHOGENIC DELETIONS WITH MSH2 INVOLVEMENT LYNCH SYNDROME: CANCER RISKSa,b Comments and Cumulative Ris | NOT an algorithm: MSH2/EPCAM Lynch syndrome cancer risk table (reference). Left alone |
+| genetic_familial_high_risk_assessment_colorectal | LS-D 1 of 6 | other | 4 | 60 | no | 0 | none: principles page typed other (a document, not a flowchart) | MSH6 LYNCH SYNDROME: CANCER RISKSa,b Cumulative Risk for Comments and Cumulative Risk for Diagnosis Through Age Referenc | NOT an algorithm: MSH6 Lynch syndrome cancer risk table (reference). Left alone |
+| genetic_familial_high_risk_assessment_colorectal | LS-E 1 of 4 | other | 3 | 66 | no | 0 | none: principles page typed other (a document, not a flowchart) | PMS2 LYNCH SYNDROME: CANCER RISKSa,b Cumulative Risk for Diagnosis Comments and Cumulative Risk for Diagnosis Through Ag | NOT an algorithm: PMS2 Lynch syndrome cancer risk table (reference). Left alone |
+| genetic_familial_high_risk_assessment_colorectal | GENE-20 | algorithm | 1 | 135 | no | 3 | none: principles / reference text page typed algorithm | REFERENCES BMPR1A Faughnan M, Palda V, Garcoa-Rsao G, et al. International guidelines for the GALNT12 Clarke E, Green RC | NOT an algorithm: references page. Left alone |
 | head_and_neck | FOLL-A 1 of 2 | other | 77 | 94 | no | 0 | none: principles page typed other (a document, not a flowchart) | FOLLOW-UP RECOMMENDATIONSa (based on risk of relapse, second primaries, treatment sequelae, and toxicities) • Supportive |  |
 | head_and_neck | IMG-A 1 of 4 | other | 1 | 96 | no | 0 | none: principles page typed other (a document, not a flowchart) | PRINCIPLES OF IMAGING • Imaging plays an essential role in the clinical care of patients with head and neck cancer. The  |  |
 | head_and_neck | SURG-A 1 of 9 | other | 1 | 100 | no | 0 | none: principles page typed other (a document, not a flowchart) | PRINCIPLES OF SURGERY Evaluation All patients should be evaluated by a head and neck surgical oncologist prior to treatm |  |
@@ -160,13 +155,12 @@ Review notes. `genuine` in the worklist is a heuristic (vector drawings and body
 | neuroendocrine_and_adrenal_tumors | NE-H 1 of 2 | other | 7 | 115 | no | 0 | none: principles page typed other (a document, not a flowchart) | PRINCIPLES OF LIVER-DIRECTED THERAPY FOR NEUROENDOCRINE TUMOR METASTASES • Liver-directed therapy1 consists of four cate |  |
 | neuroendocrine_and_adrenal_tumors | NE-I 1 of 2 | other | 10 | 117 | no | 0 | none: principles page typed other (a document, not a flowchart) | PRINCIPLES OF RADIATION THERAPY1,2 General Principles: • EBRT is a useful modality for select patients with locoregional |  |
 | neuroendocrine_and_adrenal_tumors | NE-J 1 of 3 | other | 1 | 119 | no | 0 | none: principles page typed other (a document, not a flowchart) | PRINCIPLES OF PEPTIDE RECEPTOR RADIONUCLIDE THERAPY WITH LUTETIUM LU 177 DOTATATE1-10 • Lutetium Lu 177 dotatate is a ra |  |
-| ovarian_cancer_fallopian_tube_cancer_primary_per | LCOC-5A | footnotes | 2 | 20 | yes | 9 | re-extract (flowchart) | SYSTEMIC THERAPY REGIMENSg,n SMALL CELL CARCINOMA OF THE OVARY (HYPERCALCEMIC TYPE) SMALL CELL CARCINOMA OF THE OVARY (H | systemic therapy regimen lists (reference), not an algorithm |
+| ovarian_cancer_fallopian_tube_cancer_primary_per | LCOC-5A | footnotes | 2 | 20 | yes | 9 | re-extract (flowchart) | SYSTEMIC THERAPY REGIMENSg,n SMALL CELL CARCINOMA OF THE OVARY (HYPERCALCEMIC TYPE) SMALL CELL CARCINOMA OF THE OVARY (H | NOT an algorithm: systemic therapy regimen table (preferred / other recommended / useful in certain circumstances by primary and recurrence therapy), reference for LCOC-5 'see primary therapy in LCOC-5A'. Left alone |
 | palliative_care | PAL-33 | algorithm | 3 | 42 | yes | 2 | add the missing entry box (boxes exist) | PROPORTIONAL SEDATION • Proportional sedation (formerly known as palliative sedation) is the intentional lowering of awa |  |
 | pediatric_aggressive_mature_b_cell_lymphomas | PBCL-4 | algorithm | 1 | 9 | yes | 9 | add the missing entry box (boxes exist) | STAGING International Pediatric Non-Hodgkin Lymphoma Staging Systemt,u Stage I Single tumor (extranodal) or single anato |  |
 | pediatric_hodgkin_lymphoma | PHL-6 | algorithm | 1 | 21 | yes | 16 | add the missing entry box (boxes exist) | CLINICAL PRESENTATION: NLPHL PRIMARY TREATMENTu,v,jj Preferred Ongoing clinical trial Biopsy positive or Restage and see |  |
-| prostate | PROS-12 | algorithm | 1 | 28 | yes | 18 | add the missing entry box (boxes exist) | TREATMENT AND MONITORING FOR SECOND BIOCHEMICAL RECURRENCE (N0M0) N0M0 Oligometastatich CSPC Workup and Treatment of Met |  |
-| prostate_early_detection | PROSD-2A | footnotes | 1 | 8 | no | 0 | none: genuine footnote / reference page | FOOTNOTES e Black/African American individuals have a significantly higher incidence of b Family or personal cancer his |  |
-| prostate_early_detection | PROSD-2B | other | 1 | 9 | list | 3 | re-extract (recommendation list: one entry box) | FOOTNOTES i Prostate cancer early detection is recommended in adults with a prostate starting k The median PSA values fo |  |
+| prostate_early_detection | PROSD-2A | footnotes | 1 | 8 | no | 0 | none: genuine footnote / reference page | FOOTNOTES e Black/African American individuals have a significantly higher incidence of b Family or personal cancer his | NOT an algorithm: genuine footnote page (FOOTNOTES b-h), pointed to by 'See footnotes on PROSD-2A and PROSD-2B'. Left alone |
+| prostate_early_detection | PROSD-2B | other | 1 | 9 | list | 3 | re-extract (recommendation list: one entry box) | FOOTNOTES i Prostate cancer early detection is recommended in adults with a prostate starting k The median PSA values fo | NOT an algorithm: genuine footnote page (FOOTNOTES i-l, continued from PROSD-2A). Left alone |
 | related_fatigue | FT-3 | algorithm | 3 | 7 | yes | 7 | add the missing entry box (boxes exist) | SCREENINGa Ongoing evaluation Screen every patient for fatigue at regular intervalsb • Age >12 y: Severity: 0–10 scalec |  |
 | smoking_cessation | SC-4 | algorithm | 2 | 15 | yes | 14 | add the missing entry box (boxes exist) | INDIVIDUALS WHO FORMERLY SMOKED (More Than 30 Days Since Last Smoked) EVALUATION OF RETURN TO SMOKING RISKc MANAGEMENT A |  |
 | soft_tissue_sarcoma | SARC-A 1 of 5 | other | 4 | 36 | no | 0 | none: principles page typed other (a document, not a flowchart) | PRINCIPLES OF IMAGING • Contrasted cross-sectional imaging with MRI (with and without contrast) is preferred over CT (wi |  |
@@ -197,7 +191,6 @@ Review notes. `genuine` in the worklist is a heuristic (vector drawings and body
 | t_cell_lymphomas | INTCL-3 | algorithm | 2 | 64 | yes | 3 | add the missing entry box (boxes exist) | INDOLENT T-CELL LYMPHOMAS OF THE GASTROINTESTINAL (GI) TRACT AND INDOLENT NK-CELL LYMPHOPROLIFERATIVE DISORDERS (LPD) OF |  |
 | t_cell_lymphomas | TCLYM-A 1 of 4 | other | 1 | 65 | no | 0 | none: principles page typed other (a document, not a flowchart) | PRINCIPLES OF BIOMARKER TESTING IN T-CELL LYMPHOMASa • Biomarker testing, including high-throughput sequencing (HTS), MG |  |
 | t_cell_lymphomas | TCLYM-F 1 of 4 | other | 1 | 80 | no | 0 | none: principles page typed other (a document, not a flowchart) | SECONDARY HEMOPHAGOCYTIC LYMPHOHISTIOCYTOSIS (HLH) Diagnostic LP, if clinical suspicion of CNS involvement of infection |  |
-| thyroid_carcinoma | ONC-4 | algorithm | 1 | 43 | yes | 15 | add the missing entry box (boxes exist) | RAI PLANNING AFTER TOTAL THYROIDECTOMY Low Tg Iodine-131 therapy (ONC-3) or disease monitoring (ONC-6) No gross residual |  |
 
 ## Re-extracted (now algorithm pages)
 
@@ -207,9 +200,14 @@ Kind is the earlier one.
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---|---|
 | appendiceal_neoplasms_and | APP-5A | footnotes | 1 | 10 | 36 | 34 | 0 | 3 | 14 | BIOPSY-PROVEN RECURRENCEn CRS ± IPCTq Surveillance (APP-8) Complete CRS possible No previous CRS Observation or Consider | algorithm (biopsy-proven recurrence). Re-extracted |
 | b_cell_lymphomas | MANT-6A | footnotes | 3 | 55 | 66 | 81 | 0 | 0 | 21 | FOLLOW-UPl RELAPSE #2 OR GREATER RELAPSED/REFRACTORY OR PROGRESSIVE DISEASE CONSOLIDATION/ ADDITIONAL THERAPY Responsek  | algorithm (relapsed/refractory mantle cell lymphoma), linked from MANT-2, 4, 5. Re-extracted |
+| biliary_tract | GALL-3 | algorithm | 0 | 9 | 61 | 64 | 0 | 3 | 18 | PRESENTATION POSTOPERATIVE WORKUPn PRIMARY TREATMENT Observe T1a (with negative margins) Adjuvant treatment and surveill | relabelled from 'GALL-4 1 of 3' (PDF page 9); keeps the boxes that were filed under the page of PDF page 11. Fixed |
+| biliary_tract | GALL-4 | algorithm | 2 | 10 | 38 | 47 | 0 | 4 | 12 | PRESENTATION AND WORKUP PRIMARY TREATMENT Resectabled,m Adjuvant treatment and surveillance (GALL-6) Cholecystectomyd +  | algorithm (mass on imaging, PDF page 10), was 'GALL-4 2 of 3' without boxes. Relabelled and re-extracted: 12 boxes, 9 arrows, 4 conditions (entry 'Mass on imaging' has none) |
+| biliary_tract | GALL-5 | algorithm | 2 | 11 | 52 | 58 | 0 | 3 | 16 | PRIMARY TREATMENT PRESENTATION AND WORKUP Resectabled • Consider neoadjuvant systemic therapy (category 2B)j,m • Clinica | algorithm (jaundice / metastatic disease, PDF page 11), was 'GALL-4 3 of 3' holding the boxes of PDF page 9. Relabelled and re-extracted: 16 boxes, 14 arrows, 7 conditions |
 | castleman_disease | CD-4A | footnotes | 1 | 9 | 47 | 44 | 0 | 3 | 16 | FIRST-LINE THERAPYk RELAPSED DISEASEk Responseq Relapsed diseasen • If siltuximab, continue until progression • If ritux | algorithm (multicentric Castleman disease). Re-extracted |
 | castleman_disease | CD-4B | other | 1 | 10 | 37 | 35 | 0 | 1 | 12 | FIRST-LINE THERAPYk RELAPSED DISEASEk Responseq Observation Relapsed diseasen MCD Criteria for active diseasef present b | algorithm (HHV8-positive MCD), reached from CD-4A. Re-extracted |
 | colon | COL-2A | footnotes | 1 | 11 | 23 | 34 | 0 | 2 | 8 | CLINICAL PRESENTATIONa WORKUPj pMMR/MSS COL-5 • Colonoscopy • C/A/P CTb • CBC, chemistry profile, CEA • Biomarker testin | algorithm: workup of M1 disease, MMR split to COL-5 / COL-14. Re-extracted |
+| genetic_familial_high_risk_assessment_colorectal | AFAP-1 | algorithm | 7 | 102 | 22 | 44 | 1 | 0 | 10 | ATTENUATED FAP TREATMENT AND SURVEILLANCE: PERSONAL HISTORY TREATMENT SURVEILLANCEc,d ADENOMA/ POLYP BURDEN Small adenom | algorithm (attenuated FAP treatment and surveillance, personal history, PDF page 102): had no boxes, the boxes of PDF page 85 were filed under it. Relabelled AFAP-1 and re-extracted: 10 boxes, 6 arrows, 3 conditions; AFAP-2, IAP-2, GENE-1 and the phenotype page now continue into it |
+| genetic_familial_high_risk_assessment_colorectal | FAP/AFAP-1 | algorithm | 0 | 85 | 34 | 44 | 0 | 5 | 11 | PHENOTYPE RISK STATUS Personal history of classical FAP Treatment and Surveillance (FAP-1) Genetic Testing and Surveilla | algorithm (phenotype, risk status), relabelled from 'AFAP-1 1 of 2'; boxes unchanged. Fixed |
 | hodgkin_lymphoma | HODG-6A | footnotes | 1 | 18 | 46 | 47 | 0 | 4 | 19 | CLINICAL PRESENTATION: Classic Hodgkin Lymphoma: Stage I/II Unfavorable with B Symptoms, Bulky Mediastinal Disease and/o | algorithm (stage I/II unfavorable, Other Regimens). Re-extracted |
 | hodgkin_lymphoma | HODG-6B | other | 1 | 19 | 60 | 47 | 0 | 3 | 21 | CLINICAL PRESENTATION: Classic Hodgkin Lymphoma: Stage I/II Unfavorable with B Symptoms, Bulky Disease and/or >10 cm Ade | algorithm (BrECADD + G-CSF), reached from HODG-6A; typed other because only an A suffix is read as a footnote page. Re-extracted |
 | hodgkin_lymphoma | HODG-7A | footnotes | 1 | 21 | 52 | 41 | 0 | 5 | 18 | CLINICAL PRESENTATION: Classic Hodgkin Lymphoma: Stage III–IV PRIMARY TREATMENT (continued from HODG-7) uSpecial Conside | algorithm (stage III-IV, nivolumab-AVD). Re-extracted |
@@ -230,8 +228,6 @@ Kind is the earlier one.
 | slug | page | kind | linked from | pdf page | vec | body | sees | codes | boxes | first 120 chars | review |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---|---|
 | adolescent_and_young_adult_aya_oncology | AYAO-8 1 of 2 | algorithm | 4 | 17 |  | 119 | 0 | 4 | 0 | COMPREHENSIVE PSYCHOSOCIAL CONSIDERATIONS THROUGHOUT TREATMENT: INDIVIDUAL EVALUATION SUPPORTIVE CARE SERVICES/INTERVENT | algorithm-typed page without boxes (two pages share the code AYAO-8, the later page's boxes were kept); linked from 4 boxes. NOT fixed |
-| biliary_tract | GALL-4 1 of 3 | algorithm | 2 | 9 |  | 64 | 0 | 3 | 0 | PRESENTATION POSTOPERATIVE WORKUPn PRIMARY TREATMENT Observe T1a (with negative margins) Adjuvant treatment and surveill | algorithm-typed page without boxes (three pages share the code GALL-4, the last page's boxes were kept); linked from 2 boxes. NOT fixed |
-| genetic_familial_high_risk_assessment_colorectal | AFAP-1 1 of 2 | algorithm | 7 | 85 |  | 44 | 0 | 5 | 0 | PHENOTYPE RISK STATUS Personal history of classical FAP Treatment and Surveillance (FAP-1) Genetic Testing and Surveilla | algorithm-typed page without boxes (two pages share the code AFAP-1, the later page's boxes were kept); linked from 7 boxes. NOT fixed |
 
 ## Algorithm pages with boxes but no entry box
 
@@ -247,7 +243,7 @@ Kind is the earlier one.
 | cutaneous_lymphomas | CUTB-3 | algorithm | 3 | 12 |  | 33 | 0 | 0 | 14 | PRIMARY CUTANEOUS MARGINAL ZONE LYMPHOMA OR FOLLICLE CENTER LYMPHOMAj STAGEk INITIAL THERAPYl RESPONSE/ADDITIONAL THERAP |  |
 | cutaneous_lymphomas | MFSS/INTRO-2 | algorithm | 1 | 17 |  | 34 | 0 | 1 | 3 | PRINCIPLES FOR MYCOSIS FUNGOIDES/SÉZARY SYNDROME (MF/SS) General Principles • Multidisciplinary team approach (hematolog |  |
 | cutaneous_lymphomas | MFSS-5 | algorithm | 2 | 24 |  | 16 | 0 | 0 | 3 | LYMPH NODE (LN) CLASSIFICATION IN MF AND SS NCI-VA Lymph Node Classification LN0: no atypical lymphocytes LN1: occasiona |  |
-| genetic_familial_high_risk_assessment_colorectal | GENE-20 | algorithm | 1 | 135 |  | 78 | 1 | 0 | 3 | REFERENCES BMPR1A Faughnan M, Palda V, Garcoa-Rsao G, et al. International guidelines for the GALNT12 Clarke E, Green RC |  |
+| genetic_familial_high_risk_assessment_colorectal | GENE-20 | algorithm | 1 | 135 |  | 78 | 1 | 0 | 3 | REFERENCES BMPR1A Faughnan M, Palda V, Garcoa-Rsao G, et al. International guidelines for the GALNT12 Clarke E, Green RC | NOT an algorithm: references page. Left alone |
 | in_people_with_hiv | HIV-1 | algorithm | 1 | 7 |  | 90 | 0 | 0 | 10 | Anal Cancer in PWH • PWH have an approximately 15- to 20-fold increased likelihood of being diagnosed with anal cancer c |  |
 | in_people_with_hiv | HIV-2 | algorithm | 1 | 8 |  | 77 | 0 | 0 | 11 | Cervical Dysplasia and Cervical Cancer Screening in PWH • PWH are at higher risk of HPV infection and premalignant cervi |  |
 | in_people_with_hiv | HIV-3 | algorithm | 1 | 9 |  | 79 | 0 | 0 | 9 | Prophylaxis for other opportunistic infections including gram-negative bacteria can be considered, particularly for pat |  |
@@ -256,7 +252,6 @@ Kind is the earlier one.
 | palliative_care | PAL-33 | algorithm | 3 | 42 |  | 14 | 0 | 0 | 2 | PROPORTIONAL SEDATION • Proportional sedation (formerly known as palliative sedation) is the intentional lowering of awa |  |
 | pediatric_aggressive_mature_b_cell_lymphomas | PBCL-4 | algorithm | 1 | 9 |  | 23 | 1 | 1 | 9 | STAGING International Pediatric Non-Hodgkin Lymphoma Staging Systemt,u Stage I Single tumor (extranodal) or single anato |  |
 | pediatric_hodgkin_lymphoma | PHL-6 | algorithm | 1 | 21 |  | 37 | 0 | 2 | 16 | CLINICAL PRESENTATION: NLPHL PRIMARY TREATMENTu,v,jj Preferred Ongoing clinical trial Biopsy positive or Restage and see |  |
-| prostate | PROS-12 | algorithm | 1 | 28 |  | 45 | 0 | 3 | 18 | TREATMENT AND MONITORING FOR SECOND BIOCHEMICAL RECURRENCE (N0M0) N0M0 Oligometastatich CSPC Workup and Treatment of Met |  |
 | related_fatigue | FT-3 | algorithm | 3 | 7 |  | 34 | 0 | 2 | 7 | SCREENINGa Ongoing evaluation Screen every patient for fatigue at regular intervalsb • Age >12 y: Severity: 0–10 scalec |  |
 | smoking_cessation | SC-4 | algorithm | 2 | 15 |  | 43 | 0 | 1 | 14 | INDIVIDUALS WHO FORMERLY SMOKED (More Than 30 Days Since Last Smoked) EVALUATION OF RETURN TO SMOKING RISKc MANAGEMENT A |  |
 | survivorship | SURV-4 | algorithm | 2 | 26 |  | 16 | 0 | 2 | 2 | SCREENING FOR SUBSEQUENT NEW PRIMARY CANCERS • Subsequent new primary malignant neoplasms may occur in survivors years a |  |
@@ -276,7 +271,6 @@ Kind is the earlier one.
 | t_cell_lymphomas | LGLL-2 | algorithm | 1 | 32 |  | 76 | 0 | 0 | 21 | INDICATION FOR TREATMENT FIRST-LINE THERAPY RESPONSE (at 4 mo) SECOND-LINE THERAPY ADDITIONAL THERAPY/ FOLLOW-UP Observe |  |
 | t_cell_lymphomas | INTCL-1 | algorithm | 1 | 62 |  | 30 | 0 | 1 | 3 | INDOLENT T-CELL LYMPHOMAS OF THE GASTROINTESTINAL (GI) TRACT AND INDOLENT NK-CELL LYMPHOPROLIFERATIVE DISORDERS (LPD) OF |  |
 | t_cell_lymphomas | INTCL-3 | algorithm | 2 | 64 |  | 19 | 0 | 0 | 3 | INDOLENT T-CELL LYMPHOMAS OF THE GASTROINTESTINAL (GI) TRACT AND INDOLENT NK-CELL LYMPHOPROLIFERATIVE DISORDERS (LPD) OF |  |
-| thyroid_carcinoma | ONC-4 | algorithm | 1 | 43 |  | 40 | 0 | 4 | 15 | RAI PLANNING AFTER TOTAL THYROIDECTOMY Low Tg Iodine-131 therapy (ONC-3) or disease monitoring (ONC-6) No gross residual |  |
 
 ## Not re-extracted: strong signals (flowchart-like drawings with body text, page codes or arrows)
 
@@ -321,7 +315,7 @@ Kind is the earlier one.
 | neuroendocrine_and_adrenal_tumors | p36 | other | 0 | 36 | 31 | 31 | 0 | 0 | 0 | MANAGEMENT OF PRIMARY NON-METASTATIC DISEASE TREATMENT SURVEILLANCE PanNET-11 Occult, no primary tumor or metastases on  | PanNET algorithm page (flowchart, no code the page-label detector reads); no box links to it; NOT re-extracted (page cap) |
 | central_nervous_system | p91 | other | 0 | 91 | 27 | 35 | 0 | 0 | 0 | INDICATION: TREATMENT OF ISOLATED HEARING LOSS WITHOUT RADIOGRAPHIC PROGRESSION TREATMENT FOLLOW-UP HEARING STATUS TYPE  | NF2 algorithm page (flowchart, no code the page-label detector reads); NOT re-extracted (page cap) |
 | cutaneous_lymphomas | MFSS-A 2 of 12 | principles | 0 | 33 | 27 | 54 | 2 | 0 | 0 | SUGGESTED REGIMENS: SKIN-DIRECTED THERAPIES SKIN-LIMITED/LOCAL (FOR LIMITED/LOCALIZED SKIN INVOLVEMENT) TREATMENT CONSID |  |
-| ovarian_cancer_fallopian_tube_cancer_primary_per | LCOC-5A | footnotes | 2 | 20 | 25 | 22 | 0 | 0 | 0 | SYSTEMIC THERAPY REGIMENSg,n SMALL CELL CARCINOMA OF THE OVARY (HYPERCALCEMIC TYPE) SMALL CELL CARCINOMA OF THE OVARY (H | systemic therapy regimen lists (reference), not an algorithm |
+| ovarian_cancer_fallopian_tube_cancer_primary_per | LCOC-5A | footnotes | 2 | 20 | 25 | 22 | 0 | 0 | 0 | SYSTEMIC THERAPY REGIMENSg,n SMALL CELL CARCINOMA OF THE OVARY (HYPERCALCEMIC TYPE) SMALL CELL CARCINOMA OF THE OVARY (H | NOT an algorithm: systemic therapy regimen table (preferred / other recommended / useful in certain circumstances by primary and recurrence therapy), reference for LCOC-5 'see primary therapy in LCOC-5A'. Left alone |
 | central_nervous_system | p73 | other | 0 | 73 | 24 | 53 | 0 | 0 | 0 | BRAIN METASTASESa: SYSTEMIC THERAPYb Tumor Agnostic Breast Cancerc Melanomac • NTRK1/2/3 gene fusion Preferred • HER2 ( | brain metastases systemic therapy table (reference) |
 | neuroendocrine_and_adrenal_tumors | p35 | other | 0 | 35 | 21 | 21 | 0 | 0 | 0 | CLINICAL LOCATION EVALUATIONa Locoregional disease (NE-K) PanNET-4 Recommended: • Serum gastrin levelk (NE-A) • Multipha | PanNET algorithm page (flowchart, no code the page-label detector reads); no box links to it; NOT re-extracted (page cap) |
 | neuroendocrine_and_adrenal_tumors | p37 | other | 0 | 37 | 20 | 22 | 0 | 0 | 0 | EVALUATIONa CLINICAL LOCATION Locoregional disease (NE-K) PanNET-6 Recommended: • Serum insulin, pro-insulin, and c-pept | PanNET algorithm page (flowchart, no code the page-label detector reads); no box links to it; NOT re-extracted (page cap) |
@@ -342,10 +336,10 @@ Kind is the earlier one.
 
 | slug | page | kind | linked from | pdf page | vec | body | sees | codes | boxes | first 120 chars | review |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---|---|
-| genetic_familial_high_risk_assessment_breast_ova | CRIT-8A | footnotes | 1 | 37 | 7 | 40 | 0 | 1 | 0 | DIAGNOSTIC CRITERIA FOR COWDEN SYNDROME (CS)/PTEN HAMARTOMA TUMOR SYNDROME (PHTS)a,* Major criteria: • Breast cancer • E |  |
+| genetic_familial_high_risk_assessment_breast_ova | CRIT-8A | footnotes | 1 | 37 | 7 | 40 | 0 | 1 | 0 | DIAGNOSTIC CRITERIA FOR COWDEN SYNDROME (CS)/PTEN HAMARTOMA TUMOR SYNDROME (PHTS)a,* Major criteria: • Breast cancer • E | NOT an algorithm: diagnostic criteria for Cowden syndrome / PTEN hamartoma tumor syndrome (major and minor criteria, operational diagnosis), a reference page that CRIT-8 points to ('See major and minor criteria on CRIT-8A'); no arrows. Left alone |
 | histiocytic_neoplasms | MHN-1A | footnotes | 1 | 28 | 19 | 6 | 0 | 0 | 0 | TISSUE BIOPSY ANALYSIS FOR MALIGNANT HISTIOCYTIC NEOPLASMS Immunohistochemistryl,m • Histiocytic sarcoma Positive: at l | tissue biopsy analysis list (workup content, no arrows) |
 | histiocytic_neoplasms | PEDLCH-1A | footnotes | 1 | 17 | 12 | 7 | 0 | 0 | 0 | TISSUE BIOPSY ANALYSIS FOR LCH • Morphology Histiocytes • IHC CD1a+, Langerin (CD207)+, • Molecular testingg,h,i Targ | tissue biopsy analysis list (workup content, no arrows) |
-| prostate_early_detection | PROSD-2B | other | 1 | 9 | 3 | 29 | 0 | 3 | 0 | FOOTNOTES i Prostate cancer early detection is recommended in adults with a prostate starting k The median PSA values fo |  |
+| prostate_early_detection | PROSD-2B | other | 1 | 9 | 3 | 29 | 0 | 3 | 0 | FOOTNOTES i Prostate cancer early detection is recommended in adults with a prostate starting k The median PSA values fo | NOT an algorithm: genuine footnote page (FOOTNOTES i-l, continued from PROSD-2A). Left alone |
 | distress_management | DIS-25A | footnotes | 0 | 33 | 0 | 42 | 0 | 0 | 0 | PRINCIPLES FOR IMPLEMENTATION OF STANDARDS AND DISTRESS MANAGEMENT GUIDELINES CONTINUED A systematic approach should be  |  |
 | genetic_familial_high_risk_assessment_breast_ova | CRIT-2A 2 of 2 | footnotes | 0 | 28 | 9 | 1 | 0 | 3 | 0 | TESTING CRITERIA FOR HIGH-PENETRANCE BREAST CANCER SUSCEPTIBILITY GENES a For further details regarding the nuances of g |  |
 | prostate | PROS-2A | footnotes | 0 | 14 | 11 | 1 | 0 | 0 | 0 | INITIAL RISK STRATIFICATION AND STAGING WORKUP FOR CLINICALLY LOCALIZED DISEASE g Principles of Imaging (PROS-E). h See  | footnote page with a drawing-rich header; footnotes only |
