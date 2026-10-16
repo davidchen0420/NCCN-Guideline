@@ -3,10 +3,10 @@
  * the box each one decides), where each answer would lead, whether a value is plausible, and
  * whether the details contradict each other.
  */
-import type { Facts, Schema, VarSpec } from "../types";
-import type { Graph } from "./graph";
+import type { Facts, Pred, Schema, VarSpec } from "../types";
+import { sectionStartPages, type Graph } from "./graph";
 import { derive, evaluate } from "./predicates";
-import { missingFacts, rankPathways, startingFacts, type Ranking } from "./pathways";
+import { hasFacts, missingFacts, rankPathways, startingFacts, usedFacts, type Ranking } from "./pathways";
 import { stripMarks } from "./adapt";
 import { label, valueLabel } from "./factMeta";
 
@@ -26,7 +26,8 @@ export interface Decider {
 }
 
 /** Details still unknown that decide branches on the open routes, most consequential first.
- * Before anything is entered, the details the start pages branch on. */
+ * Before anything is entered, the details the start pages branch on. When details were entered
+ * and no route is left, nothing: asking more would not help. */
 export function decidingFacts(g: Graph, ranking: Ranking, facts: Facts, limit = 8): Decider[] {
   const vars = g.bundle.schema?.variables ?? {};
   const known = (f: string) => facts[f] !== undefined && facts[f] !== null && facts[f] !== "";
@@ -50,6 +51,10 @@ export function decidingFacts(g: Graph, ranking: Ranking, facts: Facts, limit = 
       }
       for (const f of new Set([...p.missing, ...(p.laterMissing ?? [])])) { const d = out.get(f); if (d) d.share += p.likelihood; }
     }
+  } else if (hasFacts(facts)) {
+    // Facts were entered and no route fits them: more questions would not help (the route is
+    // blocked by something already answered; see whyNothingFits).
+    return [];
   } else {
     // nothing entered: the details the first branches turn on
     const where = new Map<string, string>();
@@ -208,4 +213,75 @@ export function contradictions(facts: Facts, schema: Schema): Conflict[] {
     if (nodes.length) out.push({ facts: [nn, ...nodes], message: `${label(nn)} is ${facts[nn]}, but ${nodes.map((k) => label(k).toLowerCase()).join(", ")} ${nodes.length > 1 ? "are" : "is"} recorded.` });
   }
   return out;
+}
+
+/* ---------------- why nothing fits ---------------- */
+
+export interface Blocker {
+  /** the box whose condition the entered details make false */
+  node: string;
+  page: string;
+  text: string;
+  /** the raw details entered that make it false (the settings that would have to change) */
+  facts: string[];
+}
+
+/**
+ * Why no route is left for these details: the first gate on the start page (or, failing that,
+ * the first branch behind it) whose condition is false for them. An entry box whose condition
+ * the facts contradict ("Suspected or proven metastatic disease (M1)" when no distant
+ * metastases are suspected) when every entry of the page is contradicted; otherwise the nearest
+ * branch whose every arm is. `start` is the start setting ("auto" or a page). Null when no gate
+ * is contradicted. Meant for a ranking with no routes.
+ */
+export function whyNothingFits(g: Graph, facts: Facts, start: string | "auto" = "auto"): Blocker | null {
+  const now = derive(facts, g.bundle.schema);
+  const false_ = (id: string) => !!g.preds[id] && evaluate(g.preds[id], now) === false;
+  /** The parts of a condition that are false (the others may hold): what would have to change. */
+  const failing = (p: Pred): Pred[] => {
+    if (evaluate(p, now) !== false) return [];
+    if ("all" in p) return p.all.flatMap(failing);
+    if ("any" in p) return p.any.flatMap(failing);
+    return [p];
+  };
+  const factsOf = (id: string) => {
+    const out = new Set<string>();
+    for (const part of failing(g.preds[id])) usedFacts(g, part, facts, out);
+    return [...out];
+  };
+  const blocker = (id: string): Blocker => ({ node: id, page: id.split(":")[0], text: boxText(g, id), facts: factsOf(id) });
+  const strongest = (ids: string[]) => ids.map((id) => blocker(id)).sort((a, b) => b.facts.length - a.facts.length)[0] ?? null;
+
+  let pages: string[];
+  if (start !== "auto") pages = g.bundle.pages[start] ? [start] : [];
+  else {
+    const linked = new Set<string>();
+    for (const [id, ks] of Object.entries(g.bundle.children)) ks.forEach((k) => { if (k.split(":")[0] !== id.split(":")[0]) linked.add(k.split(":")[0]); });
+    g.bundle.links.forEach(([q, p]) => { if (q !== p) linked.add(p); });
+    pages = g.flowPages.filter((p) => (g.bundle.roots[p] ?? []).length && !linked.has(p));
+    const sec = g.bundle.sections;
+    const chosen = sec ? facts[sec.variable] : undefined;
+    if (typeof chosen === "string") pages = [...new Set([...pages, ...sectionStartPages(g, chosen)])];
+  }
+  const roots = pages.flatMap((p) => g.bundle.roots[p] ?? []);
+  if (!roots.length) return null;
+  // every way into the start page is contradicted by what was entered
+  const open = roots.filter((r) => !false_(r));
+  if (!open.length) return strongest(roots.filter((r) => factsOf(r).length)) ?? strongest(roots);
+
+  // breadth first from the entries that fit: the nearest branch all of whose arms are contradicted
+  const seen = new Set<string>(open);
+  let level = open;
+  for (let depth = 0; level.length && depth < 40; depth++) {
+    const next: string[] = [];
+    for (const id of level) {
+      const ks = g.kids(id);
+      const jump = ks.length ? [] : (g.node(id)?.links ?? []).filter((l) => l !== id.split(":")[0] && g.bundle.pages[l]).flatMap((l) => g.bundle.roots[l] ?? []);
+      const arms = ks.length ? ks : jump;
+      if (arms.length && arms.every(false_) && arms.some((k) => factsOf(k).length)) return strongest(arms);
+      for (const k of arms) if (!seen.has(k) && !false_(k)) { seen.add(k); next.push(k); }
+    }
+    level = next;
+  }
+  return null;
 }

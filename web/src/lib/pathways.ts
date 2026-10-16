@@ -18,7 +18,7 @@
  *   extractor only) and the condition's review status.
  */
 import type { Facts, Pred } from "../types";
-import { sectionStartPages, stateOfEntries, stateOfTitle, type Graph } from "./graph";
+import { resolveRef, sectionStartPages, stateOfEntries, stateOfTitle, type Graph } from "./graph";
 import { derive, evaluate } from "./predicates";
 import { stripMarks } from "./adapt";
 
@@ -29,9 +29,20 @@ export interface PStep {
   /** the raw facts entered that decided this step (met, otherwise, received); empty for open steps */
   used: string[];
 }
-export type EndKind = "leaf" | "later" | "limit";
+/**
+ * How a route ends:
+ * - leaf: on a recommendation (a treatment, a test, a schedule);
+ * - later: on a recommendation, with arms behind it that describe later events;
+ * - continues: on a reference to a page the data does not carry as boxes; `continuesTo` names it;
+ * - open: on something that is not a recommendation (a page reference, a table heading, a
+ *   criteria box): more details are needed to reach one (`missing`);
+ * - limit: the route was cut at the depth limit.
+ */
+export type EndKind = "leaf" | "later" | "limit" | "continues" | "open";
 export interface Pathway {
   id: string; steps: PStep[]; end: EndKind; next: string[];
+  /** For end "continues": the page (as the data names it) where the next step is printed. */
+  continuesTo?: string;
   weight: number; likelihood: number;
   met: number; open: number; options: number;
   /** Arms taken although their condition is not encoded (left to the clinician's judgment). */
@@ -55,6 +66,32 @@ const MAX_PATHS = 4000;
 const MAX_DEPTH = 80;
 const EDGE_W: Record<EdgeKind, number> = { agreed: 1, verified: 0.95, unsure: 0.7, link: 1, entry: 1 };
 const REVIEW_W = { reviewed: 1, draft: 0.85 } as const;
+
+/** A route that ends on a recommendation (not on a page reference, a heading, a criteria box or
+ * a page printed elsewhere): the only ends that may be shown as "NCCN recommends ...". */
+export const isRecommendationEnd = (p: Pathway) => p.end === "leaf" || p.end === "later";
+
+/** Text that is only a pointer to a page ("REC-3", "REC-3A", "PROS-4 see ..."). */
+export const PAGE_REF = /^\s*[A-Z]{2,6}-\d+[A-Z]?(\s|$)/;
+const CODE = /\b[A-Z]{2,6}-(?:\d+[A-Z]?|[A-Z])(?:\s+\d+\s+of\s+\d+)?\b/g;
+const HEADING_ROLES = new Set(["page_heading", "column_header", "table_title", "table_root"]);
+/** Words of a box that says what to do (bullets, treatments, tests, schedules), as opposed to one
+ * that only describes the patient: data types some such boxes as conditions. */
+const ACTION = new RegExp(["•", "\\b(?:therapy|therapies|treatment|treat|surveillance|observation|observe|resection|surgery|surgical|excision|ablation|transplant\\w*|radiation|radiotherapy|chemo\\w*|immunotherapy|inhibitors?|mab|biopsy|imaging|MRI|CT|PET|ultrasound|exam|H&P|history|follow-?up|monitor\\w*|consider|recommend\\w*|test(?:ing|s)?|assess\\w*|evaluat\\w*|screening|discontinue|manage[d]?|management|refer\\w*|start|repeat|every|systemic|palliative|supportive|support|care|principles|dose|risk:?\\s*\\d)\\b"].join("|"), "i");
+export type BoxClass = "recommendation" | "pageref" | "heading" | "condition";
+/** What a box is, for the end of a route: a recommendation, a pointer to a page, a heading, or a
+ * criteria box that describes the patient. */
+export function boxClass(g: Graph, id: string): BoxClass {
+  const n = g.node(id);
+  if (!n) return "recommendation";
+  const role = n.role ?? "";
+  if (HEADING_ROLES.has(role) || n.kind === "header") return "heading";
+  const text = stripMarks(n.text).trim();
+  const bare = text.replace(CODE, "").replace(/[^A-Za-z]/g, "");
+  if (PAGE_REF.test(n.text) || ((role === "table_ref" || role === "link") && !n.ext?.length) || (!bare && n.links.length)) return "pageref";
+  if ((n.decision === "condition" || /condition/.test(role)) && !ACTION.test(n.text)) return "condition";
+  return "recommendation";
+}
 
 export const hasFacts = (f: Facts) => Object.values(f).some((v) => v !== null && v !== undefined && v !== "");
 
@@ -166,16 +203,16 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
   const done: Omit<Pathway, "likelihood">[] = [];
   let ruledOut = 0, truncated = false;
 
-  const finish = (steps: PStep[], weight: number, end: EndKind, next: string[] = [], laterMissing: string[] = []) => {
+  const finish = (steps: PStep[], weight: number, end: EndKind, next: string[] = [], laterMissing: string[] = [], continuesTo?: string) => {
     if (done.length >= MAX_PATHS) { truncated = true; return; }
     const crit = steps.filter((s) => s.kind !== "flow" && s.kind !== "option");
     const met = crit.filter((s) => s.kind !== "unknown" && s.kind !== "uncoded").length;
     const open = crit.length - met;
     const coverage = crit.length ? met / crit.length : 0;
     const encoding = steps.reduce((a, s) => a + EDGE_W[s.edge] * reviewW(s.node), 0) / steps.length;
-    const missing = [...new Set(steps.flatMap((s) => s.missing))];
+    const missing = [...new Set([...steps.flatMap((s) => s.missing), ...(end === "open" ? laterMissing : [])])];
     done.push({
-      id: steps.map((s) => s.node).join(">"), steps, end, next, weight,
+      id: steps.map((s) => s.node).join(">"), steps, end, next, weight, ...(continuesTo ? { continuesTo } : {}),
       met, open, options: steps.filter((s) => s.kind === "option").length, uncoded: steps.filter((s) => s.kind === "uncoded").length,
       coverage, encoding, confidence: Math.round(100 * coverage * encoding), missing,
       used: [...new Set(steps.flatMap((s) => s.used))], laterMissing,
@@ -322,6 +359,44 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
   /** A row's own cell: met/unknown come from its criteria when it has no condition itself. */
   const targetKind = (gr: Group, kind: StepKind): StepKind => (gr.pre.length && !g.preds[gr.id] && (kind === "met" || kind === "unknown") ? "flow" : kind);
 
+  /** Entry boxes of the pages a box points to (flow pages with boxes, other than its own). */
+  const jumpRoots = (id: string, seen: Set<string>) => {
+    const own = id.split(":")[0];
+    const out: string[] = [];
+    for (const l of g.node(id)?.links ?? []) {
+      if (l === own || !g.bundle.pages[l] || !inSection(l)) continue;
+      for (const r of g.bundle.roots[l] ?? []) if (!seen.has(r) && !out.includes(r)) out.push(r);
+    }
+    return out;
+  };
+  /** The page a box that goes nowhere points to: a flow page without boxes, or the page a bare
+   * page reference names. */
+  const continuesTarget = (id: string, cls: BoxClass) => {
+    const own = id.split(":")[0];
+    const targets = (g.node(id)?.links ?? []).filter((l) => l !== own);
+    const empty = targets.find((l) => g.bundle.pages[l] && !(g.bundle.roots[l] ?? []).length);
+    if (empty) return empty;
+    if (cls !== "pageref") return undefined;
+    const code = targets[0] ?? g.node(id)?.text.match(CODE)?.[0];
+    return code && (targets.length || resolveRef(g, code).type !== "none") ? code : undefined;
+  };
+  /** A route that stops on a box with nothing after it: honest about what the box is. */
+  const endHere = (id: string, steps: PStep[], weight: number) => {
+    const cls = boxClass(g, id);
+    const to = continuesTarget(id, cls);
+    if (to) return finish(steps, weight, "continues", [], [], to);
+    return finish(steps, weight, cls === "recommendation" ? "leaf" : "open");
+  };
+  /** A route that stops before arms that cannot be taken yet. On a recommendation these are
+   * later events ("later"); on a page reference or heading they are the next step itself, still
+   * to be decided: "open", with the details that decide the arms. */
+  const stop = (id: string, steps: PStep[], weight: number, kids: string[]) => {
+    const cls = boxClass(g, id);
+    if (cls !== "pageref" && cls !== "heading") return finish(steps, weight, "later", kids);
+    const need = [...new Set(kids.flatMap((k) => missingFacts(g, g.preds[k], facts)))];
+    return finish(steps, weight, "open", kids, need);
+  };
+
   let follow = true;   // follow a page reference into a page whose gate is still open
   // The disease chosen in a multi-disease guideline: no route goes into another disease's pages.
   const sec = g.bundle.sections;
@@ -332,15 +407,22 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
   const dfs = (id: string, steps: PStep[], weight: number, seen: Set<string>) => {
     if (truncated) return;
     if (steps.length > MAX_DEPTH) return finish(steps, weight, "limit");
-    const kids = g.kids(id).filter((k) => !seen.has(k) && inSection(k.split(":")[0]));
-    if (!kids.length) return finish(steps, weight, "leaf");
+    let kids = g.kids(id).filter((k) => !seen.has(k) && inSection(k.split(":")[0]));
+    // A box that only refers to another page, without an arrow in the data, goes on to that
+    // page's entry boxes (gated by their conditions like any entry).
+    let jumped = false;
+    if (!kids.length && !g.kids(id).length) {
+      const into = jumpRoots(id, seen);
+      if (into.length) { kids = into; jumped = true; }
+    }
+    if (!kids.length) return endHere(id, steps, weight);
     // Mirrors navigator._auto_step: undecided arms are explored only out of a condition box
     // (or an entry); a single plain arrow is followed out of a condition, a page reference, or
     // the box right after a condition (a workup step). Out of a recommendation, arrows lead to
     // later events, so the route ends there.
     const isCond = (n: string, i: number) =>
       !!g.preds[n] || i === 0 || (g.bundle.roots[n.split(":")[0]] ?? []).includes(n) || /\?\s*$/.test(g.node(n)?.text ?? "");
-    const cond = isCond(id, steps.length - 1);
+    const cond = jumped || isCond(id, steps.length - 1);
     // Cells of a structured table row (criteria, evaluation, "see PROS-4") read as one row.
     const tableCell = /^table_/.test(g.node(id)?.role ?? "");
     const pass = cond || tableCell || linksOut(id) || (steps.length > 1 && isCond(steps[steps.length - 2].node, steps.length - 2));
@@ -366,20 +448,20 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
       ruledOut += groups.length;
       // Out of a condition box, no arm fits: this route contradicts the facts. Out of a
       // recommendation, the arms are later events that have not happened (or not like this).
-      return cond ? undefined : finish(steps, weight, "later", kids);
+      return cond ? undefined : stop(id, steps, weight, kids);
     }
     if (groups.length === 1) {
       const gr = groups[0];
       if (v[0] === true) return go(gr, "met", 1);
       // A page reference leads on to the page's first box even when its gate is still open.
-      if (v[0] === null) return cond || (follow && linksOut(id)) ? go(gr, "unknown", 1) : finish(steps, weight, "later", kids);
-      return pass ? go(gr, "flow", 1) : finish(steps, weight, "later", kids);
+      if (v[0] === null) return cond || (follow && linksOut(id)) ? go(gr, "unknown", 1) : stop(id, steps, weight, kids);
+      return pass ? go(gr, "flow", 1) : stop(id, steps, weight, kids);
     }
     const opts = split(groups);
     // After a recommendation, children with open conditions describe later events (recurrence,
     // response): the route ends here unless the facts already say which one happened.
     if (!cond && !opts.some((o) => o.kind === "met" || o.kind === "otherwise") && opts.some((o) => o.kind === "unknown"))
-      return finish(steps, weight, "later", kids);
+      return stop(id, steps, weight, kids);
     opts.forEach((o) => go(o.gr, o.kind, o.share));
   };
 

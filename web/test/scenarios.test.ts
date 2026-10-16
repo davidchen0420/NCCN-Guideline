@@ -8,9 +8,9 @@ import { readFileSync } from "node:fs";
 import type { Bundle } from "../src/types";
 import { adaptGuideline } from "../src/lib/adapt";
 import { buildGraph } from "../src/lib/graph";
-import { rankPathways, type Pathway } from "../src/lib/pathways";
+import { boxClass, isRecommendationEnd, PAGE_REF, rankPathways, type Pathway } from "../src/lib/pathways";
 import { extractFacts, applyFound } from "../src/lib/extract";
-import { decidingFacts, previewAnswer, remainingQuestions } from "../src/lib/formAssist";
+import { decidingFacts, previewAnswer, remainingQuestions, whyNothingFits } from "../src/lib/formAssist";
 import { moments, momentsFor, phaseOf, startPhase } from "../src/lib/moments";
 
 const load = (slug: string) => buildGraph(adaptGuideline(JSON.parse(readFileSync(`../data/${slug}/guideline.json`, "utf8"))));
@@ -218,5 +218,162 @@ describe("7. honest question count", () => {
     expect(remainingQuestions(sample, rankPathways(sample, f), f)).toEqual([]);
     const f2 = { score: 12 };
     expect(remainingQuestions(sample, rankPathways(sample, f2), f2).map((d) => d.fact)).toEqual(["age"]);
+  });
+});
+
+/* ---------------- rectal cancer: a route must reach a treatment, or say honestly why not ---------------- */
+
+const texts = (g: ReturnType<typeof load>, p: Pathway) => p.steps.map((s) => g.node(s.node)?.text ?? "");
+const anyText = (g: ReturnType<typeof load>, ps: Pathway[], re: RegExp) => ps.some((p) => texts(g, p).some((t) => re.test(t)));
+const REC_PMMR = {
+  guideline_section: "pMMR/MSS Rectal Cancer", clinical_t_category: "T3", clinical_n_category: "N1",
+  mismatch_repair_status: "pMMR_MSS", distant_metastases_suspected_or_proven: false, disease_resectable: true,
+};
+
+describe("8. rectal cancer, new diagnosis, pMMR cT3 N1 M0", () => {
+  const g = load("rectal");
+
+  it("the pMMR treatment table of REC-6 is connected to its root", () => {
+    expect(g.bundle.roots["REC-6"]).toContain("REC-6:t_root");
+    expect(g.kids("REC-6:t_root").length).toBeGreaterThan(0);
+    expect(g.kids("REC-6:t0_0_0")).toContain("REC-6:t0_0_1");
+    // headings are not steps: the table title passes through
+    expect(g.kids("REC-6:t_root")).toEqual(expect.arrayContaining(["REC-6:t0_0_0", "REC-6:t1_0_0"]));
+    expect(g.bundle.children["REC-6:t0"]).toBeUndefined();
+  });
+
+  it("from REC-2 the route follows the page reference into REC-3 and decides the stage there", () => {
+    const top = rankPathways(g, REC_PMMR, "REC-2").paths[0];
+    const steps = top.steps.map((s) => s.node);
+    expect(steps).toEqual(expect.arrayContaining(["REC-2:n222_687", "REC-3:n214_25", "REC-3:n336_129"]));
+    expect(top.steps.find((s) => s.node === "REC-3:n336_129")!.kind).toBe("met");   // T3, N any; T1-2, N1-2; ...
+    expect(top.used).toEqual(expect.arrayContaining(["clinical_t_category", "clinical_n_category", "distant_metastases_suspected_or_proven"]));
+  });
+
+  it("never ends on a bare page reference as a recommendation", () => {
+    const top = rankPathways(g, REC_PMMR, "REC-2").paths[0];
+    const lastNode = g.node(top.steps[top.steps.length - 1].node)!;
+    if (PAGE_REF.test(lastNode.text)) {
+      expect(isRecommendationEnd(top)).toBe(false);
+      // REC-3A carries no boxes in the data yet: the route says where it continues
+      expect(top.end).toBe("continues");
+      expect(top.continuesTo).toBe("REC-3A");
+    } else {
+      expect(pages(top)).toContain("REC-6");   // the bridge is extracted
+    }
+  });
+
+  // Enable once REC-3A (or the arrow from REC-3 to REC-6) is re-extracted.
+  it.skip("from REC-2 the top route reaches the REC-6 treatment options", () => {
+    const ps = rankPathways(g, REC_PMMR, "REC-2").paths.slice(0, 6);
+    expect(ps.some((p) => pages(p).includes("REC-6"))).toBe(true);
+    expect(anyText(g, ps, /Long-course chemo\/RT/)).toBe(true);
+  });
+
+  it("from auto the top routes reach the REC-6 treatment options", () => {
+    const ps = rankPathways(g, REC_PMMR, "auto").paths.slice(0, 6);
+    expect(ps.length).toBeGreaterThan(0);
+    expect(ps.some((p) => pages(p).includes("REC-6"))).toBe(true);
+    expect(anyText(g, ps, /Long-course chemo\/RT/)).toBe(true);
+    expect(anyText(g, ps, /Chemotherapy \(12–16 wk\)/)).toBe(true);
+    for (const p of ps) {
+      const l = g.node(p.steps[p.steps.length - 1].node)!;
+      expect(l.text, p.id).not.toMatch(/^CLINICAL STAGE/);
+      if (isRecommendationEnd(p)) expect(boxClass(g, l.full), p.id).not.toBe("heading");
+    }
+  });
+
+  it("dMMR reaches the REC-14 immunotherapy options", () => {
+    const facts = { ...REC_PMMR, guideline_section: "dMMR/MSI-H Rectal Cancer", mismatch_repair_status: "dMMR_MSI_H" };
+    const ps = rankPathways(g, facts, "auto").paths.slice(0, 4);
+    expect(ps.some((p) => pages(p).includes("REC-14"))).toBe(true);
+    expect(anyText(g, ps, /Checkpoint inhibitor immunotherapy/)).toBe(true);
+    expect(anyText(g, ps, /Long-course chemo\/RT/)).toBe(true);
+  });
+
+  it("synchronous liver-only resectable metastases from REC-7 reach the REC-8 options", () => {
+    const facts = { guideline_section: "pMMR/MSS Rectal Cancer", distant_metastases_suspected_or_proven: true, liver_metastases_present: true, lung_metastases_present: false, peritoneal_metastases_present: false, other_site_metastases_present: false, disease_resectable: true };
+    const ps = rankPathways(g, facts, "REC-7").paths.slice(0, 3);
+    expect(pages(ps[0])).toContain("REC-8");
+    expect(anyText(g, ps, /^Chemotherapy \(preferred\)/)).toBe(true);
+    expect(anyText(g, ps, /Short-course RT or Long-course chemo\/RT/)).toBe(true);
+  });
+
+  it("a recurrence with resectable metachronous metastases reaches the REC-12 options", () => {
+    const facts = { ...REC_PMMR, metachronous_metastases_documented: true, prior_chemotherapy_regimen: "none" };
+    const ps = rankPathways(g, facts, "REC-11").paths.slice(0, 3);
+    expect(pages(ps[0])).toContain("REC-12");
+    expect(anyText(g, ps, /Resection and\/or local therapy/i)).toBe(true);
+    expect(anyText(g, ps, /Neoadjuvant chemotherapy/)).toBe(true);
+  });
+
+  it("a page reference at the end of REC-11 goes on to the page it names", () => {
+    // "pMMR/MSS REC-13" has no arrow in the data: the route continues on REC-13's entry boxes
+    const facts = { ...REC_PMMR, metachronous_metastases_documented: true, disease_resectable: false };
+    const ps = rankPathways(g, facts, "REC-11").paths.slice(0, 3);
+    expect(ps.some((p) => pages(p).includes("REC-13"))).toBe(true);
+  });
+});
+
+describe("9. when nothing fits", () => {
+  const g = load("rectal");
+  // REC-7 is the page for suspected or proven distant metastases; the entered details deny them
+  const facts = { guideline_section: "pMMR/MSS Rectal Cancer", distant_metastases_suspected_or_proven: false };
+
+  it("no route is left, and no further question is asked", () => {
+    const r = rankPathways(g, facts, "REC-7");
+    expect(r.paths).toEqual([]);
+    expect(decidingFacts(g, r, facts)).toEqual([]);
+    expect(remainingQuestions(g, r, facts)).toEqual([]);
+  });
+
+  it("names the entry box that the details make false, and the detail to change", () => {
+    const why = whyNothingFits(g, facts, "REC-7")!;
+    expect(why).not.toBeNull();
+    expect(why.page).toBe("REC-7");
+    expect(why.node).toBe("REC-7:n287_24");
+    expect(why.text).toMatch(/Suspected or proven metastatic/);
+    expect(why.facts).toEqual(["distant_metastases_suspected_or_proven"]);   // the section holds; the M1 setting is what fails
+  });
+
+  it("changing that detail brings routes back", () => {
+    const why = whyNothingFits(g, facts, "REC-7")!;
+    const fixed = { ...facts, [why.facts[0]]: true };
+    expect(rankPathways(g, fixed, "REC-7").paths.length).toBeGreaterThan(0);
+    expect(whyNothingFits(g, fixed, "REC-7")).toBeNull();
+  });
+
+  it("still asks questions while nothing has been entered", () => {
+    expect(decidingFacts(g, rankPathways(g, {}, "auto"), {}).length).toBeGreaterThan(0);
+  });
+});
+
+describe("10. page references and headings are never presented as the recommendation", () => {
+  const plausible: Record<string, Record<string, unknown>> = {
+    colon: { guideline_section: "pMMR/MSS Colon Cancer", primary_diagnosis: "colon_adenocarcinoma", t_category: "T3", n_category: "N1", m_category: "M0" },
+    prostate: { clinical_t_category: "T1c", n_category: "N0", m_category: "M0", psa_ng_ml: 5, grade_group: "1", life_expectancy_years: 18 },
+    nsclc: { histology: "adenocarcinoma", clinical_t_category: "T2a", n_category: "N0", m_category: "M0", thoracic_definitive_therapy_feasible: true },
+    breast: { guideline_section: "Invasive Breast Cancer", diagnosis_category: "invasive_breast_cancer", clinical_t_category: "T2", clinical_n_category: "N0", m_category: "M0", er_status: "positive", pr_status: "positive", her2_status: "negative" },
+  };
+  const HONEST = new Set(["leaf", "later", "open", "continues", "limit"]);
+
+  it.each(Object.keys(plausible))("%s: from every diagnosis start the routes end at a recommendation or say they are open", (slug) => {
+    const g = load(slug);
+    const starts = [...moments(g).filter((m) => m.phase === "diagnosis").map((m) => m.page), "auto"];
+    let routes = 0;
+    for (const start of starts) {
+      const r = rankPathways(g, plausible[slug], start);
+      for (const p of r.paths.slice(0, 5)) {
+        routes++;
+        const l = g.node(p.steps[p.steps.length - 1].node)!;
+        expect(HONEST.has(p.end), `${start} ${p.id}`).toBe(true);
+        if (isRecommendationEnd(p)) {
+          expect(PAGE_REF.test(l.text), `${slug} ${start}: "${l.text}" ends ${p.end}`).toBe(false);
+          expect(["heading", "pageref"], `${slug} ${start}: ${l.full} ends ${p.end}`).not.toContain(boxClass(g, l.full));
+        }
+        if (p.end === "continues") expect(p.continuesTo).toBeTruthy();
+      }
+    }
+    expect(routes).toBeGreaterThan(0);
   });
 });

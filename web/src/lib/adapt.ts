@@ -120,6 +120,7 @@ export function adaptGuideline(file: GuidelineFile): Bundle {
   // Box ids are "<printed code>:<local>"; on multi-part pages ("GALL-4 3 of 3") the viewer needs
   // "<page id>:<local>", so ids are remapped and edges, continuations and entries follow the map.
   const idMap = new Map<string, string>();
+  const headerIds = new Set<string>(), nodeIds = new Set<string>();
   for (const n of file.nodes) {
     const fp = pages[n.page];
     if (!fp) continue;
@@ -144,28 +145,62 @@ export function adaptGuideline(file: GuidelineFile): Bundle {
       decision: n.decision_type ?? null, received: n.received_predicate ?? null,
       linkCond: n.link_condition ?? null, reviewNote: n.review_note, sectionClause: !!n.section_clause, ext,
     });
-    if (!header) children[full] = [];
+    if (header) headerIds.add(full); else children[full] = [];
+    nodeIds.add(full);
   }
   const map = (id: string) => idMap.get(id);
+  // Headings and column/table titles are not steps of a route: an arrow into or out of one passes
+  // through it, so a table stays connected (root -> title -> row cell becomes root -> row cell).
+  const viaHeader = new Map<string, { dst: string; cls: BEdge["cls"] }[]>();
+  const direct: { src: string; dst: string; cls: BEdge["cls"]; counted: boolean }[] = [];
   for (const e of file.edges) {
     const src = map(e.src), dst = map(e.dst);
-    if (!src || !dst || !(src in children) || !(dst in children)) continue;
-    const page = src.slice(0, src.indexOf(":"));
-    const fp = pages[page];
+    if (!src || !dst || !nodeIds.has(src) || !nodeIds.has(dst)) continue;
     const cls = EVIDENCE[e.evidence] ?? "unsure";
-    fp.counts[cls] = (fp.counts[cls] ?? 0) + 1;
-    fp.edges.push({ src: src.slice(page.length + 1), dst: dst.slice(dst.indexOf(":") + 1), cls });
-    children[src].push(dst);
+    if (headerIds.has(src)) (viaHeader.get(src) ?? viaHeader.set(src, []).get(src)!).push({ dst, cls });
+    else direct.push({ src, dst, cls, counted: true });
   }
   for (const c of file.continuations) {
     const src = map(c.src), dst = map(c.dst);
-    if (src && dst && src in children && dst in children && !children[src].includes(dst)) children[src].push(dst);
+    if (!src || !dst || !nodeIds.has(src) || !nodeIds.has(dst)) continue;
+    if (headerIds.has(src)) (viaHeader.get(src) ?? viaHeader.set(src, []).get(src)!).push({ dst, cls: "agreed" });
+    else direct.push({ src, dst, cls: "agreed", counted: false });
+  }
+  const resolved = new Map<string, string[]>();
+  const through = (id: string, seen = new Set<string>()): string[] => {
+    if (!headerIds.has(id)) return [id];
+    if (seen.has(id)) return [];
+    const memo = resolved.get(id);
+    if (memo) return memo;
+    seen.add(id);
+    const out = [...new Set((viaHeader.get(id) ?? []).flatMap((x) => through(x.dst, seen)))];
+    seen.delete(id);
+    if (!seen.size) resolved.set(id, out);
+    return out;
+  };
+  const seenEdge = new Set<string>();
+  for (const e of direct) {
+    for (const dst of through(e.dst)) {
+      if (dst === e.src) continue;
+      const key = `${e.src}>${dst}`;
+      if (e.counted && (dst === e.dst || !seenEdge.has(key))) {
+        seenEdge.add(key);
+        const page = e.src.slice(0, e.src.indexOf(":"));
+        const fp = pages[page];
+        fp.counts[e.cls] = (fp.counts[e.cls] ?? 0) + 1;
+        fp.edges.push({ src: e.src.slice(page.length + 1), dst: dst.slice(dst.indexOf(":") + 1), cls: e.cls });
+      }
+      if (!children[e.src].includes(dst)) children[e.src].push(dst);
+    }
   }
   const roots: Record<string, string[]> = Object.fromEntries(flowIds.map((id) => [id, [] as string[]]));
   for (const e of file.entries) {
     const full = map(e);
-    if (!full || !(full in children)) continue;
-    roots[full.slice(0, full.indexOf(":"))]?.push(full);
+    if (!full || !nodeIds.has(full)) continue;
+    for (const r of through(full)) {
+      const list = roots[r.slice(0, r.indexOf(":"))];
+      if (list && !list.includes(r)) list.push(r);
+    }
   }
 
   const docs: Record<string, Doc> = {};
