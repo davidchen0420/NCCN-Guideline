@@ -1,0 +1,420 @@
+{
+ "page": "HODG-7B",
+ "note": "Typed as other by its code; the PDF page continues HODG-7 (stage III-IV classic Hodgkin lymphoma, Preferred: BrECADD + G-CSF x 2 cycles, restaging by FDG-PET/CT, BrECADD + G-CSF x 2 or x 4 cycles, second restaging, ISRT, repeat PET at 12 weeks, biopsy, follow-up HODG-12 or primary refractory disease HODG-13). Boxes, arrows and conditions written from the PDF page image and text. Only the first restaging (Deauville 1-3 / 4-5) has a condition; the second and later restagings and the three biopsies repeat variables the schema holds once, so they carry none.",
+ "footnotes": {
+  "c": "Principles of FDG-PET/CT (HODG-A).",
+  "p": "Principles of Systemic Therapy (HODG-B 1 of 8).",
+  "q": "FDG-PET 5-Point Scale (Deauville Criteria) (HODG-A 2 of 2).",
+  "r": "Principles of Radiation Therapy (HODG-C).",
+  "u": "Special Considerations for Deauville 4–5 Treatment Responses: The degree of abnormality of both Deauville 4 and 5 scores are quite variable and clinical judgment is often necessary in such settings. If disease is responding well to chemotherapy, but an interim FDG-PET/CT shows a Deauville 4 or 5 response, it may be appropriate to continue with the same chemotherapy regimen and repeat an FDG-PET/CT after 2 additional cycles. Similarly, if a post-chemotherapy FDG-PET/CT is only focally positive, consolidation RT may be appropriate, especially if a biopsy is not feasible. See Principles of Radiation Therapy (HODG-C 2 of 16). Use clinical judgement if a new lymph node can be explained by alternative etiology (eg, inflammation or infection) or if residual FDG-uptake may be related to treatment (eg, immunotherapy). Repeating a short-interval FDG-PET/CT may be preferred in such scenarios. At any point, if there is concern for refractory disease, a biopsy is appropriate to inform subsequent therapy.",
+  "x": "Utilize with caution in those with neuropathy.",
+  "y": "PJP prophylaxis is recommended for all BV containing regimens."
+ },
+ "boxes": [
+  {
+   "key": "note_cp",
+   "region": [
+    20,
+    84,
+    260,
+    150
+   ],
+   "role": "note"
+  },
+  {
+   "key": "note_u",
+   "region": [
+    265,
+    84,
+    770,
+    205
+   ],
+   "role": "note"
+  },
+  {
+   "key": "pref",
+   "region": [
+    20,
+    240,
+    80,
+    262
+   ],
+   "role": "note"
+  },
+  {
+   "key": "start",
+   "region": [
+    18,
+    266,
+    95,
+    346
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "r1",
+   "region": [
+    102,
+    290,
+    160,
+    348
+   ]
+  },
+  {
+   "key": "d13a",
+   "region": [
+    158,
+    256,
+    220,
+    290
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "deauville_score",
+    "op": "<=",
+    "value": 3
+   },
+   "predicate_status": "model_reviewed"
+  },
+  {
+   "key": "d45a",
+   "region": [
+    156,
+    350,
+    218,
+    384
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "deauville_score",
+    "op": ">=",
+    "value": 4
+   },
+   "predicate_status": "model_reviewed"
+  },
+  {
+   "key": "c2",
+   "region": [
+    224,
+    244,
+    292,
+    302
+   ]
+  },
+  {
+   "key": "c4",
+   "region": [
+    224,
+    338,
+    292,
+    396
+   ]
+  },
+  {
+   "key": "r2",
+   "region": [
+    300,
+    290,
+    360,
+    348
+   ]
+  },
+  {
+   "key": "d13b",
+   "region": [
+    370,
+    248,
+    455,
+    272
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "d4",
+   "region": [
+    370,
+    303,
+    430,
+    335
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "d5",
+   "region": [
+    370,
+    383,
+    430,
+    416
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "isrtA",
+   "region": [
+    450,
+    272,
+    490,
+    296
+   ]
+  },
+  {
+   "key": "rep",
+   "region": [
+    448,
+    294,
+    510,
+    352
+   ]
+  },
+  {
+   "key": "bxA",
+   "region": [
+    445,
+    390,
+    492,
+    411
+   ]
+  },
+  {
+   "key": "d13c",
+   "region": [
+    520,
+    290,
+    582,
+    324
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "d45c",
+   "region": [
+    520,
+    324,
+    582,
+    356
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "posA",
+   "region": [
+    520,
+    378,
+    575,
+    400
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "negA",
+   "region": [
+    520,
+    405,
+    575,
+    428
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "isrtB",
+   "region": [
+    584,
+    316,
+    625,
+    340
+   ]
+  },
+  {
+   "key": "bxB",
+   "region": [
+    584,
+    342,
+    630,
+    364
+   ]
+  },
+  {
+   "key": "isrtC",
+   "region": [
+    582,
+    403,
+    622,
+    427
+   ]
+  },
+  {
+   "key": "negB",
+   "region": [
+    640,
+    330,
+    698,
+    353
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "posB",
+   "region": [
+    640,
+    362,
+    698,
+    384
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "fuA",
+   "region": [
+    705,
+    286,
+    772,
+    320
+   ]
+  },
+  {
+   "key": "ref",
+   "region": [
+    705,
+    354,
+    772,
+    404
+   ]
+  },
+  {
+   "key": "fuB",
+   "region": [
+    705,
+    408,
+    772,
+    432
+   ]
+  }
+ ],
+ "edges": [
+  [
+   "start",
+   "r1"
+  ],
+  [
+   "r1",
+   "d13a"
+  ],
+  [
+   "r1",
+   "d45a"
+  ],
+  [
+   "d13a",
+   "c2"
+  ],
+  [
+   "d45a",
+   "c4"
+  ],
+  [
+   "c2",
+   "r2"
+  ],
+  [
+   "c4",
+   "r2"
+  ],
+  [
+   "r2",
+   "d13b"
+  ],
+  [
+   "r2",
+   "d4"
+  ],
+  [
+   "r2",
+   "d5"
+  ],
+  [
+   "d13b",
+   "fuA"
+  ],
+  [
+   "d4",
+   "isrtA"
+  ],
+  [
+   "d4",
+   "rep"
+  ],
+  [
+   "d4",
+   "bxA"
+  ],
+  [
+   "d5",
+   "bxA"
+  ],
+  [
+   "isrtA",
+   "fuA"
+  ],
+  [
+   "rep",
+   "d13c"
+  ],
+  [
+   "rep",
+   "d45c"
+  ],
+  [
+   "d13c",
+   "fuA"
+  ],
+  [
+   "d45c",
+   "isrtB"
+  ],
+  [
+   "d45c",
+   "bxB"
+  ],
+  [
+   "isrtB",
+   "fuA"
+  ],
+  [
+   "bxB",
+   "negB"
+  ],
+  [
+   "bxB",
+   "posB"
+  ],
+  [
+   "negB",
+   "fuA"
+  ],
+  [
+   "posB",
+   "ref"
+  ],
+  [
+   "bxA",
+   "posA"
+  ],
+  [
+   "bxA",
+   "negA"
+  ],
+  [
+   "posA",
+   "ref"
+  ],
+  [
+   "negA",
+   "isrtC"
+  ],
+  [
+   "isrtC",
+   "fuB"
+  ]
+ ]
+}

@@ -1,0 +1,5 @@
+{
+ "page": "LGLL-2",
+ "entries": ["LGLL-2:n152_22"],
+ "note": "Algorithm page with boxes but no entry box: patients enter at the 'Indication for treatment' criteria list on the left (LGLL-1 links to it). The box only has an incoming arrow from the Observe box (the line looping back over the top of the page, checked on the page image), so no box was without a parent."
+}

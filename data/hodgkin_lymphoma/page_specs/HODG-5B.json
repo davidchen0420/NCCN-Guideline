@@ -1,0 +1,50 @@
+{
+ "page": "HODG-5B",
+ "note": "Typed as other by its code; the PDF page continues HODG-5 (stage IA/IIA favorable classic Hodgkin lymphoma with Deauville 4-5 after 2 cycles of ABVD: ABVD x 2 more cycles or biopsy, restaging by FDG-PET/CT, ISRT 30 Gy, follow-up HODG-12 or primary refractory disease HODG-13). Boxes, arrows and conditions written from the PDF page image and text. The Deauville 1-3 / 4-5 and Negative / Positive boxes after restaging repeat variables already used at the entry, so they carry no condition.",
+ "footnotes": {
+  "c": "Principles of FDG-PET/CT (HODG-A).",
+  "q": "FDG-PET 5-Point Scale (Deauville Criteria) (HODG-A, 2 of 2).",
+  "r": "Principles of Radiation Therapy (HODG-C).",
+  "s": "Consider PFTs after 4 cycles of ABVD.",
+  "u": "Special Considerations for Deauville 4–5 Treatment Responses: The degree of abnormality of both Deauville 4 and 5 scores are quite variable and clinical judgment is often necessary in such settings. If disease is responding well to chemotherapy, but an interim FDG-PET/CT shows a Deauville 4 or 5 response, it may be appropriate to continue with the same chemotherapy regimen and repeat an FDG-PET/CT after 2 additional cycles. Similarly, if a post-chemotherapy FDG-PET/CT is only focally positive, consolidation RT may be appropriate, especially if a biopsy is not feasible. See Principles of Radiation Therapy (HODG-C 2 of 16). Use clinical judgement if a new lymph node can be explained by alternative etiology (eg, inflammation or infection) or if residual FDG-uptake may be related to treatment (eg, immunotherapy). Repeating a short-interval FDG-PET/CT may be preferred in such scenarios. At any point, if there is concern for refractory disease, a biopsy is appropriate to inform subsequent therapy.",
+  "v": "See Staging/Risk Classification of CHL (HODG-2)."
+ },
+ "boxes": [
+  {"key": "note_cp", "region": [20, 84, 260, 140], "role": "note"},
+  {"key": "note_u", "region": [265, 84, 770, 208], "role": "note"},
+  {"key": "h_at", "header": true, "region": [220, 240, 360, 260]},
+  {"key": "start", "region": [20, 296, 95, 440], "decision_type": "condition",
+   "predicate": {"all": [{"fact": "ghsg_group", "op": "==", "value": "early_favorable"}, {"fact": "deauville_score", "op": ">=", "value": 4}]},
+   "predicate_status": "model_reviewed"},
+  {"key": "d4", "region": [100, 320, 185, 342], "decision_type": "condition",
+   "predicate": {"fact": "deauville_score", "op": "==", "value": 4}, "predicate_status": "model_reviewed"},
+  {"key": "d5", "region": [100, 380, 185, 412], "decision_type": "condition",
+   "predicate": {"fact": "deauville_score", "op": "==", "value": 5}, "predicate_status": "model_reviewed"},
+  {"key": "abvd", "region": [220, 334, 280, 366]},
+  {"key": "bx1", "region": [220, 412, 270, 432]},
+  {"key": "neg1", "region": [298, 396, 355, 416], "decision_type": "condition",
+   "predicate": {"fact": "biopsy_result", "op": "==", "value": "negative"}, "predicate_status": "model_reviewed"},
+  {"key": "pos1", "region": [298, 424, 355, 444], "decision_type": "condition",
+   "predicate": {"fact": "biopsy_result", "op": "==", "value": "positive"}, "predicate_status": "model_reviewed"},
+  {"key": "ref1", "region": [370, 424, 585, 444]},
+  {"key": "restage", "region": [348, 318, 400, 374]},
+  {"key": "d13", "region": [428, 299, 490, 331], "decision_type": "condition"},
+  {"key": "d45", "region": [428, 356, 490, 388], "decision_type": "condition"},
+  {"key": "isrt", "region": [515, 296, 670, 330]},
+  {"key": "fu", "region": [700, 298, 765, 330]},
+  {"key": "bx2", "region": [500, 360, 548, 380]},
+  {"key": "neg2", "region": [576, 345, 632, 365], "decision_type": "condition"},
+  {"key": "pos2", "region": [576, 373, 632, 393], "decision_type": "condition"},
+  {"key": "ref2", "region": [646, 366, 760, 398]}
+ ],
+ "edges": [
+  ["start", "d4"], ["start", "d5"],
+  ["d4", "abvd"], ["d5", "abvd"], ["d5", "bx1"],
+  ["bx1", "neg1"], ["bx1", "pos1"], ["neg1", "abvd"], ["pos1", "ref1"],
+  ["abvd", "restage"],
+  ["restage", "d13"], ["restage", "d45"],
+  ["d13", "isrt"], ["isrt", "fu"],
+  ["d45", "bx2"], ["bx2", "neg2"], ["bx2", "pos2"],
+  ["neg2", "isrt"], ["pos2", "ref2"]
+ ]
+}

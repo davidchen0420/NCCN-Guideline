@@ -1,0 +1,84 @@
+{
+ "page": "ADULCH-1A",
+ "note": "Typed as a footnote page by its code; the PDF page is the tissue biopsy analysis for adult LCH that the workup on the previous page names (ADULCH-1 / PEDLCH-1 / ECD-1 / RDD-1 / MHN-1). Boxes, arrows and conditions written from the PDF page image and text. The page is a plain chain (tissue biopsy, morphology, IHC, molecular testing) with no patient condition, so no box has a predicate; the workup box on the linking page names this page inside its list and keeps its own children, so it is not given a continuation.",
+ "section": "Adult Langerhans Cell Histiocytosis",
+ "boxes": [
+  {
+   "key": "h",
+   "region": [
+    290,
+    84,
+    500,
+    104
+   ],
+   "header": true
+  },
+  {
+   "key": "tb",
+   "region": [
+    18,
+    226,
+    75,
+    264
+   ],
+   "decision_type": "other"
+  },
+  {
+   "key": "morph",
+   "region": [
+    108,
+    214,
+    225,
+    272
+   ]
+  },
+  {
+   "key": "ihc",
+   "region": [
+    250,
+    214,
+    420,
+    272
+   ]
+  },
+  {
+   "key": "mol",
+   "region": [
+    455,
+    206,
+    715,
+    278
+   ]
+  },
+  {
+   "key": "key",
+   "region": [
+    20,
+    400,
+    380,
+    424
+   ],
+   "role": "note"
+  }
+ ],
+ "edges": [
+  [
+   "tb",
+   "morph"
+  ],
+  [
+   "morph",
+   "ihc"
+  ],
+  [
+   "ihc",
+   "mol"
+  ]
+ ],
+ "footnotes": {
+  "h": "For patients with suspected LCH or histiocytosis and biopsy is not possible because of location or risk factors, mutational analysis of the peripheral blood is an option.",
+  "i": "Molecular testing for somatic mutations and fusions can be performed in a stepwise manner or in parallel, depending on clinical need and institutional protocols. The frequency of suspected molecular lesions should drive the order of testing if a stepwise algorithm is chosen. Allele-specific polymerase chain reaction (PCR) for BRAF V600E mutations can be the first step if BRAF V600E (VE1) IHC is not available or is equivocal. Targeted NGS panel testing should cover the common somatic mutations involving the MAPK pathway (ie, BRAF, ARAF, NRAS, KRAS, MAP2K1/2) and other related pathway mutations (eg, PIK3CA, CSF1R). RNA-based molecular panel including fusion testing should cover BRAF, ALK, RET, and NTRK1 rearrangements. If ALK IHC is positive, the presence of a rearrangement should be confirmed molecularly (eg, by fluorescence in situ hybridization [FISH] or RNA sequencing).",
+  "j": "Principles of Molecular Testing (HIST-H).",
+  "k": "Fresh or paraffin-embedded tissue is used for NGS study; peripheral blood may be informative in multisystem disease."
+ }
+}

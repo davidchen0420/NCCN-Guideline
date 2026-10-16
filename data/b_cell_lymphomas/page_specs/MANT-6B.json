@@ -1,0 +1,314 @@
+{
+ "page": "MANT-6B",
+ "note": "Typed as other by its code; the PDF page continues MANT-2, MANT-4 and MANT-5 for the other half of relapsed/refractory or progressive mantle cell lymphoma (progression on cBTKi or early relapse (<24 months) after a cBTKi-containing regimen: second-line non-covalent BTKi or other continuous regimens, or CAR T-cell therapy / fixed-duration regimens / ISRT; response, consolidation/additional therapy, follow-up, relapse #2 or greater). MANT-6A is the companion page for cBTKi-naive or late relapse. Boxes, arrows and conditions written from the PDF page image and text. Option lists printed in one bracket are one box. The entry has no condition of its own: 'early relapse (<24 months) after cBTKi' needs time since a BTK inhibitor, and months_to_relapse is measured from first-line therapy.",
+ "section": "Mantle Cell Lymphoma",
+ "footnotes": {
+  "i": "Principles of Radiation Therapy (NHODG-D).",
+  "k": "Lugano Response Criteria for Non-Hodgkin Lymphoma (NHODG-C).",
+  "l": "Follow-up includes diagnostic tests and imaging using the same modalities performed during workup as clinically indicated.",
+  "r": "Patients with a very good PR are potentially candidates for active surveillance. Patients with a minimal PR are considered as having refractory disease and go on to additional treatment.",
+  "s": "Selected cases include mobilization failures and persistent bone marrow involvement."
+ },
+ "boxes": [
+  {
+   "key": "h_rr",
+   "region": [
+    14,
+    84,
+    195,
+    116
+   ],
+   "header": true
+  },
+  {
+   "key": "h_cons",
+   "region": [
+    338,
+    84,
+    480,
+    116
+   ],
+   "header": true
+  },
+  {
+   "key": "h_fu",
+   "region": [
+    540,
+    82,
+    620,
+    104
+   ],
+   "header": true
+  },
+  {
+   "key": "h_rel2",
+   "region": [
+    643,
+    84,
+    740,
+    116
+   ],
+   "header": true
+  },
+  {
+   "key": "start",
+   "region": [
+    12,
+    204,
+    90,
+    324
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "second",
+   "region": [
+    104,
+    124,
+    206,
+    268
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "fixed",
+   "region": [
+    104,
+    304,
+    206,
+    436
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "resp",
+   "region": [
+    232,
+    118,
+    298,
+    144
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "response_category",
+    "op": "in",
+    "value": [
+     "CR",
+     "PR"
+    ]
+   },
+   "predicate_status": "model_reviewed"
+  },
+  {
+   "key": "nr",
+   "region": [
+    232,
+    244,
+    305,
+    292
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "response_category",
+    "op": "in",
+    "value": [
+     "NR",
+     "progressive_disease"
+    ]
+   },
+   "predicate_status": "model_reviewed"
+  },
+  {
+   "key": "pr",
+   "region": [
+    232,
+    350,
+    270,
+    378
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "response_category",
+    "op": "==",
+    "value": "PR"
+   },
+   "predicate_status": "model_reviewed"
+  },
+  {
+   "key": "cr",
+   "region": [
+    228,
+    432,
+    262,
+    458
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "response_category",
+    "op": "==",
+    "value": "CR"
+   },
+   "predicate_status": "model_reviewed"
+  },
+  {
+   "key": "cont",
+   "region": [
+    336,
+    114,
+    448,
+    150
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "prog",
+   "region": [
+    460,
+    120,
+    534,
+    144
+   ]
+  },
+  {
+   "key": "opt_nr",
+   "region": [
+    336,
+    170,
+    545,
+    320
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "opt_pr",
+   "region": [
+    336,
+    323,
+    545,
+    422
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "opt_cr",
+   "region": [
+    336,
+    422,
+    545,
+    534
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "fu",
+   "region": [
+    540,
+    214,
+    662,
+    274
+   ]
+  },
+  {
+   "key": "relapse",
+   "region": [
+    684,
+    222,
+    760,
+    268
+   ]
+  },
+  {
+   "key": "rel2",
+   "region": [
+    636,
+    278,
+    780,
+    566
+   ],
+   "decision_type": "option",
+   "extra_links": [
+    {
+     "code": null,
+     "part": null,
+     "type": "external_guideline",
+     "guideline": "palliative_care",
+     "page": null
+    }
+   ]
+  }
+ ],
+ "edges": [
+  [
+   "start",
+   "second"
+  ],
+  [
+   "start",
+   "fixed"
+  ],
+  [
+   "second",
+   "resp"
+  ],
+  [
+   "second",
+   "nr"
+  ],
+  [
+   "fixed",
+   "nr"
+  ],
+  [
+   "fixed",
+   "pr"
+  ],
+  [
+   "fixed",
+   "cr"
+  ],
+  [
+   "resp",
+   "cont"
+  ],
+  [
+   "cont",
+   "prog"
+  ],
+  [
+   "prog",
+   "nr"
+  ],
+  [
+   "nr",
+   "opt_nr"
+  ],
+  [
+   "pr",
+   "opt_pr"
+  ],
+  [
+   "cr",
+   "opt_cr"
+  ],
+  [
+   "opt_nr",
+   "fu"
+  ],
+  [
+   "opt_pr",
+   "fu"
+  ],
+  [
+   "opt_cr",
+   "fu"
+  ],
+  [
+   "fu",
+   "relapse"
+  ],
+  [
+   "relapse",
+   "rel2"
+  ]
+ ]
+}

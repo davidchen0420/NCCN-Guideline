@@ -19,9 +19,7 @@ const EMPTY_TARGET_BASELINE = 103;
 /** Guidelines whose pages are being re-extracted by other work; they wire their own leaf boxes
  * when that lands (page_spec wire --all). Take a slug out of this list once it is done. */
 const WIRING_PENDING = new Set([
-  "b_cell_lymphomas", "hodgkin_lymphoma", "t_cell_lymphomas", "cutaneous_lymphomas",
-  "chronic_lymphocytic_leukemia_small_lymphocytic_l", "pediatric_aggressive_mature_b_cell_lymphomas",
-  "pediatric_hodgkin_lymphoma", "castleman_disease", "histiocytic_neoplasms", "survivorship", "in_people_with_hiv",
+  "survivorship", "in_people_with_hiv",
   "kaposi_sarcoma", "adolescent_and_young_adult_aya_oncology", "palliative_care", "related_fatigue", "smoking_cessation",
   "systemic_mastocytosis",
 ]);

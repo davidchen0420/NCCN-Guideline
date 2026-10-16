@@ -1,0 +1,86 @@
+{
+ "page": "RDD-1A",
+ "note": "Typed as a footnote page by its code; the PDF page is the tissue biopsy analysis for RDD that the workup on the previous page names (ADULCH-1 / PEDLCH-1 / ECD-1 / RDD-1 / MHN-1). Boxes, arrows and conditions written from the PDF page image and text. The page is a plain chain (tissue biopsy, morphology, IHC, molecular testing) with no patient condition, so no box has a predicate; the workup box on the linking page names this page inside its list and keeps its own children, so it is not given a continuation.",
+ "section": "Rosai-Dorfman Disease",
+ "boxes": [
+  {
+   "key": "h",
+   "region": [
+    290,
+    84,
+    500,
+    104
+   ],
+   "header": true
+  },
+  {
+   "key": "tb",
+   "region": [
+    18,
+    230,
+    70,
+    266
+   ],
+   "decision_type": "other"
+  },
+  {
+   "key": "morph",
+   "region": [
+    143,
+    212,
+    290,
+    282
+   ]
+  },
+  {
+   "key": "ihc",
+   "region": [
+    312,
+    210,
+    460,
+    282
+   ]
+  },
+  {
+   "key": "mol",
+   "region": [
+    490,
+    210,
+    760,
+    282
+   ]
+  },
+  {
+   "key": "key",
+   "region": [
+    20,
+    324,
+    380,
+    348
+   ],
+   "role": "note"
+  }
+ ],
+ "edges": [
+  [
+   "tb",
+   "morph"
+  ],
+  [
+   "morph",
+   "ihc"
+  ],
+  [
+   "ihc",
+   "mol"
+  ]
+ ],
+ "footnotes": {
+  "g": "For patients with suspected RDD or histiocytosis and biopsy is not possible because of location or risk factors, liquid biopsy for mutational analysis in the peripheral blood is an option. Janku F, et al. Mol Cancer Ther 2019;18:1149-1157.",
+  "h": "Of caution, cyclin D1 could also be positive or detected in concurrent lymphocytic or histiocytic neoplasm. VE1 is the preferred antibody for BRAF V600E testing if possible. A novel study showed that OCT2 IHC might be helpful, if clinically indicated, in select cases to confirm a suspected diagnosis of RDD, together with other common diagnostic markers. Ravindran A, et al. Am J Surg Pathol 2021;45:35-44.",
+  "i": "Molecular testing for somatic mutations and fusions can be performed in a stepwise manner or in parallel, depending on clinical need and institutional protocols. The frequency of suspected molecular lesions should drive the order of testing if a stepwise algorithm is chosen. Allele-specific PCR for BRAF V600E mutations can be the first step if BRAF V600E (VE1) IHC is not available or is equivocal. Targeted NGS panel testing should cover the common somatic mutations involving the MAPK pathway (ie, BRAF, ARAF, NRAS, KRAS, MAP2K1/2) and other related pathway mutations (eg, PIK3CA, CSF1R). RNA-based molecular panel including fusion testing should cover BRAF, ALK, RET, and NTRK1 rearrangements. If ALK IHC is positive, the presence of a rearrangement should be confirmed molecularly (eg, by FISH or RNA sequencing).",
+  "j": "Principles of Molecular Testing (HIST-H).",
+  "k": "Fresh or paraffin-embedded tissue is used for the NGS study; peripheral blood testing may be informative in multisystem disease. If clinically indicated in cases without the usual MAPK pathway mutations, FISH for BRAF, ALK, RET, or NTRK1 fusions may be performed.",
+  "l": "If a familial RDD is suspected, germline mutations in SLC29A3 should be considered. Another germline gene mutation involving the Fas gene TNFRSF6 is found in 40% of patients with RDD who had an autoimmune lymphoproliferative syndrome (ALPS) type Ia."
+ }
+}
