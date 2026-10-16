@@ -151,9 +151,12 @@ export function buildInput(g: Graph, facts: Facts, pages: string[]): string {
 
 /** The children of a decision node by kind: condition arms (to choose between) and options (each judged). */
 export function branchChildren(g: Graph, nodeId: string): { conds: string[]; opts: string[] } {
-  const kids = [...new Set(g.kids(nodeId))].filter((k) => g.node(k));
+  let kids = [...new Set(g.kids(nodeId))].filter((k) => g.node(k));
+  // treatment tables: condition rows are the arms; recommendation rows beside them apply alongside
+  const rowCond = kids.filter((k) => g.node(k)!.role === "table_condition");
+  if (rowCond.length) kids = kids.filter((k) => rowCond.includes(k) || !!g.preds[k] || !!g.node(k)!.decision);
   const opts = kids.filter((k) => g.node(k)!.decision === "option");
-  const conds = kids.filter((k) => !opts.includes(k) && (g.node(k)!.decision === "condition" || !!g.preds[k]));
+  const conds = kids.filter((k) => !opts.includes(k) && (g.node(k)!.decision === "condition" || !!g.preds[k] || g.node(k)!.role === "table_condition"));
   return { conds: conds.length >= 2 ? conds : [], opts: opts.length >= 2 ? opts : [] };
 }
 /** Does the node have something to score? */

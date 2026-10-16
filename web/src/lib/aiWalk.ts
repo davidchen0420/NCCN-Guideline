@@ -208,8 +208,12 @@ function missingOf(ctx: Ctx, kids: string[], v: (boolean | null)[]): string[] {
  */
 function analyse(ctx: Ctx, at: string, path: string[], seen: Set<string>): Analysis {
   const g = ctx.g;
-  const kids = ctx.kidsOf(at).filter((k) => !seen.has(k));
+  let kids = ctx.kidsOf(at).filter((k) => !seen.has(k));
   if (!kids.length) return { t: "end" };
+  // In a treatment table, the condition rows are the arms; a recommendation row beside them
+  // (e.g. "For stage II and III … start aspirin") applies alongside, it is not a branch.
+  const rowCond = kids.filter((k) => g.node(k)?.role === "table_condition");
+  if (rowCond.length) kids = kids.filter((k) => rowCond.includes(k) || !!g.preds[k] || !!g.node(k)?.decision);
   const { v, options } = optionsOf(ctx, kids);
 
   const ov = ctx.overrides[at];

@@ -137,7 +137,9 @@ function Stop({ quiet, t }: { quiet: boolean; t: AiWalkResult }) {
     <div className={`tr-stop${quiet ? " quiet" : ""}`} role="group" aria-label={quiet ? "Open choice" : "Your decision needed"}>
       <h4 className="tr-stop-h">{quiet ? "Still open" : "Your decision needed"}: {q}</h4>
       {where}
-      {!quiet && <p className="tr-fine">The AI was not confident enough to choose for you (it needs at least {percent(ai.threshold)}).</p>}
+      {!quiet && (options.some((o) => typeof o.prob === "number")
+        ? <p className="tr-fine">The AI was not confident enough to choose for you (it needs at least {percent(ai.threshold)}).</p>
+        : <p className="tr-fine">The guideline does not encode this choice, so it is yours to make.</p>)}
       {quiet && <p className="tr-fine">The answers entered do not settle this step. Choose, or answer more questions.</p>}
       {list}
     </div>
