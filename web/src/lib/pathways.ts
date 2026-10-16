@@ -192,10 +192,15 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
    * pages with a single entry box are selected by that box itself: how they are usually reached
    * describes the history or the presentation, which the patient may not share.
    */
-  const startOk = (id: string) => {
+  const startOk = (id: string, seenPages: Set<string> = new Set()): boolean => {
     const own = verdict(id);
     if (own === false || own === null) return false;
     const page = id.split(":")[0];
+    // An entry box with no condition of its own is selected only by how it is reached (the
+    // link condition names the patient group of the box that leads there). That does not put the
+    // patient at the box: some box leading to it must itself be somewhere the patient can be
+    // (REC-13 "Previous >12 mo" follows REC-11 recurrence boxes, whose gates are open).
+    if (own === "none" && !leadsFromPlausible(id, new Set(seenPages).add(page))) return false;
     const lc = g.node(id)?.linkCond;
     const lcv = lc ? evaluate(lc, facts) : "none";
     const roots = g.bundle.roots[page] ?? [];
@@ -211,6 +216,17 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
       return !ps.length || ps.some((p) => !(g.preds[p] && evaluate(g.preds[p], facts) === false) && open(p));
     };
     return open(id);
+  };
+  const leadsFromPlausible = (id: string, seenPages: Set<string>): boolean => {
+    const page = id.split(":")[0];
+    const from = (g.parents[id] ?? []).filter((p) => p.split(":")[0] !== page);
+    if (!from.length) return true;   // nothing leads here from another page: selected by the facts alone
+    return from.some((p) => {
+      const q = p.split(":")[0];
+      if (seenPages.has(q)) return false;
+      const seen = new Set(seenPages).add(q);
+      return (g.bundle.roots[q] ?? []).some((r) => startOk(r, seen));
+    });
   };
   const linksOut = (id: string) => (g.node(id)?.links ?? []).some((l) => g.bundle.pages[l] && l !== id.split(":")[0]);
 
@@ -513,10 +529,11 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     // A multi-disease guideline with the disease chosen: other diseases' pages are out, and when
     // the shared pages ahead of the disease's own do not lead into them (a diagnostic-testing page
     // that only lists every disease), the disease's own pages start routes of their own.
+    let ownStarts = false;
     if (mySec) {
       const seenN = new Set<string>(), stack = starts.flatMap((p) => g.bundle.roots[p] ?? []);
       while (stack.length && seenN.size < 30000) { const n = stack.pop()!; if (seenN.has(n)) continue; seenN.add(n); stack.push(...g.kids(n)); }
-      if (![...seenN].some((n) => secOf(n.split(":")[0]) === mySec)) starts = starts.concat(sectionStartPages(g, mySec));
+      if (![...seenN].some((n) => secOf(n.split(":")[0]) === mySec)) { starts = starts.concat(sectionStartPages(g, mySec)); ownStarts = true; }
     }
     if (!starts.length) starts.push(g.flowPages.find((p) => (g.bundle.roots[p] ?? []).length) ?? g.flowPages[0]);
     entries = starts.flatMap((p) => g.bundle.roots[p] ?? []);
@@ -548,7 +565,16 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     follow = true;
     ruledOut = 0;
     explore(entries);
-    const full = done.splice(0);    if (later.length) {
+    const full = done.splice(0);
+    // A link from the shared pages into the disease's pages (wired continuation) does not mean the
+    // walk gets there: it may stop first, or be gated by a fact the patient has not given. When no
+    // route enters the disease's pages, those pages start routes of their own.
+    if (mySec && !ownStarts && !full.some((d) => d.steps.some((st) => secOf(st.node.split(":")[0]) === mySec))) {
+      const extra = sectionStartPages(g, mySec).flatMap((p) => g.bundle.roots[p] ?? []).filter((r) => !starts.includes(r.split(":")[0]));
+      explore(extra);
+      full.push(...done.splice(0));
+      entries = entries.concat(extra);
+    }    if (later.length) {
       // The patient is past initial diagnosis: routes from the first page that never reach a
       // selected later-state page describe history, not the current decision. A selected page
       // that the walk from the start reaches keeps those routes (with what is still unknown on
