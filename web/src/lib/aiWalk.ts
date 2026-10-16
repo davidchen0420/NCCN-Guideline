@@ -29,7 +29,7 @@ import type { Facts } from "../types";
 import { boxText, branchChildren, DecideError, isScorable, NONE, scoreBranches, type DecideOptions } from "./decide";
 import { remainingQuestions } from "./formAssist";
 import type { Graph } from "./graph";
-import { leadsOnlyElsewhere, missingFacts, rankPathways, splitAlongside } from "./pathways";
+import { isCriteriaBox, leadsOnlyElsewhere, missingFacts, rankPathways, splitAlongside } from "./pathways";
 import { derive, evaluate } from "./predicates";
 
 export type TrailBy = "rule" | "ai" | "clinician" | "single" | "entry";
@@ -241,7 +241,7 @@ function analyse(ctx: Ctx, at: string, path: string[], seen: Set<string>): Analy
   // Mirrors pathways: a branch is a decision when it hangs on a condition, an entry, a question,
   // a table cell or a link; after a plain recommendation the arrows lead to later events.
   const isCond = (n: string, i: number) =>
-    !!g.preds[n] || i === 0 || (g.bundle.roots[pageOf(n)] ?? []).includes(n) || /\?\s*$/.test(g.node(n)?.text ?? "");
+    !!g.preds[n] || i === 0 || (g.bundle.roots[pageOf(n)] ?? []).includes(n) || /\?\s*$/.test(g.node(n)?.text ?? "") || isCriteriaBox(g, n);
   const i = path.length - 1;
   const cond = isCond(at, i);
   const tableCell = /^table_/.test(g.node(at)?.role ?? "");

@@ -82,6 +82,19 @@ const HEADING_ROLES = new Set(["page_heading", "column_header", "table_title", "
 /** Words of a box that says what to do (bullets, treatments, tests, schedules), as opposed to one
  * that only describes the patient: data types some such boxes as conditions. */
 const ACTION = new RegExp(["•", "\\b(?:therapy|therapies|treatment|treat|surveillance|observation|observe|resection|surgery|surgical|excision|ablation|transplant\\w*|radiation|radiotherapy|chemo\\w*|immunotherapy|inhibitors?|mab|biopsy|imaging|MRI|CT|PET|ultrasound|exam|H&P|history|follow-?up|monitor\\w*|consider|recommend\\w*|test(?:ing|s)?|assess\\w*|evaluat\\w*|screening|discontinue|manage[d]?|management|refer\\w*|start|repeat|every|systemic|palliative|supportive|support|care|principles|dose|risk:?\\s*\\d)\\b"].join("|"), "i");
+/** Words that describe a patient or a plan's premise rather than say what to do. */
+const CRITERIA = /\b(?:candidates?|likel(?:y|ihood)|unlikely|eligible|ineligible|desired|appropriate|operable|inoperable|resectable|unresectable|suspected|suspicious|confirmed)\b|^\W*(?:stage\s+)?[IV]{1,4}[ABC]?\d?\s*(?:[–-]\s*[IV]{1,4}[ABC]?)?\s*(?:,|$|\()/i;
+/**
+ * An untyped box that only names the patient group the arrow after it applies to ("IA–IV, surgical
+ * candidate, optimal cytoreduction likely (fertility not desired)" before "Hysterectomy/BSO + staging"):
+ * a criteria box has an arrow on to the step, is short, lists nothing and has no condition encoded.
+ */
+export function isCriteriaBox(g: Graph, id: string): boolean {
+  const n = g.node(id);
+  if (!n || n.decision || g.preds[id] || n.kind === "header" || !g.kids(id).length) return false;
+  const text = stripMarks(n.text).replace(/\s+/g, " ").trim();
+  return text.length <= 160 && !/[•\u0017]/.test(n.text) && CRITERIA.test(text) && !/^\W*(?:consider|start|initiate|administer|treat)\b/i.test(text);
+}
 export type BoxClass = "recommendation" | "pageref" | "heading" | "condition";
 /** What a box is, for the end of a route: a recommendation, a pointer to a page, a heading, or a
  * criteria box that describes the patient. */
@@ -94,6 +107,7 @@ export function boxClass(g: Graph, id: string): BoxClass {
   const bare = text.replace(CODE, "").replace(/[^A-Za-z]/g, "");
   if (PAGE_REF.test(n.text) || ((role === "table_ref" || role === "link") && !n.ext?.length) || (!bare && n.links.length)) return "pageref";
   if ((n.decision === "condition" || /condition/.test(role)) && !ACTION.test(n.text)) return "condition";
+  if (isCriteriaBox(g, id)) return "condition";
   return "recommendation";
 }
 
@@ -134,19 +148,38 @@ export function usedFacts(g: Graph, pred: Pred | null | undefined, raw: Facts, o
   return out;
 }
 
-/** Raw schema variables that are still unknown and would help decide `pred`. */
+const derivedCache = new WeakMap<Facts, Facts>();
+const withDerived = (g: Graph, facts: Facts): Facts => {
+  let d = derivedCache.get(facts);
+  if (!d) { d = derive(facts, g.bundle.schema); derivedCache.set(facts, d); }
+  return d;
+};
+
+/**
+ * Raw schema variables that are still unknown and could still change the verdict of `pred`, by
+ * three-valued evaluation: a condition that is already decided (an "or" with one arm true, an "and"
+ * with one arm false) asks for nothing, and an undecided one asks only for the details of the arms
+ * that are still open (rectal "unresectable OR medically inoperable" with Resectable = No needs no
+ * answer about medical operability).
+ */
 export function missingFacts(g: Graph, pred: Pred | null | undefined, facts: Facts, seen = new Set<string>()): string[] {
   const schema = g.bundle.schema;
+  const full = withDerived(g, facts);
   const out = new Set<string>();
-  for (const name of factsUsed(pred)) {
-    if (seen.has(name)) continue;
+  const go = (p: Pred | null | undefined) => {
+    if (!p || evaluate(p, full) !== null) return;
+    if ("all" in p) { p.all.forEach(go); return; }
+    if ("any" in p) { p.any.forEach(go); return; }
+    if ("not" in p) { go(p.not); return; }
+    const name = p.fact;
+    if (seen.has(name)) return;
     seen.add(name);
-    const v = facts[name];
-    if (v !== undefined && v !== null && v !== "unknown") continue;
-    if (schema.variables[name]) { if (!name.endsWith("_stated")) out.add(name); continue; }
-    const d = schema.derived?.[name];
-    if (d) d.rules.forEach((r) => missingFacts(g, r.if, facts, seen).forEach((x) => out.add(x)));
-  }
+    if (isKnown(full[name])) return;
+    if (schema.variables[name]) { if (!name.endsWith("_stated")) out.add(name); return; }
+    // a derived detail: the arms of the rules that are not already false
+    schema.derived?.[name]?.rules.forEach((r) => go(r.if));
+  };
+  go(pred);
   return [...out];
 }
 
@@ -563,7 +596,7 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     // the box right after a condition (a workup step). Out of a recommendation, arrows lead to
     // later events, so the route ends there.
     const isCond = (n: string, i: number) =>
-      !!g.preds[n] || i === 0 || (g.bundle.roots[n.split(":")[0]] ?? []).includes(n) || /\?\s*$/.test(g.node(n)?.text ?? "");
+      !!g.preds[n] || i === 0 || (g.bundle.roots[n.split(":")[0]] ?? []).includes(n) || /\?\s*$/.test(g.node(n)?.text ?? "") || isCriteriaBox(g, n);
     const cond = jumped || isCond(id, steps.length - 1);
     const afterCond = steps.length > 1 && isCond(steps[steps.length - 2].node, steps.length - 2);
     // Cells of a structured table row (criteria, evaluation, "see PROS-4") read as one row.
@@ -764,7 +797,7 @@ export const confidenceWord = (c: number) => (c >= 75 ? "High" : c >= 45 ? "Mode
 export type StepTier = "treatment" | "other" | "workup" | "followup";
 const FOLLOWUP = /^\W*(?:(?:post-?treatment|long-term|ongoing|routine)\s+)?(?:surveillance|follow-?up|monitoring|re-?evaluat\w*\s+(?:disease\s+)?status|history and physical|H&P|clinical (?:exam|evaluation) every)\b/i;
 const TREATMENT = new RegExp(["\\b(?:therapy|therapies|chemo\\w*|radiat\\w*|radiotherapy|RT|SBRT|brachytherapy|resection|surgery|surgical|excision|ablation|transplant\\w*",
-  "immunotherapy|inhibitors?|[a-z]{4,}mab|[a-z]{3,}tinib|[a-z]{3,}ciclib|ADT|prostatectomy|lumpectomy|mastectomy|cystectomy|nephrectomy|colectomy",
+  "immunotherapy|inhibitors?|[a-z]{4,}mab|[a-z]{3,}tinib|[a-z]{3,}ciclib|ADT|[a-z]{3,}ectomy|BSO|debulking|cytoreduct\\w*",
   "embolization|endocrine|hormone\\w*|androgen|regimens?|FOLFOX|CAPEOX|FOLFIRI\\w*|FOLFIRINOX|observation|active surveillance|start|initiate|administer",
   "supplementation|prophylaxis|antiemetic\\w*|cessation|palliative|best supportive care|BSC|transfusion|TNT|stenting|ostomy)\\b"].join("|"), "i");
 const WORKUP = /\b(?:workup|biopsy|biopsies|imaging|MRI|CT|PET|ultrasound|labs?|laboratory|testing|tests?|evaluat\w*|assess\w*|exam|H&P|history|screening|colonoscopy|endoscopy|mammogra\w*|genetic|counseling)\b/i;
@@ -841,20 +874,18 @@ export function recommendationOf(g: Graph, p: Pathway, paths: Pathway[] = []): R
   let followAt = firstFollow;
   // the follow-up page's own entry box belongs to it
   while (followAt > 0 && s[followAt - 1].node.split(":")[0] === s[firstFollow].node.split(":")[0] && !isActionBox(g, s[followAt - 1].node)) followAt--;
-  const pageOf = (st: PStep) => st.node.split(":")[0];
   const scan = (until: number) => {
     let settled = -1;
-    // The entry box of a page the route moves on to after a treatment (the page of findings at
-    // surgery, after "surgical resection") is met by the details already used: it says where the
-    // patient will be after that treatment, not that the treatment is behind them. Only an entry
-    // that rests on something new (the pathologic stage after surgery) puts the patient past it.
+    // A box met after a treatment (the page of findings at surgery after "surgical resection", the
+    // pathologic staging after "hysterectomy/BSO") by details already used says where the patient will
+    // be after that treatment, not that the treatment is behind them. Only a decision that rests on
+    // something new (the pathologic stage after surgery) puts the patient past it.
     const before = new Set<string>();
     s.forEach((st, i) => {
       if (i < until && isSettled(st)) {
-        const entered = i > 0 && pageOf(s[i - 1]) !== pageOf(st) && (g.bundle.roots[pageOf(st)] ?? []).includes(st.node);
         const treated = s.slice(settled + 1, i).some((x) => isActionBox(g, x.node) && stepTier(g, x.node) === "treatment");
         const fresh = st.used.some((f) => !before.has(f));
-        if (!(entered && treated && !fresh)) settled = i;
+        if (!(treated && !fresh)) settled = i;
       }
       st.used.forEach((f) => before.add(f));
     });
