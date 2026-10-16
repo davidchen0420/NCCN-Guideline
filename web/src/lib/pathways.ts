@@ -157,7 +157,21 @@ function textMatches(g: Graph, text: string, facts: Facts): { mine: boolean; oth
   return { mine, other };
 }
 
-export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "auto"): Ranking {
+/** Optional inputs of rankPathways. */
+export interface RankOptions {
+  /**
+   * Probability of following a child from its parent, keyed "parent>child" (node ids as in the
+   * graph), e.g. from the AI-assisted walk. Where a branch splits likelihood among children that
+   * cannot be decided yet (unknown, uncoded or option arms), a supplied probability replaces the
+   * even split; shares are renormalised among the children that survive. Children without an
+   * entry share the mean of the supplied ones. Absent, the split is as before.
+   */
+  edgeProb?: Map<string, number>;
+}
+/** Lowest probability an arm keeps when an AI probability is used, so an unlikely route stays listed. */
+const MIN_PROB = 0.01;
+
+export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "auto", opts?: RankOptions): Ranking {
   const empty: Ranking = { paths: [], ruledOut: 0, entries: [], truncated: false, nextBest: null };
   if (start === "auto" && !hasFacts(raw)) return empty;
   const facts = derive(raw, g.bundle.schema);
@@ -288,7 +302,7 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
   };
 
   /** Score the children of a branch: which are possible, and with what share. */
-  const split = (groups: Group[], events = true) => {
+  const split = (groups: Group[], events = true, parent?: string) => {
     const v = groups.map((gr) => gVerdict(gr, events));
     const tr = groups.filter((_, i) => v[i] === true);
     const fl = groups.filter((_, i) => v[i] === false);
@@ -330,6 +344,18 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
         if (m[i].mine) out.push({ gr, kind: "inferred", share: tr.length ? RESIDUAL : 1 });
         else out.push({ gr, kind: "option", share: (tr.length || anyMine ? RESIDUAL : 1) * (m[i].other ? 0.5 : 1) });
       });
+    }
+    // Supplied probabilities (AI-scored edges) replace the even split among the open arms; the
+    // factors above (residual share beside a true sibling, half for a ruled-out option) still apply.
+    const probs = opts?.edgeProb;
+    if (probs && parent !== undefined) {
+      const open = (x: Opt) => x.kind === "unknown" || x.kind === "uncoded" || x.kind === "option";
+      const given = new Map<Opt, number>();
+      for (const x of out) if (open(x)) { const p = probs.get(`${parent}>${x.gr.id}`); if (typeof p === "number" && Number.isFinite(p)) given.set(x, Math.max(MIN_PROB, Math.min(1, p))); }
+      if (given.size) {
+        const mean = [...given.values()].reduce((a, b) => a + b, 0) / given.size;
+        for (const x of out) if (open(x)) x.share *= given.get(x) ?? mean;
+      }
     }
     const total = out.reduce((a, x) => a + x.share, 0) || 1;
     return out.map((x) => ({ ...x, share: x.share / total }));
@@ -457,12 +483,12 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
       if (v[0] === null) return cond || (follow && linksOut(id)) ? go(gr, "unknown", 1) : stop(id, steps, weight, kids);
       return pass ? go(gr, "flow", 1) : stop(id, steps, weight, kids);
     }
-    const opts = split(groups);
+    const arms = split(groups, true, id);
     // After a recommendation, children with open conditions describe later events (recurrence,
     // response): the route ends here unless the facts already say which one happened.
-    if (!cond && !opts.some((o) => o.kind === "met" || o.kind === "otherwise") && opts.some((o) => o.kind === "unknown"))
+    if (!cond && !arms.some((o) => o.kind === "met" || o.kind === "otherwise") && arms.some((o) => o.kind === "unknown"))
       return stop(id, steps, weight, kids);
-    opts.forEach((o) => go(o.gr, o.kind, o.share));
+    arms.forEach((o) => go(o.gr, o.kind, o.share));
   };
 
   const explore = (entries: string[]) => {
