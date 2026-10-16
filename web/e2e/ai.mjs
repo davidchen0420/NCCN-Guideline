@@ -283,8 +283,8 @@ await page.context().close();
 mock.mode = "confident";
 const seeds = {
   rectal: { guideline_section: "pMMR/MSS Rectal Cancer" },
-  breast: { guideline_section: "Invasive Breast Cancer", palpable_mass: true, tumor_size_cm: 3, rapid_growth: false },
-  b_cell_lymphomas: { guideline_section: "Diffuse Large B-Cell Lymphoma", histologic_transformation: false },
+  colon: { guideline_section: "pMMR/MSS Colon Cancer", primary_diagnosis: "colon_adenocarcinoma", m_category: "M0" },
+  b_cell_lymphomas: { guideline_section: "Diffuse Large B-Cell Lymphoma", histologic_transformation: false, ann_arbor_stage: "III", extensive_mesenteric_disease: false },
 };
 for (const [slug, facts] of Object.entries(seeds)) {
   page = await open(slug, { facts });

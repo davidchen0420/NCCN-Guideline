@@ -18,7 +18,7 @@
  *   extractor only) and the condition's review status.
  */
 import type { Facts, Pred } from "../types";
-import { resolveRef, sectionStartPages, stateOfEntries, stateOfTitle, type Graph } from "./graph";
+import { entryHeadsByGroup, resolveRef, sectionStartPages, stateOfEntries, stateOfTitle, type Graph } from "./graph";
 import { derive, evaluate } from "./predicates";
 import { stripMarks } from "./adapt";
 import { matchWord } from "./terms";
@@ -82,6 +82,27 @@ const HEADING_ROLES = new Set(["page_heading", "column_header", "table_title", "
 /** Words of a box that says what to do (bullets, treatments, tests, schedules), as opposed to one
  * that only describes the patient: data types some such boxes as conditions. */
 const ACTION = new RegExp(["•", "\\b(?:therapy|therapies|treatment|treat|surveillance|observation|observe|resection|surgery|surgical|excision|ablation|transplant\\w*|radiation|radiotherapy|chemo\\w*|immunotherapy|inhibitors?|mab|biopsy|imaging|MRI|CT|PET|ultrasound|exam|H&P|history|follow-?up|monitor\\w*|consider|recommend\\w*|test(?:ing|s)?|assess\\w*|evaluat\\w*|screening|discontinue|manage[d]?|management|refer\\w*|start|repeat|every|systemic|palliative|supportive|support|care|principles|dose|risk:?\\s*\\d)\\b"].join("|"), "i");
+/** Words that describe a patient or a plan's premise rather than say what to do. */
+const CRITERIA = /\b(?:candidates?|likel(?:y|ihood)|unlikely|eligible|ineligible|desired|appropriate|operable|inoperable|resectable|unresectable|suspected|suspicious|confirmed)\b|^\W*(?:stage\s+)?[IV]{1,4}[ABC]?\d?\s*(?:[–-]\s*[IV]{1,4}[ABC]?)?\s*(?:,|$|\()/i;
+/**
+ * An untyped box that only names the patient group the arrow after it applies to ("IA–IV, surgical
+ * candidate, optimal cytoreduction likely (fertility not desired)" before "Hysterectomy/BSO + staging"):
+ * a criteria box has an arrow on to the step, is short, lists nothing and has no condition encoded.
+ */
+export function isCriteriaBox(g: Graph, id: string): boolean {
+  const n = g.node(id);
+  if (!n || n.decision || g.preds[id] || n.kind === "header" || !g.kids(id).length) return false;
+  const text = stripMarks(n.text).replace(/\s+/g, " ").trim();
+  return text.length <= 160 && !/[•\u0017]/.test(n.text) && CRITERIA.test(text) && !/^\W*(?:consider|start|initiate|administer|treat)\b/i.test(text);
+}
+/** A short label that only names the algorithm page it hands over to ("Treatment and adjuvant therapy (COL-7)"). */
+export function isHandOver(g: Graph, id: string): boolean {
+  const n = g.node(id);
+  if (!n) return false;
+  const text = stripMarks(n.text).trim();
+  return n.links.some((l) => l !== n.page && (g.bundle.roots[l] ?? []).length > 0) && /\(\s*[A-Z]{2,6}-\d+[A-Z]?\s*\)\s*$/.test(text) && text.split(/\s+/).length <= 10
+    && !/[•\u0017]/.test(n.text) && !g.kids(id).some((k) => g.node(k)?.page === n.page);
+}
 export type BoxClass = "recommendation" | "pageref" | "heading" | "condition";
 /** What a box is, for the end of a route: a recommendation, a pointer to a page, a heading, or a
  * criteria box that describes the patient. */
@@ -94,6 +115,7 @@ export function boxClass(g: Graph, id: string): BoxClass {
   const bare = text.replace(CODE, "").replace(/[^A-Za-z]/g, "");
   if (PAGE_REF.test(n.text) || ((role === "table_ref" || role === "link") && !n.ext?.length) || (!bare && n.links.length)) return "pageref";
   if ((n.decision === "condition" || /condition/.test(role)) && !ACTION.test(n.text)) return "condition";
+  if (isCriteriaBox(g, id)) return "condition";
   return "recommendation";
 }
 
@@ -134,19 +156,113 @@ export function usedFacts(g: Graph, pred: Pred | null | undefined, raw: Facts, o
   return out;
 }
 
-/** Raw schema variables that are still unknown and would help decide `pred`. */
+/**
+ * Details a box says its advice depends on: "Preoperative systemic therapy based on HR and HER2
+ * status (BINV-L 1 and BINV-M)" names HR and HER2, which are the details "hr_status" and "her2_status"
+ * of the schema (HR is worked out from ER and PR). The box has no condition of its own, so what
+ * decides it would otherwise never be asked.
+ */
+export function namedStatuses(g: Graph, text: string): string[] {
+  const m = /\b(?:based on|depending on|according to|by)\s+([^.()]{2,80}?)\s+status\b/i.exec(text);
+  if (!m) return [];
+  const schema = g.bundle.schema;
+  return m[1].split(/\s*(?:,|\band\b|\bor\b|\/)\s*/i).map((t) => t.trim().toLowerCase()).filter((t) => schema.variables[`${t}_status`] || schema.derived?.[`${t}_status`]);
+}
+export function namedStatusFacts(g: Graph, text: string): string[] {
+  const out = new Set<string>();
+  for (const t of namedStatuses(g, text)) for (const f of missingFacts(g, { fact: `${t}_status`, op: "==", value: "\u0000" }, {})) out.add(f);
+  return [...out];
+}
+
+export interface DocSnippet { code: string; heading: string; lines: string[]; pdf: number }
+/**
+ * The part of a principles page ("BINV-M: preoperative/adjuvant therapy regimens") that a box points
+ * to for the patient's own status: the box says its advice is based on HR and HER2 status, the patient
+ * is HER2-positive, so the lines under "HER2-Positive" on that page are the regimens. Null when the box
+ * names no status, the patient has not given it, or the page has no such heading.
+ */
+export function statusSnippet(g: Graph, id: string, raw: Facts): DocSnippet | null {
+  const n = g.node(id);
+  if (!n) return null;
+  const stems = namedStatuses(g, stripMarks(n.text));
+  if (!stems.length) return null;
+  const full = derive(raw, g.bundle.schema);
+  const want: { stem: string; word: string }[] = [];
+  for (const t of stems) {
+    const v = String(full[`${t}_status`] ?? "");
+    const word = /positive/i.test(v) ? "positive" : /negative/i.test(v) ? "negative" : "";
+    if (word) want.push({ stem: t.replace(/\W/g, ""), word });
+  }
+  if (!want.length) return null;
+  const stemRe = new RegExp(`^\\s*(?:${stems.map((t) => t.replace(/\W/g, "")).join("|")})[- ]`, "i");
+  const says = (l: string, stem: string, word: string) => new RegExp(`\\b${stem}[- ]?${word}[a-z]?\\b`, "i").test(l);
+  /** How well a heading line fits the patient: statuses it names that are theirs, or -1 when it names another (and does not offer both). */
+  const fit = (l: string) => {
+    if (l.length > 90 || !stemRe.test(l)) return 0;
+    let hit = 0;
+    for (const w of want) {
+      const other = w.word === "positive" ? "negative" : "positive";
+      if (says(l, w.stem, w.word)) hit++;
+      else if (says(l, w.stem, other) && !new RegExp(`\\bor\\s*-?\\s*(?:${w.word})`, "i").test(l)) return -1;
+    }
+    return hit;
+  };
+  let best: (DocSnippet & { score: number }) | null = null;
+  for (const code of n.links) {
+    const doc = g.bundle.docs?.[code.replace(/\s+\d+\s+of\s+\d+$/, "")];
+    if (!doc) continue;
+    for (const page of doc.pages) {
+      const lines = page.text.split("\n").map((l) => l.trim()).filter(Boolean);
+      lines.forEach((l, at) => {
+        const score = fit(l);
+        if (score <= 0 || (best && best.score >= score)) return;
+        const body: string[] = [];
+        for (const x of lines.slice(at + 1)) {
+          if (body.length >= 14 || (body.length && x.length <= 60 && stemRe.test(x) && /\b(?:positive|negative)/i.test(x))) break;
+          body.push(x);
+        }
+        // regimens, not a principle that happens to name the status
+        if (!/\b(?:Preferred|Recommended|regimens?|Useful in Certain Circumstances)\b/.test(body.join(" "))) return;
+        best = { code: doc.code, heading: l, lines: body, pdf: page.pdf ?? 0, score };
+      });
+    }
+  }
+  const out = best as (DocSnippet & { score: number }) | null;
+  return out ? { code: out.code, heading: out.heading, lines: out.lines, pdf: out.pdf } : null;
+}
+
+const derivedCache = new WeakMap<Facts, Facts>();
+const withDerived = (g: Graph, facts: Facts): Facts => {
+  let d = derivedCache.get(facts);
+  if (!d) { d = derive(facts, g.bundle.schema); derivedCache.set(facts, d); }
+  return d;
+};
+
+/**
+ * Raw schema variables that are still unknown and could still change the verdict of `pred`, by
+ * three-valued evaluation: a condition that is already decided (an "or" with one arm true, an "and"
+ * with one arm false) asks for nothing, and an undecided one asks only for the details of the arms
+ * that are still open (rectal "unresectable OR medically inoperable" with Resectable = No needs no
+ * answer about medical operability).
+ */
 export function missingFacts(g: Graph, pred: Pred | null | undefined, facts: Facts, seen = new Set<string>()): string[] {
   const schema = g.bundle.schema;
+  const full = withDerived(g, facts);
   const out = new Set<string>();
-  for (const name of factsUsed(pred)) {
-    if (seen.has(name)) continue;
+  const go = (p: Pred | null | undefined) => {
+    if (!p || evaluate(p, full) !== null) return;
+    if ("all" in p) { p.all.forEach(go); return; }
+    if ("any" in p) { p.any.forEach(go); return; }
+    if ("not" in p) { go(p.not); return; }
+    const name = p.fact;
+    if (seen.has(name)) return;
     seen.add(name);
-    const v = facts[name];
-    if (v !== undefined && v !== null && v !== "unknown") continue;
-    if (schema.variables[name]) { if (!name.endsWith("_stated")) out.add(name); continue; }
-    const d = schema.derived?.[name];
-    if (d) d.rules.forEach((r) => missingFacts(g, r.if, facts, seen).forEach((x) => out.add(x)));
-  }
+    if (isKnown(full[name])) return;
+    if (schema.variables[name]) { if (!name.endsWith("_stated")) out.add(name); return; }
+    // a derived detail: the arms of the rules that are not already false
+    schema.derived?.[name]?.rules.forEach((r) => go(r.if));
+  };
+  go(pred);
   return [...out];
 }
 
@@ -221,6 +337,24 @@ export interface RankOptions {
 /** Lowest probability an arm keeps when an AI probability is used, so an unlikely route stays listed. */
 const MIN_PROB = 0.01;
 
+/**
+ * With a disease of a multi-disease guideline chosen: does a box lead only into pages of the
+ * other diseases (the "dMMR" arm that goes to the dMMR pages for a patient with pMMR disease)? The
+ * choice of disease already settled that branch.
+ */
+export function leadsOnlyElsewhere(g: Graph, id: string, section: string | null, depth = 0): boolean {
+  const sec = g.bundle.sections;
+  if (!sec || !section || depth > 3) return false;
+  const secOf = (p: string) => (sec.pages?.[p] ?? null) as string | null;
+  const ks = g.kids(id);
+  if (!ks.length) return false;
+  return ks.every((k) => {
+    const s = secOf(k.split(":")[0]);
+    if (s !== null) return s !== section;
+    return k.split(":")[0] === id.split(":")[0] && leadsOnlyElsewhere(g, k, section, depth + 1);
+  });
+}
+
 export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "auto", opts?: RankOptions): Ranking {
   const empty: Ranking = { paths: [], ruledOut: 0, entries: [], truncated: false, nextBest: null };
   if (start === "auto" && !hasFacts(raw)) return empty;
@@ -256,14 +390,35 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     const roots = g.bundle.roots[page] ?? [];
     const split = roots.length > 1 && roots.every((r) => g.preds[r]);
     const late = !!(stateOfTitle(g.bundle.pages[page]?.title ?? "") || stateOfEntries(g, page));
-    if (late || !split) return own === true || lcv === true;
+    if (late) return (own === true || lcv === true) && openAbove(id);
+    // An answered detail constrains the way in: a page that is reached only through boxes the
+    // details rule out ("Rectal cancer without distant metastases" -> clinical stage REC-6 for a
+    // patient with distant metastases) is not somewhere this patient can be, even when its own
+    // entry box says nothing about it.
+    if (!split) return (own === true || lcv === true) && openAbove(id);
     if (lcv !== true && (lc || own === "none")) return false;
+    return openAbove(id);
+  };
+  /** Does the page `to` come after the page `from` in the guideline (what loops back to an earlier page comes from later ones)? */
+  const reachesPage = (from: string, to: string): boolean => {
+    const a = g.bundle.pages[from]?.pdf, b = g.bundle.pages[to]?.pdf;
+    return from !== to && typeof a === "number" && typeof b === "number" && b > a;
+  };
+  /** Is there a way into `id` from the start of the guideline that no entered detail rules out? */
+  const openAbove = (id: string): boolean => {
+    // (the chosen disease is not a reason against a way in: its pages are reached as that disease's)
+    const sv = g.bundle.sections?.variable;
+    const rawHere = sv ? { ...raw, [sv]: undefined } : raw;
+    const here = sv ? derive(rawHere, g.bundle.schema) : facts;
     const seen = new Set<string>();
     const open = (x: string): boolean => {
       if (seen.has(x)) return false;
       seen.add(x);
-      const ps = g.parents[x] ?? [];
-      return !ps.length || ps.some((p) => !(g.preds[p] && evaluate(g.preds[p], facts) === false) && open(p));
+      // what loops back into a page from the pages after it (a return to screening) is not a way in
+      // (and an entry box is reached from other pages: a loop inside its own page is not a way in either)
+      const isRoot = (g.bundle.roots[x.split(":")[0]] ?? []).includes(x);
+      const ps = (g.parents[x] ?? []).filter((p) => !reachesPage(x.split(":")[0], p.split(":")[0]) && !(isRoot && p.split(":")[0] === x.split(":")[0]));
+      return !ps.length || ps.some((p) => !(g.preds[p] && evaluate(g.preds[p], here) === false && usedFacts(g, g.preds[p], rawHere).size > 0) && open(p));
     };
     return open(id);
   };
@@ -290,14 +445,20 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     const open = crit.length - met;
     const coverage = crit.length ? met / crit.length : 0;
     const encoding = steps.reduce((a, s) => a + EDGE_W[s.edge] * reviewW(s.node), 0) / steps.length;
-    const missing = [...new Set([...steps.flatMap((s) => s.missing), ...(end === "open" ? laterMissing : [])])];
-    done.push({
+    const pw = {
       id: steps.map((s) => s.node).join(">"), steps, end, next, weight, ...(continuesTo ? { continuesTo } : {}),
       met, open, options: steps.filter((s) => s.kind === "option").length, uncoded: steps.filter((s) => s.kind === "uncoded").length,
-      coverage, encoding, confidence: Math.round(100 * coverage * encoding), missing,
+      coverage, encoding, confidence: Math.round(100 * coverage * encoding), missing: [] as string[],
       used: [...new Set(steps.flatMap((s) => s.used))], laterMissing,
       alongside: [...new Set(steps.flatMap((s) => splitAlongside(g, g.kids(s.node)).alongside))].filter((x) => !steps.some((s) => s.node === x)),
-    });
+    };
+    // What could change the recommendation now: the details open up to the treatment it names. What
+    // lies behind that treatment (the margin of a resection that has not happened) is asked once the
+    // patient is there.
+    const rec = recommendationOf(g, { ...pw, likelihood: 0 });
+    const upTo = rec.found && rec.tier === "treatment" ? rec.index + 1 : steps.length;
+    pw.missing = [...new Set([...steps.slice(0, upTo).flatMap((s) => s.missing), ...(end === "open" ? laterMissing : [])])];
+    done.push(pw);
   };
 
   type Group = { id: string; pre: string[] };
@@ -447,7 +608,8 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
   };
   const stepFor = (parent: string | null, k: string, kind: StepKind, share: number, sibs: string[] = []): PStep => ({
     node: k, kind, share,
-    missing: kind === "unknown" ? missingFacts(g, g.preds[k], facts) : [],
+    missing: [...new Set([...(kind === "unknown" ? missingFacts(g, g.preds[k], facts) : []),
+      ...namedStatusFacts(g, g.node(k)?.text ?? "").filter((f) => !isKnown(facts[f]))])],
     edge: parent === null ? "entry" : edgeKind.get(`${parent}>${k}`) ?? (k.split(":")[0] !== parent.split(":")[0] ? "link" : "agreed"),
     used: settledBy(k, kind, sibs),
   });
@@ -491,7 +653,7 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
    * to be decided: "open", with the details that decide the arms. */
   const stop = (id: string, steps: PStep[], weight: number, kids: string[]) => {
     const cls = boxClass(g, id);
-    if (cls !== "pageref" && cls !== "heading") return finish(steps, weight, "later", kids);
+    if (cls !== "pageref" && cls !== "heading" && !(isHandOver(g, id) && !isFollowUp(g, id))) return finish(steps, weight, "later", kids);
     const need = [...new Set(kids.flatMap((k) => missingFacts(g, g.preds[k], facts)))];
     return finish(steps, weight, "open", kids, need);
   };
@@ -507,6 +669,13 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     if (truncated) return;
     if (steps.length > MAX_DEPTH) return finish(steps, weight, "limit");
     let kids = splitAlongside(g, g.kids(id)).main.filter((k) => !seen.has(k) && inSection(k.split(":")[0]));
+    // The disease was chosen: an arm that only goes into another disease's pages is not a branch
+    // for this patient (the choice of disease decided it).
+    let sectionSettled = false;
+    if (mySec && kids.length > 1) {
+      const own = kids.filter((k) => !leadsOnlyElsewhere(g, k, mySec));
+      if (own.length && own.length < kids.length) { kids = own; sectionSettled = follow; }
+    }
     // A box that only refers to another page, without an arrow in the data, goes on to that
     // page's entry boxes (gated by their conditions like any entry).
     let jumped = false;
@@ -520,11 +689,12 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     // the box right after a condition (a workup step). Out of a recommendation, arrows lead to
     // later events, so the route ends there.
     const isCond = (n: string, i: number) =>
-      !!g.preds[n] || i === 0 || (g.bundle.roots[n.split(":")[0]] ?? []).includes(n) || /\?\s*$/.test(g.node(n)?.text ?? "");
+      !!g.preds[n] || i === 0 || (g.bundle.roots[n.split(":")[0]] ?? []).includes(n) || /\?\s*$/.test(g.node(n)?.text ?? "") || isCriteriaBox(g, n);
     const cond = jumped || isCond(id, steps.length - 1);
+    const afterCond = steps.length > 1 && isCond(steps[steps.length - 2].node, steps.length - 2);
     // Cells of a structured table row (criteria, evaluation, "see PROS-4") read as one row.
     const tableCell = /^table_/.test(g.node(id)?.role ?? "");
-    const pass = cond || tableCell || linksOut(id) || (steps.length > 1 && isCond(steps[steps.length - 2].node, steps.length - 2));
+    const pass = cond || tableCell || linksOut(id) || afterCond;
     const groups = g.bundle.structured ? kids.map((id) => ({ id, pre: [] as string[] })) : rowGroups(kids);
     const sibs = groups.map((gr) => gr.id);
     // the details that ruled out the arms not taken here: they gated this route as well
@@ -547,11 +717,14 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
       if (!gs.some((x) => x.verdict === true)) {
         if (gs.every((x) => x.verdict === false)) ruledOut += groups.length;
         const open = [...new Set(gs.flatMap((x) => x.preds.flatMap((p) => missingFacts(g, p, facts))))];
-        return finish(steps, weight, "later", kids, open);
+        // on a heading or a page reference these arms are the next step itself, not a later event
+        const cls = boxClass(g, id);
+        return finish(steps, weight, cls === "pageref" || cls === "heading" ? "open" : "later", kids, open);
       }
     }
     const v = groups.map((gr) => gVerdict(gr));
     ruled = [...new Set(groups.flatMap((gr, i) => (v[i] === false ? [...usedFacts(g, g.preds[gr.id], raw)] : [])))];
+    if (sectionSettled && sec && isKnown(raw[sec.variable])) ruled.push(sec.variable);
     if (v.every((x) => x === false)) {
       ruledOut += groups.length;
       // Out of a condition box, no arm fits: this route contradicts the facts. Out of a
@@ -561,6 +734,8 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     if (groups.length === 1) {
       const gr = groups[0];
       if (v[0] === true) return go(gr, "met", 1);
+      // The disease the clinician chose is the only one this arm leads to: choosing it settled the arm.
+      if (v[0] === null && sectionSettled) return go(gr, "met", 1);
       // A page reference leads on to the page's first box even when its gate is still open.
       if (v[0] === null) return cond || (follow && linksOut(id)) ? go(gr, "unknown", 1) : stop(id, steps, weight, kids);
       return pass ? go(gr, "flow", 1) : stop(id, steps, weight, kids);
@@ -609,6 +784,12 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
       while (stack.length && seenN.size < 30000) { const n = stack.pop()!; if (seenN.has(n)) continue; seenN.add(n); stack.push(...g.kids(n)); }
       if (![...seenN].some((n) => secOf(n.split(":")[0]) === mySec)) { starts = starts.concat(sectionStartPages(g, mySec)); ownStarts = true; }
     }
+    // every page is led to by another (the algorithm loops): the first page of the loop starts it, not the alphabetically first page
+    if (!starts.length) {
+      const rooted = (ps: string[]) => ps.filter((p) => (g.bundle.roots[p] ?? []).length && inSection(p));
+      const [shared, ...diseases] = entryHeadsByGroup(g);
+      starts.push(...(rooted(shared).length ? rooted(shared) : rooted(diseases.flat())));
+    }
     if (!starts.length) starts.push(g.flowPages.find((p) => (g.bundle.roots[p] ?? []).length) ?? g.flowPages[0]);
     entries = starts.flatMap((p) => g.bundle.roots[p] ?? []);
     // The first walk decides which later pages the patient is already past (a walk that stops at
@@ -630,10 +811,24 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     // patient whose current state is a recurrence).
     const reachedNodes = new Set(shallow.flatMap((d) => d.steps.map((st) => st.node)));
     const reachedPages = new Set([...reachedNodes].map((n) => n.split(":")[0]));
-    const cands = g.flowPages.filter((p) => {
+    const cands0 = g.flowPages.filter((p) => {
       if (starts.includes(p) || !inSection(p) || [...reachedPages].some((q) => q !== p && out.get(q)?.has(p))) return false;
       if (textMatches(g, g.bundle.pages[p].title ?? "", raw).other) return false;
       return (g.bundle.roots[p] ?? []).some((r) => !reachedNodes.has(r) && startOk(r));
+    });
+    // The details that select a page: those its entry boxes (and the way into them) rest on.
+    const support = (p: string) => {
+      const out = new Set<string>();
+      for (const r of g.bundle.roots[p] ?? []) { usedFacts(g, g.preds[r], raw, out); usedFacts(g, g.node(r)?.linkCond, raw, out); }
+      return out;
+    };
+    // A page further down the guideline than another selected page counts as the patient's state only
+    // when it is selected by something the earlier page does not already rest on (a PSA recurrence
+    // after the initial treatment); selected by the same details, it is just where the earlier page
+    // leads, and the walk gets there itself.
+    const cands = cands0.filter((p) => {
+      const mine = support(p);
+      return !cands0.some((q) => q !== p && reaches(q, p) && !reaches(p, q) && [...mine].every((f) => support(q).has(f)));
     });
     const later = cands.filter((p) => !cands.some((q) => q !== p && reaches(p, q)));
     follow = true;
@@ -644,7 +839,7 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     // walk gets there: it may stop first, or be gated by a fact the patient has not given. When no
     // route enters the disease's pages, those pages start routes of their own.
     if (mySec && !ownStarts && !full.some((d) => d.steps.some((st) => secOf(st.node.split(":")[0]) === mySec))) {
-      const extra = sectionStartPages(g, mySec).flatMap((p) => g.bundle.roots[p] ?? []).filter((r) => !starts.includes(r.split(":")[0]));
+      const extra = sectionStartPages(g, mySec).flatMap((p) => g.bundle.roots[p] ?? []).filter((r) => !starts.includes(r.split(":")[0]) && openAbove(r));
       explore(extra);
       full.push(...done.splice(0));
       entries = entries.concat(extra);
@@ -701,7 +896,7 @@ export const confidenceWord = (c: number) => (c >= 75 ? "High" : c >= 45 ? "Mode
 export type StepTier = "treatment" | "other" | "workup" | "followup";
 const FOLLOWUP = /^\W*(?:(?:post-?treatment|long-term|ongoing|routine)\s+)?(?:surveillance|follow-?up|monitoring|re-?evaluat\w*\s+(?:disease\s+)?status|history and physical|H&P|clinical (?:exam|evaluation) every)\b/i;
 const TREATMENT = new RegExp(["\\b(?:therapy|therapies|chemo\\w*|radiat\\w*|radiotherapy|RT|SBRT|brachytherapy|resection|surgery|surgical|excision|ablation|transplant\\w*",
-  "immunotherapy|inhibitors?|[a-z]{4,}mab|[a-z]{3,}tinib|[a-z]{3,}ciclib|ADT|prostatectomy|lumpectomy|mastectomy|cystectomy|nephrectomy|colectomy",
+  "immunotherapy|inhibitors?|[a-z]{4,}mab|[a-z]{3,}tinib|[a-z]{3,}ciclib|ADT|[a-z]{3,}ectomy|BSO|debulking|cytoreduct\\w*",
   "embolization|endocrine|hormone\\w*|androgen|regimens?|FOLFOX|CAPEOX|FOLFIRI\\w*|FOLFIRINOX|observation|active surveillance|start|initiate|administer",
   "supplementation|prophylaxis|antiemetic\\w*|cessation|palliative|best supportive care|BSC|transfusion|TNT|stenting|ostomy)\\b"].join("|"), "i");
 const WORKUP = /\b(?:workup|biopsy|biopsies|imaging|MRI|CT|PET|ultrasound|labs?|laboratory|testing|tests?|evaluat\w*|assess\w*|exam|H&P|history|screening|colonoscopy|endoscopy|mammogra\w*|genetic|counseling)\b/i;
@@ -768,6 +963,24 @@ export interface Recommendation {
  * after a later event. When the guideline lists several options at that step they are all
  * returned (`options`), taken from `paths` (the ranking) so those the facts rule out are left out.
  */
+/** The entered-detail names (schema variables) a set of conditions rests on, through derived details. */
+function rawNames(g: Graph, preds: (Pred | null | undefined)[]): Set<string> {
+  const out = new Set<string>(), seen = new Set<string>();
+  const schema = g.bundle.schema;
+  const name = (n: string) => {
+    if (seen.has(n)) return;
+    seen.add(n);
+    if (schema.variables[n]) out.add(n);
+    schema.derived?.[n]?.rules.forEach((r) => go(r.if));
+  };
+  const go = (p: Pred | null | undefined) => {
+    if (!p) return;
+    if ("all" in p) p.all.forEach(go); else if ("any" in p) p.any.forEach(go); else if ("not" in p) go(p.not); else name(p.fact);
+  };
+  preds.forEach(go);
+  return out;
+}
+
 export function recommendationOf(g: Graph, p: Pathway, paths: Pathway[] = []): Recommendation {
   const s = p.steps;
   const isSettled = (st: PStep) => st.kind === "met" || st.kind === "otherwise" || st.kind === "inferred";
@@ -780,7 +993,21 @@ export function recommendationOf(g: Graph, p: Pathway, paths: Pathway[] = []): R
   while (followAt > 0 && s[followAt - 1].node.split(":")[0] === s[firstFollow].node.split(":")[0] && !isActionBox(g, s[followAt - 1].node)) followAt--;
   const scan = (until: number) => {
     let settled = -1;
-    s.forEach((st, i) => { if (i < until && isSettled(st)) settled = i; });
+    // A box met after a treatment (the page of findings at surgery after "surgical resection", the
+    // pathologic staging after "hysterectomy/BSO") by details already used says where the patient will
+    // be after that treatment, not that the treatment is behind them. Only a decision that rests on
+    // something new (the pathologic stage after surgery) puts the patient past it.
+    const before = new Set<string>();
+    s.forEach((st, i) => {
+      if (i < until && isSettled(st)) {
+        const treated = s.slice(settled + 1, i).some((x) => isActionBox(g, x.node) && stepTier(g, x.node) === "treatment");
+        // new information: a detail this box's own condition (or its siblings') rests on, not one only the way into the page mentions
+        const own = rawNames(g, [g.preds[st.node], ...(g.parents[st.node] ?? []).flatMap((q) => g.kids(q).map((k) => g.preds[k])), ...s.map((x) => g.node(x.node)?.received)]);
+        const fresh = st.used.some((f) => !before.has(f) && own.has(f));
+        if (!(treated && !fresh)) settled = i;
+      }
+      st.used.forEach((f) => before.add(f));
+    });
     // an "inferred" step is a treatment the patient already had: the advice comes after it
     const cands: number[] = [];
     // a met option box (an entry that is itself the treatment) is the recommendation, not only the decision before it
@@ -795,6 +1022,10 @@ export function recommendationOf(g: Graph, p: Pathway, paths: Pathway[] = []): R
   };
   let { settled, cands } = scan(followAt >= 0 ? followAt : s.length);
   if (!cands.length && followAt >= 0) ({ settled, cands } = scan(s.length));
+  // a label that only hands over to the next page is not the advice when a treatment of that page is on the route
+  const treatmentLater = (i: number) => cands.some((k) => k > i && !isHandOver(g, s[k].node) && stepTier(g, s[k].node) === "treatment");
+  const direct = cands.filter((i) => !(isHandOver(g, s[i].node) && treatmentLater(i)));
+  if (direct.length) cands = direct;
   let index = cands.length ? cands.reduce((best, i) => (TIER_ORDER[stepTier(g, s[i].node)] < TIER_ORDER[stepTier(g, s[best].node)] ? i : best), cands[0]) : -1;
   if (index < 0) {
     // nothing recommends anything after the last decision: the last box that is not a bare page reference, else the last box

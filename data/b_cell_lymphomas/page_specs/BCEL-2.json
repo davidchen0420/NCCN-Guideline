@@ -1,0 +1,15 @@
+{
+ "page": "BCEL-2",
+ "note": "Workup of diffuse large B-cell lymphoma (PDF p.63): one list of tests (ESSENTIAL / USEFUL IN SELECTED CASES) with an arrow to First-Line Therapy (BCEL-3). The list has no condition of its own; it is reached from the subtype list of BCEL-1 (DLBCL NOS, FL3B/FLBCL, IRF4/MUM1 LBCL, HGBL with MYC and BCL6, ...) and from large cell transformation of the marginal zone lymphomas and of follicular lymphoma (IRF4), so it takes the condition of the boxes that link to it. Re-applied so that condition is worked out again: the one inherited earlier was older than the DLBCL section clause of BCEL-1 and lacked it, which ruled the page out for every patient whose histology was entered.",
+ "section": "Diffuse Large B-Cell Lymphoma",
+ "footnotes": {
+  "f": "Hepatitis B testing is indicated because of the risk of reactivation with immunotherapy + chemotherapy. Tests include HBsAg and core antibody for a patient with no risk factors. For patients with risk factors or previous history of hepatitis B, add e-antigen (NHODG-B). If positive, check viral load and consider consult with gastroenterologist.",
+  "g": "Fertility preservation options include: sperm banking, IVF, or ovarian tissue or oocyte cryopreservation."
+ },
+ "boxes": [
+  {"key": "h_work", "header": true, "region": [20, 82, 80, 104]},
+  {"key": "workup", "region": [20, 104, 520, 426], "decision_type": "condition"},
+  {"key": "to3", "region": [545, 246, 660, 284]}
+ ],
+ "edges": [["workup", "to3"]]
+}

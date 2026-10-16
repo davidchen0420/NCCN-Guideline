@@ -181,3 +181,12 @@ export function trimToRoute(r: AiWalkResult, nodes: Set<string>): AiWalkResult {
   const stop = r.stoppedFor && r.stoppedFor !== "error" && (nodes.has(r.end) || (r.options ?? []).some((o) => nodes.has(o.child)));
   return stop ? { ...r, steps } : { steps, end: r.end, ...(r.stoppedFor === "error" ? { stoppedFor: "error" as const } : {}) };
 }
+
+/** The choices a stop offers: an arm the rules rule out is never one of them. */
+export const offeredOptions = (r: Pick<AiWalkResult, "options">): TrailOption[] => (r.options ?? []).filter((o) => o.verdict !== false);
+/**
+ * Is the walk's stop a decision the clinician can be asked to make? Not when every arm of it is ruled
+ * out by the answers (the route contradicts them: there is nothing to choose).
+ */
+export const isPendingDecision = (r: Pick<AiWalkResult, "stoppedFor" | "options">): boolean =>
+  (r.stoppedFor === "ask" || r.stoppedFor === "not-enough") && (!(r.options ?? []).length || offeredOptions(r).length > 0);

@@ -9,7 +9,7 @@ import type { Facts } from "../src/types";
 import { adaptGuideline } from "../src/lib/adapt";
 import { buildGraph, type Graph } from "../src/lib/graph";
 import { moments } from "../src/lib/moments";
-import { rankPathways } from "../src/lib/pathways";
+import { rankPathways, recommendationOf } from "../src/lib/pathways";
 import { rulesOnlyTrail } from "../src/lib/aiWalk";
 import { openDetails, trailStart } from "../src/lib/openDetails";
 import { remainingQuestions } from "../src/lib/formAssist";
@@ -53,7 +53,12 @@ describe("openDetails", () => {
         const open = new Set(openDetails(g, facts, start, { ranking, limit: 200 }).map((d) => d.fact));
         const vars = g.bundle.schema.variables;
         const trail = rulesOnlyTrail(g, facts, trailStart(ranking, start));
-        const said = [...(trail.stoppedFor === "ask" || trail.stoppedFor === "not-enough" ? trail.missing ?? [] : []), ...top.missing, ...top.laterMissing].filter((m) => vars[m] && facts[m] === undefined);
+        // What lies behind the treatment the best route recommends now (the margin of a resection, a later
+        // recurrence) is for when the patient is there: it is not asked now.
+        const rec = recommendationOf(g, top, ranking.paths);
+        const treatmentFirst = rec.found && rec.tier === "treatment" && rec.index + 1 < top.steps.length;
+        const behind = treatmentFirst && top.steps.findIndex((s) => s.node === trail.end) > rec.index;
+        const said = [...(!behind && (trail.stoppedFor === "ask" || trail.stoppedFor === "not-enough") ? trail.missing ?? [] : []), ...top.missing, ...(treatmentFirst ? [] : top.laterMissing)].filter((m) => vars[m] && facts[m] === undefined);
         for (const m of said) expect(open.has(m), `${slug} ${start}: ${m} is said to settle it but is not asked`).toBe(true);
         checked += said.length;
       }

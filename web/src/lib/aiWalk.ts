@@ -29,7 +29,7 @@ import type { Facts } from "../types";
 import { boxText, branchChildren, DecideError, isScorable, NONE, scoreBranches, type DecideOptions } from "./decide";
 import { remainingQuestions } from "./formAssist";
 import type { Graph } from "./graph";
-import { missingFacts, rankPathways, splitAlongside } from "./pathways";
+import { isCriteriaBox, leadsOnlyElsewhere, missingFacts, rankPathways, splitAlongside } from "./pathways";
 import { derive, evaluate } from "./predicates";
 
 export type TrailBy = "rule" | "ai" | "clinician" | "single" | "entry";
@@ -124,6 +124,8 @@ interface Ctx {
   section: string | null;
   linksOut: (id: string) => boolean;
   kidsOf: (id: string) => string[];
+  /** boxes where the chosen disease left a single way on (the other arms go into other diseases' pages) */
+  settledBySection: Set<string>;
 }
 
 function makeCtx(g: Graph, raw: Facts, overrides: Record<string, string>): Ctx {
@@ -141,8 +143,14 @@ function makeCtx(g: Graph, raw: Facts, overrides: Record<string, string>): Ctx {
    * chosen). A box with no arrow that points to another page goes on to that page's entry boxes
    * (as rankPathways does).
    */
+  const settledBySection = new Set<string>();
   const kidsOf = (id: string): string[] => {
     let ks = [...new Set(g.kids(id))].filter((k) => inSection(k.split(":")[0]));
+    // the chosen disease settles an arm that only goes into another disease's pages
+    if (section && ks.length > 1) {
+      const own = ks.filter((k) => !leadsOnlyElsewhere(g, k, section));
+      if (own.length && own.length < ks.length) { ks = own; settledBySection.add(id); }
+    }
     if (!ks.length && !g.kids(id).length) {
       const own = id.split(":")[0];
       for (const l of g.node(id)?.links ?? []) {
@@ -152,7 +160,7 @@ function makeCtx(g: Graph, raw: Facts, overrides: Record<string, string>): Ctx {
     }
     return ks;
   };
-  return { g, raw, facts: derive(raw, g.bundle.schema), overrides, section, linksOut, kidsOf };
+  return { g, raw, facts: derive(raw, g.bundle.schema), overrides, section, linksOut, kidsOf, settledBySection };
 }
 
 /** The children the walk would consider at a box (the arrows, or the entry boxes of the page it points to). */
@@ -208,7 +216,7 @@ function optionsOf(ctx: Ctx, kids: string[]): { v: (boolean | null)[]; options: 
 /** Raw details whose answers would decide the (not yet false) children's conditions. */
 function missingOf(ctx: Ctx, kids: string[], v: (boolean | null)[]): string[] {
   const out = new Set<string>();
-  kids.forEach((c, i) => { if (v[i] !== false && ctx.g.preds[c]) missingFacts(ctx.g, ctx.g.preds[c], ctx.raw).forEach((m) => out.add(m)); });
+  kids.forEach((c, i) => { if (v[i] !== false && ctx.g.preds[c]) missingFacts(ctx.g, ctx.g.preds[c], ctx.facts).forEach((m) => out.add(m)); });
   return [...out];
 }
 
@@ -233,7 +241,7 @@ function analyse(ctx: Ctx, at: string, path: string[], seen: Set<string>): Analy
   // Mirrors pathways: a branch is a decision when it hangs on a condition, an entry, a question,
   // a table cell or a link; after a plain recommendation the arrows lead to later events.
   const isCond = (n: string, i: number) =>
-    !!g.preds[n] || i === 0 || (g.bundle.roots[pageOf(n)] ?? []).includes(n) || /\?\s*$/.test(g.node(n)?.text ?? "");
+    !!g.preds[n] || i === 0 || (g.bundle.roots[pageOf(n)] ?? []).includes(n) || /\?\s*$/.test(g.node(n)?.text ?? "") || isCriteriaBox(g, n);
   const i = path.length - 1;
   const cond = isCond(at, i);
   const tableCell = /^table_/.test(g.node(at)?.role ?? "");
@@ -244,6 +252,8 @@ function analyse(ctx: Ctx, at: string, path: string[], seen: Set<string>): Analy
     if (!g.preds[k]) return pass ? { t: "follow", chosen: k, by: "single", options, branch: false } : { t: "end" };
     if (v[0] === true) return { t: "follow", chosen: k, by: "rule", options, branch: false };
     if (!pass) return { t: "end" };
+    // the chosen disease left this arm as the only way on (the others go into other diseases' pages)
+    if (v[0] === null && ctx.settledBySection.has(at)) return { t: "follow", chosen: k, by: "single", options, branch: false };
     if (v[0] === false) return { t: "stop", why: "ask", options: sortOptions(options), missing: [] };
     return cond || ctx.linksOut(at)
       ? { t: "stop", why: "not-enough", options, missing: missingOf(ctx, kids, v) }
@@ -427,7 +437,7 @@ export async function aiWalk(g: Graph, facts: Facts, start: string, opts: AiWalk
       if (best && !a.optionArms && best.prob! >= threshold && best.prob! - runnerUp(options, best.child) >= AUTO_MARGIN - 1e-9) {
         // ... and say so when the arm's condition rests on a detail that was never entered: the
         // model assumed it, and the reader can answer it instead.
-        const gaps = g.preds[best.child] ? missingFacts(g, g.preds[best.child], ctx.raw) : [];
+        const gaps = g.preds[best.child] ? missingFacts(g, g.preds[best.child], ctx.facts) : [];
         steps.push({
           node: at, page: pageOf(at), chosen: best.child, by: "ai", prob: best.prob, ...(none !== undefined ? { none } : {}), options,
           ...(gaps.length ? { assumed: gaps } : {}),

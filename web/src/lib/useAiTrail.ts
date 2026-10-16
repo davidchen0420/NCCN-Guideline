@@ -42,6 +42,17 @@ export interface AiTrail {
 export const trailKey = (g: Graph, facts: Facts, start: string, overrides: Record<string, string>, enabled: boolean, threshold: number): string =>
   JSON.stringify([g.bundle.title, start, facts, overrides, enabled, enabled ? threshold : 0]);
 
+/**
+ * Does the walk reach a node the model is needed for? The rules and the clinician's choices decide every
+ * branch up to where the rules-only walk stops; the model is asked only at that stop (an open branch), and
+ * about the branches the clinician chose between several arms (for the bars). A walk that finishes, or that
+ * stops with no arm left to weigh, has nothing to ask the model.
+ */
+export function needsModel(rules: AiWalkResult, overrides: Record<string, string>): boolean {
+  if (Object.keys(overrides).length > 0) return true;
+  return (rules.stoppedFor === "ask" || rules.stoppedFor === "not-enough") && (rules.options ?? []).some((o) => o.verdict !== false);
+}
+
 /** Is there anything to ask the model about? A blank patient (no answers, no choices) has no facts to weigh. */
 const hasInput = (facts: Facts, overrides: Record<string, string>) =>
   Object.keys(overrides).length > 0 || Object.values(facts).some((v) => v !== null && v !== undefined && v !== "" && v !== "unknown");
@@ -59,10 +70,12 @@ export function useAiTrail(g: Graph, facts: Facts, start: string, overrides: Rec
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const rules = useMemo(() => rulesOnlyTrail(g, facts, start, overrides), [g, rulesKey]);
 
+  // the rules settle everything the walk reaches: no node needs the model, so nothing is asked or waited for
+  const skip = enabled && !needsModel(rules, overrides);
   const [done, setDone] = useState<{ key: string; res: AiWalkResult } | null>(null);
   const lastFacts = useRef(factsKey);
   useEffect(() => {
-    if (!enabled) { setDone(null); lastFacts.current = factsKey; return; }
+    if (!enabled || skip) { setDone(null); lastFacts.current = factsKey; return; }
     // a new answer waits a moment (the clinician is still typing); a choice, the threshold or the starting point is asked at once
     const wait = lastFacts.current === factsKey ? 0 : debounceMs;
     lastFacts.current = factsKey;
@@ -82,7 +95,7 @@ export function useAiTrail(g: Graph, facts: Facts, start: string, overrides: Rec
   const edgeProb = useMemo(() => (ai ? edgeProbFromTrail(ai) : undefined), [ai]);
   return {
     rules, ai, trail: ai ?? rules, failed, edgeProb,
-    loading: enabled && !current,
-    settled: !enabled || !!current,
+    loading: enabled && !current && !skip,
+    settled: !enabled || !!current || skip,
   };
 }

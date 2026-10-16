@@ -310,7 +310,8 @@ await step("a chosen subtype keeps its moments; a long answer list is searched, 
   await search.fill("burkitt");
   assert.equal(await panel.locator(".iv-list button").count(), 1);
   await search.press("Enter");
-  await page.waitForFunction(() => [...document.querySelectorAll(".chips-strip li")].some((li) => /Histology/.test(li.textContent)));
+  // (the answer is kept: shown in the strip of answers, or, when nothing else is left to ask, as the reason on the recommendation)
+  await page.waitForFunction(() => [...document.querySelectorAll(".chips-strip li")].some((li) => /Histology/.test(li.textContent)) || /Histology\s*Burkitt/.test(document.querySelector(".reco-card .rc-why")?.textContent ?? ""));
 });
 await step("rectal cancer: subtype, what you need, the setting in plain words, a next step that is always there", async () => {
   await page.goto(base + "#rectal/");
@@ -449,7 +450,7 @@ await step("DLBCL: the workup page asks the staging details that decide where it
   assert.match(await moment.locator(".hint").innerText(), /Starting at .*\(BCEL-1\)/, "the disease's own first page, not the table of diseases (DIAG-1)");
   const asked = await drive([[/Histologic Transformation|Concurrent/, /^\d?No$/], [/^Histology/, /Diffuse/], [/Ann Arbor/, /III/]]);
   const qs = asked.map((a) => a.q).join(" | ");
-  assert.ok(asked.length >= 2, "questions are asked: " + qs);
+  assert.ok(asked.length >= 1, "questions are asked: " + qs);   // (the histology and transformation no longer gate the DLBCL workup: the disease chosen already says it)
   assert.ok(asked.some((a) => /Ann Arbor/.test(a.q)), "the stage that decides the route after the workup is asked: " + qs);
   assert.equal(await panel.locator(".interview.done .iv-q").filter({ hasText: /No patient details change/ }).count(), 0);
   // the way on is always one button; it never sends the reader round in a circle

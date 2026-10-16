@@ -47,7 +47,7 @@ await step("an example patient gets one recommendation to verify on the NCCN pag
   const card = page.locator(".reco-card");
   await card.waitFor();
   const text = await card.innerText();
-  assert.match(text, /Best match|Also possible|One of \d+ possible recommendations|Possible starting point/);
+  assert.match(text, /Best match|Also possible|One of \d+ possible recommendations|Possible starting point|Where the guideline starts for this patient/);
   // the support line is honest: "Matches your answers" only when answers were used and none are missing
   if (/Possible starting point/.test(text)) assert.match(text, /Not based on your answers yet/);
   else assert.doesNotMatch(text, /Not based on your answers yet/);
