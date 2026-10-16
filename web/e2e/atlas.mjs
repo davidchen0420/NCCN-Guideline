@@ -125,8 +125,9 @@ await step("an example patient's route is shown and opens in the reader", async 
   // the verify link opens the NCCN page in its own window; Escape closes that window again
   const [nccn] = await Promise.all([page.context().waitForEvent("page"), page.getByRole("button", { name: "Verify on the NCCN page" }).click()]);
   await nccn.locator(".viewer-title").waitFor();
-  await nccn.keyboard.press("Escape");
-  await nccn.waitForEvent("close", { timeout: 5000 }).catch(() => {});
+  // the window may close while the key press is still settling
+  await nccn.keyboard.press("Escape").catch((e) => { if (!nccn.isClosed()) throw e; });
+  if (!nccn.isClosed()) await nccn.waitForEvent("close", { timeout: 5000 }).catch(() => {});
   assert.ok(nccn.isClosed(), "Escape closes the NCCN page window");
   await page.getByRole("button", { name: /Open in the reader with this patient/ }).click();
   await page.locator("[data-testid=card]").first().waitFor();
@@ -208,6 +209,7 @@ await step("the keyboard tree walks sites, guidelines and pages", async () => {
 });
 await step("clicking a guideline on the ring opens its map", async () => {
   await page.goto(base + "#atlas");
+  await page.evaluate(() => document.fonts.ready);   // the layout is decided again once fonts load
   await page.waitForTimeout(3000);
   // find the Survivorship marker by hovering along its spoke until the tooltip names it
   const box = await page.locator(".atlas-canvas").boundingBox();
@@ -216,7 +218,7 @@ await step("clicking a guideline on the ring opens its map", async () => {
     for (const r of [0.30, 0.31, 0.32, 0.33, 0.34, 0.35]) {
       const x = box.width / 2 + Math.sin(a) * r * Math.min(box.width, box.height - 60), y = 30 + box.height / 2 - Math.cos(a) * r * Math.min(box.width, box.height - 60);
       await page.mouse.move(x, y);
-      const t = await page.locator(".tip .tip-title").textContent({ timeout: 120 }).catch(() => null);
+      const t = await page.locator(".tip .tip-title").textContent({ timeout: 250 }).catch(() => null);
       if (t === "Survivorship") { hit = [x, y]; break; }
     }
   }
