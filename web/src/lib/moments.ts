@@ -7,6 +7,7 @@
 import type { Facts, Pred } from "../types";
 import { entryHeadsByGroup, isPostSurgicalTitle, pageLeads, stateOfEntries, stateOfTitle, statesOfTitle, withoutRisk, type Graph } from "./graph";
 import { missingFacts, rankPathways, type Ranking } from "./pathways";
+import { derive, evaluate } from "./predicates";
 import { decidingFacts, type Decider } from "./formAssist";
 import { stripMarks } from "./adapt";
 import { label as factLabel, valueLabel } from "./factMeta";
@@ -149,6 +150,23 @@ function viableFor(g: Graph, page: string, section: string): boolean {
   return v;
 }
 
+/** The diseases a page with no disease of its own belongs to by the pages that lead to it: if only pages of
+ * other diseases lead to it (a recurrence page that only the glioma pages lead to), it is theirs, not the
+ * patient's. Empty when nothing of a disease leads there, or when the page is a disease's own already. */
+const ownersCache = new WeakMap<Graph, Map<string, Set<string>>>();
+function ownersOf(g: Graph, page: string): Set<string> {
+  let m = ownersCache.get(g);
+  if (!m) ownersCache.set(g, (m = new Map()));
+  let r = m.get(page);
+  if (!r) {
+    r = new Set();
+    const pages = g.bundle.sections?.pages ?? {};
+    for (const [q, to] of pageLeads(g)) if (q !== page && to.has(page) && pages[q]) r.add(pages[q]);
+    m.set(page, r);
+  }
+  return r;
+}
+
 /** Moments for the patient's disease, in multi-disease guidelines (the section variable). */
 export function momentsFor(g: Graph, all: Moment[], facts: Facts): Moment[] {
   const sec = g.bundle.sections;
@@ -173,7 +191,9 @@ export function momentsFor(g: Graph, all: Moment[], facts: Facts): Moment[] {
   const leadsIn = (p: string) => ownPages.some((q) => reaches(g, p, q));
   const kept = mine.filter((m) => !(ownFirst && m.phase === "diagnosis" && secOf(m.page) === null && !(statesSetting(g, m.page) && leadsIn(m.page)))
     // (a shared page whose entry conditions are about other diseases leads nowhere for this one)
-    && (secOf(m.page) !== null || viableFor(g, m.page, v as string)));
+    && (secOf(m.page) !== null || viableFor(g, m.page, v as string))
+    // (a page after the first workup that only other diseases' pages lead to is theirs: the AFAP follow-up page is not Lynch syndrome's)
+    && (secOf(m.page) !== null || (m.phase === "diagnosis" && !m.post) || ownersOf(g, m.page).size === 0 || ownersOf(g, m.page).has(v as string)));
   return kept.length ? kept : all;
 }
 
@@ -191,7 +211,13 @@ export function reachableFacts(g: Graph, pages: string[]): Set<string> {
     if (seen.has(id)) continue;
     seen.add(id);
     const n = g.node(id);
-    add(g.preds[id]); add(n?.linkCond); add(n?.received);
+    // (how a box is reached — its link condition — names the details of the pages before it: a patient
+    // who starts at a page is already past them. Only a box with no condition of its own, elsewhere, is described by it.)
+    // (a condition a box took over from the boxes that lead to it says the same)
+    const here = pages.includes(id.split(":")[0]);
+    if (!(here && n?.review === "inherited")) add(g.preds[id]);
+    add(n?.received);
+    if (!g.preds[id] && !here) add(n?.linkCond);
     for (const k of g.kids(id)) if (!seen.has(k)) stack.push(k);
     for (const l of [...(n?.links ?? []), ...(g.parsed.get(id)?.refs ?? [])]) {
       if (!g.bundle.pages[l] || seenPages.has(l)) continue;
@@ -245,6 +271,15 @@ export function carryOver(g: Graph, from: string, to: string, facts: Facts, held
 
 const cleanText = (g: Graph, id: string) => stripMarks(g.node(id)?.text ?? "").replace(/\s+/g, " ").trim();
 const clipText = (t: string, n: number) => (t.length > n ? t.slice(0, n).trimEnd() + "…" : t);
+/** A text of at most `n` characters, cut at a whole word, and before a bracket it would leave open. */
+const clipWords = (t: string, n: number) => {
+  if (t.length <= n) return t;
+  let c = t.slice(0, n - 1);
+  const open = Math.max(c.lastIndexOf("("), c.lastIndexOf("["));
+  if (open >= 12 && open > Math.max(c.lastIndexOf(")"), c.lastIndexOf("]"))) return c.slice(0, open).trim().replace(/[,;:\-–]+$/, "");
+  if (!/\s/.test(t[n - 1])) c = c.replace(/\s+\S*$/, "");
+  return c.replace(/[,;:\s\-–(]+$/, "") + "…";
+};
 const upperFirst = (t: string) => (t && !/^[a-z]{1,2}[A-Z0-9]/.test(t) ? t[0].toUpperCase() + t.slice(1) : t);   // (pT3 and ypN0 keep their small first letter)
 /** "Metastatic (M1) disease" -> "metastatic (M1) disease"; "HER2-positive" and "M1" stay as they are. */
 const lowerFirst = (t: string) => (/^[A-Z][A-Z0-9]/.test(t) ? t : t ? t[0].toLowerCase() + t.slice(1) : t);
@@ -306,12 +341,12 @@ function primaryRoot(g: Graph, page: string, need?: Phase): string | null {
 /** An entry text in plain clinical words. */
 export function plainSetting(text: string, need: Phase): string {
   let t = text.replace(/\s*\([A-Z]+-[A-Z0-9]+\)\s*$/, "").trim();
-  if (t.length > 3 && t === t.toUpperCase()) t = t.toLowerCase();   // a heading in capitals
+  if (/\s/.test(t) && t.length > 8 && t === t.toUpperCase()) t = t.toLowerCase();   // a heading in capitals (a lone acronym stays)
   if (/polyp/i.test(t) && /invasive|cancer|carcinoma/i.test(t)) return "Malignant polyp (invasive cancer in a polyp)";
   const without = /^(.+?)\s+(?:without|with no)\s+(?:suspected or proven\s+)?(?:distant\s+)?metasta/i.exec(t);
   if (need === "diagnosis" && without) return `${upperFirst(without[1])}, no distant metastases (localized or locally advanced)`;
   if (need === "advanced" && /synchronous|at (initial )?(diagnosis|presentation)|\bT any\b/i.test(t)) return "Metastatic (M1) at presentation";
-  return clipText(upperFirst(t), 80);
+  return clipWords(upperFirst(t), 80);
 }
 
 export interface Setting extends Moment {
@@ -323,6 +358,8 @@ export interface Setting extends Moment {
   implied: Facts;
   /** true: the label is the page title, so the page code follows it */
   byTitle: boolean;
+  /** settings picked by the same detail, listed together once a need has many */
+  group?: { id: string; label: string };
 }
 
 /** Details an entry box states outright (`fact == value`, a bool `!= true`), except the disease. */
@@ -405,38 +442,134 @@ export function hasOwnEntry(g: Graph, page: string, other: string): boolean {
   return false;
 }
 
+/** Words that make a page title say nothing about the patient ("Assessment/Grading", "Clinical Presentation", "Adverse EVENT(S)"). */
+const GENERIC_WORDS = new Set(("assessment grading evaluation workup work up treatment presentation management classification location findings results " +
+  "overview adverse event events diagnosis stage staging risk response therapy clinical initial pathologic and or of the for s").split(" "));
+export const isGenericTitle = (t: string) => {
+  const w = t.toLowerCase().split(/[^a-z]+/).filter(Boolean);
+  return w.length > 0 && w.length <= 4 && w.every((x) => GENERIC_WORDS.has(x));
+};
+
+/** A title of at most `n` characters: a closing bracket group goes first, then what follows a colon, then a cut at a word. */
+export function shortTitle(title: string, n = 80): string {
+  let t = title;
+  if (t.length <= n) return t;
+  t = t.replace(/\s*\([^()]*\)\s*$/, "").trim();
+  if (t.length <= n) return t;
+  const colon = t.indexOf(":");
+  if (colon >= 12 && colon <= n) return t.slice(0, colon).trim();
+  return clipText(t, n - 1).replace(/\s+\S*…$/, "…");
+}
+
+/** What the entry boxes of a page call the patient, as one complete phrase of at most `max` characters:
+ * short boxes (up to three items each) joined by " / ". Empty when a box is a list of steps, a heading
+ * or too long to say whole: a cut-off fragment is never offered. */
+export function entryPhrase(g: Graph, page: string, max = 90): string {
+  const roots = g.bundle.roots[page] ?? [];
+  if (!roots.length) return "";
+  const parts: string[] = [];
+  for (const r of roots.slice(0, 3)) {
+    const items = stripMarks(g.node(r)?.text ?? "").split(BULLET).map((x) => x.replace(/\s+/g, " ").trim()).filter(Boolean);
+    if (!items.length || items.length > 3 || items.some((x) => x.length > 60 || /[:;]$/.test(x))) return "";
+    let t = items.join(", ").replace(/\s*\([A-Z]+-[A-Z0-9]+\)\s*$/, "").trim();
+    if (/\s/.test(t) && t.length > 8 && t === t.toUpperCase()) t = t.toLowerCase();
+    if (onlyCodes(t) || t.replace(/[^a-z]/gi, "").length < 4) return "";
+    if (!parts.some((x) => sameKey(x) === sameKey(t))) parts.push(t);
+    if (parts.join(" / ").length > max) { parts.pop(); break; }
+  }
+  const out = parts.join(" / ");
+  return out ? upperFirst(out) : "";
+}
+
+/** Stage groups ("T3, N0, M0", "Stage IIB"): a list of them says "by stage". */
+const STAGE_ITEM = /^(?:stage\s+[0-4IV]|[cpy]{0,2}T(?:is|[0-4X]|\s*any)|[cpy]{0,2}N(?:[0-3X]|\s*any)|[cpy]{0,2}M[01X])/i;
+const isStageList = (g: Graph, page: string) => {
+  const roots = g.bundle.roots[page] ?? [];
+  return roots.length > 0 && roots.filter((r) => STAGE_ITEM.test(cleanText(g, r))).length * 2 >= roots.length;
+};
+
 /** Describe a moment as a setting the clinician can recognise. */
 export function describeSetting(g: Graph, m: Moment): Setting {
   const roots = g.bundle.roots[m.page] ?? [];
   const classes = new Set(roots.map((r) => rootClass(g, r)));
   const root = primaryRoot(g, m.page, m.phase);
   const text = root ? cleanText(g, root) : "";
-  const title = tidyTitle(m.title) || m.title;
+  const title = shortTitle(tidyTitle(m.title) || m.title);
   // (a page that opens after surgery is named by its title: "Pathologic Stage" is the setting)
   // several entry boxes of one kind (three kinds of recurrence): the page title says it best
   // (a title that names the need — "Recurrence" — also says it best when entries differ by pattern;
   // a bulleted list of workup steps is not a description of the patient)
-  const byTitle = !root || !!m.post || needsOf(g, m.page).title.length > 0 || (roots.length > 1 && classes.size === 1) || BULLET.test(text) || text.length > 110 || text.replace(/[^a-z]/gi, "").length < 8 || onlyCodes(text);   // ("CR or PR" says little)
+  let byTitle = !root || !!m.post || needsOf(g, m.page).title.length > 0 || (roots.length > 1 && classes.size === 1) || BULLET.test(text) || text.length > 110 || text.replace(/[^a-z]/gi, "").length < 8 || onlyCodes(text);   // ("CR or PR" says little)
   // (a page whose title is only its code says nothing: its entry text, without bullets, does)
   const useText = byTitle && onlyCodes(m.title) && !!text && !onlyCodes(text);
-  let label = useText ? plainSetting(oneLine(text, 200).replace(/;\s*/g, ", "), m.phase) : byTitle ? title : plainSetting(text, m.phase);
+  const phrase = entryPhrase(g, m.page);
+  // (a title that says nothing — "Assessment/Grading" — is named by what its entry boxes say, when they say it whole)
+  const byPhrase = byTitle && !useText && !m.post && !needsOf(g, m.page).title.length && isGenericTitle(title) && !!phrase && sameKey(phrase) !== sameKey(title)
+    && !/^[A-Z0-9+/-]{2,8}$/.test(phrase);   // (a bare acronym — the disease, "NSCLC" — names no setting)
+  let label = useText ? plainSetting(oneLine(text, 200).replace(/;\s*/g, ", "), m.phase) : byPhrase ? phrase : byTitle ? title : plainSetting(text, m.phase);
+  if (byPhrase) byTitle = false;
   if (m.post && !/^after|post/i.test(label)) label = `After surgery: ${label}`;
   // (a page found to be the follow-up by its place in the algorithm, not by its title, is named for what it is)
   const viaPlace = m.phase === "followup" && !statesOfTitle(m.title).includes("followup");
   if (viaPlace) label = "Surveillance after treatment";
-  const entries = roots.slice(0, 2).map((r) => oneLine(cleanText(g, r), 60)).filter(Boolean).join(" · ");
-  // (the entry text restating the title, or the page code, says nothing more)
-  let sub = viaPlace ? `${title} (${m.page})` : byTitle ? (sameKey(entries) === sameKey(label) || sameKey(entries) === sameKey(m.title) || onlyCodes(entries) ? "" : clipText(entries, 90)) : `${title} (${m.page})`;
-  if (!byTitle && sameKey(title) === sameKey(label)) sub = "";
+  // the second line: a short description, never a cut-off fragment of a box
+  let sub: string;
+  if (viaPlace || !byTitle) {
+    // (the page title when it fits whole; a title cut off at a word says nothing, so the page is named by its code)
+    const t = shortTitle(title, 66);
+    sub = sameKey(title) === sameKey(label) ? "" : t.endsWith("…") ? `NCCN page ${m.page}` : `${t} (${m.page})`;
+  }
+  else if (phrase && sameKey(phrase) !== sameKey(label) && sameKey(phrase) !== sameKey(m.title)) sub = phrase.length <= 80 ? phrase : "";
+  else if (m.post) sub = `Treatment after surgery, by ${isStageList(g, m.page) ? "the pathologic stage" : "the pathologic findings"}`;
+  else if (isStageList(g, m.page) && !/stage/i.test(label)) sub = "By stage group";
+  else sub = "";
+  if (sameKey(sub) === sameKey(label)) sub = "";
   // (a setting that states several details at once is too much to answer for the clinician)
   const said = byTitle || !root ? {} : impliedFacts(g, root);
-  return { ...m, label, sub, byTitle: byTitle && !viaPlace, implied: Object.keys(said).length <= 2 ? said : {} };
+  return { ...m, label: clipWords(label, 100), sub, byTitle: byTitle && !viaPlace, implied: Object.keys(said).length <= 2 ? said : {} };
+}
+
+/** The one detail every entry box of a page tests (`presenting_site == head_neck`), besides the disease: what picks the page. */
+function selectorOf(g: Graph, page: string): string | null {
+  const roots = g.bundle.roots[page] ?? [];
+  const sv = g.bundle.sections?.variable;
+  let found: string | null = null;
+  const facts = (p: Pred | null | undefined, out: string[]) => {
+    if (!p) return;
+    if ("all" in p) { p.all.forEach((x) => facts(x, out)); return; }
+    if ("fact" in p) { if (p.fact !== sv) out.push(p.fact); } else out.push("*");
+  };
+  for (const r of roots) {
+    const fs: string[] = [];
+    facts(g.preds[r], fs);
+    if (fs.length !== 1 || fs[0] === "*" || (found && found !== fs[0])) return null;
+    found = fs[0];
+  }
+  return found;
+}
+
+/** The most choices a need lists at the top level; more are put in groups. */
+export const MAX_CHOICES = 6;
+
+/** What the clinician chooses from for one need: single settings, and groups of settings that are picked by the
+ * same detail (the presenting immune-related toxicity, the site of the mass), put in one line each. */
+export type Choice = { group?: undefined; setting: Setting } | { group: { id: string; label: string }; settings: Setting[] };
+export function settingChoices(list: Setting[]): Choice[] {
+  const out: Choice[] = [];
+  const seen = new Set<string>();
+  for (const s of list) {
+    if (!s.group) { out.push({ setting: s }); continue; }
+    if (seen.has(s.group.id)) continue;
+    seen.add(s.group.id);
+    out.push({ group: s.group, settings: list.filter((x) => x.group?.id === s.group!.id) });
+  }
+  return out;
 }
 
 /** The settings to offer for one need: its start pages, less those that another start page of
  * the same need leads to (REC-6 is reached through the workup page) and pages that only continue
  * a route from elsewhere. A page after surgery is a setting beside the clinical ones even though
- * the clinical pages lead to it. */
+ * the clinical pages lead to it. Past six, settings picked by the same detail are grouped. */
 export function settingsFor(g: Graph, list: Moment[], need: Phase): Setting[] {
   const mine = list.filter((m) => m.phase === need);
   const real = mine.filter((m) => !isContinuation(g, m.page));
@@ -449,13 +582,38 @@ export function settingsFor(g: Graph, list: Moment[], need: Phase): Setting[] {
   out.forEach((s) => seen.set(sameKey(s.label), [...(seen.get(sameKey(s.label)) ?? []), s]));
   for (const dup of seen.values()) if (dup.length > 1) for (const s of dup) {
     // (the first entry box that reads as a short sentence, not a list of steps)
-    const root = (g.bundle.roots[s.page] ?? []).find((r) => { const x = cleanText(g, r); return !BULLET.test(x) && x.length >= 8 && x.length <= 90 && !onlyCodes(x); });
+    const root = (g.bundle.roots[s.page] ?? []).find((r) => { const x = cleanText(g, r); return !BULLET.test(x) && x.length >= 4 && x.length <= 90 && !onlyCodes(x); });
     const t = root ? plainSetting(cleanText(g, root), s.phase) : "";
     if (t && !onlyCodes(t) && sameKey(t) !== sameKey(s.label) && !dup.some((o) => o !== s && sameKey(o.label) === sameKey(t))) {
       s.sub = s.label; s.label = s.post && !/^after|post/i.test(t) ? `After surgery: ${t}` : t; s.byTitle = false;
     }
   }
+  // (any name still shared is told apart by its page: a label is never the same as another's)
+  const again = new Map<string, Setting[]>();
+  out.forEach((s) => again.set(sameKey(s.label), [...(again.get(sameKey(s.label)) ?? []), s]));
+  for (const dup of again.values()) if (dup.length > 1) for (const s of dup) {
+    const t = shortTitle(tidyTitle(s.title) || s.title, 50);
+    const named = t && !onlyCodes(t) && sameKey(t) !== sameKey(s.label) && !dup.some((o) => o !== s && sameKey(o.title) === sameKey(s.title));
+    s.label = named ? `${s.label}: ${t}` : `${s.label} (${s.page})`;
+  }
+  groupSettings(g, out);
   return out;
+}
+
+/** Past six settings, those picked by the same detail form one group (named for the detail), largest first. */
+function groupSettings(g: Graph, out: Setting[]) {
+  const distinct = () => settingChoices(out).length;
+  if (distinct() <= MAX_CHOICES) return;
+  const by = new Map<string, Setting[]>();
+  for (const s of out) {
+    const f = selectorOf(g, s.page);
+    if (f) by.set(f, [...(by.get(f) ?? []), s]);
+  }
+  for (const [fact, members] of [...by.entries()].sort((a, b) => b[1].length - a[1].length)) {
+    if (members.length < 3 || distinct() <= MAX_CHOICES) continue;
+    const group = { id: `by:${fact}`, label: `By ${factLabel(fact).split(" ").map((w) => (/^[A-Z0-9]{2,}$|\d|[a-z][A-Z]/.test(w) ? w : w.toLowerCase())).join(" ")}` };
+    members.forEach((s) => { s.group = group; });
+  }
 }
 
 /** Moments, worked out once per guideline. */
@@ -619,6 +777,32 @@ export function questionsAhead(g: Graph, ranking: Ranking, facts: Facts, depth =
     level = next;
   }
   return [];
+}
+
+/**
+ * What must still hold for an answer to lead where it is said to: the box an answer reaches is
+ * reached only when its own condition is met, and details still unknown can decide that ("M0" leads
+ * to the regional page only if N is N1). The words are "N Category is N1"; empty when the answer settles
+ * the box or the box has no condition.
+ */
+export function leadsCondition(g: Graph, facts: Facts, fact: string, value: unknown, at: string | undefined): string {
+  const pred = at ? g.preds[at] : undefined;
+  if (!pred) return "";
+  const schema = g.bundle.schema;
+  const now = derive({ ...facts, [fact]: value }, schema);
+  if (evaluate(pred, now) === true) return "";
+  const open = missingFacts(g, pred, now).filter((f) => f !== fact && schema.variables[f]);
+  const parts: string[] = [];
+  for (const f of open.slice(0, 3)) {
+    const spec = schema.variables[f];
+    const all = spec.type === "bool" ? [true, false] : spec.type === "enum" ? (spec.values ?? []).filter((v) => v !== "other") : [];
+    const allowed = all.filter((v) => evaluate(pred, derive({ ...now, [f]: v }, schema)) !== false);
+    if (allowed.length && allowed.length < all.length) {
+      parts.push(spec.type === "bool" ? `${factLabel(f)}: ${valueLabel(allowed[0]).toLowerCase()}` : `${factLabel(f)} is ${allowed.map(valueLabel).join(" or ")}`);
+    }
+  }
+  if (parts.length) return `if ${parts.join(" and ")}`;
+  return open.length ? `depends on ${open.slice(0, 2).map(factLabel).join(" and ")}` : "";
 }
 
 /** The page the open route leads to next, for showing in the diagram when nothing can be asked. */
