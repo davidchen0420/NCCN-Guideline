@@ -477,18 +477,20 @@ await step("a topic with nothing to ask says so plainly and opens the page; the 
   await btn.click();
   await page.waitForFunction(() => /#survivorship\/flow\/SLYMPH/.test(location.hash));
 });
-await step("colon, after surgery: the setting asks pathologic details, not the clinical-stage or pre-op ones; the answers' previews say what they still depend on", async () => {
+await step("colon, after surgery: the setting asks pathologic details, not the clinical-stage or pre-op ones", async () => {
   await page.goto(base + "#colon/");
   await page.reload();
   await page.locator("[data-testid=card]").first().waitFor();
   if (await panel.getByTestId("mode-form").count()) await panel.getByTestId("mode-form").click();
-  await page.locator("#fact-guideline_section").selectOption({ label: "pMMR/MSS Colon Cancer" });
+  await page.locator("#fact-guideline_section").getByRole("radio", { name: "pMMR/MSS Colon Cancer" }).click();
   const moment = panel.getByTestId("moment");
   await moment.getByRole("button", { name: "Workup & first treatment" }).click();
   await moment.getByTestId("situations").getByRole("radio", { name: /After surgery: Pathologic Stage/ }).click();
   assert.match(await moment.locator(".hint").innerText(), /Starting at .*\(COL-4\)/);
   // its second line is a short whole description
   assert.equal(await moment.getByTestId("situations").getByRole("radio", { name: /After surgery: Pathologic Stage/ }).locator(".sit-h").innerText(), "Treatment after surgery, by the pathologic stage");
+  if (await panel.getByTestId("mode-form").count()) await panel.getByTestId("mode-form").click();
+  await panel.locator(".pf .flabel").nth(1).waitFor();
   const fields = (await panel.locator(".pf .flabel").allInnerTexts()).map((t) => t.replace(/\s+/g, " ").trim()).join(" | ");
   assert.match(fields, /N Category/, fields);
   for (const bad of [/Locally Unresectable/, /Medically Inoperable/, /Bulky Nodal/]) assert.doesNotMatch(fields, bad, "a pre-op question after surgery: " + fields);
