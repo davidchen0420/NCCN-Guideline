@@ -653,7 +653,7 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
    * to be decided: "open", with the details that decide the arms. */
   const stop = (id: string, steps: PStep[], weight: number, kids: string[]) => {
     const cls = boxClass(g, id);
-    if (cls !== "pageref" && cls !== "heading") return finish(steps, weight, "later", kids);
+    if (cls !== "pageref" && cls !== "heading" && !(isHandOver(g, id) && !isFollowUp(g, id))) return finish(steps, weight, "later", kids);
     const need = [...new Set(kids.flatMap((k) => missingFacts(g, g.preds[k], facts)))];
     return finish(steps, weight, "open", kids, need);
   };
