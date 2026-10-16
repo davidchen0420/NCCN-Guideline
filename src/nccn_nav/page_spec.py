@@ -13,7 +13,10 @@ footnote letters), checks the conditions against the schema, and rewrites guidel
 
 Spec format (JSON):
   page        page id in guideline.json ("REC-3A")
-  relabel     [{page, code}, ...] pages whose printed code was misread (given before the page is rewritten)
+  relabel     [{page, code, nodes_from?, section?}, ...] pages whose printed code was misread (given before the
+              page is rewritten). `section` (a value of sections.values, or null) sets the relabelled page's
+              section in pages[] and in sections.pages, so that a fresh apply gives the same sections.pages as
+              the published file; without it the section map is only carried over from the old page id
   note        why the page is an algorithm page (kept as pages[].reextracted)
   footnotes   {letter: text} replacing the page's footnote texts (footnote pages often hold algorithm
               text inside a footnote entry; list every letter the boxes cite)
@@ -26,8 +29,13 @@ Spec format (JSON):
                 text / marks (override of the measured text / footnote letters)}]
   edges       [[key, key], ...]   arrows (all read from the page image)
   entries     [node id, ...] instead of boxes: the page has its boxes but no entry box; name where patients enter
+  decision_type  with entries: "other" for a recommendation / principles page (the entry takes no condition and
+              inherits none from the boxes that link to it)
   extra_edges [[node id, node id, reason], ...]   arrows on other pages that the earlier extraction missed
               and that lead into this page (full node ids)
+
+Multi-disease guidelines: apply and wire finish with own_section_entries, so that an entry whose condition was
+inherited from boxes of another section also admits the patient who chose the page's own section.
 
 Boxes without edges stay loose (links and notes). Entry boxes are the boxes without a parent that
 have an arrow (or entry: true). Page references in leaf boxes become continuations into the entry
@@ -44,7 +52,7 @@ from collections import Counter
 from pathlib import Path
 
 from .bundle import PAGE_REF_RE, _cover, _tokens
-from .predicates import facts_used  # noqa: F401  (used by tests)
+from .predicates import evaluate, facts_used  # noqa: F401  (facts_used is used by tests)
 
 OPS = {"==", "!=", ">", ">=", "<", "<=", "in", "not_in"}
 MARK_RE = re.compile(r"^[a-z]{1,3}$")
@@ -143,6 +151,9 @@ def check_predicate(pred, schema_values, where):
 
 
 # ---------------------------------------------------------------------------------------------
+_UNSET = object()
+
+
 class Pack:
     """One guideline.json being edited."""
 
@@ -206,7 +217,7 @@ class Pack:
             return re.sub(r"\s+", "", node["text"]) in re.sub(r"\s+", "", inside)
         return _cover(node["text"], inside) >= 0.9
 
-    def relabel(self, old_id, code, nodes_from=None):
+    def relabel(self, old_id, code, nodes_from=None, section=_UNSET):
         """Give a page its printed code. The page-label detector reads a reference printed inside
         the flowchart (a box "WILMS-11") instead of the label in the corner ("WILMS-5"), so two
         pages shared one code and the first lost its boxes. The page becomes <code> (a single page
@@ -214,9 +225,11 @@ class Pack:
         named it follows; page links in the guideline that mention the code are re-resolved."""
         g = self.g
         if old_id not in self.pages and code in self.pages:
+            self._relabel_section(code, section)
             return  # done by an earlier run
         page = self.pages[old_id]
         if old_id == code:
+            self._relabel_section(code, section)
             return
         if code in self.pages:
             raise ValueError(f"relabel: page {code} already exists")
@@ -247,12 +260,26 @@ class Pack:
         sec = g.get("sections")
         if sec and old_id in sec["pages"]:
             sec["pages"][code] = sec["pages"].pop(old_id)
+        self._relabel_section(code, section)
         for n in g["nodes"]:
             for l in n["links"]:
                 if l.get("page") == old_id:
                     l["page"] = code
         self.touched.add(code)
         self.relinked = getattr(self, "relinked", set()) | {code}
+
+    def _relabel_section(self, code, section):
+        """The section a relabelled page belongs to, when the spec gives one (null = shared page):
+        pages[].section and sections.pages, whatever the old page id carried."""
+        if section is _UNSET:
+            return
+        sec = self.g.get("sections")
+        if sec is not None and section is not None and section not in sec["values"]:
+            raise ValueError(f"relabel {code}: section {section!r} is not one of sections.values")
+        self.pages[code]["section"] = section
+        if sec is not None:
+            sec["pages"][code] = section
+        self.touched.add(code)
 
     def relink(self):
         """Re-resolve the page links of every box whose text names a relabelled code."""
@@ -290,6 +317,12 @@ class Pack:
                 if e not in ids:
                     raise ValueError(f"{pid}: entry {e} is not a box of the page")
                 ids[e]["role"] = "entry" if ids[e]["role"] in ("leaf", "step", "decision", "note", "link") else ids[e]["role"]
+                if spec.get("decision_type") and ids[e].get("predicate") is None:
+                    # a recommendation / principles page: not a condition on the patient, so link_conditions
+                    # does not give it the condition of the boxes that point here
+                    ids[e]["decision_type"] = spec["decision_type"]
+                    ids[e].setdefault("predicate_status", "none")
+                    ids[e].setdefault("section_clause", False)
             g["entries"] = sorted(set(g["entries"]) | set(spec["entries"]))
             page["entry_fixed"] = spec.get("note", "entry box named from the PDF page")
             self.touched.add(pid)
@@ -497,6 +530,40 @@ class Pack:
                     rec["predicate_status"] = "inherited_from_link"
                     rec.setdefault("decision_type", "condition")
 
+    def own_section_entries(self):
+        """Multi-disease guidelines: a page of one section takes the condition of the boxes that link
+        to it (link_conditions). When every link comes from another section, that condition names the
+        other section, so a patient who has chosen this page's own section (and nothing else) is ruled
+        out at every entry of the page: the section has no route into its own page (EW-1 "Ewing
+        sarcoma" reached from the chondrosarcoma pages, NMZL-1 from the marginal zone page). The page
+        belongs to its section (sections.pages), so its entries also take that section's clause:
+        any(section == own, inherited). Only entries whose condition was inherited are touched.
+        Returns the entry ids changed."""
+        g = self.g
+        sec = g.get("sections")
+        if not sec:
+            return []
+        by_id = {n["id"]: n for n in g["nodes"]}
+        entries_of = {}
+        for e in g["entries"]:
+            entries_of.setdefault(e.split(":")[0], []).append(e)
+        changed = []
+        for page, own in sec["pages"].items():
+            if own is None or page not in self.pages or self.pages[page]["kind"] != "algorithm":
+                continue
+            roots = [by_id[e] for e in entries_of.get(page, []) if e in by_id]
+            facts = {sec["variable"]: own}
+            if not roots or not all(r.get("predicate") is not None and evaluate(r["predicate"], facts) is False for r in roots):
+                continue
+            clause = {"fact": sec["variable"], "op": "==", "value": own}
+            for r in roots:
+                if r.get("predicate_status") != "inherited_from_link":
+                    continue   # a condition a reviewer wrote that excludes its own section is a data error to look at, not to widen
+                r["predicate"] = {"any": [clause, r["predicate"]]}
+                r["section_clause"] = True
+                changed.append(r["id"])
+        return changed
+
     # ---- quality ----------------------------------------------------------------------------------
     def quality(self):
         g = self.g
@@ -618,12 +685,13 @@ def main(argv=None):
         specs = load_specs(args.data, args.specs)
         for s in specs:
             for r in s.get("relabel", []):
-                pack.relabel(r["page"], r["code"], r.get("nodes_from"))
+                pack.relabel(r["page"], r["code"], r.get("nodes_from"), r["section"] if "section" in r else _UNSET)
         for s in specs:
             pack.apply(s)
         pack.relink()
         added = pack.wire()
         pack.link_conditions()
+        pack.own_section_entries()
         pack.save()
         print(f"{pack.slug}: {len(specs)} pages rewritten, {len(added)} continuations added")
         print(json.dumps(pack.g["quality"]))
@@ -631,6 +699,7 @@ def main(argv=None):
         pack.touched = {p["id"] for p in pack.g["pages"] if p["kind"] == "algorithm"} if args.all else set()
         added = pack.wire()
         pack.link_conditions()
+        pack.own_section_entries()
         pack.save()
         print(f"{pack.slug}: {len(added)} continuations added")
     else:

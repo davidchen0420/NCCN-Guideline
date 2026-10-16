@@ -11,10 +11,21 @@ import { buildGraph, resolveRef, type Graph } from "../src/lib/graph";
 import { moments } from "../src/lib/moments";
 import { boxClass, isRecommendationEnd, PAGE_REF, rankPathways } from "../src/lib/pathways";
 
-/** Boxes with nothing after them that point at a page with no entry boxes (an empty algorithm
- * page, or a footnote page that carries a flow). Lower this as the data agent re-extracts those
- * pages; it must never go up. */
-const EMPTY_TARGET_BASELINE = 73;
+/** Boxes with nothing after them that point at a page with no entry boxes. What is left are pointers
+ * on purpose: "Footnotes on X-nA" / "References on X" notes that name a genuine footnote or reference
+ * page (about 40), and the boxes that name a reference or definition page (APL-7 references, GENE-20
+ * references, INTCL-3 references, MFSS-5 lymph node classification, PBCL-4 staging, CRIT-8A criteria);
+ * reports/misclassified-pages.md says why for each. Lower this when more pages are re-extracted;
+ * it must never go up. */
+const EMPTY_TARGET_BASELINE = 53;
+
+/** Sections of a multi-disease guideline whose own pages lead into each other (a recurrence box
+ * sends the reader back to the first page: OV-6 -> OV-1, INTRA-2 -> INTRA-1, AGT-2 -> AGT-1), so
+ * sectionStartPages (web/src/lib/graph.ts: own pages that no other own page leads to) finds no start
+ * and rankPathways(auto) falls back to the first page of the guideline, which belongs to another
+ * disease. The data is right; the start rule needs a cycle fallback. Take a section out of this list
+ * when that is fixed (the test below fails if one of them starts to have its own route). */
+const NO_OWN_START_YET = new Set<string>([]);
 
 /** Guidelines whose pages are being re-extracted by other work; they wire their own leaf boxes
  * when that lands (page_spec wire --all). Take a slug out of this list once it is done. */
@@ -85,6 +96,41 @@ describe("library integrity", () => {
     console.log(`links to pages with no entry boxes: ${found.length} (baseline ${EMPTY_TARGET_BASELINE})`);
     expect(found.length).toBeLessThanOrEqual(EMPTY_TARGET_BASELINE);
   }, 120_000);
+
+  it("(f) every section of a multi-disease guideline has a route, and one through its own pages", () => {
+    const none: string[] = [], notOwn: string[] = [], stale: string[] = [];
+    let runs = 0;
+    for (const slug of slugs) {
+      const g = load(slug), b = g.bundle;
+      if (!b.sections) continue;
+      for (const v of b.sections.values) {
+        runs++;
+        const r = rankPathways(g, { [b.sections.variable]: v }, "auto");
+        if (!r.paths.length) { none.push(`${slug}: ${v}`); continue; }
+        // a section with algorithm pages of its own (pages with entry boxes) must be entered through them
+        const ownPages = Object.entries(b.sections.pages ?? {}).filter(([p, s]) => s === v && (b.roots[p] ?? []).length);
+        if (!ownPages.length) continue;
+        const own = r.paths.some((p) => p.steps.some((s) => (b.sections!.pages?.[s.node.split(":")[0]] ?? null) === v));
+        const known = NO_OWN_START_YET.has(`${slug}|${v}`);
+        if (!own && !known) notOwn.push(`${slug}: ${v} (own pages ${ownPages.map(([p]) => p).join(", ")}; routes start at ${[...new Set(r.paths.map((p) => p.steps[0].node.split(":")[0]))].join(", ")})`);
+        if (own && known) stale.push(`${slug}|${v}`);
+      }
+    }
+    expect(runs).toBeGreaterThan(150);
+    expect(none, "section values with no route at all").toEqual([]);
+    expect(notOwn, "section values whose routes never enter their own pages").toEqual([]);
+    expect(stale, "listed in NO_OWN_START_YET but now fine: take them out").toEqual([]);
+  }, 120_000);
+
+  it("(f) every survivorship subtype is a route of its own pages (Fertility, Healthy Lifestyles, Supplement Use, Employment have a principles page as their start)", () => {
+    const g = load("survivorship"), b = g.bundle;
+    expect(b.sections!.values.length).toBe(17);
+    for (const v of b.sections!.values) {
+      const r = rankPathways(g, { [b.sections!.variable]: v }, "auto");
+      expect(r.paths.length, v).toBeGreaterThan(0);
+      expect(r.paths.some((p) => p.steps.some((s) => b.sections!.pages?.[s.node.split(":")[0]] === v)), v).toBe(true);
+    }
+  });
 
   it("(c) from every start page no route ends on a page reference or a heading as a recommendation", () => {
     const bad: string[] = [];

@@ -345,29 +345,29 @@
      "two_methods": 57,
      "image_checked": 10
     },
-    "decision_boxes": 89,
+    "decision_boxes": 90,
     "predicate_status": {
+     "none": 14,
      "model_reviewed": 74,
-     "rejected": 2,
-     "none": 13
+     "rejected": 2
     },
     "decision_types": {
+     "other": 4,
      "condition": 76,
-     "option": 10,
-     "other": 3
+     "option": 10
     },
-    "entries": 33,
+    "entries": 34,
     "entries_with_predicate": 33,
-    "entries_reached_by_link": 18,
+    "entries_reached_by_link": 19,
     "roles": {
-     "note": 55,
+     "entry": 15,
+     "note": 54,
      "page_heading": 45,
      "table_root": 19,
      "table_condition": 37,
      "table_value": 21,
      "table_rec": 29,
      "step": 37,
-     "entry": 14,
      "leaf": 18,
      "table_title": 4,
      "table_ref": 2,
@@ -751,27 +751,28 @@
      "two_methods": 171,
      "image_checked": 15
     },
-    "decision_boxes": 105,
+    "decision_boxes": 107,
     "predicate_status": {
+     "none": 17,
      "model_reviewed": 81,
-     "none": 15,
      "section_only": 2,
      "inherited_from_link": 7
     },
     "decision_types": {
+     "other": 2,
      "condition": 91,
      "option": 14
     },
-    "entries": 28,
+    "entries": 30,
     "entries_with_predicate": 28,
     "entries_reached_by_link": 20,
     "roles": {
-     "note": 8,
+     "entry": 30,
      "page_heading": 34,
      "step": 85,
      "leaf": 55,
      "decision": 24,
-     "entry": 28,
+     "note": 6,
      "column_header": 3
     },
     "links": {
@@ -1362,26 +1363,26 @@
      "table_text_checked": 204,
      "single_source": 1
     },
-    "decision_boxes": 285,
+    "decision_boxes": 286,
     "predicate_status": {
      "section_only": 3,
      "model_reviewed": 122,
      "inherited_from_link": 3,
-     "none": 153,
+     "none": 154,
      "rejected": 4
     },
     "decision_types": {
-     "other": 43,
+     "other": 44,
      "condition": 233,
      "option": 9
     },
-    "entries": 24,
+    "entries": 25,
     "entries_with_predicate": 22,
     "entries_reached_by_link": 18,
     "roles": {
      "page_heading": 28,
-     "note": 56,
-     "entry": 21,
+     "note": 55,
+     "entry": 22,
      "decision": 42,
      "leaf": 43,
      "column_header": 4,
@@ -1901,28 +1902,28 @@
      "image_checked": 162,
      "single_source": 7
     },
-    "decision_boxes": 519,
+    "decision_boxes": 521,
     "predicate_status": {
+     "none": 141,
      "model_reviewed": 373,
      "section_only": 4,
-     "none": 139,
      "inherited_from_link": 2,
      "rejected": 1
     },
     "decision_types": {
+     "other": 11,
      "condition": 374,
-     "other": 9,
      "option": 133,
      "null": 3
     },
-    "entries": 74,
+    "entries": 76,
     "entries_with_predicate": 73,
     "entries_reached_by_link": 66,
     "roles": {
      "page_heading": 114,
-     "note": 50,
+     "entry": 76,
+     "note": 48,
      "step": 502,
-     "entry": 74,
      "leaf": 225,
      "decision": 126,
      "column_header": 8
@@ -4384,30 +4385,30 @@
      "image_checked": 29,
      "single_source": 7
     },
-    "decision_boxes": 153,
+    "decision_boxes": 169,
     "predicate_status": {
-     "none": 51,
+     "none": 67,
      "section_only": 8,
      "model_reviewed": 76,
      "inherited_from_link": 15,
      "rejected": 3
     },
     "decision_types": {
-     "other": 46,
+     "other": 62,
      "condition": 99,
      "option": 5,
      "null": 3
     },
-    "entries": 79,
+    "entries": 95,
     "entries_with_predicate": 53,
-    "entries_reached_by_link": 63,
+    "entries_reached_by_link": 75,
     "roles": {
      "page_heading": 89,
-     "note": 74,
+     "note": 58,
      "table_root": 9,
      "table_rec": 20,
+     "entry": 86,
      "step": 86,
-     "entry": 70,
      "leaf": 78,
      "decision": 10,
      "table_title": 7,
@@ -4562,26 +4563,26 @@
      "image_checked": 29,
      "table_text_checked": 30
     },
-    "decision_boxes": 140,
+    "decision_boxes": 142,
     "predicate_status": {
      "section_only": 7,
      "model_reviewed": 95,
-     "none": 33,
+     "none": 35,
      "inherited_from_link": 5
     },
     "decision_types": {
-     "other": 15,
+     "other": 17,
      "condition": 121,
      "null": 1,
      "option": 3
     },
-    "entries": 32,
+    "entries": 34,
     "entries_with_predicate": 32,
-    "entries_reached_by_link": 30,
+    "entries_reached_by_link": 32,
     "roles": {
-     "entry": 31,
+     "entry": 33,
      "leaf": 51,
-     "note": 29,
+     "note": 27,
      "page_heading": 51,
      "step": 108,
      "decision": 28,

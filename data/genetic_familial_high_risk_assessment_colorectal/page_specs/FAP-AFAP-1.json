@@ -2,7 +2,7 @@
  "page": "FAP/AFAP-1",
  "note": "APC-associated polyposis, phenotype and risk status (PDF page 85, printed 'FAP/ AFAP-1'): classical FAP and attenuated FAP phenotypes, each with 'personal history' (FAP-1 / AFAP-1) or 'family history, family PV known' (FAP-2 / AFAP-2). The page-label detector read the code AFAP-1 for both PDF page 85 and PDF page 102 (the attenuated FAP treatment and surveillance page, printed 'AFAP-1'), so page 85 lost its boxes (they were filed under the later page) and every reference to AFAP-1 resolved to page 85. Page 85 is relabelled FAP/AFAP-1 (the code the other pages print when they refer to it), its boxes moved back; page 102 keeps AFAP-1 and is re-extracted (see AFAP-1.json). The boxes of this page are unchanged.",
  "relabel": [
-  {"page": "AFAP-1 1 of 2", "code": "FAP/AFAP-1", "nodes_from": "AFAP-1 2 of 2"},
-  {"page": "AFAP-1 2 of 2", "code": "AFAP-1"}
+  {"page": "AFAP-1 1 of 2", "code": "FAP/AFAP-1", "nodes_from": "AFAP-1 2 of 2", "section": "APC-Associated Polyposis"},
+  {"page": "AFAP-1 2 of 2", "code": "AFAP-1", "section": null}
  ]
 }
