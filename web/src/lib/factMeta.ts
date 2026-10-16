@@ -4,6 +4,7 @@
  * of the variable name, so other guidelines still work.
  */
 import type { Facts, Schema, VarSpec } from "../types";
+import { humanizeValue } from "./terms";
 
 export interface Meta { label: string; hint?: string; group?: string; short?: string }
 
@@ -171,7 +172,7 @@ function humanValue(v: string): string {
 
 export function valueLabel(v: unknown): string {
   if (typeof v === "boolean") return v ? "Yes" : "No";
-  if (typeof v === "string") return VALUE_LABEL[v] ? titleCase(VALUE_LABEL[v]) : /^[a-z0-9_]+$/.test(v) && /[a-z]/.test(v) ? humanValue(v) : v;
+  if (typeof v === "string") return VALUE_LABEL[v] ? titleCase(VALUE_LABEL[v]) : /^[a-z0-9_]+$/.test(v) && /[a-z]/.test(v) ? humanValue(v) : v.includes("_") ? humanizeValue(v) : v;
   if (Array.isArray(v)) return v.map(valueLabel).join(", ");
   return String(v);
 }
