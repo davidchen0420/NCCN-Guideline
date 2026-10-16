@@ -1,0 +1,31 @@
+{
+ "page": "REC-2A",
+ "note": "Typed as a footnote page by its code; the PDF page is the workup of rectal cancer with suspected or proven distant metastases (arrow from REC-2) and splits by MMR status into REC-7 (pMMR/MSS) and REC-15 (dMMR/MSI-H or POLE/POLD1). Boxes, arrows and conditions written from the PDF page image and text.",
+ "footnotes": {
+  "a": "All patients with rectal cancer should be counseled for family history. Patients with suspected LS, FAP, and attenuated FAP, see the NCCN Guidelines for Genetic/ Familial High-Risk Assessment: Colorectal, Endometrial, and Gastric.",
+  "b": "For melanoma histology, see the NCCN Guidelines for Melanoma: Cutaneous.",
+  "f": "Principles of Pathologic Review (REC-B).",
+  "h": "Principles of Imaging (REC-A).",
+  "j": "For tools to aid optimal assessment and care of older adults with cancer, see the NCCN Guidelines for Older Adult Oncology.",
+  "l": "For information on DPYD testing and fluoropyrimidine-associated toxicity, see the NCCN Guidelines for Colon Cancer.",
+  "n": "Tissue- or blood-based analysis using MGPT have the ability to pick up rare and actionable mutations and fusions."
+ },
+ "boxes": [
+  {"key": "h_pres", "header": true, "region": [20, 82, 130, 116]},
+  {"key": "h_work", "header": true, "region": [168, 82, 235, 104]},
+  {"key": "start", "region": [20, 222, 95, 304], "decision_type": "condition",
+   "predicate": {"fact": "distant_metastases_suspected_or_proven", "op": "==", "value": true}},
+  {"key": "workup", "region": [140, 138, 548, 388]},
+  {"key": "pmmr", "region": [570, 170, 652, 228], "decision_type": "condition",
+   "predicate": {"fact": "mmr_group", "op": "==", "value": "pmmr_mss"}},
+  {"key": "dmmr", "region": [570, 288, 690, 392], "decision_type": "condition",
+   "predicate": {"fact": "mmr_group", "op": "==", "value": "dmmr_or_pole_pold1_ultra_hypermutated"}},
+  {"key": "to7", "region": [712, 186, 755, 210]},
+  {"key": "to15", "region": [712, 328, 760, 352]}
+ ],
+ "edges": [
+  ["start", "workup"],
+  ["workup", "pmmr"], ["workup", "dmmr"],
+  ["pmmr", "to7"], ["dmmr", "to15"]
+ ]
+}

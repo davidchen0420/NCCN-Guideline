@@ -263,8 +263,7 @@ describe("8. rectal cancer, new diagnosis, pMMR cT3 N1 M0", () => {
     }
   });
 
-  // Enable once REC-3A (or the arrow from REC-3 to REC-6) is re-extracted.
-  it.skip("from REC-2 the top route reaches the REC-6 treatment options", () => {
+  it("from REC-2 the top route reaches the REC-6 treatment options", () => {
     const ps = rankPathways(g, REC_PMMR, "REC-2").paths.slice(0, 6);
     expect(ps.some((p) => pages(p).includes("REC-6"))).toBe(true);
     expect(anyText(g, ps, /Long-course chemo\/RT/)).toBe(true);

@@ -1,0 +1,272 @@
+{
+ "page": "CD-4A",
+ "note": "Typed as a footnote page by its code; the PDF page is the multicentric Castleman disease algorithm that CD-2 points to (HHV8-positive MCD to CD-4B, fulminant/severe MCD to CD-5, idiopathic MCD first-line therapy, response, relapsed disease to CD-6). Boxes, arrows and conditions written from the PDF page image and text. The idiopathic MCD box also requires HIV-1 negativity, which the schema cannot state, so it carries no condition.",
+ "footnotes": {
+  "f": "Diagnostic Criteria for Idiopathic MCD (CD-B). Active disease is the presence of ≥2 minor criteria (with at least 1 of them being a lab abnormality).",
+  "k": "See Supportive Care for B-Cell Lymphomas for the management of complications associated with anti-CD20 mAb therapy in the NCCN Guidelines for B-Cell Lymphomas.",
+  "n": "Encourage biopsy to rule out transformation to DLBCL or concomitant development of other malignancies or opportunistic infections.",
+  "o": "Severe disease defined as: Eastern Cooperative Oncology Group (ECOG) performance status ≥2; stage IV kidney dysfunction (estimated glomerular filtration rate <30 mL/min/1.73 m2, creatinine >3 mg/dL); anasarca and/or ascites, pleural effusion, or pericardial effusion; hemoglobin ≤8 g/dL; pulmonary involvement/interstitial pneumonitis with dyspnea (van Rhee F, et al. Blood 2018;132:2115-2124).",
+  "p": "All patients with HIV infection should be on combination antiretroviral therapy (cART). For principles of concurrent HIV management and supportive care, see the NCCN Guidelines for Cancer in People with HIV.",
+  "q": "Response assessment using the imaging modalities performed during workup (C/A/P CT with contrast or PET/CT).",
+  "r": "Rituximab ± prednisone may be repeated without limit if progression is ≥6 months after completion of rituximab."
+ },
+ "boxes": [
+  {
+   "key": "h_first",
+   "header": true,
+   "region": [
+    228,
+    82,
+    362,
+    104
+   ]
+  },
+  {
+   "key": "h_rel",
+   "header": true,
+   "region": [
+    522,
+    82,
+    595,
+    116
+   ]
+  },
+  {
+   "key": "mcd",
+   "region": [
+    10,
+    308,
+    42,
+    328
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "castleman_subtype",
+    "op": "==",
+    "value": "mcd"
+   }
+  },
+  {
+   "key": "crit",
+   "region": [
+    60,
+    236,
+    148,
+    292
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "all": [
+     {
+      "fact": "active_disease_criteria_present",
+      "op": "==",
+      "value": true
+     },
+     {
+      "fact": "organ_failure_present",
+      "op": "==",
+      "value": false
+     }
+    ]
+   }
+  },
+  {
+   "key": "idio",
+   "region": [
+    128,
+    160,
+    200,
+    228
+   ],
+   "decision_type": "condition"
+  },
+  {
+   "key": "hhv8",
+   "region": [
+    136,
+    303,
+    184,
+    323
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "hhv8_status",
+    "op": "==",
+    "value": "positive"
+   }
+  },
+  {
+   "key": "to4b",
+   "region": [
+    232,
+    303,
+    272,
+    323
+   ]
+  },
+  {
+   "key": "fulm",
+   "region": [
+    60,
+    352,
+    165,
+    375
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "fulminant_or_severe_disease",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "key": "to5",
+   "region": [
+    232,
+    355,
+    265,
+    375
+   ]
+  },
+  {
+   "key": "regimens",
+   "region": [
+    228,
+    154,
+    302,
+    236
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "resp",
+   "region": [
+    314,
+    150,
+    378,
+    172
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "response_to_therapy",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "key": "noresp",
+   "region": [
+    314,
+    220,
+    380,
+    252
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "response_to_therapy",
+    "op": "==",
+    "value": false
+   }
+  },
+  {
+   "key": "cont",
+   "region": [
+    392,
+    122,
+    502,
+    202
+   ]
+  },
+  {
+   "key": "relapsed",
+   "region": [
+    522,
+    146,
+    580,
+    178
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "relapsed_refractory_or_progressive",
+    "op": "==",
+    "value": true
+   }
+  },
+  {
+   "key": "alt",
+   "region": [
+    596,
+    140,
+    680,
+    256
+   ]
+  },
+  {
+   "key": "rr",
+   "region": [
+    696,
+    170,
+    778,
+    228
+   ]
+  }
+ ],
+ "edges": [
+  [
+   "mcd",
+   "crit"
+  ],
+  [
+   "mcd",
+   "fulm"
+  ],
+  [
+   "crit",
+   "idio"
+  ],
+  [
+   "crit",
+   "hhv8"
+  ],
+  [
+   "hhv8",
+   "to4b"
+  ],
+  [
+   "fulm",
+   "to5"
+  ],
+  [
+   "idio",
+   "regimens"
+  ],
+  [
+   "regimens",
+   "resp"
+  ],
+  [
+   "regimens",
+   "noresp"
+  ],
+  [
+   "resp",
+   "cont"
+  ],
+  [
+   "cont",
+   "relapsed"
+  ],
+  [
+   "noresp",
+   "alt"
+  ],
+  [
+   "relapsed",
+   "alt"
+  ],
+  [
+   "alt",
+   "rr"
+  ]
+ ]
+}

@@ -1,0 +1,43 @@
+{
+ "page": "REC-3A",
+ "note": "Typed as a footnote page by its code; the PDF page continues REC-3 (T3, N any and T3 N0 low-risk branches, MMR split into REC-6 / REC-14). Boxes, arrows and conditions written from the PDF page image and text.",
+ "footnotes": {
+  "a": "All patients with rectal cancer should be counseled for family history. Patients with suspected LS, FAP, and attenuated FAP, see the NCCN Guidelines for Genetic/ Familial High-Risk Assessment: Colorectal, Endometrial, and Gastric.",
+  "b": "For melanoma histology, see the NCCN Guidelines for Melanoma: Cutaneous.",
+  "g": "Principles of Surgery and Locoregional Therapies (REC-C).",
+  "j": "For tools to aid optimal assessment and care of older adults with cancer, see the NCCN Guidelines for Older Adult Oncology.",
+  "k": "The rectum lies below the peritoneal reflection from the sacral promontory to the upper edge of the symphysis as determined by MRI.",
+  "m": "Somatic PI3K pathway alterations include mutations in PIK3CA exon 9 and 20; other PIK3CA, PIK3R1, and PTEN mutations; and deep deletions of PTEN. Aspirin should not be initiated until after recovery from surgery. For patients receiving adjuvant therapy and aspirin, aspirin can be given concurrently with adjuvant chemotherapy.",
+  "o": "High-risk features include positive margins, lymphovascular invasion, poorly differentiated tumors, or sm3 invasion (submucosal invasion to the lower third of the submucosal level)."
+ },
+ "boxes": [
+  {"key": "h_pres", "header": true, "region": [20, 84, 130, 116]},
+  {"key": "h_stage", "header": true, "region": [180, 84, 250, 116]},
+  {"key": "h_tx", "header": true, "region": [315, 84, 455, 108]},
+  {"key": "start", "region": [20, 228, 110, 296], "decision_type": "condition",
+   "predicate": {"fact": "distant_metastases_suspected_or_proven", "op": "!=", "value": true}},
+  {"key": "t1", "region": [180, 138, 250, 160], "decision_type": "condition",
+   "predicate": {"all": [{"fact": "clinical_t_category", "op": "in", "value": ["T1", "T2"]}, {"fact": "clinical_n_category", "op": "==", "value": "N0"}]}},
+  {"key": "to3", "region": [315, 138, 356, 160]},
+  {"key": "t3low", "region": [180, 198, 285, 234], "decision_type": "condition"},
+  {"key": "resect", "region": [316, 194, 465, 240], "decision_type": "option"},
+  {"key": "surv", "region": [548, 206, 670, 228]},
+  {"key": "aspirin", "region": [556, 88, 768, 178], "role": "note"},
+  {"key": "t3any", "region": [186, 318, 265, 412], "decision_type": "condition",
+   "predicate": {"fact": "clinical_risk_group", "op": "==", "value": "locally_advanced"}},
+  {"key": "pmmr", "region": [308, 322, 375, 344], "decision_type": "condition",
+   "predicate": {"fact": "mmr_group", "op": "==", "value": "pmmr_mss"}},
+  {"key": "dmmr", "region": [306, 370, 520, 416], "decision_type": "condition",
+   "predicate": {"fact": "mmr_group", "op": "==", "value": "dmmr_or_pole_pold1_ultra_hypermutated"}},
+  {"key": "to6", "region": [572, 322, 720, 344]},
+  {"key": "to14", "region": [572, 382, 725, 404]}
+ ],
+ "edges": [
+  ["start", "t1"], ["start", "t3low"], ["start", "t3any"],
+  ["t1", "to3"],
+  ["t3low", "resect"],
+  ["resect", "surv"], ["resect", "t3any"],
+  ["t3any", "pmmr"], ["t3any", "dmmr"],
+  ["pmmr", "to6"], ["dmmr", "to14"]
+ ]
+}

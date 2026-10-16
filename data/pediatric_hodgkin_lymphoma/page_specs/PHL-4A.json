@@ -1,0 +1,413 @@
+{
+ "page": "PHL-4A",
+ "note": "Typed as a footnote page by its code; the PDF page continues PHL-4 (Other Recommended regimens for stage I-II CHL with risk factors: OEPA / AEPA with response assessment, COPDAC / CAPDAC, ISRT, end of therapy assessment, follow-up PHL-8 or relapsed disease PHL-9; ABVD or adult regimens). Boxes, arrows and conditions written from the PDF page image and text. Footnote letters are defined on the printed footnote page (PHL-4B).",
+ "footnotes": {},
+ "boxes": [
+  {
+   "key": "h_pres",
+   "header": true,
+   "region": [
+    20,
+    84,
+    205,
+    104
+   ]
+  },
+  {
+   "key": "h_prim",
+   "header": true,
+   "region": [
+    20,
+    104,
+    120,
+    135
+   ]
+  },
+  {
+   "key": "h_resp",
+   "header": true,
+   "region": [
+    150,
+    102,
+    225,
+    124
+   ]
+  },
+  {
+   "key": "h_add",
+   "header": true,
+   "region": [
+    318,
+    102,
+    485,
+    124
+   ]
+  },
+  {
+   "key": "other",
+   "region": [
+    24,
+    181,
+    142,
+    202
+   ],
+   "decision_type": "other",
+   "entry": true
+  },
+  {
+   "key": "oepa",
+   "region": [
+    24,
+    235,
+    125,
+    278
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "aepa",
+   "region": [
+    24,
+    377,
+    125,
+    423
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "abvd",
+   "region": [
+    24,
+    489,
+    66,
+    509
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "adult",
+   "region": [
+    24,
+    519,
+    285,
+    538
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "ext",
+   "region": [
+    350,
+    504,
+    612,
+    524
+   ],
+   "links": [
+    {
+     "code": null,
+     "part": null,
+     "type": "external_guideline",
+     "guideline": "hodgkin_lymphoma",
+     "page": null
+    }
+   ]
+  },
+  {
+   "key": "resp1",
+   "region": [
+    142,
+    241,
+    215,
+    272
+   ]
+  },
+  {
+   "key": "adq1",
+   "region": [
+    224,
+    200,
+    282,
+    232
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "early_response_category",
+    "op": "==",
+    "value": "rapid_early_response"
+   }
+  },
+  {
+   "key": "inadq1",
+   "region": [
+    217,
+    278,
+    282,
+    310
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "early_response_category",
+    "op": "==",
+    "value": "slow_early_response"
+   }
+  },
+  {
+   "key": "cop2a",
+   "region": [
+    296,
+    184,
+    408,
+    216
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "cop4a",
+   "region": [
+    296,
+    215,
+    434,
+    258
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "cop2b",
+   "region": [
+    296,
+    257,
+    408,
+    289
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "cop4b",
+   "region": [
+    296,
+    296,
+    410,
+    340
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "isrt",
+   "region": [
+    431,
+    253,
+    512,
+    348
+   ]
+  },
+  {
+   "key": "eot1",
+   "region": [
+    543,
+    245,
+    616,
+    287
+   ]
+  },
+  {
+   "key": "fu",
+   "region": [
+    660,
+    255,
+    748,
+    383
+   ]
+  },
+  {
+   "key": "resp2",
+   "region": [
+    142,
+    386,
+    215,
+    416
+   ]
+  },
+  {
+   "key": "adq2",
+   "region": [
+    240,
+    364,
+    298,
+    395
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "early_response_category",
+    "op": "==",
+    "value": "rapid_early_response"
+   }
+  },
+  {
+   "key": "inadq2",
+   "region": [
+    240,
+    412,
+    306,
+    443
+   ],
+   "decision_type": "condition",
+   "predicate": {
+    "fact": "early_response_category",
+    "op": "==",
+    "value": "slow_early_response"
+   }
+  },
+  {
+   "key": "cap_a",
+   "region": [
+    321,
+    365,
+    384,
+    395
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "cap_b",
+   "region": [
+    321,
+    413,
+    378,
+    443
+   ],
+   "decision_type": "option"
+  },
+  {
+   "key": "rnrt",
+   "region": [
+    405,
+    403,
+    505,
+    453
+   ]
+  },
+  {
+   "key": "eot2",
+   "region": [
+    543,
+    386,
+    615,
+    430
+   ]
+  }
+ ],
+ "edges": [
+  [
+   "other",
+   "oepa"
+  ],
+  [
+   "other",
+   "aepa"
+  ],
+  [
+   "other",
+   "abvd"
+  ],
+  [
+   "other",
+   "adult"
+  ],
+  [
+   "abvd",
+   "ext"
+  ],
+  [
+   "adult",
+   "ext"
+  ],
+  [
+   "oepa",
+   "resp1"
+  ],
+  [
+   "resp1",
+   "adq1"
+  ],
+  [
+   "resp1",
+   "inadq1"
+  ],
+  [
+   "adq1",
+   "cop2a"
+  ],
+  [
+   "adq1",
+   "cop4a"
+  ],
+  [
+   "inadq1",
+   "cop2b"
+  ],
+  [
+   "inadq1",
+   "cop4b"
+  ],
+  [
+   "cop2a",
+   "eot1"
+  ],
+  [
+   "cop4a",
+   "eot1"
+  ],
+  [
+   "cop2b",
+   "isrt"
+  ],
+  [
+   "cop4b",
+   "isrt"
+  ],
+  [
+   "isrt",
+   "eot1"
+  ],
+  [
+   "eot1",
+   "fu"
+  ],
+  [
+   "aepa",
+   "resp2"
+  ],
+  [
+   "resp2",
+   "adq2"
+  ],
+  [
+   "resp2",
+   "inadq2"
+  ],
+  [
+   "adq2",
+   "cap_a"
+  ],
+  [
+   "inadq2",
+   "cap_b"
+  ],
+  [
+   "cap_a",
+   "eot2"
+  ],
+  [
+   "cap_b",
+   "rnrt"
+  ],
+  [
+   "rnrt",
+   "eot2"
+  ],
+  [
+   "eot2",
+   "fu"
+  ]
+ ]
+}
