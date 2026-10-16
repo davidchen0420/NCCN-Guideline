@@ -1,7 +1,7 @@
 {
  "page": "AFAP-1",
- "note": "Attenuated FAP treatment and surveillance, personal history (PDF page 102, printed 'AFAP-1'): by adenoma burden (endoscopically manageable or not) to treatment, then one surveillance box. The page had no boxes because the code AFAP-1 was shared with PDF page 85 (see FAP-AFAP-1.json); AFAP-2, IAP-2, GENE-1 and the phenotype page refer to it as AFAP-1.",
- "section": "Attenuated Familial Adenomatous Polyposis",
+ "note": "Attenuated FAP treatment and surveillance, personal history (PDF page 102, printed 'AFAP-1'): by adenoma burden (endoscopically manageable or not) to treatment, then one surveillance box. The page had no boxes because the code AFAP-1 was shared with PDF page 85 (see FAP-AFAP-1.json); AFAP-2, IAP-2, GENE-1 and the phenotype page refer to it as AFAP-1. No section (like FAP-1 and FAP-2): it is reached from the phenotype page (section APC-Associated Polyposis) as well as from AFAP-2 (Attenuated Familial Adenomatous Polyposis), and a section clause would shut one of the two routes.",
+ "section": null,
  "footnotes": {
   "a": "Small adenoma burden is defined (somewhat arbitrarily) as <20 adenomas, all <1 cm in diameter, and none with advanced histology, so that colonoscopy with polypectomy can be used to effectively eliminate the polyps. Colectomy may be indicated before this level of polyp burden, especially if colonoscopy is difficult and polyp control is uncertain. Surgery could be considered when polyp burden is >20 at any individual examination, when polyps have been previously ablated, when some polyps have reached a size >1 cm, or when advanced histology is encountered in any polyp.",
   "b": "Surgical Options for Treating the Colon and Rectum in Patients with FAP (FAP-F).",
