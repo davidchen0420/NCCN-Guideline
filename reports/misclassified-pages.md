@@ -8,90 +8,42 @@ Review notes. `genuine` in the worklist is a heuristic (vector drawings and body
 - Genuine footnote pages exist too (PROS-10A, PROS-9A, the ESOPH/GAST/LCS/ME/ICI footnote pages): they are not re-extracted, and the audit counts them under "Not listed".
 - Two pages with one printed code lose the first page's boxes (WILMS-5 / WILMS-11, AFAP-1, GALL-4, AYAO-8): fixed for WILMS, listed for the rest.
 
-- 82 pages typed footnotes / other / principles / staging carry signals or are linked to (algorithm: 2, footnotes: 40, other: 29, principles: 11); 19 of them are re-extracted, 63 remain listed below (55 with strong signals).
-- 3 algorithm pages without any box and 40 algorithm pages with boxes but no entry box are linked to.
+- 94 pages typed footnotes / other / principles / staging carry signals or are linked to (algorithm: 14, footnotes: 40, other: 29, principles: 11); 31 of them are re-extracted, 63 remain listed below (55 with strong signals).
+- 2 algorithm pages without any box and 27 algorithm pages with boxes but no entry box are linked to.
 - Not listed: 158 lettered pages titled FOOTNOTES / REFERENCES with little body text (what their code says they are) and another 349 principles, staging or other reference pages that boxes link to without algorithm signals.
 
-- Dead-end link targets (a page with no entry box that boxes on algorithm pages link to; principles and staging pages are shown as documents and left out): 99 pages, 454 boxes; 44 carry algorithm content (worklist, about 525 boxes), 0 need a look, 55 are genuine footnote / reference pages that boxes link to on purpose.
-- 538 leaf boxes name an algorithm page that has entry boxes but have no continuation into it (`page_spec wire --all` adds them; not applied).
+- Dead-end link targets (a page with no entry box that boxes on algorithm pages link to; principles and staging pages are shown as documents and left out): 85 pages, 420 boxes; 30 carry algorithm content (worklist, about 398 boxes), 0 need a look, 55 are genuine footnote / reference pages that boxes link to on purpose.
+- 96 leaf boxes name an algorithm page that has entry boxes but have no continuation into it (`page_spec wire --all` adds them; not applied).
 
 ## Worklist per guideline
 
 | slug | dead-end pages | boxes linking | to re-extract | est. boxes | to check | genuine (leave) | unwired leaf boxes |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| adolescent_and_young_adult_aya_oncology | 1 | 4 | 1 | 33 | 0 | 0 | 3 |
-| adult_pain | 1 | 1 | 0 | 0 | 0 | 1 | 6 |
-| aml | 1 | 4 | 0 | 0 | 0 | 1 | 2 |
-| antiemesis | 1 | 2 | 0 | 0 | 0 | 1 | 9 |
-| b_cell_lymphomas | 4 | 13 | 4 | 67 | 0 | 0 | 51 |
-| basal_cell_skin | 0 | 0 | 0 | 0 | 0 | 0 | 3 |
+| adult_pain | 1 | 1 | 0 | 0 | 0 | 1 | 0 |
+| aml | 1 | 4 | 0 | 0 | 0 | 1 | 0 |
+| antiemesis | 1 | 2 | 0 | 0 | 0 | 1 | 0 |
+| b_cell_lymphomas | 4 | 13 | 4 | 67 | 0 | 0 | 0 |
 | biliary_tract | 1 | 2 | 1 | 17 | 0 | 0 | 1 |
-| bladder | 0 | 0 | 0 | 0 | 0 | 0 | 13 |
-| bone | 0 | 0 | 0 | 0 | 0 | 0 | 15 |
-| breast | 0 | 0 | 0 | 0 | 0 | 0 | 18 |
-| breast_risk_reduction | 0 | 0 | 0 | 0 | 0 | 0 | 9 |
-| breast_screening_and_diagnosis | 0 | 0 | 0 | 0 | 0 | 0 | 13 |
 | castleman_disease | 1 | 1 | 1 | 21 | 0 | 0 | 0 |
-| central_nervous_system | 4 | 17 | 0 | 0 | 0 | 4 | 10 |
-| cervical | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| central_nervous_system | 4 | 17 | 0 | 0 | 0 | 4 | 0 |
 | chronic_lymphocytic_leukemia_small_lymphocytic_l | 1 | 2 | 1 | 11 | 0 | 0 | 4 |
-| chronic_myeloid_leukemia | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
-| colon | 0 | 0 | 0 | 0 | 0 | 0 | 7 |
-| colorectal_screening | 0 | 0 | 0 | 0 | 0 | 0 | 7 |
 | cutaneous_lymphomas | 3 | 6 | 2 | 17 | 0 | 1 | 14 |
-| distress_management | 0 | 0 | 0 | 0 | 0 | 0 | 11 |
-| esophageal_and_esophagogastric_junction | 0 | 0 | 0 | 0 | 0 | 0 | 9 |
-| gastric | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
 | genetic_familial_high_risk_assessment_breast_ova | 1 | 1 | 1 | 10 | 0 | 0 | 3 |
 | genetic_familial_high_risk_assessment_colorectal | 8 | 29 | 1 | 12 | 0 | 7 | 6 |
-| gestational_trophoblastic_neoplasia | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
-| head_and_neck | 5 | 88 | 0 | 0 | 0 | 5 | 22 |
-| hematopoietic_cell_transplantation | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| hematopoietic_growth_factors | 0 | 0 | 0 | 0 | 0 | 0 | 4 |
-| hepatocellular_carcinoma | 0 | 0 | 0 | 0 | 0 | 0 | 5 |
+| head_and_neck | 5 | 88 | 0 | 0 | 0 | 5 | 0 |
 | histiocytic_neoplasms | 6 | 25 | 5 | 48 | 0 | 1 | 6 |
 | hodgkin_lymphoma | 4 | 4 | 4 | 73 | 0 | 0 | 3 |
-| in_people_with_hiv | 4 | 4 | 4 | 34 | 0 | 0 | 0 |
-| kaposi_sarcoma | 1 | 1 | 1 | 17 | 0 | 0 | 0 |
-| kidney | 0 | 0 | 0 | 0 | 0 | 0 | 5 |
-| lung_screening | 0 | 0 | 0 | 0 | 0 | 0 | 10 |
-| management_of_car_t_cell_and_lymphocyte_engager | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
-| management_of_immune_checkpoint_inhibitor_relate | 0 | 0 | 0 | 0 | 0 | 0 | 18 |
-| melanoma_cutaneous | 3 | 3 | 0 | 0 | 0 | 3 | 17 |
-| melanoma_uveal | 0 | 0 | 0 | 0 | 0 | 0 | 3 |
-| merkel_cell_carcinoma | 0 | 0 | 0 | 0 | 0 | 0 | 6 |
-| mesothelioma_pleural | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| multiple_myeloma | 0 | 0 | 0 | 0 | 0 | 0 | 5 |
-| myelodysplastic_syndromes | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
-| myeloproliferative_neoplasms | 0 | 0 | 0 | 0 | 0 | 0 | 6 |
-| neuroblastoma | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| neuroendocrine_and_adrenal_tumors | 11 | 132 | 0 | 0 | 0 | 11 | 34 |
-| nsclc | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| occult_primary | 0 | 0 | 0 | 0 | 0 | 0 | 10 |
+| melanoma_cutaneous | 3 | 3 | 0 | 0 | 0 | 3 | 0 |
+| neuroendocrine_and_adrenal_tumors | 11 | 132 | 0 | 0 | 0 | 11 | 0 |
 | ovarian_cancer_fallopian_tube_cancer_primary_per | 1 | 2 | 1 | 9 | 0 | 0 | 17 |
-| palliative_care | 1 | 3 | 1 | 2 | 0 | 0 | 8 |
-| pediatric_acute_lymphoblastic_leukemia | 0 | 0 | 0 | 0 | 0 | 0 | 6 |
 | pediatric_aggressive_mature_b_cell_lymphomas | 1 | 1 | 1 | 9 | 0 | 0 | 9 |
-| pediatric_central_nervous_system | 0 | 0 | 0 | 0 | 0 | 0 | 3 |
 | pediatric_hodgkin_lymphoma | 1 | 1 | 1 | 16 | 0 | 0 | 1 |
-| pediatric_soft_tissue_sarcoma | 0 | 0 | 0 | 0 | 0 | 0 | 4 |
-| prevention_and_treatment_of_related_infections | 0 | 0 | 0 | 0 | 0 | 0 | 4 |
 | prostate | 1 | 1 | 1 | 18 | 0 | 0 | 1 |
 | prostate_early_detection | 2 | 2 | 1 | 3 | 0 | 1 | 0 |
-| rectal | 0 | 0 | 0 | 0 | 0 | 0 | 6 |
-| related_fatigue | 1 | 3 | 1 | 7 | 0 | 0 | 3 |
-| sclc | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| small_bowel_adenocarcinoma | 0 | 0 | 0 | 0 | 0 | 0 | 4 |
-| smoking_cessation | 1 | 2 | 1 | 14 | 0 | 0 | 0 |
-| soft_tissue_sarcoma | 5 | 9 | 0 | 0 | 0 | 5 | 25 |
-| squamous_cell_skin | 0 | 0 | 0 | 0 | 0 | 0 | 14 |
-| survivorship | 17 | 82 | 5 | 35 | 0 | 12 | 7 |
-| systemic_mastocytosis | 1 | 2 | 1 | 10 | 0 | 0 | 3 |
+| soft_tissue_sarcoma | 5 | 9 | 0 | 0 | 0 | 5 | 0 |
+| survivorship | 13 | 67 | 1 | 25 | 0 | 12 | 0 |
 | t_cell_lymphomas | 5 | 6 | 3 | 27 | 0 | 2 | 12 |
 | thyroid_carcinoma | 1 | 1 | 1 | 15 | 0 | 0 | 19 |
-| uterine_neoplasms | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
-| vaginal | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
-| wilms_tumor_nephroblastoma | 0 | 0 | 0 | 0 | 0 | 0 | 4 |
 
 ## Every dead-end link target
 
@@ -99,7 +51,6 @@ Review notes. `genuine` in the worklist is a heuristic (vector drawings and body
 
 | slug | page | kind | linked from (boxes) | pdf page | genuine algorithm content | est. boxes | action | first 120 chars | review |
 |---|---|---|---:|---:|---|---:|---|---|---|
-| adolescent_and_young_adult_aya_oncology | AYAO-8 1 of 2 | algorithm | 4 | 17 | yes | 33 | re-extract (flowchart) | COMPREHENSIVE PSYCHOSOCIAL CONSIDERATIONS THROUGHOUT TREATMENT: INDIVIDUAL EVALUATION SUPPORTIVE CARE SERVICES/INTERVENT | algorithm-typed page without boxes (two pages share the code AYAO-8, the later page's boxes were kept); linked from 4 boxes. NOT fixed |
 | adult_pain | PAIN-1 | algorithm | 1 | 10 | no | 11 | none: principles / reference text page typed algorithm | PRINCIPLES OF CANCER PAIN MANAGEMENT Pain Definition • Pain is defined by the International Association for the Study of |  |
 | aml | APL-7 | algorithm | 4 | 22 | no | 2 | none: principles / reference text page typed algorithm | REFERENCES 1 Lo-Coco F, Avvisati G, Vignetti M, et al. Retinoic acid and arsenic trioxide for acute promyelocytic leukem |  |
 | antiemesis | AE-1 | algorithm | 2 | 13 | no | 5 | none: principles / reference text page typed algorithm | PRINCIPLES OF EMESIS CONTROL FOR THE PATIENT WITH CANCERa • Prevention of nausea/vomiting is the goal. The risk of naus |  |
@@ -141,11 +92,6 @@ Review notes. `genuine` in the worklist is a heuristic (vector drawings and body
 | hodgkin_lymphoma | HODG-7B | other | 1 | 22 | yes | 25 | re-extract (flowchart) | CLINICAL PRESENTATION: Classic Hodgkin Lymphoma: Stage III–IV PRIMARY TREATMENT (continued from HODG-7) uSpecial Conside | algorithm continuation page (typed other). NOT re-extracted (page cap) |
 | hodgkin_lymphoma | HODG-7C | other | 1 | 23 | yes | 13 | re-extract (flowchart) | CLINICAL PRESENTATION: Classic Hodgkin Lymphoma: Stage III–IV PRIMARY TREATMENT (continued from HODG-7) uSpecial Conside | algorithm continuation page (typed other). NOT re-extracted (page cap) |
 | hodgkin_lymphoma | HODG-7D | other | 1 | 24 | yes | 19 | re-extract (flowchart) | CLINICAL PRESENTATION: Classic Hodgkin Lymphoma: Stage III–IV PRIMARY TREATMENT (continued from HODG-7) uSpecial Conside | algorithm continuation page (typed other). NOT re-extracted (page cap) |
-| in_people_with_hiv | HIV-1 | algorithm | 1 | 7 | yes | 10 | add the missing entry box (boxes exist) | Anal Cancer in PWH • PWH have an approximately 15- to 20-fold increased likelihood of being diagnosed with anal cancer c |  |
-| in_people_with_hiv | HIV-2 | algorithm | 1 | 8 | yes | 11 | add the missing entry box (boxes exist) | Cervical Dysplasia and Cervical Cancer Screening in PWH • PWH are at higher risk of HPV infection and premalignant cervi |  |
-| in_people_with_hiv | HIV-3 | algorithm | 1 | 9 | yes | 9 | add the missing entry box (boxes exist) | Prophylaxis for other opportunistic infections including gram-negative bacteria can be considered, particularly for pat |  |
-| in_people_with_hiv | HIV-4 | algorithm | 1 | 10 | yes | 4 | add the missing entry box (boxes exist) | Non-Small Cell Lung Cancer in PWH • The risk of lung cancer is 2 to 5 times higher in PWH than in individuals who are HI |  |
-| kaposi_sarcoma | KS-2 | algorithm | 1 | 8 | yes | 17 | add the missing entry box (boxes exist) | FIRST-LINE THERAPYh RESPONSEr RELAPSED/REFRACTORY THERAPY KS STATEe,g ARTj,k,l PWH Limited cutaneous Stable disease or R |  |
 | melanoma_cutaneous | ME-2A | footnotes | 1 | 20 | no | 0 | none: genuine footnote / reference page | FOOTNOTES FOR WORKUP AND PRIMARY TREATMENT e Molecular analysis for BRAF or MGPT of the primary lesion is not recommende |  |
 | melanoma_cutaneous | ME-6A | footnotes | 1 | 30 | no | 0 | none: genuine footnote / reference page | FOOTNOTES FOR STAGE III (CLINICALLY NODE POSITIVE) q Principles of Imaging–Workup (ME-D). v Principles of Surgical and N |  |
 | melanoma_cutaneous | ME-15A | footnotes | 1 | 43 | no | 0 | none: genuine footnote / reference page | FOOTNOTES FOR LOCAL SATELLITE/IN-TRANSIT RECURRENCE uu Principles of Radiation Therapy (ME-H). zz For low-volume in-tran |  |
@@ -161,37 +107,29 @@ Review notes. `genuine` in the worklist is a heuristic (vector drawings and body
 | neuroendocrine_and_adrenal_tumors | NE-I 1 of 2 | other | 10 | 117 | no | 0 | none: principles page typed other (a document, not a flowchart) | PRINCIPLES OF RADIATION THERAPY1,2 General Principles: • EBRT is a useful modality for select patients with locoregional |  |
 | neuroendocrine_and_adrenal_tumors | NE-J 1 of 3 | other | 1 | 119 | no | 0 | none: principles page typed other (a document, not a flowchart) | PRINCIPLES OF PEPTIDE RECEPTOR RADIONUCLIDE THERAPY WITH LUTETIUM LU 177 DOTATATE1-10 • Lutetium Lu 177 dotatate is a ra |  |
 | ovarian_cancer_fallopian_tube_cancer_primary_per | LCOC-5A | footnotes | 2 | 20 | yes | 9 | re-extract (flowchart) | SYSTEMIC THERAPY REGIMENSg,n SMALL CELL CARCINOMA OF THE OVARY (HYPERCALCEMIC TYPE) SMALL CELL CARCINOMA OF THE OVARY (H | systemic therapy regimen lists (reference), not an algorithm |
-| palliative_care | PAL-33 | algorithm | 3 | 42 | yes | 2 | add the missing entry box (boxes exist) | PROPORTIONAL SEDATION • Proportional sedation (formerly known as palliative sedation) is the intentional lowering of awa |  |
 | pediatric_aggressive_mature_b_cell_lymphomas | PBCL-4 | algorithm | 1 | 9 | yes | 9 | add the missing entry box (boxes exist) | STAGING International Pediatric Non-Hodgkin Lymphoma Staging Systemt,u Stage I Single tumor (extranodal) or single anato |  |
 | pediatric_hodgkin_lymphoma | PHL-6 | algorithm | 1 | 21 | yes | 16 | add the missing entry box (boxes exist) | CLINICAL PRESENTATION: NLPHL PRIMARY TREATMENTu,v,jj Preferred Ongoing clinical trial Biopsy positive or Restage and see |  |
 | prostate | PROS-12 | algorithm | 1 | 28 | yes | 18 | add the missing entry box (boxes exist) | TREATMENT AND MONITORING FOR SECOND BIOCHEMICAL RECURRENCE (N0M0) N0M0 Oligometastatich CSPC Workup and Treatment of Met |  |
 | prostate_early_detection | PROSD-2A | footnotes | 1 | 8 | no | 0 | none: genuine footnote / reference page | FOOTNOTES e Black/African American individuals have a significantly higher incidence of b Family or personal cancer his |  |
 | prostate_early_detection | PROSD-2B | other | 1 | 9 | list | 3 | re-extract (recommendation list: one entry box) | FOOTNOTES i Prostate cancer early detection is recommended in adults with a prostate starting k The median PSA values fo |  |
-| related_fatigue | FT-3 | algorithm | 3 | 7 | yes | 7 | add the missing entry box (boxes exist) | SCREENINGa Ongoing evaluation Screen every patient for fatigue at regular intervalsb • Age >12 y: Severity: 0–10 scalec |  |
-| smoking_cessation | SC-4 | algorithm | 2 | 15 | yes | 14 | add the missing entry box (boxes exist) | INDIVIDUALS WHO FORMERLY SMOKED (More Than 30 Days Since Last Smoked) EVALUATION OF RETURN TO SMOKING RISKc MANAGEMENT A |  |
 | soft_tissue_sarcoma | SARC-A 1 of 5 | other | 4 | 36 | no | 0 | none: principles page typed other (a document, not a flowchart) | PRINCIPLES OF IMAGING • Contrasted cross-sectional imaging with MRI (with and without contrast) is preferred over CT (wi |  |
 | soft_tissue_sarcoma | SARC-D 1 of 4 | other | 1 | 46 | no | 0 | none: principles page typed other (a document, not a flowchart) | PRINCIPLES OF SURGERY1 The multidisciplinary surgical team should include expertise in the management of sarcomas at spe |  |
 | soft_tissue_sarcoma | SARC-D 3 of 4 | other | 2 | 48 | no | 0 | none: principles page typed other (a document, not a flowchart) | PRINCIPLES OF SURGERY1 Prehabilitation/Rehabilitation • Surgery for extremity soft tissue sarcomas can often result in p |  |
 | soft_tissue_sarcoma | SARC-G 1 of 14 | other | 1 | 59 | no | 0 | none: principles page typed other (a document, not a flowchart) | SYSTEMIC THERAPY AGENTS AND REGIMENS WITH ACTIVITY IN SOFT TISSUE SARCOMA SUBTYPESa,b,c,d AND AGGRESSIVE SOFT TISSUE NEO |  |
 | soft_tissue_sarcoma | SARC-G 2 of 14 | other | 1 | 60 | no | 0 | none: principles page typed other (a document, not a flowchart) | SYSTEMIC THERAPY AGENTS AND REGIMENS WITH ACTIVITY IN SOFT TISSUE SARCOMA SUBTYPESd AND AGGRESSIVE SOFT TISSUE NEOPLASMS |  |
-| survivorship | SURV-4 | algorithm | 2 | 26 | yes | 2 | add the missing entry box (boxes exist) | SCREENING FOR SUBSEQUENT NEW PRIMARY CANCERS • Subsequent new primary malignant neoplasms may occur in survivors years a |  |
-| survivorship | SURV-4A 1 of 5 | footnotes | 1 | 27 | yes | 25 | re-extract (flowchart) | PRINCIPLES OF SCREENING FOR TREATMENT-RELATED SUBSEQUENT PRIMARY CANCERS • As part of screening and early detection for  | screening recommendations table (principles) |
-| survivorship | SURV-5 | algorithm | 1 | 32 | no | 4 | none: principles / reference text page typed algorithm | PRINCIPLES OF CANCER RISK ASSESSMENT AND COUNSELING • Periodic updating of family cancer history (when known) is recomme |  |
-| survivorship | HL-1 | algorithm | 10 | 42 | no | 6 | none: principles / reference text page typed algorithm | GENERAL PRINCIPLES OF HEALTHY LIFESTYLES • Healthy lifestyle habits have been associated with improved overall health an |  |
-| survivorship | SPA-1 | algorithm | 10 | 44 | no | 5 | none: principles / reference text page typed algorithm | GENERAL PRINCIPLES OF PHYSICAL ACTIVITY • Physical activity and exercise recommendations should be tailored to individua |  |
-| survivorship | SNWM-1A | footnotes | 1 | 55 | no | 0 | none: genuine footnote / reference page | GENERAL PRINCIPLES OF NUTRITION FOOTNOTES AND REFERENCES Footnotes a Survivors who had radiation directed to the digesti |  |
-| survivorship | SSUP-1 | algorithm | 2 | 60 | no | 2 | none: principles / reference text page typed algorithm | GENERAL PRINCIPLES OF SUPPLEMENT USE • Supplement use is not recommended for most survivors, except in instances of docu |  |
-| survivorship | SIMIN-1 | algorithm | 1 | 61 | no | 2 | none: principles / reference text page typed algorithm | GENERAL PRINCIPLES OF IMMUNIZATIONS • These principles apply to cancer survivors, including those with hematologic or so |  |
-| survivorship | SCARDIO-1 | algorithm | 4 | 76 | no | 1 | none: principles / reference text page typed algorithm | PRINCIPLES OF ANTHRACYCLINE-INDUCED CARDIAC TOXICITYa • Cancer treatments can result in diverse cardiovascular issues (S |  |
-| survivorship | SANXDE-1 | algorithm | 17 | 79 | no | 6 | none: principles / reference text page typed algorithm | GENERAL PRINCIPLES OF ANXIETY, DEPRESSION, TRAUMA, AND DISTRESS • The NCCN Guidelines for Distress Management define dis |  |
-| survivorship | SCF-1 | algorithm | 4 | 96 | yes | 2 | add the missing entry box (boxes exist) | COGNITIVE FUNCTION FOLLOWING CANCER TREATMENT General Principles • Growing evidence supports the validity of the patient |  |
-| survivorship | SFAT-1 | algorithm | 8 | 100 | yes | 4 | add the missing entry box (boxes exist) | DEFINITION OF CANCER-RELATED FATIGUE • Cancer-related fatigue is a distressing, persistent, subjective sense of physical |  |
-| survivorship | SLYMPH-1 | algorithm | 1 | 105 | yes | 2 | add the missing entry box (boxes exist) | DEFINITION AND STAGES OF LYMPHEDEMA1,2 • Definition: Lymphedema occurs when lymph fluid accumulates in the interstitial  |  |
-| survivorship | SLYMPH-2A | footnotes | 1 | 107 | no | 0 | none: genuine footnote / reference page | REFERENCES FOR SLYMPH-2 1 National Cancer Institute Lymphedema (PDQ)–Patient Version: https://www.cancer.gov/about-cance |  |
-| survivorship | SPAIN-1 | algorithm | 8 | 113 | no | 2 | none: principles / reference text page typed algorithm | GENERAL PRINCIPLES OF PAIN MANAGEMENT • Comprehensive pain assessment should be done to determine the etiology of the pa |  |
-| survivorship | SSD-1 | algorithm | 10 | 143 | no | 6 | none: principles / reference text page typed algorithm | GENERAL PRINCIPLES OF SLEEP Importance of Sleep Health • Sleep is composed of a complex set of neurobehavioral states th |  |
-| survivorship | SSD-2A | footnotes | 1 | 145 | no | 0 | none: genuine footnote / reference page | GENERAL PRINCIPLES OF SLEEP REFERENCES 1 Buysse DJ. Sleep health: can we define it? Does it matter? Sleep 2014;37:9-17.  |  |
-| systemic_mastocytosis | SM-2 | algorithm | 2 | 7 | yes | 10 | add the missing entry box (boxes exist) | CLASSIFICATIONi WORKUP FOR SUSPECTED SYSTEMIC MASTOCYTOSISi General Diagnostic Studies • History and physical (H&P), inc |  |
+| survivorship | SURV-4A 1 of 5 | footnotes | 1 | 27 | yes | 25 | re-extract (flowchart) | PRINCIPLES OF SCREENING FOR TREATMENT-RELATED SUBSEQUENT PRIMARY CANCERS • As part of screening and early detection for  | NOT re-extracted: a five-page reference table (treatment exposure -> increased risk -> screening -> comments), no arrows; read pages 1 of 5 as a table, not a flowchart. Left as a principles table |
+| survivorship | SURV-5 | algorithm | 1 | 32 | no | 4 | none: principles / reference text page typed algorithm | PRINCIPLES OF CANCER RISK ASSESSMENT AND COUNSELING • Periodic updating of family cancer history (when known) is recomme | NOT an algorithm: a general-principles reference page (bulleted text, no arrows, no patient steps); boxes link to it as a document. Left alone (PRINCIPLES OF CANCER RISK ASSESSMENT AND COUNSELING) |
+| survivorship | HL-1 | algorithm | 10 | 42 | no | 6 | none: principles / reference text page typed algorithm | GENERAL PRINCIPLES OF HEALTHY LIFESTYLES • Healthy lifestyle habits have been associated with improved overall health an | NOT an algorithm: a general-principles reference page (bulleted text, no arrows, no patient steps); boxes link to it as a document. Left alone (GENERAL PRINCIPLES OF HEALTHY LIFESTYLES; footnotes and references on HL-1A) |
+| survivorship | SPA-1 | algorithm | 10 | 44 | no | 5 | none: principles / reference text page typed algorithm | GENERAL PRINCIPLES OF PHYSICAL ACTIVITY • Physical activity and exercise recommendations should be tailored to individua | NOT an algorithm: a general-principles reference page (bulleted text, no arrows, no patient steps); boxes link to it as a document. Left alone (GENERAL PRINCIPLES OF PHYSICAL ACTIVITY; footnotes on SPA-1A) |
+| survivorship | SNWM-1A | footnotes | 1 | 55 | no | 0 | none: genuine footnote / reference page | GENERAL PRINCIPLES OF NUTRITION FOOTNOTES AND REFERENCES Footnotes a Survivors who had radiation directed to the digesti | NOT an algorithm: a genuine footnote / reference page (GENERAL PRINCIPLES OF NUTRITION FOOTNOTES AND REFERENCES). Left alone |
+| survivorship | SSUP-1 | algorithm | 2 | 60 | no | 2 | none: principles / reference text page typed algorithm | GENERAL PRINCIPLES OF SUPPLEMENT USE • Supplement use is not recommended for most survivors, except in instances of docu | NOT an algorithm: a general-principles reference page (bulleted text, no arrows, no patient steps); boxes link to it as a document. Left alone (GENERAL PRINCIPLES OF SUPPLEMENT USE) |
+| survivorship | SIMIN-1 | algorithm | 1 | 61 | no | 2 | none: principles / reference text page typed algorithm | GENERAL PRINCIPLES OF IMMUNIZATIONS • These principles apply to cancer survivors, including those with hematologic or so | NOT an algorithm: a general-principles reference page (bulleted text, no arrows, no patient steps); boxes link to it as a document. Left alone (GENERAL PRINCIPLES OF IMMUNIZATIONS) |
+| survivorship | SCARDIO-1 | algorithm | 4 | 76 | no | 1 | none: principles / reference text page typed algorithm | PRINCIPLES OF ANTHRACYCLINE-INDUCED CARDIAC TOXICITYa • Cancer treatments can result in diverse cardiovascular issues (S | NOT an algorithm: a general-principles reference page (bulleted text, no arrows, no patient steps); boxes link to it as a document. Left alone (PRINCIPLES OF ANTHRACYCLINE-INDUCED CARDIAC TOXICITY) |
+| survivorship | SANXDE-1 | algorithm | 17 | 79 | no | 6 | none: principles / reference text page typed algorithm | GENERAL PRINCIPLES OF ANXIETY, DEPRESSION, TRAUMA, AND DISTRESS • The NCCN Guidelines for Distress Management define dis | NOT an algorithm: a general-principles reference page (bulleted text, no arrows, no patient steps); boxes link to it as a document. Left alone (GENERAL PRINCIPLES OF ANXIETY, DEPRESSION, TRAUMA, AND DISTRESS) |
+| survivorship | SLYMPH-2A | footnotes | 1 | 107 | no | 0 | none: genuine footnote / reference page | REFERENCES FOR SLYMPH-2 1 National Cancer Institute Lymphedema (PDQ)–Patient Version: https://www.cancer.gov/about-cance | NOT an algorithm: a genuine reference page (REFERENCES FOR SLYMPH-2). Left alone |
+| survivorship | SPAIN-1 | algorithm | 8 | 113 | no | 2 | none: principles / reference text page typed algorithm | GENERAL PRINCIPLES OF PAIN MANAGEMENT • Comprehensive pain assessment should be done to determine the etiology of the pa | NOT an algorithm: a general-principles reference page (bulleted text, no arrows, no patient steps); boxes link to it as a document. Left alone (GENERAL PRINCIPLES OF PAIN MANAGEMENT) |
+| survivorship | SSD-1 | algorithm | 10 | 143 | no | 6 | none: principles / reference text page typed algorithm | GENERAL PRINCIPLES OF SLEEP Importance of Sleep Health • Sleep is composed of a complex set of neurobehavioral states th | NOT an algorithm: a general-principles reference page (bulleted text, no arrows, no patient steps); boxes link to it as a document. Left alone (GENERAL PRINCIPLES OF SLEEP; references on SSD-2A) |
+| survivorship | SSD-2A | footnotes | 1 | 145 | no | 0 | none: genuine footnote / reference page | GENERAL PRINCIPLES OF SLEEP REFERENCES 1 Buysse DJ. Sleep health: can we define it? Does it matter? Sleep 2014;37:9-17.  | NOT an algorithm: a genuine reference page (GENERAL PRINCIPLES OF SLEEP REFERENCES). Left alone |
 | t_cell_lymphomas | LGLL-2 | algorithm | 1 | 32 | yes | 21 | add the missing entry box (boxes exist) | INDICATION FOR TREATMENT FIRST-LINE THERAPY RESPONSE (at 4 mo) SECOND-LINE THERAPY ADDITIONAL THERAPY/ FOLLOW-UP Observe |  |
 | t_cell_lymphomas | INTCL-1 | algorithm | 1 | 62 | yes | 3 | add the missing entry box (boxes exist) | INDOLENT T-CELL LYMPHOMAS OF THE GASTROINTESTINAL (GI) TRACT AND INDOLENT NK-CELL LYMPHOPROLIFERATIVE DISORDERS (LPD) OF |  |
 | t_cell_lymphomas | INTCL-3 | algorithm | 2 | 64 | yes | 3 | add the missing entry box (boxes exist) | INDOLENT T-CELL LYMPHOMAS OF THE GASTROINTESTINAL (GI) TRACT AND INDOLENT NK-CELL LYMPHOPROLIFERATIVE DISORDERS (LPD) OF |  |
@@ -205,6 +143,8 @@ Kind is the earlier one.
 
 | slug | page | kind | linked from | pdf page | vec | body | sees | codes | boxes | first 120 chars | review |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---|---|
+| adolescent_and_young_adult_aya_oncology | AYAO-7 | algorithm | 4 | 17 | 19 | 119 | 0 | 4 | 8 | COMPREHENSIVE PSYCHOSOCIAL CONSIDERATIONS THROUGHOUT TREATMENT: INDIVIDUAL EVALUATION SUPPORTIVE CARE SERVICES/INTERVENT | shared-code page: pdf page 17 is printed AYAO-7 (its link column prints 'AYAO-8'). Relabelled AYAO-7 with its boxes, re-extracted: evaluation list -> services list, links to AYAO-8/9/11 |
+| adolescent_and_young_adult_aya_oncology | AYAO-8 | algorithm | 3 | 18 | 11 | 65 | 0 | 2 | 7 | COMPREHENSIVE BEHAVIORAL CONSIDERATIONS THROUGHOUT TREATMENT: INDIVIDUAL EVALUATION SUPPORTIVE CARE SERVICES/INTERVENTIO | shared-code page: pdf page 18, printed AYAO-8, had lost its boxes. Relabelled and re-extracted: evaluation list -> services list, links to AYAO-9/11 |
 | appendiceal_neoplasms_and | APP-5A | footnotes | 1 | 10 | 36 | 34 | 0 | 3 | 14 | BIOPSY-PROVEN RECURRENCEn CRS ± IPCTq Surveillance (APP-8) Complete CRS possible No previous CRS Observation or Consider | algorithm (biopsy-proven recurrence). Re-extracted |
 | b_cell_lymphomas | MANT-6A | footnotes | 3 | 55 | 66 | 81 | 0 | 0 | 21 | FOLLOW-UPl RELAPSE #2 OR GREATER RELAPSED/REFRACTORY OR PROGRESSIVE DISEASE CONSOLIDATION/ ADDITIONAL THERAPY Responsek  | algorithm (relapsed/refractory mantle cell lymphoma), linked from MANT-2, 4, 5. Re-extracted |
 | castleman_disease | CD-4A | footnotes | 1 | 9 | 47 | 44 | 0 | 3 | 16 | FIRST-LINE THERAPYk RELAPSED DISEASEk Responseq Relapsed diseasen • If siltuximab, continue until progression • If ritux | algorithm (multicentric Castleman disease). Re-extracted |
@@ -213,12 +153,22 @@ Kind is the earlier one.
 | hodgkin_lymphoma | HODG-6A | footnotes | 1 | 18 | 46 | 47 | 0 | 4 | 19 | CLINICAL PRESENTATION: Classic Hodgkin Lymphoma: Stage I/II Unfavorable with B Symptoms, Bulky Mediastinal Disease and/o | algorithm (stage I/II unfavorable, Other Regimens). Re-extracted |
 | hodgkin_lymphoma | HODG-6B | other | 1 | 19 | 60 | 47 | 0 | 3 | 21 | CLINICAL PRESENTATION: Classic Hodgkin Lymphoma: Stage I/II Unfavorable with B Symptoms, Bulky Disease and/or >10 cm Ade | algorithm (BrECADD + G-CSF), reached from HODG-6A; typed other because only an A suffix is read as a footnote page. Re-extracted |
 | hodgkin_lymphoma | HODG-7A | footnotes | 1 | 21 | 52 | 41 | 0 | 5 | 18 | CLINICAL PRESENTATION: Classic Hodgkin Lymphoma: Stage III–IV PRIMARY TREATMENT (continued from HODG-7) uSpecial Conside | algorithm (stage III-IV, nivolumab-AVD). Re-extracted |
+| in_people_with_hiv | HIV-1 | algorithm | 1 | 7 | 14 | 81 | 0 | 0 | 2 | Anal Cancer in PWH • PWH have an approximately 15- to 20-fold increased likelihood of being diagnosed with anal cancer c | two-column recommendation lists without arrows (anal screening / anal cancer in PWH). Re-extracted as two entry boxes |
+| in_people_with_hiv | HIV-2 | algorithm | 1 | 8 | 17 | 76 | 0 | 0 | 2 | Cervical Dysplasia and Cervical Cancer Screening in PWH • PWH are at higher risk of HPV infection and premalignant cervi | two-column recommendation lists without arrows (cervical screening / cervical cancer in PWH). Re-extracted as two entry boxes |
+| in_people_with_hiv | HIV-3 | algorithm | 1 | 9 | 14 | 79 | 0 | 0 | 2 | Prophylaxis for other opportunistic infections including gram-negative bacteria can be considered, particularly for pat | classic Hodgkin lymphoma in PWH: one list printed in two columns, without arrows. Re-extracted as two entry boxes |
+| in_people_with_hiv | HIV-4 | algorithm | 1 | 10 | 6 | 27 | 0 | 0 | 1 | Non-Small Cell Lung Cancer in PWH • The risk of lung cancer is 2 to 5 times higher in PWH than in individuals who are HI | NSCLC in PWH: one recommendation list without arrows. Re-extracted as one entry box |
+| palliative_care | PAL-33 | algorithm | 3 | 42 | 0 | 14 | 0 | 0 | 2 | PROPORTIONAL SEDATION • Proportional sedation (formerly known as palliative sedation) is the intentional lowering of awa | recommendation page (proportional sedation), no arrows. Re-extracted as one entry box |
 | pediatric_hodgkin_lymphoma | PHL-4A | footnotes | 1 | 16 | 65 | 69 | 0 | 4 | 27 | RESPONSEx PRIMARY TREATMENTu,v,w ADDITIONAL TREATMENTv,x CLINICAL PRESENTATION: CHL (continued from PHL-4) Other Recomme | algorithm (Other Recommended, stage I-II with risk factors). Re-extracted |
 | pediatric_hodgkin_lymphoma | PHL-5A | footnotes | 1 | 19 | 49 | 60 | 0 | 7 | 24 | CLINICAL PRESENTATION: CHL PRIMARY TREATMENTu,v,w RESPONSEx ADDITIONAL TREATMENTv,x (continued from PHL-5) Useful in Cer | algorithm (Useful in Certain Circumstances, stage III-IV). Re-extracted; also wires the missing arrow PHL-5 -> PHL-5A |
 | rectal | REC-10A | footnotes | 12 | 22 | 1 | 11 | 0 | 0 | 3 | SURVEILLANCE FOLLOWING NONOPERATIVE MANAGEMENT • History and physical examination every 3–6 months for 2 years and then  | recommendation page (surveillance after nonoperative management), no arrows: one entry box, 12 boxes point to it. Re-extracted |
 | rectal | REC-11A | footnotes | 1 | 24 | 58 | 57 | 0 | 2 | 25 | RECURRENCE TREATMENT Capecitabine + RTp,t or Infusional fluorouracil + RTp,t Resectiong dMMR/MSI-H or POLE/ POLD1 mutati | algorithm: treatment of isolated pelvic/anastomotic recurrence. Re-extracted |
 | rectal | REC-2A | footnotes | 1 | 12 | 25 | 41 | 0 | 2 | 8 | WORKUPl CLINICAL PRESENTATIONa,b REC-7 Proficient MMR (pMMR)/ microsatellite stable (MSS) • Colonoscopy • Consider proct | algorithm: workup of M1 disease, MMR split to REC-7 / REC-15. Re-extracted |
 | rectal | REC-3A | footnotes | 1 | 14 | 39 | 35 | 0 | 4 | 15 | PRIMARY TREATMENTt CLINICAL PRESENTATIONa,b CLINICAL STAGE T1, T1–2, N0 REC-3 For stage II and III, if somatic PI3K path | algorithm: bridge T3 N0 low-risk / T3 N any, MMR split to REC-6 / REC-14. Re-extracted |
+| survivorship | SCF-1 | algorithm | 4 | 96 | 1 | 17 | 0 | 0 | 2 | COGNITIVE FUNCTION FOLLOWING CANCER TREATMENT General Principles • Growing evidence supports the validity of the patient | recommendation page (cognitive function, general principles of the module), no arrows. Re-extracted as one entry box |
+| survivorship | SFAT-1 | algorithm | 8 | 100 | 5 | 25 | 0 | 0 | 4 | DEFINITION OF CANCER-RELATED FATIGUE • Cancer-related fatigue is a distressing, persistent, subjective sense of physical | definition and considerations page of the fatigue module, no arrows. Re-extracted as two entry boxes |
+| survivorship | SLYMPH-1 | algorithm | 1 | 105 | 6 | 16 | 0 | 0 | 2 | DEFINITION AND STAGES OF LYMPHEDEMA1,2 • Definition: Lymphedema occurs when lymph fluid accumulates in the interstitial  | definition and stages of lymphedema, no arrows. Re-extracted as one entry box |
+| survivorship | SURV-4 | algorithm | 2 | 26 | 5 | 16 | 0 | 2 | 2 | SCREENING FOR SUBSEQUENT NEW PRIMARY CANCERS • Subsequent new primary malignant neoplasms may occur in survivors years a | recommendation page (screening for subsequent primary cancers), no arrows. Re-extracted as one entry box |
+| systemic_mastocytosis | SM-2 | algorithm | 2 | 7 | 32 | 46 | 1 | 9 | 8 | CLASSIFICATIONi WORKUP FOR SUSPECTED SYSTEMIC MASTOCYTOSISi General Diagnostic Studies • History and physical (H&P), inc | algorithm: workup list with arrows to the ISM/SSM/ASM/SM-AHN/MCL classification. Re-extracted |
 | wilms_tumor_nephroblastoma | WILMS-11 | algorithm | 2 | 28 | 23 | 33 | 0 | 0 | 12 | NEOADJUVANT THERAPYt FINDINGS RADIATION THERAPYw,uu,vv ADJUVANT CHEMOTHERAPYt Resectable Continue Revised Regimen UH-2 N | algorithm page that had no boxes for the same reason. Re-extracted |
 | wilms_tumor_nephroblastoma | WILMS-5 | algorithm | 3 | 14 | 86 | 99 | 0 | 2 | 30 | RADIATION THERAPYw,x NEOADJUVANT THERAPYt ADJUVANT CHEMOTHERAPYt FINDINGS BIOMARKER/ IMAGING RESULTSu Continue Regimen D | algorithm page whose boxes were filed under WILMS-11 (page label misread: a reference box 'WILMS-11' printed in the flowchart was taken for the page label). Boxes moved back, page relabelled |
 | wilms_tumor_nephroblastoma | WILMS-5A | footnotes | 1 | 15 | 53 | 67 | 0 | 2 | 21 | FINDINGS RADIATION THERAPYw,x NEOADJUVANT THERAPYt ADJUVANT CHEMOTHERAPYt BIOMARKER/ IMAGING RESULTSu WILMS-5 Localized  | algorithm. Re-extracted |
@@ -229,7 +179,6 @@ Kind is the earlier one.
 
 | slug | page | kind | linked from | pdf page | vec | body | sees | codes | boxes | first 120 chars | review |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---|---|
-| adolescent_and_young_adult_aya_oncology | AYAO-8 1 of 2 | algorithm | 4 | 17 |  | 119 | 0 | 4 | 0 | COMPREHENSIVE PSYCHOSOCIAL CONSIDERATIONS THROUGHOUT TREATMENT: INDIVIDUAL EVALUATION SUPPORTIVE CARE SERVICES/INTERVENT | algorithm-typed page without boxes (two pages share the code AYAO-8, the later page's boxes were kept); linked from 4 boxes. NOT fixed |
 | biliary_tract | GALL-4 1 of 3 | algorithm | 2 | 9 |  | 64 | 0 | 3 | 0 | PRESENTATION POSTOPERATIVE WORKUPn PRIMARY TREATMENT Observe T1a (with negative margins) Adjuvant treatment and surveill | algorithm-typed page without boxes (three pages share the code GALL-4, the last page's boxes were kept); linked from 2 boxes. NOT fixed |
 | genetic_familial_high_risk_assessment_colorectal | AFAP-1 1 of 2 | algorithm | 7 | 85 |  | 44 | 0 | 5 | 0 | PHENOTYPE RISK STATUS Personal history of classical FAP Treatment and Surveillance (FAP-1) Genetic Testing and Surveilla | algorithm-typed page without boxes (two pages share the code AFAP-1, the later page's boxes were kept); linked from 7 boxes. NOT fixed |
 
@@ -248,31 +197,18 @@ Kind is the earlier one.
 | cutaneous_lymphomas | MFSS/INTRO-2 | algorithm | 1 | 17 |  | 34 | 0 | 1 | 3 | PRINCIPLES FOR MYCOSIS FUNGOIDES/SÉZARY SYNDROME (MF/SS) General Principles • Multidisciplinary team approach (hematolog |  |
 | cutaneous_lymphomas | MFSS-5 | algorithm | 2 | 24 |  | 16 | 0 | 0 | 3 | LYMPH NODE (LN) CLASSIFICATION IN MF AND SS NCI-VA Lymph Node Classification LN0: no atypical lymphocytes LN1: occasiona |  |
 | genetic_familial_high_risk_assessment_colorectal | GENE-20 | algorithm | 1 | 135 |  | 78 | 1 | 0 | 3 | REFERENCES BMPR1A Faughnan M, Palda V, Garcoa-Rsao G, et al. International guidelines for the GALNT12 Clarke E, Green RC |  |
-| in_people_with_hiv | HIV-1 | algorithm | 1 | 7 |  | 90 | 0 | 0 | 10 | Anal Cancer in PWH • PWH have an approximately 15- to 20-fold increased likelihood of being diagnosed with anal cancer c |  |
-| in_people_with_hiv | HIV-2 | algorithm | 1 | 8 |  | 77 | 0 | 0 | 11 | Cervical Dysplasia and Cervical Cancer Screening in PWH • PWH are at higher risk of HPV infection and premalignant cervi |  |
-| in_people_with_hiv | HIV-3 | algorithm | 1 | 9 |  | 79 | 0 | 0 | 9 | Prophylaxis for other opportunistic infections including gram-negative bacteria can be considered, particularly for pat |  |
-| in_people_with_hiv | HIV-4 | algorithm | 1 | 10 |  | 27 | 0 | 0 | 4 | Non-Small Cell Lung Cancer in PWH • The risk of lung cancer is 2 to 5 times higher in PWH than in individuals who are HI |  |
-| kaposi_sarcoma | KS-2 | algorithm | 1 | 8 |  | 39 | 0 | 2 | 17 | FIRST-LINE THERAPYh RESPONSEr RELAPSED/REFRACTORY THERAPY KS STATEe,g ARTj,k,l PWH Limited cutaneous Stable disease or R |  |
-| palliative_care | PAL-33 | algorithm | 3 | 42 |  | 14 | 0 | 0 | 2 | PROPORTIONAL SEDATION • Proportional sedation (formerly known as palliative sedation) is the intentional lowering of awa |  |
 | pediatric_aggressive_mature_b_cell_lymphomas | PBCL-4 | algorithm | 1 | 9 |  | 23 | 1 | 1 | 9 | STAGING International Pediatric Non-Hodgkin Lymphoma Staging Systemt,u Stage I Single tumor (extranodal) or single anato |  |
 | pediatric_hodgkin_lymphoma | PHL-6 | algorithm | 1 | 21 |  | 37 | 0 | 2 | 16 | CLINICAL PRESENTATION: NLPHL PRIMARY TREATMENTu,v,jj Preferred Ongoing clinical trial Biopsy positive or Restage and see |  |
 | prostate | PROS-12 | algorithm | 1 | 28 |  | 45 | 0 | 3 | 18 | TREATMENT AND MONITORING FOR SECOND BIOCHEMICAL RECURRENCE (N0M0) N0M0 Oligometastatich CSPC Workup and Treatment of Met |  |
-| related_fatigue | FT-3 | algorithm | 3 | 7 |  | 34 | 0 | 2 | 7 | SCREENINGa Ongoing evaluation Screen every patient for fatigue at regular intervalsb • Age >12 y: Severity: 0–10 scalec |  |
-| smoking_cessation | SC-4 | algorithm | 2 | 15 |  | 43 | 0 | 1 | 14 | INDIVIDUALS WHO FORMERLY SMOKED (More Than 30 Days Since Last Smoked) EVALUATION OF RETURN TO SMOKING RISKc MANAGEMENT A |  |
-| survivorship | SURV-4 | algorithm | 2 | 26 |  | 16 | 0 | 2 | 2 | SCREENING FOR SUBSEQUENT NEW PRIMARY CANCERS • Subsequent new primary malignant neoplasms may occur in survivors years a |  |
-| survivorship | SURV-5 | algorithm | 1 | 32 |  | 28 | 0 | 0 | 4 | PRINCIPLES OF CANCER RISK ASSESSMENT AND COUNSELING • Periodic updating of family cancer history (when known) is recomme |  |
-| survivorship | HL-1 | algorithm | 10 | 42 |  | 43 | 0 | 9 | 6 | GENERAL PRINCIPLES OF HEALTHY LIFESTYLES • Healthy lifestyle habits have been associated with improved overall health an |  |
-| survivorship | SPA-1 | algorithm | 10 | 44 |  | 24 | 0 | 1 | 5 | GENERAL PRINCIPLES OF PHYSICAL ACTIVITY • Physical activity and exercise recommendations should be tailored to individua |  |
-| survivorship | SSUP-1 | algorithm | 2 | 60 |  | 16 | 0 | 0 | 2 | GENERAL PRINCIPLES OF SUPPLEMENT USE • Supplement use is not recommended for most survivors, except in instances of docu |  |
-| survivorship | SIMIN-1 | algorithm | 1 | 61 |  | 22 | 0 | 0 | 2 | GENERAL PRINCIPLES OF IMMUNIZATIONS • These principles apply to cancer survivors, including those with hematologic or so |  |
-| survivorship | SCARDIO-1 | algorithm | 4 | 76 |  | 17 | 0 | 2 | 1 | PRINCIPLES OF ANTHRACYCLINE-INDUCED CARDIAC TOXICITYa • Cancer treatments can result in diverse cardiovascular issues (S |  |
-| survivorship | SANXDE-1 | algorithm | 17 | 79 |  | 31 | 0 | 3 | 6 | GENERAL PRINCIPLES OF ANXIETY, DEPRESSION, TRAUMA, AND DISTRESS • The NCCN Guidelines for Distress Management define dis |  |
-| survivorship | SCF-1 | algorithm | 4 | 96 |  | 17 | 0 | 0 | 2 | COGNITIVE FUNCTION FOLLOWING CANCER TREATMENT General Principles • Growing evidence supports the validity of the patient |  |
-| survivorship | SFAT-1 | algorithm | 8 | 100 |  | 25 | 0 | 0 | 4 | DEFINITION OF CANCER-RELATED FATIGUE • Cancer-related fatigue is a distressing, persistent, subjective sense of physical |  |
-| survivorship | SLYMPH-1 | algorithm | 1 | 105 |  | 16 | 0 | 0 | 2 | DEFINITION AND STAGES OF LYMPHEDEMA1,2 • Definition: Lymphedema occurs when lymph fluid accumulates in the interstitial  |  |
-| survivorship | SPAIN-1 | algorithm | 8 | 113 |  | 31 | 0 | 1 | 2 | GENERAL PRINCIPLES OF PAIN MANAGEMENT • Comprehensive pain assessment should be done to determine the etiology of the pa |  |
-| survivorship | SSD-1 | algorithm | 10 | 143 |  | 28 | 0 | 1 | 6 | GENERAL PRINCIPLES OF SLEEP Importance of Sleep Health • Sleep is composed of a complex set of neurobehavioral states th |  |
-| systemic_mastocytosis | SM-2 | algorithm | 2 | 7 |  | 50 | 1 | 9 | 10 | CLASSIFICATIONi WORKUP FOR SUSPECTED SYSTEMIC MASTOCYTOSISi General Diagnostic Studies • History and physical (H&P), inc |  |
+| survivorship | SURV-5 | algorithm | 1 | 32 |  | 28 | 0 | 0 | 4 | PRINCIPLES OF CANCER RISK ASSESSMENT AND COUNSELING • Periodic updating of family cancer history (when known) is recomme | NOT an algorithm: a general-principles reference page (bulleted text, no arrows, no patient steps); boxes link to it as a document. Left alone (PRINCIPLES OF CANCER RISK ASSESSMENT AND COUNSELING) |
+| survivorship | HL-1 | algorithm | 10 | 42 |  | 43 | 0 | 9 | 6 | GENERAL PRINCIPLES OF HEALTHY LIFESTYLES • Healthy lifestyle habits have been associated with improved overall health an | NOT an algorithm: a general-principles reference page (bulleted text, no arrows, no patient steps); boxes link to it as a document. Left alone (GENERAL PRINCIPLES OF HEALTHY LIFESTYLES; footnotes and references on HL-1A) |
+| survivorship | SPA-1 | algorithm | 10 | 44 |  | 24 | 0 | 1 | 5 | GENERAL PRINCIPLES OF PHYSICAL ACTIVITY • Physical activity and exercise recommendations should be tailored to individua | NOT an algorithm: a general-principles reference page (bulleted text, no arrows, no patient steps); boxes link to it as a document. Left alone (GENERAL PRINCIPLES OF PHYSICAL ACTIVITY; footnotes on SPA-1A) |
+| survivorship | SSUP-1 | algorithm | 2 | 60 |  | 16 | 0 | 0 | 2 | GENERAL PRINCIPLES OF SUPPLEMENT USE • Supplement use is not recommended for most survivors, except in instances of docu | NOT an algorithm: a general-principles reference page (bulleted text, no arrows, no patient steps); boxes link to it as a document. Left alone (GENERAL PRINCIPLES OF SUPPLEMENT USE) |
+| survivorship | SIMIN-1 | algorithm | 1 | 61 |  | 22 | 0 | 0 | 2 | GENERAL PRINCIPLES OF IMMUNIZATIONS • These principles apply to cancer survivors, including those with hematologic or so | NOT an algorithm: a general-principles reference page (bulleted text, no arrows, no patient steps); boxes link to it as a document. Left alone (GENERAL PRINCIPLES OF IMMUNIZATIONS) |
+| survivorship | SCARDIO-1 | algorithm | 4 | 76 |  | 17 | 0 | 2 | 1 | PRINCIPLES OF ANTHRACYCLINE-INDUCED CARDIAC TOXICITYa • Cancer treatments can result in diverse cardiovascular issues (S | NOT an algorithm: a general-principles reference page (bulleted text, no arrows, no patient steps); boxes link to it as a document. Left alone (PRINCIPLES OF ANTHRACYCLINE-INDUCED CARDIAC TOXICITY) |
+| survivorship | SANXDE-1 | algorithm | 17 | 79 |  | 31 | 0 | 3 | 6 | GENERAL PRINCIPLES OF ANXIETY, DEPRESSION, TRAUMA, AND DISTRESS • The NCCN Guidelines for Distress Management define dis | NOT an algorithm: a general-principles reference page (bulleted text, no arrows, no patient steps); boxes link to it as a document. Left alone (GENERAL PRINCIPLES OF ANXIETY, DEPRESSION, TRAUMA, AND DISTRESS) |
+| survivorship | SPAIN-1 | algorithm | 8 | 113 |  | 31 | 0 | 1 | 2 | GENERAL PRINCIPLES OF PAIN MANAGEMENT • Comprehensive pain assessment should be done to determine the etiology of the pa | NOT an algorithm: a general-principles reference page (bulleted text, no arrows, no patient steps); boxes link to it as a document. Left alone (GENERAL PRINCIPLES OF PAIN MANAGEMENT) |
+| survivorship | SSD-1 | algorithm | 10 | 143 |  | 28 | 0 | 1 | 6 | GENERAL PRINCIPLES OF SLEEP Importance of Sleep Health • Sleep is composed of a complex set of neurobehavioral states th | NOT an algorithm: a general-principles reference page (bulleted text, no arrows, no patient steps); boxes link to it as a document. Left alone (GENERAL PRINCIPLES OF SLEEP; references on SSD-2A) |
 | t_cell_lymphomas | LGLL-2 | algorithm | 1 | 32 |  | 76 | 0 | 0 | 21 | INDICATION FOR TREATMENT FIRST-LINE THERAPY RESPONSE (at 4 mo) SECOND-LINE THERAPY ADDITIONAL THERAPY/ FOLLOW-UP Observe |  |
 | t_cell_lymphomas | INTCL-1 | algorithm | 1 | 62 |  | 30 | 0 | 1 | 3 | INDOLENT T-CELL LYMPHOMAS OF THE GASTROINTESTINAL (GI) TRACT AND INDOLENT NK-CELL LYMPHOPROLIFERATIVE DISORDERS (LPD) OF |  |
 | t_cell_lymphomas | INTCL-3 | algorithm | 2 | 64 |  | 19 | 0 | 0 | 3 | INDOLENT T-CELL LYMPHOMAS OF THE GASTROINTESTINAL (GI) TRACT AND INDOLENT NK-CELL LYMPHOPROLIFERATIVE DISORDERS (LPD) OF |  |
@@ -284,16 +220,16 @@ Kind is the earlier one.
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---|---|
 | hodgkin_lymphoma | HODG-3A | footnotes | 0 | 12 | 171 | 28 | 0 | 0 | 0 | UNFAVORABLE RISK FACTORS Definitions of Lymph Node Regions* EORTC Nodal GHSG Nodal Ann Arbor Nodal Sites Regions Regions | reference table (lymph node regions, unfavorable risk factors), not an algorithm |
 | kidney | p27 | other | 0 | 27 | 91 | 104 | 1 | 1 | 0 | HEREDITARY RCC SYNDROMES OVERVIEW Syndrome/Gene Common Histologies Inheritance Pattern Major Clinical Manifestations Oth | hereditary RCC syndromes table (reference) |
-| survivorship | SURV-4A 1 of 5 | footnotes | 1 | 27 | 90 | 60 | 0 | 1 | 0 | PRINCIPLES OF SCREENING FOR TREATMENT-RELATED SUBSEQUENT PRIMARY CANCERS • As part of screening and early detection for  | screening recommendations table (principles) |
+| survivorship | SURV-4A 1 of 5 | footnotes | 1 | 27 | 90 | 60 | 0 | 1 | 0 | PRINCIPLES OF SCREENING FOR TREATMENT-RELATED SUBSEQUENT PRIMARY CANCERS • As part of screening and early detection for  | NOT re-extracted: a five-page reference table (treatment exposure -> increased risk -> screening -> comments), no arrows; read pages 1 of 5 as a table, not a flowchart. Left as a principles table |
 | colorectal_screening | CSCR-10A 1 of 2 | footnotes | 0 | 24 | 85 | 80 | 0 | 5 | 0 | MANAGEMENT OF LARGE COLORECTAL POLYP(S) CLINICAL FINDINGS FOLLOW-UP OF CLINICAL FINDINGS No invasive cancer Colonoscopy  | management of large polyps: flowchart-like; no box links to it; NOT re-extracted (page cap) |
 | genetic_familial_high_risk_assessment_breast_ova | GENE-A 2 of 12 | principles | 0 | 40 | 85 | 82 | 2 | 0 | 0 | CANCER RISK MANAGEMENT BASED ON GENETIC TEST RESULTSa,1,2 Gene Breast Cancerb Epithelial Ovarian Cancerb Pancreatic Canc | risk management table (principles) |
 | hodgkin_lymphoma | HODG-7B | other | 1 | 22 | 84 | 75 | 0 | 5 | 0 | CLINICAL PRESENTATION: Classic Hodgkin Lymphoma: Stage III–IV PRIMARY TREATMENT (continued from HODG-7) uSpecial Conside | algorithm continuation page (typed other). NOT re-extracted (page cap) |
 | ovarian_cancer_fallopian_tube_cancer_primary_per | OV-D 4 of 14 | principles | 0 | 49 | 83 | 69 | 2 | 2 | 0 | PRINCIPLES OF SYSTEMIC THERAPY Principles of Maintenance PARP Inhibitor (PARPi) Therapy • Post Primary Treatment Certai |  |
-| survivorship | SURV-4A 4 of 5 | footnotes | 0 | 30 | 72 | 17 | 0 | 1 | 0 | PRINCIPLES OF SCREENING FOR TREATMENT-RELATED SUBSEQUENT PRIMARY CANCERS Treatment-Related Subsequent Primary Cancers by | screening recommendations table (principles) |
-| survivorship | SURV-4A 2 of 5 | footnotes | 0 | 28 | 68 | 14 | 0 | 0 | 0 | PRINCIPLES OF SCREENING FOR TREATMENT-RELATED SUBSEQUENT PRIMARY CANCERS Treatment-Related Subsequent Primary Cancers by | screening recommendations table (principles) |
+| survivorship | SURV-4A 4 of 5 | footnotes | 0 | 30 | 72 | 17 | 0 | 1 | 0 | PRINCIPLES OF SCREENING FOR TREATMENT-RELATED SUBSEQUENT PRIMARY CANCERS Treatment-Related Subsequent Primary Cancers by | screening recommendations table (principles), no arrows; see SURV-4A 1 of 5 |
+| survivorship | SURV-4A 2 of 5 | footnotes | 0 | 28 | 68 | 14 | 0 | 0 | 0 | PRINCIPLES OF SCREENING FOR TREATMENT-RELATED SUBSEQUENT PRIMARY CANCERS Treatment-Related Subsequent Primary Cancers by | screening recommendations table (principles), no arrows; see SURV-4A 1 of 5 |
 | adolescent_and_young_adult_aya_oncology | AYAO-13A | footnotes | 0 | 24 | 65 | 37 | 0 | 0 | 0 | SURVIVORSHIP SYSTEMIC THERAPY EXPOSURE RECOMMENDATION Screening Recommendations (AYAO-B) Any chemotherapy • Recommend a  | recommendation table (survivorship), not an algorithm |
 | genetic_familial_high_risk_assessment_breast_ova | GENE-A 7 of 12 | principles | 0 | 45 | 64 | 58 | 2 | 0 | 0 | CANCER RISK MANAGEMENT BASED ON GENETIC TEST RESULTSa,1,2 Gene Breast Cancerb Epithelial Ovarian Cancerb Pancreatic Canc | risk management table (principles) |
-| survivorship | SURV-4A 3 of 5 | footnotes | 0 | 29 | 64 | 42 | 0 | 0 | 0 | PRINCIPLES OF SCREENING FOR TREATMENT-RELATED SUBSEQUENT PRIMARY CANCERS Treatment-Related Subsequent Primary Cancers by | screening recommendations table (principles) |
+| survivorship | SURV-4A 3 of 5 | footnotes | 0 | 29 | 64 | 42 | 0 | 0 | 0 | PRINCIPLES OF SCREENING FOR TREATMENT-RELATED SUBSEQUENT PRIMARY CANCERS Treatment-Related Subsequent Primary Cancers by | screening recommendations table (principles), no arrows; see SURV-4A 1 of 5 |
 | b_cell_lymphomas | MANT-6B | other | 3 | 56 | 61 | 107 | 0 | 0 | 0 | RELAPSED/REFRACTORY OR PROGRESSIVE DISEASE FOLLOW-UPl RELAPSE #2 OR GREATER CONSOLIDATION/ ADDITIONAL THERAPY Responsek  | algorithm continuation page (typed other). NOT re-extracted (page cap) |
 | older_adult_oncology | OAO-F 3 of 4 | principles | 0 | 36 | 57 | 46 | 2 | 1 | 0 | ASSESSMENT OF COGNITIVE FUNCTION1,2,3 Confusion Assessment Method (CAM)7 Mild Cognitive Impairment Dementia Delirium Scr |  |
 | associated_venous_thromboembolic_disease | VTE-B 2 of 5 | principles | 0 | 10 | 56 | 32 | 2 | 1 | 0 | VTE PROPHYLAXIS OPTIONS: AMBULATORY MEDICAL ONCOLOGY PATIENTS AND PATIENTS POST-MEDICAL ONCOLOGY DISCHARGE (VTE-2)h,i Ag |  |

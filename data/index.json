@@ -70,7 +70,7 @@
     "boxes": 42,
     "boxes_text_found_in_pdf_at_bbox": "42/42",
     "edges_by_evidence": {
-     "image_checked": 6,
+     "image_checked": 11,
      "two_methods": 16,
      "table_text_checked": 28
     },
@@ -86,13 +86,13 @@
     },
     "entries": 14,
     "entries_with_predicate": 6,
-    "entries_reached_by_link": 8,
+    "entries_reached_by_link": 12,
     "roles": {
      "page_heading": 16,
      "note": 5,
      "step": 8,
-     "leaf": 12,
-     "decision": 1,
+     "leaf": 10,
+     "decision": 3,
      "entry": 11,
      "table_root": 3,
      "table_condition": 10,
@@ -3371,7 +3371,7 @@
     },
     "entries": 74,
     "entries_with_predicate": 68,
-    "entries_reached_by_link": 60,
+    "entries_reached_by_link": 65,
     "roles": {
      "note": 35,
      "page_heading": 82,
@@ -4042,8 +4042,7 @@
     "decision_boxes": 13,
     "predicate_status": {
      "model_reviewed": 6,
-     "inherited_from_link": 4,
-     "none": 3
+     "inherited_from_link": 7
     },
     "decision_types": {
      "condition": 6,
@@ -4051,8 +4050,8 @@
      "option": 3
     },
     "entries": 8,
-    "entries_with_predicate": 4,
-    "entries_reached_by_link": 5,
+    "entries_with_predicate": 7,
+    "entries_reached_by_link": 8,
     "roles": {
      "page_heading": 5,
      "note": 18,
@@ -4205,7 +4204,7 @@
     },
     "entries": 6,
     "entries_with_predicate": 4,
-    "entries_reached_by_link": 4,
+    "entries_reached_by_link": 5,
     "roles": {
      "page_heading": 14,
      "leaf": 11,
@@ -4361,10 +4360,10 @@
     },
     "decision_boxes": 153,
     "predicate_status": {
-     "none": 53,
+     "none": 51,
      "section_only": 8,
      "model_reviewed": 76,
-     "inherited_from_link": 13,
+     "inherited_from_link": 15,
      "rejected": 3
     },
     "decision_types": {
@@ -4374,8 +4373,8 @@
      "null": 3
     },
     "entries": 79,
-    "entries_with_predicate": 51,
-    "entries_reached_by_link": 45,
+    "entries_with_predicate": 53,
+    "entries_reached_by_link": 63,
     "roles": {
      "page_heading": 89,
      "note": 74,
@@ -4899,7 +4898,7 @@
   },
   {
    "slug": "waldenstrom_macroglobulinemia_lymphoplasmacytic",
-   "title": "Waldenström Macroglobulinemia_Lymphoplasmacytic Lymphoma",
+   "title": "Waldenstr\u00f6m Macroglobulinemia_Lymphoplasmacytic Lymphoma",
    "category": "Treatment",
    "version": "2.2026",
    "version_date": "March 3, 2026",
