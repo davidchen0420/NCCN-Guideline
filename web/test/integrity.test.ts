@@ -14,7 +14,7 @@ import { boxClass, isRecommendationEnd, PAGE_REF, rankPathways } from "../src/li
 /** Boxes with nothing after them that point at a page with no entry boxes (an empty algorithm
  * page, or a footnote page that carries a flow). Lower this as the data agent re-extracts those
  * pages; it must never go up. */
-const EMPTY_TARGET_BASELINE = 106;
+const EMPTY_TARGET_BASELINE = 103;
 
 /** Guidelines whose pages are being re-extracted by other work; they wire their own leaf boxes
  * when that lands (page_spec wire --all). Take a slug out of this list once it is done. */
@@ -23,9 +23,7 @@ const WIRING_PENDING = new Set([
   "chronic_lymphocytic_leukemia_small_lymphocytic_l", "pediatric_aggressive_mature_b_cell_lymphomas",
   "pediatric_hodgkin_lymphoma", "castleman_disease", "histiocytic_neoplasms", "survivorship", "in_people_with_hiv",
   "kaposi_sarcoma", "adolescent_and_young_adult_aya_oncology", "palliative_care", "related_fatigue", "smoking_cessation",
-  "systemic_mastocytosis", "biliary_tract", "genetic_familial_high_risk_assessment_breast_ova",
-  "genetic_familial_high_risk_assessment_colorectal", "ovarian_cancer_fallopian_tube_cancer_primary_per", "prostate",
-  "prostate_early_detection", "thyroid_carcinoma",
+  "systemic_mastocytosis",
 ]);
 
 const slugs = readdirSync("../data").filter((d) => existsSync(`../data/${d}/guideline.json`)).sort();
