@@ -95,6 +95,14 @@ export function isCriteriaBox(g: Graph, id: string): boolean {
   const text = stripMarks(n.text).replace(/\s+/g, " ").trim();
   return text.length <= 160 && !/[•\u0017]/.test(n.text) && CRITERIA.test(text) && !/^\W*(?:consider|start|initiate|administer|treat)\b/i.test(text);
 }
+/** A short label that only names the algorithm page it hands over to ("Treatment and adjuvant therapy (COL-7)"). */
+export function isHandOver(g: Graph, id: string): boolean {
+  const n = g.node(id);
+  if (!n) return false;
+  const text = stripMarks(n.text).trim();
+  return n.links.some((l) => l !== n.page && (g.bundle.roots[l] ?? []).length > 0) && /\(\s*[A-Z]{2,6}-\d+[A-Z]?\s*\)\s*$/.test(text) && text.split(/\s+/).length <= 10
+    && !/[•\u0017]/.test(n.text) && !g.kids(id).some((k) => g.node(k)?.page === n.page);
+}
 export type BoxClass = "recommendation" | "pageref" | "heading" | "condition";
 /** What a box is, for the end of a route: a recommendation, a pointer to a page, a heading, or a
  * criteria box that describes the patient. */
@@ -940,6 +948,24 @@ export interface Recommendation {
  * after a later event. When the guideline lists several options at that step they are all
  * returned (`options`), taken from `paths` (the ranking) so those the facts rule out are left out.
  */
+/** The entered-detail names (schema variables) a set of conditions rests on, through derived details. */
+function rawNames(g: Graph, preds: (Pred | null | undefined)[]): Set<string> {
+  const out = new Set<string>(), seen = new Set<string>();
+  const schema = g.bundle.schema;
+  const name = (n: string) => {
+    if (seen.has(n)) return;
+    seen.add(n);
+    if (schema.variables[n]) out.add(n);
+    schema.derived?.[n]?.rules.forEach((r) => go(r.if));
+  };
+  const go = (p: Pred | null | undefined) => {
+    if (!p) return;
+    if ("all" in p) p.all.forEach(go); else if ("any" in p) p.any.forEach(go); else if ("not" in p) go(p.not); else name(p.fact);
+  };
+  preds.forEach(go);
+  return out;
+}
+
 export function recommendationOf(g: Graph, p: Pathway, paths: Pathway[] = []): Recommendation {
   const s = p.steps;
   const isSettled = (st: PStep) => st.kind === "met" || st.kind === "otherwise" || st.kind === "inferred";
@@ -960,7 +986,9 @@ export function recommendationOf(g: Graph, p: Pathway, paths: Pathway[] = []): R
     s.forEach((st, i) => {
       if (i < until && isSettled(st)) {
         const treated = s.slice(settled + 1, i).some((x) => isActionBox(g, x.node) && stepTier(g, x.node) === "treatment");
-        const fresh = st.used.some((f) => !before.has(f));
+        // new information: a detail this box's own condition (or its siblings') rests on, not one only the way into the page mentions
+        const own = rawNames(g, [g.preds[st.node], ...(g.parents[st.node] ?? []).flatMap((q) => g.kids(q).map((k) => g.preds[k])), ...s.map((x) => g.node(x.node)?.received)]);
+        const fresh = st.used.some((f) => !before.has(f) && own.has(f));
         if (!(treated && !fresh)) settled = i;
       }
       st.used.forEach((f) => before.add(f));
@@ -979,6 +1007,10 @@ export function recommendationOf(g: Graph, p: Pathway, paths: Pathway[] = []): R
   };
   let { settled, cands } = scan(followAt >= 0 ? followAt : s.length);
   if (!cands.length && followAt >= 0) ({ settled, cands } = scan(s.length));
+  // a label that only hands over to the next page is not the advice when a treatment of that page is on the route
+  const treatmentLater = (i: number) => cands.some((k) => k > i && !isHandOver(g, s[k].node) && stepTier(g, s[k].node) === "treatment");
+  const direct = cands.filter((i) => !(isHandOver(g, s[i].node) && treatmentLater(i)));
+  if (direct.length) cands = direct;
   let index = cands.length ? cands.reduce((best, i) => (TIER_ORDER[stepTier(g, s[i].node)] < TIER_ORDER[stepTier(g, s[best].node)] ? i : best), cands[0]) : -1;
   if (index < 0) {
     // nothing recommends anything after the last decision: the last box that is not a bare page reference, else the last box

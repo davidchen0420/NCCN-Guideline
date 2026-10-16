@@ -304,6 +304,53 @@ function hash(s: string): string {
 }
 export const factsHash = (g: Graph, facts: Facts) => hash(factLines(g, facts).join("\n"));
 
+const relevantMemo = new WeakMap<Graph, Map<string, Set<string>>>();
+/**
+ * The entered details a decision node's answer can depend on: those the conditions on its page, on its
+ * arms and on the treatment each option was already received by rest on (through derived details, down to
+ * what is entered), and the chosen disease. A detail outside this set cannot change what the model is asked
+ * about this node, so the remembered answer holds when only such details change.
+ */
+export function relevantFacts(g: Graph, nodeId: string): Set<string> {
+  let byNode = relevantMemo.get(g);
+  if (!byNode) relevantMemo.set(g, (byNode = new Map()));
+  const hit = byNode.get(nodeId);
+  if (hit) return hit;
+  const schema = g.bundle.schema;
+  const out = new Set<string>();
+  const seen = new Set<string>();
+  const name = (n: string) => {
+    if (seen.has(n)) return;
+    seen.add(n);
+    if (schema?.variables?.[n]) out.add(n);
+    schema?.derived?.[n]?.rules.forEach((r) => pred(r.if));
+  };
+  const pred = (p: Pred | null | undefined) => {
+    if (!p) return;
+    if ("all" in p) p.all.forEach(pred);
+    else if ("any" in p) p.any.forEach(pred);
+    else if ("not" in p) pred(p.not);
+    else name(p.fact);
+  };
+  const page = g.node(nodeId)?.page;
+  for (const n of g.nodes.values()) {
+    if (n.page !== page) continue;
+    pred(g.preds[n.full]);
+    pred(n.received);
+    pred(n.linkCond);
+  }
+  for (const k of g.kids(nodeId)) { pred(g.preds[k]); pred(g.node(k)?.received); }
+  if (g.bundle.sections) name(g.bundle.sections.variable);
+  byNode.set(nodeId, out);
+  return out;
+}
+
+/** The entered details restricted to those a node depends on (see relevantFacts). */
+export function factsFor(g: Graph, facts: Facts, nodeId: string): Facts {
+  const rel = relevantFacts(g, nodeId);
+  return Object.fromEntries(Object.entries(facts).filter(([k]) => rel.has(k)));
+}
+
 const prob = (x: unknown): number | null => (typeof x === "number" && Number.isFinite(x) ? Math.min(1, Math.max(0, x)) : null);
 
 /** Fold the answers of one request into per-node scores (refusals and malformed answers add nothing). */
@@ -380,8 +427,9 @@ async function post(f: typeof fetch, opts: DecideOptions, input: string, questio
  */
 export async function scoreBranchesDetailed(g: Graph, facts: Facts, nodeIds: string[], opts: DecideOptions = {}): Promise<Map<string, BranchScores>> {
   const f = opts.fetch ?? fetch;
-  const fh = factsHash(g, facts), scope = `${g.bundle.title}|`;
-  const key = (id: string) => `${scope}${id}|${fh}`;
+  const scope = `${g.bundle.title}|`;
+  // remembered per node and the details that node depends on: an answer about something else does not ask again
+  const key = (id: string) => `${scope}${id}|${factsHash(g, factsFor(g, facts, id))}`;
   const result = new Map<string, BranchScores>();
   const todo: string[] = [];
   for (const id of new Set(nodeIds)) {
