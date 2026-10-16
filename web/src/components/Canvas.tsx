@@ -9,7 +9,10 @@ import { matcher } from "../lib/search";
 import { boxSrc } from "./PathwaysPanel";
 import { useSource } from "../source";
 
-const n_entry = (g: { bundle: { roots: Record<string, string[]> } }, full: string) => (g.bundle.roots[full.split(":")[0]] ?? []).includes(full);
+/** The smallest zoom a page opens at: below this the cards' text is too small to read. */
+const FLOOR = 0.55;
+
+const n_entry =(g: { bundle: { roots: Record<string, string[]> } }, full: string) => (g.bundle.roots[full.split(":")[0]] ?? []).includes(full);
 
 export function Canvas({ page }: { page: string }) {
   const { s, g, set, dispatch, openFootnote, selected: route, isPhone } = useApp();
@@ -38,17 +41,29 @@ export function Canvas({ page }: { page: string }) {
 
   const layout = useMemo(() => (heights ? layoutPage(flow, heights, parsedByShort, flow.band?.[0] ?? g.bundle.top) : null), [flow, heights, parsedByShort, g.bundle.top]);
 
-  const fit = useCallback((all: boolean) => {
+  /**
+   * "all": the whole page in view. "reading": the reading size, from the top left. Otherwise (a
+   * page opening) the page's width fitted into the visible canvas, so most of its cards are in
+   * view at once: never larger than the reading size, never smaller than FLOOR (cards stay
+   * legible); a page still wider than that shows its first columns and the rest is panned to.
+   */
+  const fit = useCallback((mode: "open" | "all" | "reading") => {
     const el = wrapRef.current, t = tx.current;
     if (!el || !t || !layout) return;
     const cw = el.clientWidth, ch = el.clientHeight;
     const phone = cw < 620;
-    const sc = all ? Math.max(0.12, Math.min((cw - 70) / layout.width, ch / layout.height, 1.2) * 0.96) : phone ? 0.82 : Math.min(1, Math.max(0.9, cw / layout.width));
-    const x = all ? 60 + (cw - 60 - layout.width * sc) / 2 : phone ? 52 : 64;
-    const y = all ? Math.max(8, (ch - layout.height * sc) / 2) : 12;
-    t.setTransform(x, y, sc, 0);
+    const left = phone ? 52 : 64;   // room for the zoom controls
+    const reading = phone ? 0.82 : Math.min(1, Math.max(0.9, cw / layout.width));
+    if (mode === "reading") { t.setTransform(left, 12, reading, 0); return; }
+    if (mode === "open") {
+      const sc = Math.min(phone ? 0.82 : 1, Math.max(FLOOR, (cw - left - 16) / layout.width));
+      t.setTransform(left, 12, sc, 0);
+      return;
+    }
+    const sc = Math.max(0.12, Math.min((cw - 70) / layout.width, ch / layout.height, 1.2) * 0.96);
+    t.setTransform(60 + (cw - 60 - layout.width * sc) / 2, Math.max(8, (ch - layout.height * sc) / 2), sc, 0);
   }, [layout]);
-  useEffect(() => { fit(false); }, [fit]);
+  useEffect(() => { fit("open"); }, [fit]);
 
   // keep the selected card in view
   const selected = s.loc.kind === "flow" ? s.loc.node : undefined;
@@ -157,8 +172,8 @@ export function Canvas({ page }: { page: string }) {
         </TransformComponent>
       </TransformWrapper>
       <div className="zoomctl">
-        <button aria-label="Fit page" title="Fit the whole page" onClick={() => fit(true)}><Maximize2 size={15} /></button>
-        <button aria-label="Back to reading size" title="Reading size" onClick={() => fit(false)}><Crosshair size={15} /></button>
+        <button aria-label="Fit page" title="Fit the whole page" onClick={() => fit("all")}><Maximize2 size={15} /></button>
+        <button aria-label="Back to reading size" title="Reading size" onClick={() => fit("reading")}><Crosshair size={15} /></button>
         <div className="zbox">
           <button aria-label="Zoom in" onClick={() => tx.current?.zoomIn(0.3, 150)}><Plus size={15} /></button>
           <input type="range" aria-label="Zoom" min={12} max={250} value={Math.round(scale * 100)}

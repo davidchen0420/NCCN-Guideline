@@ -157,7 +157,21 @@ function textMatches(g: Graph, text: string, facts: Facts): { mine: boolean; oth
   return { mine, other };
 }
 
-export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "auto"): Ranking {
+/** Optional inputs of rankPathways. */
+export interface RankOptions {
+  /**
+   * Probability of following a child from its parent, keyed "parent>child" (node ids as in the
+   * graph), e.g. from the AI-assisted walk. Where a branch splits likelihood among children that
+   * cannot be decided yet (unknown, uncoded or option arms), a supplied probability replaces the
+   * even split; shares are renormalised among the children that survive. Children without an
+   * entry share the mean of the supplied ones. Absent, the split is as before.
+   */
+  edgeProb?: Map<string, number>;
+}
+/** Lowest probability an arm keeps when an AI probability is used, so an unlikely route stays listed. */
+const MIN_PROB = 0.01;
+
+export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "auto", opts?: RankOptions): Ranking {
   const empty: Ranking = { paths: [], ruledOut: 0, entries: [], truncated: false, nextBest: null };
   if (start === "auto" && !hasFacts(raw)) return empty;
   const facts = derive(raw, g.bundle.schema);
@@ -178,10 +192,15 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
    * pages with a single entry box are selected by that box itself: how they are usually reached
    * describes the history or the presentation, which the patient may not share.
    */
-  const startOk = (id: string) => {
+  const startOk = (id: string, seenPages: Set<string> = new Set()): boolean => {
     const own = verdict(id);
     if (own === false || own === null) return false;
     const page = id.split(":")[0];
+    // An entry box with no condition of its own is selected only by how it is reached (the
+    // link condition names the patient group of the box that leads there). That does not put the
+    // patient at the box: some box leading to it must itself be somewhere the patient can be
+    // (REC-13 "Previous >12 mo" follows REC-11 recurrence boxes, whose gates are open).
+    if (own === "none" && !leadsFromPlausible(id, new Set(seenPages).add(page))) return false;
     const lc = g.node(id)?.linkCond;
     const lcv = lc ? evaluate(lc, facts) : "none";
     const roots = g.bundle.roots[page] ?? [];
@@ -197,6 +216,17 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
       return !ps.length || ps.some((p) => !(g.preds[p] && evaluate(g.preds[p], facts) === false) && open(p));
     };
     return open(id);
+  };
+  const leadsFromPlausible = (id: string, seenPages: Set<string>): boolean => {
+    const page = id.split(":")[0];
+    const from = (g.parents[id] ?? []).filter((p) => p.split(":")[0] !== page);
+    if (!from.length) return true;   // nothing leads here from another page: selected by the facts alone
+    return from.some((p) => {
+      const q = p.split(":")[0];
+      if (seenPages.has(q)) return false;
+      const seen = new Set(seenPages).add(q);
+      return (g.bundle.roots[q] ?? []).some((r) => startOk(r, seen));
+    });
   };
   const linksOut = (id: string) => (g.node(id)?.links ?? []).some((l) => g.bundle.pages[l] && l !== id.split(":")[0]);
 
@@ -288,7 +318,7 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
   };
 
   /** Score the children of a branch: which are possible, and with what share. */
-  const split = (groups: Group[], events = true) => {
+  const split = (groups: Group[], events = true, parent?: string) => {
     const v = groups.map((gr) => gVerdict(gr, events));
     const tr = groups.filter((_, i) => v[i] === true);
     const fl = groups.filter((_, i) => v[i] === false);
@@ -330,6 +360,18 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
         if (m[i].mine) out.push({ gr, kind: "inferred", share: tr.length ? RESIDUAL : 1 });
         else out.push({ gr, kind: "option", share: (tr.length || anyMine ? RESIDUAL : 1) * (m[i].other ? 0.5 : 1) });
       });
+    }
+    // Supplied probabilities (AI-scored edges) replace the even split among the open arms; the
+    // factors above (residual share beside a true sibling, half for a ruled-out option) still apply.
+    const probs = opts?.edgeProb;
+    if (probs && parent !== undefined) {
+      const open = (x: Opt) => x.kind === "unknown" || x.kind === "uncoded" || x.kind === "option";
+      const given = new Map<Opt, number>();
+      for (const x of out) if (open(x)) { const p = probs.get(`${parent}>${x.gr.id}`); if (typeof p === "number" && Number.isFinite(p)) given.set(x, Math.max(MIN_PROB, Math.min(1, p))); }
+      if (given.size) {
+        const mean = [...given.values()].reduce((a, b) => a + b, 0) / given.size;
+        for (const x of out) if (open(x)) x.share *= given.get(x) ?? mean;
+      }
     }
     const total = out.reduce((a, x) => a + x.share, 0) || 1;
     return out.map((x) => ({ ...x, share: x.share / total }));
@@ -457,12 +499,12 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
       if (v[0] === null) return cond || (follow && linksOut(id)) ? go(gr, "unknown", 1) : stop(id, steps, weight, kids);
       return pass ? go(gr, "flow", 1) : stop(id, steps, weight, kids);
     }
-    const opts = split(groups);
+    const arms = split(groups, true, id);
     // After a recommendation, children with open conditions describe later events (recurrence,
     // response): the route ends here unless the facts already say which one happened.
-    if (!cond && !opts.some((o) => o.kind === "met" || o.kind === "otherwise") && opts.some((o) => o.kind === "unknown"))
+    if (!cond && !arms.some((o) => o.kind === "met" || o.kind === "otherwise") && arms.some((o) => o.kind === "unknown"))
       return stop(id, steps, weight, kids);
-    opts.forEach((o) => go(o.gr, o.kind, o.share));
+    arms.forEach((o) => go(o.gr, o.kind, o.share));
   };
 
   const explore = (entries: string[]) => {
@@ -487,10 +529,11 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     // A multi-disease guideline with the disease chosen: other diseases' pages are out, and when
     // the shared pages ahead of the disease's own do not lead into them (a diagnostic-testing page
     // that only lists every disease), the disease's own pages start routes of their own.
+    let ownStarts = false;
     if (mySec) {
       const seenN = new Set<string>(), stack = starts.flatMap((p) => g.bundle.roots[p] ?? []);
       while (stack.length && seenN.size < 30000) { const n = stack.pop()!; if (seenN.has(n)) continue; seenN.add(n); stack.push(...g.kids(n)); }
-      if (![...seenN].some((n) => secOf(n.split(":")[0]) === mySec)) starts = starts.concat(sectionStartPages(g, mySec));
+      if (![...seenN].some((n) => secOf(n.split(":")[0]) === mySec)) { starts = starts.concat(sectionStartPages(g, mySec)); ownStarts = true; }
     }
     if (!starts.length) starts.push(g.flowPages.find((p) => (g.bundle.roots[p] ?? []).length) ?? g.flowPages[0]);
     entries = starts.flatMap((p) => g.bundle.roots[p] ?? []);
@@ -522,7 +565,16 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     follow = true;
     ruledOut = 0;
     explore(entries);
-    const full = done.splice(0);    if (later.length) {
+    const full = done.splice(0);
+    // A link from the shared pages into the disease's pages (wired continuation) does not mean the
+    // walk gets there: it may stop first, or be gated by a fact the patient has not given. When no
+    // route enters the disease's pages, those pages start routes of their own.
+    if (mySec && !ownStarts && !full.some((d) => d.steps.some((st) => secOf(st.node.split(":")[0]) === mySec))) {
+      const extra = sectionStartPages(g, mySec).flatMap((p) => g.bundle.roots[p] ?? []).filter((r) => !starts.includes(r.split(":")[0]));
+      explore(extra);
+      full.push(...done.splice(0));
+      entries = entries.concat(extra);
+    }    if (later.length) {
       // The patient is past initial diagnosis: routes from the first page that never reach a
       // selected later-state page describe history, not the current decision. A selected page
       // that the walk from the start reaches keeps those routes (with what is still unknown on

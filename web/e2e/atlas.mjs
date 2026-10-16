@@ -13,6 +13,7 @@ const ROOT = fileURLToPath(new URL("../../", import.meta.url));
 const TYPES = { ".html": "text/html", ".json": "application/json", ".js": "text/javascript" };
 const server = createServer(async (req, res) => {
   const path = normalize(decodeURIComponent(new URL(req.url, "http://x").pathname)).replace(/^(\.\.[/\\])+/, "");
+  if (/^[/\\]Guideline[/\\]/.test(path)) { res.writeHead(404); res.end(); return; }   // the tests run without the licensed PDFs
   try { const body = await readFile(join(ROOT, path)); res.writeHead(200, { "content-type": TYPES[extname(path)] ?? "application/octet-stream" }); res.end(body); }
   catch { res.writeHead(404); res.end(); }
 }).listen(0, "127.0.0.1");
@@ -382,14 +383,14 @@ await step("hosted copy: the PDF published next to the page; clicking a box show
   await p.locator(".pdf-btn.ready").first().waitFor({ timeout: 20000 });
   const card = p.locator(".canvas [data-testid=card]:visible").filter({ hasText: "Intermediate" }).first();
   // hover: the page with the box highlighted
-  await card.hover({ position: { x: 30, y: 30 } });
+  await card.hover({ position: { x: 10, y: 10 } });
   await p.locator(".peek .page-img img").waitFor();
   assert.equal(await p.locator(".peek .hl").count(), 1, "box highlighted");
   // click: the page in its own window, reused for the next box
-  const [win] = await Promise.all([ctx.waitForEvent("page"), card.click({ position: { x: 20, y: 40 } })]);
+  const [win] = await Promise.all([ctx.waitForEvent("page"), card.click({ position: { x: 10, y: 10 } })]);
   await win.locator(".viewer .page-img img").waitFor();
   assert.match(await win.locator(".viewer-title").innerText(), /PROS-2[\s\S]*PDF p\.\d+ of 222/);
-  await p.locator(".canvas [data-testid=card]:visible").filter({ hasText: "High" }).first().click({ position: { x: 20, y: 30 } });
+  await p.locator(".canvas [data-testid=card]:visible").filter({ hasText: "High" }).first().click({ position: { x: 10, y: 10 } });
   await p.waitForTimeout(500);
   assert.equal(ctx.pages().length, 2, "one window for the pages");
   await ctx.close();

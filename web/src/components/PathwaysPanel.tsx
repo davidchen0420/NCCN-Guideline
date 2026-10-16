@@ -2,14 +2,16 @@ import { Fragment, useMemo, useState } from "react";
 import { Check, CircleDashed, CircleHelp, GitFork, ArrowRight, LocateFixed, Minus, FileText, ChevronDown, ChevronRight, ExternalLink } from "lucide-react";
 import { useApp, useAdvanced } from "../store";
 import type { Pathway, PStep } from "../lib/pathways";
-import { likelihoodWord, startingFacts } from "../lib/pathways";
+import { isRecommendationEnd, likelihoodWord, startingFacts } from "../lib/pathways";
 import { conditionTree, type CondNode } from "../lib/humanize";
 import { derive } from "../lib/predicates";
 import { factValue, label } from "../lib/factMeta";
 import { remainingQuestions } from "../lib/formAssist";
 import { Blocks, Linked } from "./Rich";
 import { PageCrop, SrcChip, useSource, useSrc, type SrcTarget } from "../source";
-import type { Graph } from "../lib/graph";
+import { resolveRef, type Graph } from "../lib/graph";
+import { gateSentence } from "../lib/moments";
+import { whyNothingFits } from "../lib/formAssist";
 import type { Block, Inline, Item } from "../lib/parseBox";
 import { Summary } from "./Summary";
 import { T, matchWord, pageName, supportPhrase } from "../lib/terms";
@@ -365,6 +367,8 @@ const normText = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, "");
 /** Does the route get as far as a recommendation, or does it stop at a criteria box / an open branch? */
 export function reachesRecommendation(g: Graph, p: Pathway): boolean {
   const key = routeFocus(g, p).key;
+  // a route that hands over to another page, or stops at an open branch, ends in no recommendation (never a page heading)
+  if (!isRecommendationEnd(p)) return false;
   if (key.kind === "unknown" || key.kind === "uncoded") return false;
   const kn = g.node(key.node);
   if (g.bundle.structured) return kn?.decision !== "condition" && !/condition/.test(kn?.role ?? "");
@@ -528,13 +532,58 @@ function RecoCard({ p, tied, isTop }: CardProps) {
   );
 }
 
+/** Where the NCCN page for a code can be opened: the page itself, its parent page for a continuation
+ * ("REC-3A" -> REC-3), a document page, or else the box that sends the reader there. */
+function pageSource(g: Graph, code: string, fromNode: string): { page: string | null; src: SrcTarget | null } {
+  const t = resolveRef(g, code);
+  const page = t.type === "flow" ? t.page : null;
+  const pdf = page ? g.bundle.pages[page]?.pdf : t.type === "doc" ? g.bundle.docs[t.code]?.pages[0]?.pdf : undefined;
+  if (pdf !== undefined && pdf !== null) {
+    const excerpt = page ? g.bundle.pages[page].title : t.type === "doc" ? g.bundle.docs[t.code].title : undefined;
+    return { page, src: { page: pdf, label: code, excerpt } };
+  }
+  return { page, src: boxSrc(g, fromNode) };
+}
+
+/** The route hands over to another page of the guideline: no recommendation yet, but one clear way on. */
+function ContinuesCard({ p, to }: { p: Pathway; to: string }) {
+  const { g, go, set, s, isPhone } = useApp();
+  const { open } = useSource();
+  const last = p.steps[p.steps.length - 1].node;
+  const { page, src } = pageSource(g, to, last);
+  const title = g.bundle.pages[page ?? to]?.title;
+  const name = pageName(to, title && title !== to ? title : null);
+  const schema = g.bundle.schema;
+  const why = useMemo(() => p.used.filter((k) => s.facts[k] !== undefined && s.facts[k] !== null).map((k) => [label(k), factValue(k, s.facts[k], schema)] as [string, string]), [p.used, s.facts, schema]);
+  return (
+    <section className="reco reco-card continues" aria-label="Next step" data-testid="continues-card">
+      <div className="rc-top"><span className="rc-match">Next step</span></div>
+      <div className="rc-main">
+        <h3 className="rc-next">The next step is on <b>{name}</b></h3>
+        <p className="rc-none">The guideline hands over to that page here. Open it to see the options and what decides between them.</p>
+        <div className="rc-src-actions">
+          {src && <button type="button" className="btn primary rc-verify" title="Opens the NCCN page in a new window" onClick={() => open(src)}><ExternalLink size={14} aria-hidden /> Open the NCCN page</button>}
+          {page && <button type="button" className="btn small" onClick={() => { go({ kind: "flow", page }); if (isPhone) set({ sheet: false }); }}><LocateFixed size={13} aria-hidden /> Show this page</button>}
+        </div>
+      </div>
+      {why.length > 0 && (
+        <div className="rc-sec">
+          <h4 className="rc-h">Why</h4>
+          <ul className="rc-why">{why.slice(0, 6).map(([k, v]) => <li key={k}><span>{k}</span><b>{v}</b></li>)}</ul>
+        </div>
+      )}
+      <div className="rc-foot"><p className="rc-fine">{T.prototype}</p></div>
+    </section>
+  );
+}
+
 /** The best route stops before a recommendation: say which answers would get it there. */
 function NeedsCard({ p }: { p: Pathway }) {
   const { g, set, s, ranking, focusFact } = useApp();
   const [all, setAll] = useState(false);
   const questions = useMemo(() => {
-    const names = [...remainingQuestions(g, ranking, s.facts).map((d) => d.fact), ...p.missing];
-    return [...new Set(names)];
+    const names = [...remainingQuestions(g, ranking, s.facts).map((d) => d.fact), ...p.missing, ...p.laterMissing];
+    return [...new Set(names)].filter((f) => g.bundle.schema.variables[f]);
   }, [g, ranking, s.facts, p]);
   const shown = all ? questions : questions.slice(0, 6);
   return (
@@ -598,6 +647,8 @@ function ClinicianView() {
   const p = picked ?? (top && !reachesRecommendation(g, top) ? top : ordered[0] ?? top);
   if (!p) return null;
   const reaches = reachesRecommendation(g, p);
+  // a route that hands over to another page: the card says where the next step is
+  const next = reaches || p.end !== "continues" ? null : p.continuesTo ?? null;
   const mine = normText(keyText(g, p));
   const others = reaches ? ordered.filter((x) => x.id !== p.id && normText(keyText(g, x)) !== mine) : ordered;
   const shown = all ? others : others.slice(0, 4);
@@ -612,7 +663,7 @@ function ClinicianView() {
   };
   return (
     <>
-      {reaches ? <RecoCard key={p.id} p={p} tied={tied} isTop={p.id === ordered[0]?.id} /> : <NeedsCard key={p.id} p={p} />}
+      {reaches ? <RecoCard key={p.id} p={p} tied={tied} isTop={p.id === ordered[0]?.id} /> : next ? <ContinuesCard key={p.id} p={p} to={next} /> : <NeedsCard key={p.id} p={p} />}
       {reaches && others.length > 0 && (
         <button type="button" className="linkish rc-tap rc-below" onClick={toOthers}>{others.length} other possible recommendation{others.length === 1 ? "" : "s"} below <ChevronDown size={13} aria-hidden /></button>
       )}
@@ -719,6 +770,7 @@ function EmptyState() {
   const adv = useAdvanced();
   const entered = Object.keys(s.facts).length > 0;
   const toQuestions = () => set({ rightTab: "patient" });
+  const gate = useMemo(() => (s.start === "auto" && !entered ? null : whyNothingFits(g, s.facts, s.start)), [g, s.facts, s.start, entered]);
   return (
     <div className="empty">
       {s.start === "auto" && !entered ? (
@@ -730,7 +782,7 @@ function EmptyState() {
       ) : (
         <>
           <h3>No recommendation fits these answers</h3>
-          <p>Check the answers, or say where the patient is now.{adv && <> Every route from this starting point contradicts something entered ({r.ruledOut} arms ruled out).</>}</p>
+          <p>{gate ? gateSentence(g, gate, s.facts) : "Check the answers, or say what the patient needs."}{adv && <> Every route from this starting point contradicts something entered ({r.ruledOut} arms ruled out).</>}</p>
           <button type="button" className="btn primary" onClick={toQuestions}>Back to the patient questions <ArrowRight size={14} /></button>
         </>
       )}

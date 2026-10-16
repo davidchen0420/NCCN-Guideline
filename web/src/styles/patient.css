@@ -180,6 +180,19 @@
 .patient .src-chip { font-size: var(--fs-xs); min-height: 32px; display: inline-flex; align-items: center; }
 .patient .fgroup.more summary { min-height: 32px; display: flex; align-items: center; }
 
+/* ---------- the way on: one obvious next step, always in view ---------- */
+.patient .next-step { position: sticky; bottom: -40px; z-index: 5; margin: 20px -18px -40px; padding: 10px 18px 14px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  background: var(--surface); border-top: 1px solid var(--line-strong); box-shadow: 0 -6px 14px -10px rgba(0, 0, 0, .35); }
+.patient .next-step .btn.primary { margin: 0; min-height: 44px; padding: 8px 18px; font-size: var(--fs-md); font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex: 1 1 auto; }
+.patient .next-step .ns-n { font-weight: 500; opacity: .85; }
+.patient .next-step.stuck { border-top-color: var(--warn); }
+.patient .next-step .ns-msg { flex: 1 1 220px; min-width: 0; margin: 0; font-size: var(--fs-sm); color: var(--ink-2); line-height: 1.4; display: grid; gap: 2px; }
+.patient .next-step .ns-msg b { font-size: var(--fs-md); color: var(--warn); }
+.patient .next-step.stuck .btn.primary { flex: 0 0 auto; }
+.patient .interview.stuck { border-color: var(--warn); }
+.patient .interview.stuck .iv-q { color: var(--warn); font-size: var(--fs-lg); }
+@media (max-width: 760px) { .patient .next-step { bottom: -32px; margin: 20px -16px -32px; padding: 10px 16px 12px; } }
+
 @media (max-width: 520px) {
   .pt-paste-btn { padding: 4px 8px; }
   .patient .iv-q { font-size: 18px; }
