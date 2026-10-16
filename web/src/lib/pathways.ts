@@ -148,6 +148,81 @@ export function usedFacts(g: Graph, pred: Pred | null | undefined, raw: Facts, o
   return out;
 }
 
+/**
+ * Details a box says its advice depends on: "Preoperative systemic therapy based on HR and HER2
+ * status (BINV-L 1 and BINV-M)" names HR and HER2, which are the details "hr_status" and "her2_status"
+ * of the schema (HR is worked out from ER and PR). The box has no condition of its own, so what
+ * decides it would otherwise never be asked.
+ */
+export function namedStatuses(g: Graph, text: string): string[] {
+  const m = /\b(?:based on|depending on|according to|by)\s+([^.()]{2,80}?)\s+status\b/i.exec(text);
+  if (!m) return [];
+  const schema = g.bundle.schema;
+  return m[1].split(/\s*(?:,|\band\b|\bor\b|\/)\s*/i).map((t) => t.trim().toLowerCase()).filter((t) => schema.variables[`${t}_status`] || schema.derived?.[`${t}_status`]);
+}
+export function namedStatusFacts(g: Graph, text: string): string[] {
+  const out = new Set<string>();
+  for (const t of namedStatuses(g, text)) for (const f of missingFacts(g, { fact: `${t}_status`, op: "==", value: "\u0000" }, {})) out.add(f);
+  return [...out];
+}
+
+export interface DocSnippet { code: string; heading: string; lines: string[]; pdf: number }
+/**
+ * The part of a principles page ("BINV-M: preoperative/adjuvant therapy regimens") that a box points
+ * to for the patient's own status: the box says its advice is based on HR and HER2 status, the patient
+ * is HER2-positive, so the lines under "HER2-Positive" on that page are the regimens. Null when the box
+ * names no status, the patient has not given it, or the page has no such heading.
+ */
+export function statusSnippet(g: Graph, id: string, raw: Facts): DocSnippet | null {
+  const n = g.node(id);
+  if (!n) return null;
+  const stems = namedStatuses(g, stripMarks(n.text));
+  if (!stems.length) return null;
+  const full = derive(raw, g.bundle.schema);
+  const want: { stem: string; word: string }[] = [];
+  for (const t of stems) {
+    const v = String(full[`${t}_status`] ?? "");
+    const word = /positive/i.test(v) ? "positive" : /negative/i.test(v) ? "negative" : "";
+    if (word) want.push({ stem: t.replace(/\W/g, ""), word });
+  }
+  if (!want.length) return null;
+  const stemRe = new RegExp(`^\\s*(?:${stems.map((t) => t.replace(/\W/g, "")).join("|")})[- ]`, "i");
+  const says = (l: string, stem: string, word: string) => new RegExp(`\\b${stem}[- ]?${word}[a-z]?\\b`, "i").test(l);
+  /** How well a heading line fits the patient: statuses it names that are theirs, or -1 when it names another (and does not offer both). */
+  const fit = (l: string) => {
+    if (l.length > 90 || !stemRe.test(l)) return 0;
+    let hit = 0;
+    for (const w of want) {
+      const other = w.word === "positive" ? "negative" : "positive";
+      if (says(l, w.stem, w.word)) hit++;
+      else if (says(l, w.stem, other) && !new RegExp(`\\bor\\s*-?\\s*(?:${w.word})`, "i").test(l)) return -1;
+    }
+    return hit;
+  };
+  let best: (DocSnippet & { score: number }) | null = null;
+  for (const code of n.links) {
+    const doc = g.bundle.docs?.[code.replace(/\s+\d+\s+of\s+\d+$/, "")];
+    if (!doc) continue;
+    for (const page of doc.pages) {
+      const lines = page.text.split("\n").map((l) => l.trim()).filter(Boolean);
+      lines.forEach((l, at) => {
+        const score = fit(l);
+        if (score <= 0 || (best && best.score >= score)) return;
+        const body: string[] = [];
+        for (const x of lines.slice(at + 1)) {
+          if (body.length >= 14 || (body.length && x.length <= 60 && stemRe.test(x) && /\b(?:positive|negative)/i.test(x))) break;
+          body.push(x);
+        }
+        // regimens, not a principle that happens to name the status
+        if (!/\b(?:Preferred|Recommended|regimens?|Useful in Certain Circumstances)\b/.test(body.join(" "))) return;
+        best = { code: doc.code, heading: l, lines: body, pdf: page.pdf ?? 0, score };
+      });
+    }
+  }
+  const out = best as (DocSnippet & { score: number }) | null;
+  return out ? { code: out.code, heading: out.heading, lines: out.lines, pdf: out.pdf } : null;
+}
+
 const derivedCache = new WeakMap<Facts, Facts>();
 const withDerived = (g: Graph, facts: Facts): Facts => {
   let d = derivedCache.get(facts);
@@ -516,7 +591,8 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
   };
   const stepFor = (parent: string | null, k: string, kind: StepKind, share: number, sibs: string[] = []): PStep => ({
     node: k, kind, share,
-    missing: kind === "unknown" ? missingFacts(g, g.preds[k], facts) : [],
+    missing: [...new Set([...(kind === "unknown" ? missingFacts(g, g.preds[k], facts) : []),
+      ...namedStatusFacts(g, g.node(k)?.text ?? "").filter((f) => !isKnown(facts[f]))])],
     edge: parent === null ? "entry" : edgeKind.get(`${parent}>${k}`) ?? (k.split(":")[0] !== parent.split(":")[0] ? "link" : "agreed"),
     used: settledBy(k, kind, sibs),
   });

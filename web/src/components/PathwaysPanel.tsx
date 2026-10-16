@@ -2,7 +2,7 @@ import { Fragment, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Check, CircleDashed, CircleHelp, GitFork, ArrowRight, LocateFixed, Minus, FileText, ChevronDown, ChevronRight, ExternalLink, Sparkles } from "lucide-react";
 import { useApp, useAdvanced } from "../store";
 import type { Pathway, PStep, RecGroup, Recommendation } from "../lib/pathways";
-import { distinctRecommendations, isActionBox, likelihoodWord, reachesRecommendation, recommendationOf, shownRoute, startingFacts } from "../lib/pathways";
+import { distinctRecommendations, isActionBox, likelihoodWord, reachesRecommendation, recommendationOf, shownRoute, startingFacts, statusSnippet } from "../lib/pathways";
 import { conditionTree, type CondNode } from "../lib/humanize";
 import { derive } from "../lib/predicates";
 import { factValue, label } from "../lib/factMeta";
@@ -501,6 +501,8 @@ function RecoCard({ p, tied, isTop, share }: CardProps) {
   const { pdf, open } = useSource();
   const blank = useBlankStart();
   const rec = useMemo(() => recommendationOf(g, p, ranking.paths), [g, p, ranking]);
+  // a box that points to a regimens page "based on HR and HER2 status": the regimens for the patient's own status
+  const snip = useMemo(() => [rec.key.node, ...rec.then].map((x) => statusSnippet(g, x, s.facts)).find(Boolean) ?? null, [g, rec, s.facts]);
   const stop = useRouteStop(p);
   // "AI-assisted": the decisions on the way to this recommendation that the AI chose
   const onRoute = useMemo(() => (ai.on && ai.ai ? trimToRoute(ai.ai, new Set(p.steps.map((x) => x.node))) : null), [ai.on, ai.ai, p]);
@@ -576,9 +578,16 @@ function RecoCard({ p, tied, isTop, share }: CardProps) {
       <div className="rc-main">
         <span className="rc-label">{lead}</span>
         {several ? <OptionList rec={rec} p={p} /> : <Headline id={id} />}
-        {(n.footnotes.length > 0 || rec.then.length > 0 || rec.alongside.length > 0) && (
+        {(n.footnotes.length > 0 || rec.then.length > 0 || rec.alongside.length > 0 || snip || nextPage) && (
           <div className="rc-more">
             <ThenList rec={rec} />
+            {snip && (
+              <details className="rc-also rc-regimens">
+                <summary>{snip.heading.replace(/[a-z]$/, "")} · regimens in {snip.code}</summary>
+                <ul>{snip.lines.map((l, i) => <li key={i}>{clip(l.replace(/\u0017/g, "· "), 200)}</li>)}</ul>
+                <button type="button" className="linkish rc-tap" onClick={() => open({ page: snip.pdf, label: snip.code })}>Open the NCCN page <ExternalLink size={12} aria-hidden /></button>
+              </details>
+            )}
             {nextPage && <p className="reco-then rc-then"><b>Next:</b> <button type="button" className="linkish rc-tap" onClick={() => toDiagram(nextPage)}>{pageName(nextPage, g.bundle.pages[nextPage]?.title)} <ArrowRight size={12} aria-hidden /></button></p>}
             {rec.alongside.length > 0 && (
               <details className="rc-also">
