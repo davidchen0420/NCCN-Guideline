@@ -18,3 +18,7 @@ web/dist/
 # AI decisions: cached answers (served by nccn_nav.serve) and mock-run eval reports
 .cache/
 reports/ai-decisions-eval.mock.md
+
+# throwaway audit/probe scripts
+web/e2e/_*.mjs
+web/test/_*.test.ts
