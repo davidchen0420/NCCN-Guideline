@@ -18,7 +18,7 @@
  *   extractor only) and the condition's review status.
  */
 import type { Facts, Pred } from "../types";
-import { resolveRef, sectionStartPages, stateOfEntries, stateOfTitle, type Graph } from "./graph";
+import { entryHeadsByGroup, resolveRef, sectionStartPages, stateOfEntries, stateOfTitle, type Graph } from "./graph";
 import { derive, evaluate } from "./predicates";
 import { stripMarks } from "./adapt";
 import { matchWord } from "./terms";
@@ -390,7 +390,7 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     const roots = g.bundle.roots[page] ?? [];
     const split = roots.length > 1 && roots.every((r) => g.preds[r]);
     const late = !!(stateOfTitle(g.bundle.pages[page]?.title ?? "") || stateOfEntries(g, page));
-    if (late) return own === true || lcv === true;
+    if (late) return (own === true || lcv === true) && openAbove(id);
     // An answered detail constrains the way in: a page that is reached only through boxes the
     // details rule out ("Rectal cancer without distant metastases" -> clinical stage REC-6 for a
     // patient with distant metastases) is not somewhere this patient can be, even when its own
@@ -399,17 +399,26 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
     if (lcv !== true && (lc || own === "none")) return false;
     return openAbove(id);
   };
+  /** Does the page `to` come after the page `from` in the guideline (what loops back to an earlier page comes from later ones)? */
+  const reachesPage = (from: string, to: string): boolean => {
+    const a = g.bundle.pages[from]?.pdf, b = g.bundle.pages[to]?.pdf;
+    return from !== to && typeof a === "number" && typeof b === "number" && b > a;
+  };
   /** Is there a way into `id` from the start of the guideline that no entered detail rules out? */
   const openAbove = (id: string): boolean => {
     // (the chosen disease is not a reason against a way in: its pages are reached as that disease's)
     const sv = g.bundle.sections?.variable;
-    const here = sv ? derive({ ...raw, [sv]: undefined }, g.bundle.schema) : facts;
+    const rawHere = sv ? { ...raw, [sv]: undefined } : raw;
+    const here = sv ? derive(rawHere, g.bundle.schema) : facts;
     const seen = new Set<string>();
     const open = (x: string): boolean => {
       if (seen.has(x)) return false;
       seen.add(x);
-      const ps = g.parents[x] ?? [];
-      return !ps.length || ps.some((p) => !(g.preds[p] && evaluate(g.preds[p], here) === false) && open(p));
+      // what loops back into a page from the pages after it (a return to screening) is not a way in
+      // (and an entry box is reached from other pages: a loop inside its own page is not a way in either)
+      const isRoot = (g.bundle.roots[x.split(":")[0]] ?? []).includes(x);
+      const ps = (g.parents[x] ?? []).filter((p) => !reachesPage(x.split(":")[0], p.split(":")[0]) && !(isRoot && p.split(":")[0] === x.split(":")[0]));
+      return !ps.length || ps.some((p) => !(g.preds[p] && evaluate(g.preds[p], here) === false && usedFacts(g, g.preds[p], rawHere).size > 0) && open(p));
     };
     return open(id);
   };
@@ -774,6 +783,12 @@ export function rankPathways(g: Graph, raw: Facts, start: string | "auto" = "aut
       const seenN = new Set<string>(), stack = starts.flatMap((p) => g.bundle.roots[p] ?? []);
       while (stack.length && seenN.size < 30000) { const n = stack.pop()!; if (seenN.has(n)) continue; seenN.add(n); stack.push(...g.kids(n)); }
       if (![...seenN].some((n) => secOf(n.split(":")[0]) === mySec)) { starts = starts.concat(sectionStartPages(g, mySec)); ownStarts = true; }
+    }
+    // every page is led to by another (the algorithm loops): the first page of the loop starts it, not the alphabetically first page
+    if (!starts.length) {
+      const rooted = (ps: string[]) => ps.filter((p) => (g.bundle.roots[p] ?? []).length && inSection(p));
+      const [shared, ...diseases] = entryHeadsByGroup(g);
+      starts.push(...(rooted(shared).length ? rooted(shared) : rooted(diseases.flat())));
     }
     if (!starts.length) starts.push(g.flowPages.find((p) => (g.bundle.roots[p] ?? []).length) ?? g.flowPages[0]);
     entries = starts.flatMap((p) => g.bundle.roots[p] ?? []);

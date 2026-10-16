@@ -8,7 +8,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import type { Facts, Pred } from "../src/types";
 import { adaptGuideline, stripMarks } from "../src/lib/adapt";
 import { buildGraph, type Graph } from "../src/lib/graph";
-import { boxClass, distinctRecommendations, isCriteriaBox, missingFacts, namedStatusFacts, rankPathways, recommendationOf, shownRoute, statusSnippet } from "../src/lib/pathways";
+import { boxClass, distinctRecommendations, isCriteriaBox, missingFacts, namedStatusFacts, rankPathways, recommendationOf, shownRoute, statusSnippet, usedFacts } from "../src/lib/pathways";
 import { derive, evaluate } from "../src/lib/predicates";
 import { aiWalk, rulesOnlyTrail } from "../src/lib/aiWalk";
 import { clearDecideCache, relevantFacts } from "../src/lib/decide";
@@ -295,13 +295,19 @@ describe("N1 an answered detail that appears in an entry or link condition const
               if (isRoot && g.preds[st.node] && evaluate(g.preds[st.node], full) === false && !(st.kind === "flow" || st.kind === "option")) bad.push(`${slug} {${f}=${String(v)}}: ${st.node} is an entry whose condition is false`);
             }
             // a route that starts in the middle of the guideline needs a way in that no answer rules out
+            const after = (from: string, to: string) => {
+              const a = g.bundle.pages[from]?.pdf, b = g.bundle.pages[to]?.pdf;
+              return from !== to && typeof a === "number" && typeof b === "number" && b > a;
+            };
             const first = p.steps[0].node;
             const seen = new Set<string>();
             const open = (x: string): boolean => {
               if (seen.has(x)) return false;
               seen.add(x);
-              const ps = g.parents[x] ?? [];
-              return !ps.length || ps.some((q) => !(g.preds[q] && evaluate(g.preds[q], derive(Object.fromEntries(Object.entries(facts)), schema)) === false) && open(q));
+              // what loops back into a page from the pages after it (a return to screening) is no way in
+              const isRoot = (g.bundle.roots[x.split(":")[0]] ?? []).includes(x);   // an entry is reached from other pages, not by a loop inside its own
+              const ps = (g.parents[x] ?? []).filter((q) => !after(x.split(":")[0], q.split(":")[0]) && !(isRoot && q.split(":")[0] === x.split(":")[0]));
+              return !ps.length || ps.some((q) => !(g.preds[q] && evaluate(g.preds[q], full) === false && usedFacts(g, g.preds[q], facts).size > 0) && open(q));
             };
             if (!open(first)) bad.push(`${slug} {${f}=${String(v)}}: route starts at ${first}, which every way in rules out`);
           }
@@ -326,12 +332,12 @@ describe("AI calls: only where the walk needs the model, remembered by node and 
     }) as unknown as typeof fetch;
     return { calls, fetchFn };
   };
-  const walk = (facts: Facts, fetchFn: typeof fetch) => aiWalk(g, facts, "PROS-1", { decide: { fetch: fetchFn } });
+  const walk = (facts: Facts, fetchFn: typeof fetch) => aiWalk(g, facts, "PROS-2", { decide: { fetch: fetchFn } });
 
   it("an answer about something the open node does not rest on asks nothing again", async () => {
     clearDecideCache();
     const { calls, fetchFn } = counting();
-    const seq: Facts[] = [{ n_category: "N0" }];
+    const seq: Facts[] = [{ m_category: "M0", n_category: "N0", clinical_t_category: "T2b" }];
     await walk(seq[0], fetchFn);
     const first = calls.length;
     expect(first).toBeGreaterThan(0);
@@ -350,14 +356,18 @@ describe("AI calls: only where the walk needs the model, remembered by node and 
   it("an answer the node rests on asks again, once", async () => {
     clearDecideCache();
     const { calls, fetchFn } = counting();
-    const res = await walk({ n_category: "N0" }, fetchFn);
+    const base: Facts = { m_category: "M0", n_category: "N0", clinical_t_category: "T2b" };
+    const res = await walk(base, fetchFn);
     const before = calls.length;
-    const rel = [...relevantFacts(g, res.end)].find((k) => g.bundle.schema.variables[k].type === "bool" && k !== "n_category");
-    if (!rel) return;
-    await walk({ n_category: "N0", [rel]: true }, fetchFn);
-    expect(calls.length).toBeGreaterThanOrEqual(before);
+    expect(before).toBeGreaterThan(0);
+    const vars = g.bundle.schema.variables;
+    const rel = [...relevantFacts(g, res.end)].find((k) => (vars[k].type === "bool" || (vars[k].type === "enum" && vars[k].values?.length)) && base[k] === undefined)!;
+    expect(rel).toBeTruthy();
+    const val = vars[rel].type === "bool" ? true : vars[rel].values![0];
+    await walk({ ...base, [rel]: val }, fetchFn);
+    expect(calls.length).toBeGreaterThan(before);
     const after = calls.length;
-    await walk({ n_category: "N0", [rel]: true }, fetchFn);
+    await walk({ ...base, [rel]: val }, fetchFn);
     expect(calls.length).toBe(after);
   });
 
