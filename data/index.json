@@ -313,8 +313,7 @@
      "leaf": 12,
      "entry": 5,
      "note": 3,
-     "link": 1,
-     "column_header": 1
+     "column_header": 2
     },
     "links": {
      "page": 13
@@ -345,15 +344,15 @@
      "two_methods": 57,
      "image_checked": 10
     },
-    "decision_boxes": 90,
+    "decision_boxes": 92,
     "predicate_status": {
      "none": 14,
-     "model_reviewed": 74,
-     "rejected": 2
+     "model_reviewed": 77,
+     "rejected": 1
     },
     "decision_types": {
      "other": 4,
-     "condition": 76,
+     "condition": 78,
      "option": 10
     },
     "entries": 34,
@@ -374,7 +373,7 @@
      "decision": 6
     },
     "links": {
-     "page": 76,
+     "page": 77,
      "external_guideline": 1
     },
     "footnote_refs_by_resolution": {
@@ -816,7 +815,8 @@
     "decision_types": {
      "option": 12,
      "condition": 167,
-     "other": 21
+     "other": 20,
+     "null": 1
     },
     "entries": 54,
     "entries_with_predicate": 51,
@@ -824,11 +824,11 @@
     "roles": {
      "page_heading": 49,
      "step": 179,
-     "decision": 38,
+     "decision": 37,
      "leaf": 81,
      "entry": 52,
      "note": 28,
-     "column_header": 4,
+     "column_header": 5,
      "table_root": 2,
      "table_title": 8,
      "table_condition": 11,
@@ -930,7 +930,7 @@
     "entries_reached_by_link": 27,
     "roles": {
      "page_heading": 26,
-     "leaf": 80,
+     "leaf": 79,
      "step": 110,
      "decision": 41,
      "entry": 30,
@@ -938,7 +938,7 @@
      "table_root": 1,
      "table_rec": 1,
      "table_condition": 1,
-     "column_header": 2
+     "column_header": 3
     },
     "links": {
      "page": 59,
@@ -3154,23 +3154,23 @@
    "quality": {
     "pages": 302,
     "algorithm_pages": 43,
-    "boxes": 671,
-    "boxes_text_found_in_pdf_at_bbox": "669/671",
+    "boxes": 672,
+    "boxes_text_found_in_pdf_at_bbox": "670/672",
     "edges_by_evidence": {
      "two_methods": 572,
      "single_source": 19,
-     "image_checked": 49,
+     "image_checked": 51,
      "table_text_checked": 28
     },
-    "decision_boxes": 353,
+    "decision_boxes": 350,
     "predicate_status": {
-     "model_reviewed": 290,
+     "model_reviewed": 289,
      "inherited_from_link": 4,
      "none": 54,
-     "rejected": 5
+     "rejected": 3
     },
     "decision_types": {
-     "condition": 297,
+     "condition": 294,
      "other": 10,
      "option": 38,
      "null": 8
@@ -3180,11 +3180,11 @@
     "entries_reached_by_link": 57,
     "roles": {
      "page_heading": 66,
-     "note": 20,
+     "note": 19,
      "decision": 90,
-     "leaf": 158,
+     "leaf": 159,
      "entry": 58,
-     "step": 344,
+     "step": 345,
      "table_root": 1,
      "table_condition": 14,
      "table_ref": 14,
@@ -3346,11 +3346,11 @@
     "entries_with_predicate": 33,
     "entries_reached_by_link": 34,
     "roles": {
-     "page_heading": 41,
+     "page_heading": 42,
      "decision": 33,
      "step": 150,
      "entry": 34,
-     "leaf": 59,
+     "leaf": 58,
      "note": 8
     },
     "links": {
