@@ -25,11 +25,7 @@ const EMPTY_TARGET_BASELINE = 53;
  * and rankPathways(auto) falls back to the first page of the guideline, which belongs to another
  * disease. The data is right; the start rule needs a cycle fallback. Take a section out of this list
  * when that is fixed (the test below fails if one of them starts to have its own route). */
-const NO_OWN_START_YET = new Set<string>([
-  "biliary_tract|Intrahepatic Cholangiocarcinoma",
-  "neuroendocrine_and_adrenal_tumors|Adrenal Gland Tumors",
-  "ovarian_cancer_fallopian_tube_cancer_primary_per|Epithelial Ovarian Cancer/Fallopian Tube Cancer/ Primary Peritoneal Cancer",
-]);
+const NO_OWN_START_YET = new Set<string>([]);
 
 /** Guidelines whose pages are being re-extracted by other work; they wire their own leaf boxes
  * when that lands (page_spec wire --all). Take a slug out of this list once it is done. */

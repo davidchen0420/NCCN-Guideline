@@ -143,7 +143,23 @@ export function sectionStartPages(g: Graph, section: string): string[] {
   const link = (q: string, p: string) => { if (p !== q) (leadsTo.get(q) ?? leadsTo.set(q, new Set()).get(q)!).add(p); };
   for (const [id, ks] of Object.entries(g.bundle.children)) ks.forEach((k) => link(id.split(":")[0], k.split(":")[0]));
   g.bundle.links.forEach(([q, p]) => link(q, p));
-  return own.filter((p) => !own.some((q) => q !== p && leadsTo.get(q)?.has(p)));
+  const starts = own.filter((p) => !own.some((q) => q !== p && leadsTo.get(q)?.has(p)));
+  if (starts.length || !own.length) return starts;
+  // Every own page is led to by another (a later page loops back to the first, e.g. OV-6 → OV-1):
+  // start at the first page, in guideline order, of each group no other own page leads into.
+  const ownSet = new Set(own);
+  const reach = (p: string) => {
+    const seen = new Set([p]), st = [p];
+    while (st.length) for (const q of leadsTo.get(st.pop()!) ?? []) if (ownSet.has(q) && !seen.has(q)) { seen.add(q); st.push(q); }
+    return seen;
+  };
+  const r = new Map(own.map((p) => [p, reach(p)]));
+  const out: string[] = [];
+  for (const p of own) {
+    const fromOutside = own.some((q) => r.get(q)!.has(p) && !r.get(p)!.has(q));
+    if (!fromOutside && !out.some((s) => r.get(s)!.has(p))) out.push(p);
+  }
+  return out;
 }
 
 /** Ancestors and descendants of the selected answers (across linked pages). */

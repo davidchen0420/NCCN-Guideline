@@ -251,7 +251,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Incidental finding on pathologic review | GALL-3 (Presentation) | presentation_type=incidental_finding_on_pathologic_review |
+| Workup & first treatment | Presentation and workup | EXTRA-1 (Presentation and Workup) |  |
 
 ### Gallbladder Cancer
 
@@ -263,7 +263,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | Incidental finding on pathologic review | GALL-3 (Presentation) | presentation_type=incidental_finding_on_pathologic_review |
+| Workup & first treatment | Presentation | INTRA-1  |  |
 
 ## Bladder Cancer · v2.2026 (`bladder`)
 
@@ -1194,7 +1194,7 @@ to are not offered. `fills` are the details the setting itself states (entered f
 
 | Need | Setting | Start page | Fills |
 |---|---|---|---|
-| Workup & first treatment | SSTR- Negative Disease | SSTRNEG-1 (Management of Sstr-Negative Disease of Well-Differentiated Grade 1/2 NETS) | sstr_pet_positive=false |
+| Workup & first treatment | Adrenal gland tumor on imaging | AGT-1 (Clinical Presentation) | tumor_site=adrenal |
 
 ### Large or Small Cell Carcinoma/Mixed
 
