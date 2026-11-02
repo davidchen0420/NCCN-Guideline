@@ -6,6 +6,7 @@ import "@fontsource/ibm-plex-mono/latin-400.css";
 import "@fontsource/source-serif-4/latin-400.css";
 import "@fontsource/source-serif-4/latin-600.css";
 import "./styles/app.css";
+import { applyTheme } from "./lib/theme";
 import { App } from "./App";
 import { Provider } from "./store";
 import { SourceProvider } from "./source";
@@ -16,6 +17,7 @@ import { adaptGuideline, isGuidelineFile } from "./lib/adapt";
 import { registerGuidelines } from "./lib/pdf";
 import "./atlas/model";   // declares window.__ATLAS__
 
+applyTheme();
 const root = createRoot(document.getElementById("root")!);
 const single = (bundle: Bundle) => {
   document.title = bundle.title ? `${bundle.title} · OncoCarta` : "OncoCarta";

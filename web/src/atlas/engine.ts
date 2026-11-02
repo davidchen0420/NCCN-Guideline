@@ -6,6 +6,7 @@
  * "lens", 2 one page's boxes on a paper card. Sizes on screen are computed from world sizes
  * and the zoom, with limits, so text stays readable at every zoom (semantic zoom).
  */
+import { isDark, THEME_EVENT } from "../lib/theme";
 import { zoom, zoomIdentity, type ZoomBehavior, type ZoomTransform } from "d3-zoom";
 import { select, type Selection } from "d3-selection";
 import { interpolateZoom } from "d3-interpolate";
@@ -80,9 +81,9 @@ function readTheme(): Theme {
   const cs = getComputedStyle(document.documentElement);
   const v = (n: string, d: string) => cs.getPropertyValue(n).trim() || d;
   return {
-    paper: v("--paper", "#f3f1ec"), surface: v("--surface", "#fdfcfa"), ink: v("--ink", "#1d1c19"), ink2: v("--ink-2", "#45433d"),
+    paper: v("--paper", "#ffffff"), surface: v("--surface", "#ffffff"), ink: v("--ink", "#1d1c19"), ink2: v("--ink-2", "#45433d"),
     muted: v("--muted", "#6b6860"), faint: v("--faint", "#8f8b81"), line: v("--line", "#dedad1"), strong: v("--line-strong", "#c7c2b6"),
-    accent: v("--accent", "#135c4d"), hl: v("--hl-line", "#b88600"), dark: matchMedia("(prefers-color-scheme: dark)").matches,
+    accent: v("--accent", "#135c4d"), hl: v("--hl-line", "#b88600"), dark: isDark(),
   };
 }
 const rgbCache = new Map<string, [number, number, number]>();
@@ -183,8 +184,9 @@ export class Engine {
     const onDark = () => { this.theme = readTheme(); this.applyTheme(); this.request(); };
     const onMotion = () => { this.reduced = motion.matches; };
     dark.addEventListener("change", onDark); motion.addEventListener("change", onMotion);
+    window.addEventListener(THEME_EVENT, onDark);
     this.mqs = [dark, motion];
-    this.cleanupMq = () => { dark.removeEventListener("change", onDark); motion.removeEventListener("change", onMotion); };
+    this.cleanupMq = () => { window.removeEventListener(THEME_EVENT, onDark); dark.removeEventListener("change", onDark); motion.removeEventListener("change", onMotion); };
     this.resize();
     // Label widths change when the fonts arrive, so the sites-first decision made before that can be wrong
     // (the home layout flipped between loads): decide again, and if the view is still the home view, move it to the new one.

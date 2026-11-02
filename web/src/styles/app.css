@@ -1,14 +1,14 @@
 /* OncoCarta — calm, document-like UI. One accent (deep green), warm neutrals,
    serif for guideline headings and recommendations, sans for interface text. */
 :root {
-  --paper: #f3f1ec; --surface: #fdfcfa; --surface-2: #f6f4ef; --sunken: #ebe8e1;
+  --paper: #ffffff; --surface: #ffffff; --surface-2: #f7f7f6; --sunken: #eeeeec;
   --ink: #1d1c19; --ink-2: #45433d; --muted: #5f5c55; --faint: #69655d;   /* AA (4.5:1) on paper, surface and every tinted fill */
-  --line: #dedad1; --line-2: #e9e6df; --line-strong: #c7c2b6;
+  --line: #dcdcd8; --line-2: #e9e9e6; --line-strong: #c4c4bf;
   --accent: #135c4d; --accent-ink: #ffffff; --accent-soft: #e2eeea; --accent-line: #8fbcb0;
   --route: #135c4d; --route-soft: #e2eeea;
   --met: #2a7248; --met-soft: #e3f0e7; --open: #8e5400; --open-soft: #f7ecd9; --opt: #3d5a80; --opt-soft: #e4eaf2;
   --warn: #a53a28; --warn-soft: #f8e5e1; --hl: rgba(240, 190, 40, .32); --hl-line: #b88600;
-  --pref: #1e4d42; --pref-ink: #ffffff; --tag: #ecebe6; --tag-ink: #45433d;
+  --pref: #1e4d42; --pref-ink: #ffffff; --tag: #efefec; --tag-ink: #45433d;
   --edge: #8a867c; --shadow: 0 1px 2px rgba(30, 28, 22, .05), 0 1px 1px rgba(30, 28, 22, .03);
   --shadow-lg: 0 2px 6px rgba(30, 28, 22, .08), 0 18px 48px rgba(30, 28, 22, .16);
   --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -21,7 +21,7 @@
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --paper: #151513; --surface: #1c1c19; --surface-2: #22221e; --sunken: #2a2925;
     --ink: #ecebe5; --ink-2: #cbc8bf; --muted: #a9a59b; --faint: #9b978d;
     --line: #34332e; --line-2: #2b2a26; --line-strong: #4a4840;
@@ -33,6 +33,18 @@
     --edge: #7d7a71; --shadow: 0 1px 2px rgba(0, 0, 0, .3); --shadow-lg: 0 2px 6px rgba(0, 0, 0, .35), 0 18px 48px rgba(0, 0, 0, .5);
     color-scheme: dark;
   }
+}
+:root[data-theme="dark"] {
+    --paper: #151513; --surface: #1c1c19; --surface-2: #22221e; --sunken: #2a2925;
+    --ink: #ecebe5; --ink-2: #cbc8bf; --muted: #a9a59b; --faint: #9b978d;
+    --line: #34332e; --line-2: #2b2a26; --line-strong: #4a4840;
+    --accent: #6cc4ad; --accent-ink: #0d1d18; --accent-soft: #1b322c; --accent-line: #3f7f70;
+    --route: #6cc4ad; --route-soft: #1b322c;
+    --met: #74c891; --met-soft: #1c3124; --open: #e3a650; --open-soft: #382b16; --opt: #9bb8dc; --opt-soft: #212b38;
+    --warn: #f08b77; --warn-soft: #3a1f1a; --hl: rgba(220, 170, 40, .28); --hl-line: #d9a520;
+    --pref: #6cc4ad; --pref-ink: #0d1d18; --tag: #2c2b27; --tag-ink: #cbc8bf;
+    --edge: #7d7a71; --shadow: 0 1px 2px rgba(0, 0, 0, .3); --shadow-lg: 0 2px 6px rgba(0, 0, 0, .35), 0 18px 48px rgba(0, 0, 0, .5);
+    color-scheme: dark;
 }
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; }

@@ -7,6 +7,7 @@ import { AI_THRESHOLD_MAX, AI_THRESHOLD_MIN, readPref, writePref } from "../lib/
 import { percent } from "../lib/trailView";
 import { T } from "../lib/terms";
 import { setGuideSteps, useGuideSteps } from "./Guide";
+import { ThemeChoice, ThemeToggle } from "./Theme";
 import "../styles/shell.css";
 
 /** Settings: Advanced tools, the 3-step guide, Help. A small popover beside the rail button. */
@@ -43,6 +44,7 @@ function SettingsMenu() {
       {open && createPortal(
         <div ref={menu} className="set-menu" role="dialog" aria-label="Settings" style={pos}>
           <h3>Settings</h3>
+          <ThemeChoice />
           <label className="set-row">
             <input type="checkbox" className="sw" checked={s.advanced} onChange={(e) => set({ advanced: e.target.checked })} data-testid="advanced-toggle" />
             <span className="set-t"><b>Advanced tools</b>
@@ -111,6 +113,7 @@ export function Rail() {
       {b("Search", <Search size={20} />, s.left === "search", () => toggle("search"), "rail-search")}
       <span className="grow" />
       {b("Help", <CircleHelp size={20} />, s.help, () => set({ help: true }), "rail-help")}
+      <ThemeToggle label />
       <SettingsMenu />
     </nav>
   );

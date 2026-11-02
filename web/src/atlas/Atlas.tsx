@@ -19,6 +19,7 @@ import { PageImage, PdfButton, SourceProvider, useSource, useSrc, type SrcTarget
 import { useAdvanced } from "../store";
 import { T, matchWord, supportPhrase } from "../lib/terms";
 import { readPref, writePref } from "../lib/prefs";
+import { ThemeToggle } from "../components/Theme";
 import "./atlas.css";
 import "./home.css";
 
@@ -393,6 +394,7 @@ export function Atlas({ lib, raw, onOpen, onList }: Props) {
           ))}
         </nav>
         <div className="top-right">
+        <ThemeToggle className="theme-btn" />
         <PdfButton total={model.guidelines.length} />
         <div className="view-switch" role="group" aria-label="View">
           <button type="button" className="on" aria-pressed="true"><Compass size={14} aria-hidden /> Map</button>
